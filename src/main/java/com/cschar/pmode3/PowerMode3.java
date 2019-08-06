@@ -28,32 +28,56 @@ import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import com.intellij.openapi.editor.actionSystem.TypedAction;
 import com.intellij.openapi.editor.actionSystem.TypedActionHandler;
+import com.intellij.ui.JBColor;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.awt.*;
 
+
+
+//https://corochann.com/intellij-plugin-development-introduction-persiststatecomponent-903.html
+
+//This will save this object as state
 //https://www.jetbrains.org/intellij/sdk/docs/basics/persisting_state_of_components.html#defining-the-storage-location
 @State(
         name = "PowerMode3",
+
+        //./build/idea-sandbox/config/options/power.mode3.xml
         storages = {@Storage(value = "$APP_CONFIG$/power.mode3.xml")}
-        //storages = {@Storage(com.cschar.pmode3.xml")}
+        //storages = {@Storage("com.cschar.pmode3.xml")}
 )
 public class PowerMode3 implements BaseComponent,
-        PersistentStateComponent<PowerMode3.State> {
+        PersistentStateComponent<PowerMode3> {
     //https://www.jetbrains.org/intellij/sdk/docs/basics/persisting_state_of_components.html#implementing-the-persistentstatecomponent-interface
 
     @com.intellij.util.xmlb.annotations.Transient
     private ParticleContainerManager particleContainerManager;
 
+    @com.intellij.util.xmlb.annotations.Transient
+    public Color particleColor;
+
     private boolean enabled = true;
+    private int lifetime = 60;
+    private int particleSize = 3;
+
+//    @com.intellij.util.xmlb.annotations.Transient
+//    private JBColor particleColor;
+
+
+
+    private int particleRGB;
+
 
     public static PowerMode3 getInstance() {
         return ApplicationManager.getApplication().getComponent(PowerMode3.class);
     }
 
     @Override
-    public void initComponent() {
+    public void initializeComponent() {
+
+        this.particleColor = new JBColor(new Color(this.getParticleRGB()), new Color(this.getParticleRGB()));
 
         final EditorActionManager editorActionManager = EditorActionManager.getInstance();
         final EditorFactory editorFactory = EditorFactory.getInstance();
@@ -106,32 +130,60 @@ public class PowerMode3 implements BaseComponent,
 //        XmlSerializerUtil.copyBean(state, this);
 //    }
 
-    public boolean isEnabled() {
-        return enabled;
-    }
 
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    static class State {
-        public String value;
-        public int lifetime=15;
-    }
-
-    State myState;
 
 
     @Nullable
     @Override
-    public PowerMode3.State getState() {
-        return myState;
+    public PowerMode3 getState() {
+        return this;
     }
 
     @Override
-    public void loadState(@NotNull PowerMode3.State state) {
-        myState = state;
+    public void loadState(@NotNull PowerMode3 state) {
+        System.out.println("prevous state found -- setting up...");
+
+//        Color c = new Color(particleRGB);
+//        this.setParticleColor(c);
+        XmlSerializerUtil.copyBean(state, this);
+
+//        this.particleColor = JBColor.darkGray;
     }
+
+
+
+    @Override
+    public void noStateLoaded() {
+//        this.setParticleColor(c);
+        System.out.println("NO State loaded previously");
+         this.setParticleRGB(JBColor.darkGray.getRGB());
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+
+    public int getLifetime() { return lifetime; }
+    public void setLifetime(int l) { lifetime=l;}
+    public int getParticleSize() { return particleSize;}
+    public void setParticleSize(int p) {particleSize=p;}
+
+    public int getParticleRGB() {     return particleRGB; }
+    public void setParticleRGB(int particleRGB) {
+        this.particleRGB = particleRGB;
+        this.particleColor = new JBColor(new Color(particleRGB), new Color(particleRGB));
+    }
+
+//    public JBColor getParticleColor() {
+//        return new JBColor(new Color(this.particleRGB), new Color(this.particleRGB));
+//
+//    }
+//    public void setParticleColor(JBColor particleColor) {
+//        this.particleRGB = particleColor.getRGB();
+//    }
 }
 

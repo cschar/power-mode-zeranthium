@@ -13,12 +13,17 @@
     <depends>com.intellij.modules.lang</depends>
     -->
 
+<!--    see config options here-->
+<!--    https://www.jetbrains.org/intellij/sdk/docs/basics/plugin_structure/plugin_configuration_file.html-->
     <application-components>
 <!--        <component>-->
 <!--            <implementation-class>com.cschar.pmode3.MyBaseComponent</implementation-class>-->
 <!--        </component>-->
         <component>
             <implementation-class>com.cschar.pmode3.PowerMode3</implementation-class>
+            <!-- Component's interface class -->
+<!--            how do i use this?-->
+<!--            <interface-class>com.cschar.pmode3.MenuConfigurableUI</interface-class>-->
         </component>`
 
 
@@ -26,10 +31,19 @@
 
     <extensions defaultExtensionNs="com.intellij">
 
-        <toolWindow id="My Sample Tool Window"
-                    icon="/plus.png"
-                    anchor="right"
-                    factoryClass="dk.lost_world.DummyWindowFactory"/>
+<!--        see file below for an explanation -->
+<!--        com.intellij.openapi.options.ConfigurableEP-->
+
+        <applicationConfigurable groupId="appearance"
+                                 groupWeight="20"
+                                 id="power.mode3"
+                                 displayName="Power mode 3 3 3"
+                                 instance="com.cschar.pmode3.PowerMode3Configurable" />
+
+<!--        <toolWindow id="My Sample Tool Window"-->
+<!--                    icon="/plus.png"-->
+<!--                    anchor="right"-->
+<!--                    factoryClass="dk.lost_world.DummyWindowFactory"/>-->
 
     </extensions>
 

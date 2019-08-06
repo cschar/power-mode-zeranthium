@@ -71,15 +71,27 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
     public void addParticle(int x, int y) {
         //TODO configurable
+        PowerMode3 settings = PowerMode3.getInstance();
+
         int dx, dy;
         dx = (int) (Math.random() * 4) * (Math.random() > 0.5 ? -1 : 1);
         dy = (int) (Math.random() * -3 - 1);
 
-        int size = (int) (Math.random() * 3 + 1);
+//        int size = (int) (Math.random() * 3 + 1);
+        int size = (int) (Math.random() * settings.getParticleSize() + 1);
         int life = 45;
-        int lifeSetting = PowerMode3.getInstance().myState.lifetime;
-        final Particle e = new Particle(x, y, dx, dy, size, life, JBColor.darkGray);
+        int lifeSetting = settings.getLifetime();
+        final Particle e = new Particle(x, y, dx, dy, size, lifeSetting, settings.particleColor);
+//        final Particle e = new Particle(x, y, dx, dy, size, lifeSetting, JBColor.darkGray);
         particles.add(e);
+
+        dx = (int) (Math.random() * 4) * (Math.random() > 0.5 ? -1 : 1);
+        dy = (int) (Math.random() * 3 + 1);
+        y = y + 20;
+
+        final Particle e2 = new Particle(x, y, dx, dy, size, lifeSetting, settings.particleColor);
+//        final Particle e2 = new Particle(x, y, dx, dy, size, lifeSetting, JBColor.darkGray);
+        particles.add(e2);
     }
 
     public void renderParticles(Graphics g) {
