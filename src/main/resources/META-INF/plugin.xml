@@ -1,0 +1,47 @@
+<idea-plugin>
+    <id>main.java.dk.lost_world</id>
+    <name>pluginnn</name>
+    <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+
+    <description><![CDATA[
+    test description <h1> yes </h1> must be lgneth greater than 40
+    ]]></description>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <application-components>
+<!--        <component>-->
+<!--            <implementation-class>com.cschar.pmode3.MyBaseComponent</implementation-class>-->
+<!--        </component>-->
+        <component>
+            <implementation-class>com.cschar.pmode3.PowerMode3</implementation-class>
+        </component>`
+
+
+    </application-components>
+
+    <extensions defaultExtensionNs="com.intellij">
+
+        <toolWindow id="My Sample Tool Window"
+                    icon="/plus.png"
+                    anchor="right"
+                    factoryClass="dk.lost_world.DummyWindowFactory"/>
+
+    </extensions>
+
+    <actions>
+
+
+<!--        <action id="EditorIllustration"-->
+<!--                class="dk.lost_world.TypeActionBooma"-->
+<!--                text="Editor Handler [][][]"-->
+<!--                description="illustrates how to plug an action in ">-->
+
+<!--            <add-to-group group-id="EditorPopupMenu" anchor="last"/>-->
+<!--        </action>-->
+    </actions>
+</idea-plugin>
