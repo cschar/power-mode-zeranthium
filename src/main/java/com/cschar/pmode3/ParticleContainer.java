@@ -77,6 +77,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
         int size = (int) (Math.random() * 3 + 1);
         int life = 45;
+        int lifeSetting = PowerMode3.getInstance().myState.lifetime;
         final Particle e = new Particle(x, y, dx, dy, size, life, JBColor.darkGray);
         particles.add(e);
     }

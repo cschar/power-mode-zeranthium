@@ -33,8 +33,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-public class PowerMode3 implements BaseComponent {
-
+//https://www.jetbrains.org/intellij/sdk/docs/basics/persisting_state_of_components.html#defining-the-storage-location
+@State(
+        name = "PowerMode3",
+        storages = {@Storage(value = "$APP_CONFIG$/power.mode3.xml")}
+        //storages = {@Storage(com.cschar.pmode3.xml")}
+)
+public class PowerMode3 implements BaseComponent,
+        PersistentStateComponent<PowerMode3.State> {
+    //https://www.jetbrains.org/intellij/sdk/docs/basics/persisting_state_of_components.html#implementing-the-persistentstatecomponent-interface
 
     @com.intellij.util.xmlb.annotations.Transient
     private ParticleContainerManager particleContainerManager;
@@ -74,6 +81,7 @@ public class PowerMode3 implements BaseComponent {
     }
 
 
+
     @Override
     public void disposeComponent() {
         particleContainerManager.dispose();
@@ -102,8 +110,28 @@ public class PowerMode3 implements BaseComponent {
         return enabled;
     }
 
+
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    static class State {
+        public String value;
+        public int lifetime=15;
+    }
+
+    State myState;
+
+
+    @Nullable
+    @Override
+    public PowerMode3.State getState() {
+        return myState;
+    }
+
+    @Override
+    public void loadState(@NotNull PowerMode3.State state) {
+        myState = state;
     }
 }
 
