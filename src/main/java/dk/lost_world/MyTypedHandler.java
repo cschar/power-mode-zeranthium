@@ -1,9 +1,6 @@
 package dk.lost_world;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.application.Application;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.TypedActionHandler;
@@ -16,8 +13,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.net.URL;
-import java.util.ArrayList;
 
 
 public class MyTypedHandler implements TypedActionHandler {
@@ -32,9 +27,6 @@ public class MyTypedHandler implements TypedActionHandler {
         caretModel.moveToOffset(caretModel.getOffset() + 1);
         VisualPosition visualPosition = caretModel.getVisualPosition();
 
-
-
-        SpriteHolder spriteHolder = new SpriteHolder();
 
 
         Project project = editor.getProject();
@@ -75,7 +67,7 @@ public class MyTypedHandler implements TypedActionHandler {
                 p3.y = p3.y + editor.getComponent().getLocationOnScreen().y + 90;
 
                 JLabel spriteLabel = new JLabel();
-                spriteLabel.setIcon(new ImageIcon(getClass().getResource("/blender/0001.png")));
+                spriteLabel.setIcon(new ImageIcon(getClass().getResource("/blender/cube/0001.png")));
 
                 JBPopupFactory.getInstance().createBalloonBuilder(spriteLabel)
                         .setFadeoutTime(1000)
@@ -87,7 +79,7 @@ public class MyTypedHandler implements TypedActionHandler {
                 p4.y = p4.y + editor.getComponent().getLocationOnScreen().y - 90;
 
                 JLabel spriteLabel2 = new JLabel();
-                spriteLabel2.setIcon(new ImageIcon(getClass().getResource("/blender/0002.png")));
+                spriteLabel2.setIcon(new ImageIcon(getClass().getResource("/blender/cube/0002.png")));
                 spriteLabel2.setOpaque(false);
 
 //                MyPanel myPanel = new MyPanel(p4);

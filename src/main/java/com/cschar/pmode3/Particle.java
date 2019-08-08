@@ -23,13 +23,13 @@ import java.awt.*;
  * @author Baptiste Mesta
  */
 public class Particle {
-    private int x;
-    private int y;
-    private final int dx;
-    private final int dy;
-    private final int size;
-    private int life;
-    private final Color c;
+    int x;
+    int y;
+    final int dx;
+    final int dy;
+    final int size;
+    int life;
+    final Color c;
 
     public Particle(int x, int y, int dx, int dy, int size, int life, Color c) {
         this.x = x;

@@ -15,7 +15,6 @@ package com.cschar.pmode3;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.ui.JBColor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -81,17 +80,25 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         int size = (int) (Math.random() * settings.getParticleSize() + 1);
         int life = 45;
         int lifeSetting = settings.getLifetime();
-        final Particle e = new Particle(x, y, dx, dy, size, lifeSetting, settings.particleColor);
-//        final Particle e = new Particle(x, y, dx, dy, size, lifeSetting, JBColor.darkGray);
-        particles.add(e);
 
-        dx = (int) (Math.random() * 4) * (Math.random() > 0.5 ? -1 : 1);
-        dy = (int) (Math.random() * 3 + 1);
-        y = y + 20;
+        if (settings.getSpriteTypeEnabled() == 1){
+            final ParticleSpriteLightning e = new ParticleSpriteLightning(x, y, dx, dy, size, lifeSetting, settings.particleColor);
+            particles.add(e);
 
-        final Particle e2 = new Particle(x, y, dx, dy, size, lifeSetting, settings.particleColor);
-//        final Particle e2 = new Particle(x, y, dx, dy, size, lifeSetting, JBColor.darkGray);
-        particles.add(e2);
+        }else if(settings.getSpriteTypeEnabled() == 2){
+
+        }else {
+
+            final Particle e = new Particle(x, y, dx, dy, size, lifeSetting, settings.particleColor);
+            particles.add(e);
+
+            dx = (int) (Math.random() * 4) * (Math.random() > 0.5 ? -1 : 1);
+            dy = (int) (Math.random() * 3 + 1);
+            y = y + 20;
+
+            final Particle e2 = new Particle(x, y, dx, dy, size, lifeSetting, settings.particleColor);
+            particles.add(e2);
+        }
     }
 
     public void renderParticles(Graphics g) {

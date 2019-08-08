@@ -59,8 +59,9 @@ public class PowerMode3 implements BaseComponent,
     public Color particleColor;
 
     private boolean enabled = true;
-    private int lifetime = 60;
+    private int lifetime = 200;
     private int particleSize = 3;
+    private int spriteTypeEnabled = 0;
 
 //    @com.intellij.util.xmlb.annotations.Transient
 //    private JBColor particleColor;
@@ -178,6 +179,14 @@ public class PowerMode3 implements BaseComponent,
     public void setParticleRGB(int particleRGB) {
         this.particleRGB = particleRGB;
         this.particleColor = new JBColor(new Color(particleRGB), new Color(particleRGB));
+    }
+
+    public int getSpriteTypeEnabled() {
+        return spriteTypeEnabled;
+    }
+
+    public void setSpriteTypeEnabled(int spriteTypeEnabled) {
+        this.spriteTypeEnabled = spriteTypeEnabled;
     }
 
 //    public JBColor getParticleColor() {

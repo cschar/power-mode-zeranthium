@@ -1,10 +1,7 @@
 package com.cschar.pmode3;
 
-import com.bmesta.powermode.PowerMode;
 import com.intellij.openapi.options.ConfigurableUi;
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.JBColor;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,6 +16,13 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private JSlider sliderMaxSize;
     private JButton chooseColorButton;
     private JLabel particleColorLabel;
+    private JCheckBox enableLightningCheckBox;
+    private JCheckBox enableLizardCheckBox;
+    private JRadioButton radioButton1;
+    private JRadioButton radioButton2;
+    private JRadioButton radioButton3;
+    private JRadioButton radioButton4;
+    private JRadioButton radioButton5;
 
     public MenuConfigurableUI(PowerMode3 powerMode3) {
         isEnabledCheckBox.setSelected(powerMode3.isEnabled());
@@ -26,40 +30,31 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
         sliderMaxSize.setValue(powerMode3.getParticleSize());
 
-
         particleColorLabel.setOpaque(true); //to show background  https://stackoverflow.com/a/2380328/403403
         particleColorLabel.setBackground(powerMode3.particleColor);
         chooseColorButton.addActionListener(e -> clickChooseColorButton(powerMode3));
+
+        if(powerMode3.getSpriteTypeEnabled() == 1){
+            enableLightningCheckBox.setSelected(true);
+        }
+        else if(powerMode3.getSpriteTypeEnabled() == 2){
+            enableLizardCheckBox.setSelected(true);
+        }
     }
 
     private void clickChooseColorButton(PowerMode3 powerMode3){
-        JColorChooser colorChooser = new JColorChooser();
-
-
-
-//        Color newColor = JColorChooser.showDialog(this.mainPanel, "Choose particle color",
-//                                                              powerMode3.getParticleColor());
         Color newColor = JColorChooser.showDialog(this.mainPanel, "Choose particle color",
                 JBColor.darkGray);
 
-        //powerMode3.particleColor = newColor;
         powerMode3.setParticleRGB(newColor.getRGB());
         particleColorLabel.setBackground(powerMode3.particleColor);
 
     }
 
-    private void setSettings(PowerMode3 settings){
-
-//        int newLifeTime=5;
-//        newLifeTime = Integer.parseInt(lifetimeTextField.getText());
-//        lifetimeTextField.setText(String.format("%d",newLifeTime));
-    }
 
     @Override
     public void reset(@NotNull PowerMode3 settings) {
         isEnabledCheckBox.setSelected(settings.isEnabled());
-
-        //setSettings(settings);
     }
 
     @Override
@@ -89,6 +84,15 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
 
         settings.setParticleSize(sliderMaxSize.getValue());
+
+        if(enableLightningCheckBox.isSelected()){
+            settings.setSpriteTypeEnabled(1);
+        }else if(enableLizardCheckBox.isSelected()){
+            settings.setSpriteTypeEnabled(2);
+        }else{
+            settings.setSpriteTypeEnabled(0);
+        }
+
     }
 
     @NotNull
