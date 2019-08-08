@@ -1,11 +1,14 @@
 package com.cschar.pmode3;
 
+import com.cschar.pmode3.ui.LightningConfigUI;
 import com.intellij.openapi.options.ConfigurableUi;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.ui.JBColor;
+import com.intellij.ui.components.JBScrollPane;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
@@ -51,7 +54,21 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         MOMAEmitTopCheckBox.setSelected(topBotEnabled[0]);
         MOMAEmitBottomCheckBox.setSelected(topBotEnabled[1]);
 
+        setCustom();
+    }
 
+    private void setCustom(){
+//        JLabel jj = new JLabel();
+//        jj.setText("Hello hello");
+//        this.myCustomCreatePanel.add(jj);
+//        JPanel jp = new JPanel();
+//        jp.setPreferredSize(new Dimension(400,400));
+//        jp.setBackground(Color.cyan);
+//        this.myCustomCreatePanel.add(jp);
+//
+//        JLabel jj2 = new JLabel();
+//        jj2.setText("Hello hello");
+//        jp.add(jj2);
     }
 
     private void clickChooseColorButton(PowerMode3 powerMode3){
@@ -113,25 +130,67 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     @NotNull
     @Override
     public JComponent getComponent() {
-        return this.mainPanel;
+        JBScrollPane scrollPane = new JBScrollPane(this.mainPanel);
+
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+//        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+//        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+//        scrollPane.setBounds(50, 30, 700, 200);
+
+//        JPanel contentPane = new JPanel(null);
+//        contentPane.setPreferredSize(new Dimension(500, 400));
+//        contentPane.add(scrollPane);
+
+//        return contentPane;
+        return scrollPane;
+//        return this.mainPanel;
     }
 
-//    private void createUIComponents() {
-//        // TODO: place custom component creation code here
-//
-//        JLabel jj = new JLabel();
-//        jj.setText("Hello hello");
-//        this.myCustomCreatePanel.add(jj);
-//        JPanel jp = new JPanel();
+    //https://www.jetbrains.com/help/idea/creating-form-initialization-code.html
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+        System.out.println("custom create");
+        myCustomCreatePanel = new JPanel();
+        myCustomCreatePanel.setBorder(new EmptyBorder(10, 10, 200, 10));
+        //https://docs.oracle.com/javase/tutorial/uiswing/layout/visual.html
+        myCustomCreatePanel.setLayout(new BoxLayout(myCustomCreatePanel, BoxLayout.PAGE_AXIS));
+
+        JLabel jj = new JLabel();
+        jj.setText("Hello hello");
+        this.myCustomCreatePanel.add(jj);
+        JPanel jp = new JPanel();
+        jp.setLayout(new BoxLayout(jp, BoxLayout.PAGE_AXIS));
 //        jp.setPreferredSize(new Dimension(400,400));
-//        jp.setBackground(Color.cyan);
-//        this.myCustomCreatePanel.add(jp);
-//
-//        JLabel jj2 = new JLabel();
-//        jj2.setText("Hello hello");
-//        jp.add(jj2);
-//
-//
-//
-//    }
+        jp.setBackground(Color.cyan);
+        this.myCustomCreatePanel.add(jp);
+
+        for(int i =0; i < 10; i++) {
+            JLabel jj2 = new JLabel();
+            jj2.setText("Hello \n hello");
+            jp.add(jj2);
+        }
+
+        LightningConfigUI lightningConfigUI = new LightningConfigUI();
+        JComponent p = lightningConfigUI.getComponent();
+//        p.setPreferredSize(new Dimension(400,400));
+
+        this.myCustomCreatePanel.add(p);
+
+        JPanel spacer1 = new JPanel();
+        spacer1.setMinimumSize(new Dimension(100,100));
+        spacer1.setBackground(Color.GRAY);
+
+        this.myCustomCreatePanel.add(spacer1);
+
+
+        LightningConfigUI lightningConfigUI2 = new LightningConfigUI();
+        lightningConfigUI2.infoPanel.setBackground(Color.WHITE);
+
+        JComponent lcui2 = lightningConfigUI2.getComponent();
+        this.myCustomCreatePanel.add(lcui2);
+
+        JPanel lizardPanel = new JPanel();
+    }
+
 }
