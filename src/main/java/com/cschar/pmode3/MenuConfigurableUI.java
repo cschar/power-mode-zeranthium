@@ -18,21 +18,23 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private JLabel particleColorLabel;
     private JCheckBox enableLightningCheckBox;
     private JCheckBox enableLizardCheckBox;
-    private JRadioButton radioButton1;
-    private JRadioButton radioButton2;
-    private JRadioButton radioButton3;
-    private JRadioButton radioButton4;
-    private JRadioButton radioButton5;
+    private JCheckBox enableMOMACheckBox;
+    private JCheckBox MOMAEmitBottomCheckBox;
+    private JCheckBox MOMAEmitTopCheckBox;
+    private JPanel myCustomCreatePanel;
+    private JCheckBox enableBasicParticleCheckBox;
 
     public MenuConfigurableUI(PowerMode3 powerMode3) {
         isEnabledCheckBox.setSelected(powerMode3.isEnabled());
         lifetimeTextField.setText(Integer.toString(powerMode3.getLifetime()));
-
         sliderMaxSize.setValue(powerMode3.getParticleSize());
 
         particleColorLabel.setOpaque(true); //to show background  https://stackoverflow.com/a/2380328/403403
         particleColorLabel.setBackground(powerMode3.particleColor);
         chooseColorButton.addActionListener(e -> clickChooseColorButton(powerMode3));
+
+
+        enableBasicParticleCheckBox.setSelected(powerMode3.getBasicParticleEnabled());
 
         if(powerMode3.getSpriteTypeEnabled() == 1){
             enableLightningCheckBox.setSelected(true);
@@ -81,9 +83,10 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         }
 
         settings.setLifetime(newLifetime);
-
-
         settings.setParticleSize(sliderMaxSize.getValue());
+
+
+        settings.setBasicParticleEnabled(enableBasicParticleCheckBox.isSelected());
 
         if(enableLightningCheckBox.isSelected()){
             settings.setSpriteTypeEnabled(1);
@@ -100,4 +103,23 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     public JComponent getComponent() {
         return this.mainPanel;
     }
+
+//    private void createUIComponents() {
+//        // TODO: place custom component creation code here
+//
+//        JLabel jj = new JLabel();
+//        jj.setText("Hello hello");
+//        this.myCustomCreatePanel.add(jj);
+//        JPanel jp = new JPanel();
+//        jp.setPreferredSize(new Dimension(400,400));
+//        jp.setBackground(Color.cyan);
+//        this.myCustomCreatePanel.add(jp);
+//
+//        JLabel jj2 = new JLabel();
+//        jj2.setText("Hello hello");
+//        jp.add(jj2);
+//
+//
+//
+//    }
 }

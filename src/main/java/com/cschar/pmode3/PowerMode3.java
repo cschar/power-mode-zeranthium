@@ -34,7 +34,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
-
+import java.util.HashMap;
+import java.util.Map;
 
 
 //https://corochann.com/intellij-plugin-development-introduction-persiststatecomponent-903.html
@@ -62,13 +63,24 @@ public class PowerMode3 implements BaseComponent,
     private int lifetime = 200;
     private int particleSize = 3;
     private int spriteTypeEnabled = 0;
+    private int particleRGB;
+
+    private Map<String,String> configMap = new HashMap<String,String>(){{
+            put("basicParticleEnabled", "true");
+        }};
 
 //    @com.intellij.util.xmlb.annotations.Transient
 //    private JBColor particleColor;
 
+    //LOMBOK would help here... wouldnt have to do these pesky getter/setters
+    public void setBasicParticleEnabled(Boolean enabled){
+        configMap.put("basicParticleEnabled", enabled.toString());
+    }
+    public boolean getBasicParticleEnabled(){
+        return Boolean.parseBoolean(configMap.get("basicParticleEnabled"));
+    }
 
 
-    private int particleRGB;
 
 
     public static PowerMode3 getInstance() {
@@ -118,18 +130,6 @@ public class PowerMode3 implements BaseComponent,
     public String getComponentName() {
         return "PowerMode";
     }
-
-
-//    @Nullable
-//    @Override
-//    public PowerMode3 getState() {
-//        return this;
-//    }
-//
-//    @Override
-//    public void loadState(PowerMode3 state) {
-//        XmlSerializerUtil.copyBean(state, this);
-//    }
 
 
 

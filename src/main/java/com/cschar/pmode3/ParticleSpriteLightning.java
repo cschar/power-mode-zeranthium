@@ -59,7 +59,7 @@ public class ParticleSpriteLightning extends Particle{
 
     public ParticleSpriteLightning(int x, int y, int dx, int dy, int size, int life, Color c) {
         super(x,y,dx,dy,size,life,c);
-
+        sprite = sprites.get(0);
     }
 
     public boolean update() {
@@ -82,18 +82,6 @@ public class ParticleSpriteLightning extends Particle{
             width),
             redSquare = new Rectangle(gap, gap, width, width);
 
-    private void drawSquares(Graphics2D g2d, float alpha) {
-        Composite originalComposite = g2d.getComposite();
-
-        g2d.setComposite(makeComposite(alpha));
-        g2d.setPaint(Color.blue);
-        g2d.fill(blueSquare);
-
-        g2d.setPaint(Color.red);
-        g2d.fill(redSquare);
-        g2d.setComposite(originalComposite);
-    }
-
     @Override
     public void render(Graphics g) {
 
@@ -105,9 +93,6 @@ public class ParticleSpriteLightning extends Particle{
 
             AffineTransform at = new AffineTransform();
             at.translate((int)x ,(int)y );
-//            at.rotate(Math.PI/2 + angle);
-            //at.translate(-sprite.getWidth()/2, -sprite.getHeight()/2);
-            //drawSquares(g2d, 0.2f);
 
             Composite originalComposite = g2d.getComposite();
             g2d.setComposite(makeComposite(0.5f));
@@ -115,8 +100,8 @@ public class ParticleSpriteLightning extends Particle{
             at.translate(-sprite.getWidth()/2 - 20, -sprite.getHeight()/2 - 20);
 //            g2d.drawImage(sprite, at, null);
 
-            //every 5 updates, increment frame, this controls how fast it animates
-            if( this.life % 5 == 0){
+            //every X updates, increment frame, this controls how fast it animates
+            if( this.life % 3 == 0){
                 frame += 1;
                 if (frame >= ParticleSpriteLightning.sprites.size()){
                     frame = 0;

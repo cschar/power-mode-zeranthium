@@ -25,19 +25,15 @@ import java.awt.image.BufferedImage;
 /**
  * @author Baptiste Mesta
  */
-public class ParticleSpriteMoma extends Particle{
+public class ParticleSpriteMOMA extends Particle{
 
     private BufferedImage sprite;
 
 
 
 
-    public ParticleSpriteMoma(int x, int y, int dx, int dy, int size, int life, Color c) {
+    public ParticleSpriteMOMA(int x, int y, int dx, int dy, int size, int life, Color c) {
         super(x,y,dx,dy,size,life,c);
-
-        try{
-            sprite = ImageIO.read(getClass().getResource("/cube11.png"));
-        } catch(Exception e){e.printStackTrace();}
 
     }
 
@@ -95,7 +91,7 @@ public class ParticleSpriteMoma extends Particle{
             g2d.setComposite(makeComposite(0.5f));
 
             at.translate(-sprite.getWidth()/2 - 20, -sprite.getHeight()/2 - 20);
-            g2d.drawImage(sprite, at, null);
+
             //g2d.setComposite(originalComposite);
 
 

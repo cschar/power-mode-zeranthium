@@ -85,10 +85,13 @@ public class ParticleContainer extends JComponent implements ComponentListener {
             final ParticleSpriteLightning e = new ParticleSpriteLightning(x, y, dx, dy, size, lifeSetting, settings.particleColor);
             particles.add(e);
 
-        }else if(settings.getSpriteTypeEnabled() == 2){
+        }
 
-        }else {
+        if(settings.getSpriteTypeEnabled() == 2){
 
+        }
+
+        if(settings.getBasicParticleEnabled()) {
             final Particle e = new Particle(x, y, dx, dy, size, lifeSetting, settings.particleColor);
             particles.add(e);
 
@@ -99,6 +102,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
             final Particle e2 = new Particle(x, y, dx, dy, size, lifeSetting, settings.particleColor);
             particles.add(e2);
         }
+
     }
 
     public void renderParticles(Graphics g) {
