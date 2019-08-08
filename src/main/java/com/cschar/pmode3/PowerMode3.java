@@ -133,9 +133,11 @@ public class PowerMode3 implements BaseComponent,
 
 
 
+
     @Nullable
     @Override
     public PowerMode3 getState() {
+        //http://www.jetbrains.org/intellij/sdk/docs/basics/persisting_state_of_components.html#persistent-component-lifecycle
         return this;
     }
 
