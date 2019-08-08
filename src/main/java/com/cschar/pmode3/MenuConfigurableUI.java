@@ -36,12 +36,22 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
         enableBasicParticleCheckBox.setSelected(powerMode3.getBasicParticleEnabled());
 
-        if(powerMode3.getSpriteTypeEnabled() == 1){
+
+        if(powerMode3.getSpriteTypeEnabled(PowerMode3.SpriteType.LIGHTNING)){
             enableLightningCheckBox.setSelected(true);
         }
-        else if(powerMode3.getSpriteTypeEnabled() == 2){
+        if(powerMode3.getSpriteTypeEnabled(PowerMode3.SpriteType.LIZARD)){
             enableLizardCheckBox.setSelected(true);
         }
+        if(powerMode3.getSpriteTypeEnabled(PowerMode3.SpriteType.MOMA)){
+            enableMOMACheckBox.setSelected(true);
+        }
+
+        boolean[] topBotEnabled = powerMode3.getSpriteTypeDirections(PowerMode3.SpriteType.MOMA);
+        MOMAEmitTopCheckBox.setSelected(topBotEnabled[0]);
+        MOMAEmitBottomCheckBox.setSelected(topBotEnabled[1]);
+
+
     }
 
     private void clickChooseColorButton(PowerMode3 powerMode3){
@@ -50,6 +60,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
         powerMode3.setParticleRGB(newColor.getRGB());
         particleColorLabel.setBackground(powerMode3.particleColor);
+
 
     }
 
@@ -85,16 +96,17 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         settings.setLifetime(newLifetime);
         settings.setParticleSize(sliderMaxSize.getValue());
 
-
+        //basic particle
         settings.setBasicParticleEnabled(enableBasicParticleCheckBox.isSelected());
 
-        if(enableLightningCheckBox.isSelected()){
-            settings.setSpriteTypeEnabled(1);
-        }else if(enableLizardCheckBox.isSelected()){
-            settings.setSpriteTypeEnabled(2);
-        }else{
-            settings.setSpriteTypeEnabled(0);
-        }
+        //lightning
+        settings.setSpriteTypeEnabled(enableLightningCheckBox.isSelected(), PowerMode3.SpriteType.LIGHTNING);
+        //lizard
+        settings.setSpriteTypeEnabled(enableLizardCheckBox.isSelected(), PowerMode3.SpriteType.LIZARD);
+        //MOMA
+        settings.setSpriteTypeEnabled(enableMOMACheckBox.isSelected(), PowerMode3.SpriteType.MOMA);
+        settings.setSpriteTypeDirections(PowerMode3.SpriteType.MOMA, MOMAEmitTopCheckBox.isSelected(), MOMAEmitBottomCheckBox.isSelected());
+
 
     }
 

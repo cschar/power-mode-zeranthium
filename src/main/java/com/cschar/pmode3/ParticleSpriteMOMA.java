@@ -30,8 +30,6 @@ public class ParticleSpriteMOMA extends Particle{
     private BufferedImage sprite;
 
 
-
-
     public ParticleSpriteMOMA(int x, int y, int dx, int dy, int size, int life, Color c) {
         super(x,y,dx,dy,size,life,c);
 
@@ -84,15 +82,11 @@ public class ParticleSpriteMOMA extends Particle{
             AffineTransform at = new AffineTransform();
             at.translate((int)x ,(int)y );
 //            at.rotate(Math.PI/2 + angle);
-            at.translate(-sprite.getWidth()/2, -sprite.getHeight()/2);
+
             drawSquares(g2d, 0.2f);
 
             Composite originalComposite = g2d.getComposite();
             g2d.setComposite(makeComposite(0.5f));
-
-            at.translate(-sprite.getWidth()/2 - 20, -sprite.getHeight()/2 - 20);
-
-            //g2d.setComposite(originalComposite);
 
 
 

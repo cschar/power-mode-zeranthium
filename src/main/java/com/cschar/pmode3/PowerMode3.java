@@ -30,6 +30,7 @@ import com.intellij.openapi.editor.actionSystem.TypedAction;
 import com.intellij.openapi.editor.actionSystem.TypedActionHandler;
 import com.intellij.ui.JBColor;
 import com.intellij.util.xmlb.XmlSerializerUtil;
+import dk.lost_world.SpriteA;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,7 +58,7 @@ public class PowerMode3 implements BaseComponent,
     private ParticleContainerManager particleContainerManager;
 
     @com.intellij.util.xmlb.annotations.Transient
-    public Color particleColor;
+    Color particleColor;
 
     private boolean enabled = true;
     private int lifetime = 200;
@@ -65,20 +66,60 @@ public class PowerMode3 implements BaseComponent,
     private int spriteTypeEnabled = 0;
     private int particleRGB;
 
-    private Map<String,String> configMap = new HashMap<String,String>(){{
-            put("basicParticleEnabled", "true");
-        }};
+    public enum SpriteType{
+        LIGHTNING,
+        LIZARD,
+        MOMA
+    }
 
-//    @com.intellij.util.xmlb.annotations.Transient
-//    private JBColor particleColor;
+    //consider JSON https://stackabuse.com/reading-and-writing-json-in-java/ ??
+    @com.intellij.util.xmlb.annotations.MapAnnotation  //this tells it to copy its inner values, wont serialize without it
+    private Map<String,String> configMap = new HashMap<String,String>(){{
+        put("basicParticleEnabled", "true");
+        put("sprite"+ SpriteType.LIGHTNING + "Enabled", "false");
+        put("sprite"+ SpriteType.LIZARD + "Enabled", "false");
+
+        put("sprite"+ SpriteType.MOMA+ "Enabled", "false");
+        put(String.format("sprite%sEmitTop", SpriteType.MOMA), "true");
+        put(String.format("sprite%sEmitBottom", SpriteType.MOMA), "true");
+    }};
+
+
+    //good lord
+    boolean[] getSpriteTypeDirections(SpriteType type){
+        boolean[] directions = new boolean[]{
+                Boolean.parseBoolean(configMap.get("sprite" + type + "EmitTop")),
+                Boolean.parseBoolean(configMap.get("sprite" + type + "EmitBottom"))
+        };
+        return directions;
+    }
+    void setSpriteTypeDirections(SpriteType type, Boolean top, Boolean bottom){
+        configMap.put(String.format("sprite%sEmitTop", type), top.toString());
+        configMap.put(String.format("sprite%sEmitBottom", type), bottom.toString());
+    }
+
+    void setSpriteTypeEnabled(Boolean enabled, SpriteType type){
+        configMap.put("sprite" + type + "Enabled", enabled.toString());
+    }
+    boolean getSpriteTypeEnabled(SpriteType type){
+        return Boolean.parseBoolean(configMap.get("sprite"+type+"Enabled"));
+    }
 
     //LOMBOK would help here... wouldnt have to do these pesky getter/setters
-    public void setBasicParticleEnabled(Boolean enabled){
+    void setBasicParticleEnabled(Boolean enabled){
         configMap.put("basicParticleEnabled", enabled.toString());
     }
-    public boolean getBasicParticleEnabled(){
+    boolean getBasicParticleEnabled(){
         return Boolean.parseBoolean(configMap.get("basicParticleEnabled"));
     }
+
+
+
+
+
+
+
+
 
 
 
@@ -128,7 +169,7 @@ public class PowerMode3 implements BaseComponent,
     @NotNull
     @Override
     public String getComponentName() {
-        return "PowerMode";
+        return "PowerMode3";
     }
 
 
@@ -181,20 +222,7 @@ public class PowerMode3 implements BaseComponent,
         this.particleColor = new JBColor(new Color(particleRGB), new Color(particleRGB));
     }
 
-    public int getSpriteTypeEnabled() {
-        return spriteTypeEnabled;
-    }
 
-    public void setSpriteTypeEnabled(int spriteTypeEnabled) {
-        this.spriteTypeEnabled = spriteTypeEnabled;
-    }
 
-//    public JBColor getParticleColor() {
-//        return new JBColor(new Color(this.particleRGB), new Color(this.particleRGB));
-//
-//    }
-//    public void setParticleColor(JBColor particleColor) {
-//        this.particleRGB = particleColor.getRGB();
-//    }
 }
 

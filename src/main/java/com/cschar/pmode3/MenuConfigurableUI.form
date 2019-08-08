@@ -176,22 +176,6 @@
               <text value="Which directions:"/>
             </properties>
           </component>
-          <component id="40a3a" class="javax.swing.JCheckBox" binding="MOMAEmitBottomCheckBox" default-binding="true">
-            <constraints>
-              <grid row="4" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="MOMA emit Bottom"/>
-            </properties>
-          </component>
-          <component id="99a0f" class="javax.swing.JCheckBox" binding="MOMAEmitTopCheckBox" default-binding="true">
-            <constraints>
-              <grid row="5" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="MOMA emit Top"/>
-            </properties>
-          </component>
           <component id="bc202" class="javax.swing.JCheckBox" binding="enableBasicParticleCheckBox" default-binding="true">
             <constraints>
               <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -199,6 +183,22 @@
             <properties>
               <selected value="true"/>
               <text value="Enable Basic Particle"/>
+            </properties>
+          </component>
+          <component id="40a3a" class="javax.swing.JCheckBox" binding="MOMAEmitBottomCheckBox" default-binding="true">
+            <constraints>
+              <grid row="5" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="MOMA emit Bottom"/>
+            </properties>
+          </component>
+          <component id="99a0f" class="javax.swing.JCheckBox" binding="MOMAEmitTopCheckBox" default-binding="true">
+            <constraints>
+              <grid row="4" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="MOMA emit Top"/>
             </properties>
           </component>
         </children>

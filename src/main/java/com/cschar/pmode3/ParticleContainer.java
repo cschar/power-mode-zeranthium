@@ -81,15 +81,28 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         int life = 45;
         int lifeSetting = settings.getLifetime();
 
-        if (settings.getSpriteTypeEnabled() == 1){
+        if (settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LIGHTNING)){
             final ParticleSpriteLightning e = new ParticleSpriteLightning(x, y, dx, dy, size, lifeSetting, settings.particleColor);
             particles.add(e);
 
         }
 
-        if(settings.getSpriteTypeEnabled() == 2){
+        if (settings.getSpriteTypeEnabled(PowerMode3.SpriteType.MOMA)){
 
+            if(settings.getSpriteTypeDirections(PowerMode3.SpriteType.MOMA)[0]) {
+                final ParticleSpriteMOMA e = new ParticleSpriteMOMA(x, y, dx, dy, size, lifeSetting, settings.particleColor);
+                particles.add(e);
+            }
+            if(settings.getSpriteTypeDirections(PowerMode3.SpriteType.MOMA)[1]) {
+                int momaDx = (int) (Math.random() * 4) * (Math.random() > 0.5 ? -1 : 1);
+                int momaDy = (int) (Math.random() * 3 + 1);
+                int momaY = y + 60;
+
+                final ParticleSpriteMOMA e3 = new ParticleSpriteMOMA(x, momaY, momaDx, momaDy, size, lifeSetting, settings.particleColor);
+                particles.add(e3);
+            }
         }
+
 
         if(settings.getBasicParticleEnabled()) {
             final Particle e = new Particle(x, y, dx, dy, size, lifeSetting, settings.particleColor);

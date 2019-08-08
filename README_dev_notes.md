@@ -1,4 +1,7 @@
 
+Other styles:
+https://github.com/codeinthedark/awesome-power-mode
+
 
 
 Notes on plugin Dev:
