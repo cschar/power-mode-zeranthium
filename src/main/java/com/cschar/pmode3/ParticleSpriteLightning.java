@@ -20,6 +20,7 @@ package com.cschar.pmode3;
 
 import com.intellij.util.ui.UIUtil;
 import dk.lost_world.MyTypedHandler;
+import kotlin.random.Random;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -28,9 +29,10 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 
-/**
- * @author Baptiste Mesta
- */
+
+import java.util.concurrent.ThreadLocalRandom;
+
+
 public class ParticleSpriteLightning extends Particle{
     private static BufferedImage loadSprite(String name){
         try {
@@ -47,8 +49,11 @@ public class ParticleSpriteLightning extends Particle{
 
 
         sprites = new ArrayList<BufferedImage>();
-        for(int i=1; i <= 25; i++){
-            sprites.add(loadSprite(String.format("/blender/cube/00%02d.png", i)));
+//        for(int i=1; i <= 25; i++){
+//            sprites.add(loadSprite(String.format("/blender/cube/00%02d.png", i)));
+//        }
+        for(int i=1; i <= 150; i++){
+            sprites.add(loadSprite(String.format("/blender/lightning/lightning10%03d.png", i)));
         }
         System.out.println("LightningSprites initialized");
     }
@@ -57,9 +62,23 @@ public class ParticleSpriteLightning extends Particle{
 
     private int frame = 0;
 
+    private int origX,origY;
+
+    private boolean makeLightningBeam = false;
+
     public ParticleSpriteLightning(int x, int y, int dx, int dy, int size, int life, Color c) {
         super(x,y,dx,dy,size,life,c);
         sprite = sprites.get(0);
+
+        origX = x;
+        origY = y;
+
+        int randomNum = ThreadLocalRandom.current().nextInt(1, 100 +1);
+//        System.out.println(randomNum);
+        if(randomNum < 10){
+            makeLightningBeam = true;
+            this.life = 1000;
+        }
     }
 
     public boolean update() {
@@ -69,18 +88,13 @@ public class ParticleSpriteLightning extends Particle{
         return life <= 0;
     }
 
-    private static int gap=10, width=60, offset=20,
-            deltaX=gap+width+offset;
+
 
     private AlphaComposite makeComposite(float alpha) {
         int type = AlphaComposite.SRC_OVER;
         return(AlphaComposite.getInstance(type, alpha));
     }
 
-    private Rectangle
-            blueSquare = new Rectangle(gap+offset, gap+offset, width,
-            width),
-            redSquare = new Rectangle(gap, gap, width, width);
 
     @Override
     public void render(Graphics g) {
@@ -88,28 +102,28 @@ public class ParticleSpriteLightning extends Particle{
         if (life > 0) {
             Graphics2D g2d = (Graphics2D) g.create();
             g2d.setColor(c);
-            g2d.fillRect(x - (size / 2), y - (size / 2), size, size);
+            g2d.fillRect(origX - (size / 2), origY - (size / 2), size, size);
 
+            if (makeLightningBeam) {
+                AffineTransform at = new AffineTransform();
+                at.translate((int)origX ,(int)origY );
+                at.translate(-sprite.getWidth()/2,
+                                 -sprite.getHeight()); //move image 100% up so lightning lands at bottom
 
-            AffineTransform at = new AffineTransform();
-            at.translate((int)x ,(int)y );
+//            Composite originalComposite = g2d.getComposite();
+                g2d.setComposite(makeComposite(0.5f));
 
-            Composite originalComposite = g2d.getComposite();
-            g2d.setComposite(makeComposite(0.5f));
-
-            at.translate(-sprite.getWidth()/2 - 20, -sprite.getHeight()/2 - 20);
-//            g2d.drawImage(sprite, at, null);
-
-            //every X updates, increment frame, this controls how fast it animates
-            if( this.life % 3 == 0){
-                frame += 1;
-                if (frame >= ParticleSpriteLightning.sprites.size()){
-                    frame = 0;
+                //every X updates, increment frame, this controls how fast it animates
+                if( this.life % 2 == 0){
+                    frame += 1;
+                    if (frame >= ParticleSpriteLightning.sprites.size()){
+                        frame = 0;
+                        life = 0;
+                    }
+                    System.out.println(String.format("frame %d - life %d", frame, life));
                 }
+                g2d.drawImage(ParticleSpriteLightning.sprites.get(frame), at, null);
             }
-
-            g2d.drawImage(ParticleSpriteLightning.sprites.get(frame), at, null);
-
 
             g2d.dispose();
         }

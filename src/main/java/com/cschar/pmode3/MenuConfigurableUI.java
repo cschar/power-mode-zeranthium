@@ -7,9 +7,13 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
 import org.jetbrains.annotations.NotNull;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private JPanel mainPanel;
@@ -157,40 +161,87 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         myCustomCreatePanel.setLayout(new BoxLayout(myCustomCreatePanel, BoxLayout.PAGE_AXIS));
 
         JLabel jj = new JLabel();
-        jj.setText("Hello hello");
+        jj.setText("Lightning Options");
         this.myCustomCreatePanel.add(jj);
-        JPanel jp = new JPanel();
-        jp.setLayout(new BoxLayout(jp, BoxLayout.PAGE_AXIS));
-//        jp.setPreferredSize(new Dimension(400,400));
-        jp.setBackground(Color.cyan);
-        this.myCustomCreatePanel.add(jp);
 
-        for(int i =0; i < 10; i++) {
-            JLabel jj2 = new JLabel();
-            jj2.setText("Hello \n hello");
-            jp.add(jj2);
-        }
 
-        LightningConfigUI lightningConfigUI = new LightningConfigUI();
+        LightningConfigUI lightningConfigUI = new LightningConfigUI(PowerMode3.getInstance());
+        lightningConfigUI.imagePreviewPanel.setBackground(Color.WHITE);
+
+        ImageIcon imageIcon = new ImageIcon(getClass().getResource("/blender/lightning/lightning10101.png"));
+        imageIcon = new ImageIcon(imageIcon.getImage().getScaledInstance(100,100, Image.SCALE_DEFAULT));
+        lightningConfigUI.imagePreviewLabel.setIcon(new ImageIcon(getClass().getResource("/blender/lightning/lightning10101.png")));
+        lightningConfigUI.imagePreviewLabel.setIcon(imageIcon);
+
         JComponent p = lightningConfigUI.getComponent();
-//        p.setPreferredSize(new Dimension(400,400));
+        p.setMaximumSize(new Dimension(1000,400));
 
         this.myCustomCreatePanel.add(p);
 
-        JPanel spacer1 = new JPanel();
-        spacer1.setMinimumSize(new Dimension(100,100));
-        spacer1.setBackground(Color.GRAY);
+        this.myCustomCreatePanel.add(this.createSpacer());
 
-        this.myCustomCreatePanel.add(spacer1);
+//        LightningConfigUI lightningConfigUI2 = new LightningConfigUI();
+//        lightningConfigUI2.imagePreviewPanel.setBackground(Color.WHITE);
+//        JComponent lcui2 = lightningConfigUI2.getComponent();
+//        lcui2.setMaximumSize(new Dimension(500,400));
+//        this.myCustomCreatePanel.add(lcui2);
 
-
-        LightningConfigUI lightningConfigUI2 = new LightningConfigUI();
-        lightningConfigUI2.infoPanel.setBackground(Color.WHITE);
-
-        JComponent lcui2 = lightningConfigUI2.getComponent();
-        this.myCustomCreatePanel.add(lcui2);
-
+        //LIZARD
+        //Build without GUI designer
         JPanel lizardPanel = new JPanel();
+        lizardPanel.setMaximumSize(new Dimension(1000,300));
+
+        lizardPanel.setLayout(new GridLayout(0,2));
+
+        JPanel lizardPreviewPanel = new JPanel();
+        lizardPanel.add(lizardPreviewPanel);
+
+        JPanel lizardOptionPanel = new JPanel();
+        lizardOptionPanel.setLayout(new BoxLayout(lizardOptionPanel, BoxLayout.PAGE_AXIS));
+        lizardOptionPanel.add(new JLabel("Options"));
+
+        //Lizard color
+        JPanel lizardColorPanel = new JPanel();
+        JLabel lizardColorLabel = new JLabel("Lizard Color");
+        lizardColorLabel.setOpaque(true); //to show background  https://stackoverflow.com/a/2380328/403403
+        lizardColorPanel.add(lizardColorLabel);
+        JButton lizardColorPickerButton = new JButton("Pick color");
+        lizardColorPickerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Color newColor = JColorChooser.showDialog(lizardColorPanel, "Choose lizard color",
+                        JBColor.darkGray);
+
+//                PowerMode3.getInstance().setSomePersistantState
+                lizardColorLabel.setBackground(newColor);
+            }
+        });
+        lizardColorPanel.add(lizardColorPickerButton);
+        lizardOptionPanel.add(lizardColorPanel);
+
+        //lizard density
+        JPanel lop1 = new JPanel();
+        lop1.add(new JLabel("lizard density: "));
+        lop1.add(new JTextField("test"));
+
+        lizardOptionPanel.add(lop1);
+
+        lizardPanel.add(lizardOptionPanel);
+
+
+        this.myCustomCreatePanel.add(this.createSpacer());
+        this.myCustomCreatePanel.add(lizardPanel);
+
+    }
+
+
+    private JPanel createSpacer(){
+        JPanel spacer1 = new JPanel();
+        spacer1.setMinimumSize(new Dimension(100,30));
+        spacer1.setMaximumSize(new Dimension(1000,30));
+        spacer1.setBackground(Color.lightGray);
+
+        return spacer1;
     }
 
 }

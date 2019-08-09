@@ -118,7 +118,7 @@
               </grid>
             </constraints>
             <properties>
-              <text value="Label hello i am va very long label what dsklfja dfklj"/>
+              <text value=""/>
             </properties>
           </component>
           <vspacer id="a65c7">
@@ -126,14 +126,6 @@
               <grid row="0" column="3" row-span="1" col-span="2" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
             </constraints>
           </vspacer>
-          <component id="4ecc6" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Label"/>
-            </properties>
-          </component>
           <hspacer id="9ee2a">
             <constraints>
               <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -153,7 +145,8 @@
               <grid row="7" column="0" row-span="1" col-span="5" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="true"/>
             </constraints>
             <properties>
-              <background color="-5846935"/>
+              <background color="-1250068"/>
+              <enabled value="true"/>
             </properties>
             <border type="none"/>
             <children/>

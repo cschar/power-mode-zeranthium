@@ -82,7 +82,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         int lifeSetting = settings.getLifetime();
 
         if (settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LIGHTNING)){
-            final ParticleSpriteLightning e = new ParticleSpriteLightning(x, y, dx, dy, size, lifeSetting, settings.particleColor);
+            final ParticleSpriteLightning e = new ParticleSpriteLightning(x, y, dx, dy, size, lifeSetting, Color.ORANGE);
             particles.add(e);
 
         }

@@ -22,9 +22,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
-/**
- * @author Baptiste Mesta
- */
+
 public class ParticleSpriteMOMA extends Particle{
 
     private BufferedImage sprite;
@@ -69,7 +67,7 @@ public class ParticleSpriteMOMA extends Particle{
 
     @Override
     public void render(Graphics g) {
-        blueSquare = new Rectangle(x - (size / 2) - 50, y - (size / 2) - 50, width,   width);
+        blueSquare = new Rectangle(x - (size / 2) - 50, y - (size / 2) - 55, width,   width);
 
         redSquare = new Rectangle(x - (size / 2), y - (size / 2), width*2, width*2);
 
@@ -94,43 +92,5 @@ public class ParticleSpriteMOMA extends Particle{
         }
     }
 
-//    @Override
-//    public void render(Graphics g) {
-//
-//
-//        if (life > 0) {
-//            Graphics2D g2d = (Graphics2D) g.create();
-//            g2d.setColor(c);
-//            g2d.fillRect(x - (size / 2), y - (size / 2), size, size);
-//
-//
-//            AffineTransform at = new AffineTransform();
-//            at.translate((int)x ,(int)y );
-////            at.rotate(Math.PI/2 + angle);
-//            at.translate(-sprite.getWidth()/2, -sprite.getHeight()/2);
-//            g2d.drawImage(sprite, at, null);
-//
-////            if (backgroundImage != null) {
-////                //g2d.drawImage(backgroundImage, at,null);
-////            }
-////            if (overlayImage != null) {
-////                g2d.drawImage(overlayImage, at, null);
-////            }
-//
-//            g2d.dispose();
-//        }
-//    }
 
-    @Override
-    public String toString() {
-        return "Particle{" +
-                "x=" + x +
-                ", y=" + y +
-                ", dx=" + dx +
-                ", dy=" + dy +
-                ", size=" + size +
-                ", life=" + life +
-                ", c=" + c +
-                '}';
-    }
 }
