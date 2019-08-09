@@ -18,12 +18,17 @@ import com.intellij.openapi.editor.ScrollingModel;
 import com.intellij.openapi.editor.VisualPosition;
 import com.intellij.openapi.editor.event.EditorFactoryAdapter;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
+import com.intellij.psi.*;
+import com.intellij.psi.util.PsiTreeUtil;
 
 /**
  * @author Baptiste Mesta
@@ -57,6 +62,7 @@ class ParticleContainerManager extends EditorFactoryAdapter {
     @Override
     public void editorCreated(@NotNull EditorFactoryEvent event) {
         final Editor editor = event.getEditor();
+
         particleContainers.put(editor, new ParticleContainer(editor));
     }
 
@@ -66,26 +72,56 @@ class ParticleContainerManager extends EditorFactoryAdapter {
         particleContainers.remove(event.getEditor());
     }
 
-    public void update(final Editor editor) {
+    public void update(final Editor editor, PsiFile psiFile) {
+
         if (PowerMode3.getInstance().isEnabled())
             SwingUtilities.invokeLater(new Runnable() {
 
                 @Override
                 public void run() {
-                    updateInUI(editor);
+                    updateInUI(editor, psiFile);
                 }
             });
     }
 
-    private void updateInUI(Editor editor) {
+    private void updateInUI(Editor editor, PsiFile psiFile) {
         VisualPosition visualPosition = editor.getCaretModel().getVisualPosition();
         Point point = editor.visualPositionToXY(visualPosition);
         ScrollingModel scrollingModel = editor.getScrollingModel();
         point.x = point.x - scrollingModel.getHorizontalScrollOffset();
         point.y = point.y - scrollingModel.getVerticalScrollOffset();
         final ParticleContainer particleContainer = particleContainers.get(editor);
+
         if (particleContainer != null) {
             particleContainer.update(point);
+        }
+
+        int offset = editor.getCaretModel().getOffset();
+        PsiElement element = psiFile.findElementAt(offset);
+        //infoBuilder.append("Element at caret: ").append(element).append("\n");
+        if (element != null) {
+            //PsiMethod containingMethod = PsiTreeUtil.getParentOfType(element, PsiMethod.class);
+//
+//            if (containingMethod != null) {
+//                PsiClass containingClass = containingMethod.getContainingClass();
+//                infoBuilder
+//                        .append("Containing class: ")
+//                        .append(containingClass != null ? containingClass.getName() : "none")
+//                        .append("\n");
+//
+//                infoBuilder.append("Local variables:\n");
+//                containingMethod.accept(new JavaRecursiveElementVisitor() {
+//                    @Override
+//                    public void visitLocalVariable(PsiLocalVariable variable) {
+//                        super.visitLocalVariable(variable);
+//                        infoBuilder.append(variable.getName()).append("\n");
+//                    }
+//                });
+//            }
+        }
+
+        if (particleContainer != null) {
+            particleContainer.updatePsi(point);
         }
     }
 

@@ -87,6 +87,12 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
         }
 
+        if (settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LIZARD)){
+            final ParticleSpriteLizard e = new ParticleSpriteLizard(x, y, dx, dy, size, lifeSetting, Color.GREEN);
+            particles.add(e);
+
+        }
+
         if (settings.getSpriteTypeEnabled(PowerMode3.SpriteType.MOMA)){
 
             if(settings.getSpriteTypeDirections(PowerMode3.SpriteType.MOMA)[0]) {
@@ -124,6 +130,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         }
     }
 
+
     public void update(Point point) {
         //TODO configurable
         for (int i = 0; i < 7; i++) {
@@ -132,6 +139,10 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         shakeEditor(parent, 5, 5, shakeDir);
         shakeDir = !shakeDir;
         this.repaint();
+    }
+
+    public void updatePsi(Point point){
+
     }
 
     @Override

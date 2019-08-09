@@ -1,5 +1,6 @@
 package dk.lost_world;
 
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.*;
@@ -8,6 +9,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
+import com.intellij.psi.PsiFile;
 import com.intellij.ui.awt.RelativePoint;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,6 +29,7 @@ public class MyTypedHandler implements TypedActionHandler {
         caretModel.moveToOffset(caretModel.getOffset() + 1);
         VisualPosition visualPosition = caretModel.getVisualPosition();
 
+//        PsiFile psiFile = dataContext.getData(CommonDataKeys.PSI_FILE);
 
 
         Project project = editor.getProject();

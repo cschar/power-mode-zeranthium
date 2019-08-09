@@ -1,4 +1,19 @@
 
+
+#TODO:
+
+NO PSIMethod ?!!?
+
+clone and get PSI example working
+https://github.com/JetBrains/intellij-sdk-docs.git
+
+
+
+
+
+
+
+
 Other styles:
 https://github.com/codeinthedark/awesome-power-mode
 

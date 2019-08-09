@@ -20,6 +20,7 @@ package com.cschar.pmode3;
 
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
@@ -28,6 +29,7 @@ import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import com.intellij.openapi.editor.actionSystem.TypedAction;
 import com.intellij.openapi.editor.actionSystem.TypedActionHandler;
+import com.intellij.psi.PsiFile;
 import com.intellij.ui.JBColor;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import dk.lost_world.SpriteA;
@@ -147,15 +149,18 @@ public class PowerMode3 implements BaseComponent,
         typedAction.setupRawHandler(new TypedActionHandler() {
             @Override
             public void execute(@NotNull final Editor editor, final char c, @NotNull final DataContext dataContext) {
-                updateEditor(editor);
+
+                PsiFile psiFile = dataContext.getData(CommonDataKeys.PSI_FILE);
+
+                updateEditor(editor, psiFile);
                 rawHandler.execute(editor, c, dataContext);
             }
         });
     }
 
-    private void updateEditor(@NotNull final Editor editor) {
+    private void updateEditor(@NotNull final Editor editor, @NotNull final PsiFile psiFile) {
         //TODO configurable
-        particleContainerManager.update(editor);
+        particleContainerManager.update(editor, psiFile);
     }
 
 
