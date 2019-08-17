@@ -1,4 +1,10 @@
 
+TODO:
+Figure out how to traverse
+PsiElement tree
+
+
+
 
 
 To RUn project:

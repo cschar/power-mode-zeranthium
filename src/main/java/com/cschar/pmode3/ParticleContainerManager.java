@@ -13,17 +13,19 @@
 
 package com.cschar.pmode3;
 
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.ScrollingModel;
-import com.intellij.openapi.editor.VisualPosition;
+import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.event.EditorFactoryAdapter;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
 import com.intellij.psi.*;
+
+import com.intellij.psi.util.PsiElementFilter;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.util.PsiUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -93,11 +95,93 @@ class ParticleContainerManager extends EditorFactoryAdapter {
             particleContainer.update(point);
         }
 
+        PsiElementFilter whiteSpaceFilter = new PsiElementFilter() {
+            @Override
+            public boolean isAccepted(@NotNull PsiElement psiElement) {
+                if (psiElement.toString() == "PsiWhiteSpace"){
+                    return false;
+                }else {
+                    return true;
+                }
+            }
+        };
+
+
+        PsiElement dummyHead;
+        PsiElement firstChild = psiFile.getFirstChild();
+        dummyHead = firstChild;
+        ArrayList<PsiElement> allTopLevelElements = new ArrayList<PsiElement>();
+
+        while(firstChild != null){
+            allTopLevelElements.add(firstChild);
+            firstChild = firstChild.getNextSibling();
+        }
+        System.out.println(String.format("top level children length: %d", allTopLevelElements.size()));
+
+        for ( PsiElement e: allTopLevelElements) {
+            System.out.print(String.format("%s (%s) - ", e, e.getClass()));
+//            System.out.print("-- text: " + e.getText()); //gets all text of class from start to end bracket
+        // class is of type PsiClassImpl
+        }
+        System.out.println();
+
+//        PsiClass
+
+        //PsiUtil.getTopLevelClass()
+
+        //System.out.println(String.format("filtered elements: %d", PsiTreeUtil.collectElements(dummyHead,psf).length));
+
+        //https://www.jetbrains.org/intellij/sdk/docs/basics/architectural_overview/psi_elements.html#how-do-i-get-a-psi-element
         int offset = editor.getCaretModel().getOffset();
+
+        for(int i =0; i < 100; i++){
+            int surroundOffset = offset - 50 + i;
+            if(surroundOffset <= 0){ continue; }
+
+            PsiElement e = PsiUtil.getElementAtOffset(psiFile, surroundOffset);
+            if(e.toString().contains("PsiJavaToken:RBRACE") || e.toString().contains("PsiJavaToken:LBRACE")){
+                System.out.print(String.format(" %d - ", i));
+                Point offsetPoint = editor.offsetToXY(surroundOffset);
+                particleContainer.update(offsetPoint);
+                //need some method like
+                // particleContainer.updateANCHORS(offsetPoint);
+                // then any particle in system that users "Anchors" will act accordingly
+                //  E.g   LizardSpriteAnchor  --> towards anchor movement
+                //        LizardSprite      ---> normal movement
+            }
+
+
+//            PsiJavaToken:SEMICOLON
+            //PsiJavaToken:RBRACE
+            //PsiJavaToken:LBRACE
+        }
+//        CaretModel cm = editor.getCaretModel();
+
+
+
+
+//        Point point = editor.visualPositionToXY(visualPosition);
+//        ScrollingModel scrollingModel = editor.getScrollingModel();
+//        point.x = point.x - scrollingModel.getHorizontalScrollOffset();
+//        point.y = point.y - scrollingModel.getVerticalScrollOffset();
+
         PsiElement element = psiFile.findElementAt(offset);
+
         StringBuilder sb = new StringBuilder();
         sb.append("Element at caret: ").append(element).append("\n");
+
+
         if (element != null) {
+            PsiElement nextLeaf = PsiTreeUtil.nextLeaf(element);
+            sb.append(String.format("Next Leaf: %s \n",nextLeaf));
+            sb.append(String.format("Prev Leaf: %s \n", PsiTreeUtil.prevLeaf(element)));
+            sb.append(String.format("Common Parent: %s \n", PsiTreeUtil.findCommonParent(element)));
+
+
+
+
+
+
             PsiMethod containingMethod = PsiTreeUtil.getParentOfType(element, PsiMethod.class);
 ////
             if (containingMethod != null) {
