@@ -32,7 +32,6 @@ import com.intellij.openapi.editor.actionSystem.TypedActionHandler;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.JBColor;
 import com.intellij.util.xmlb.XmlSerializerUtil;
-import dk.lost_world.SpriteA;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,11 +64,12 @@ public class PowerMode3 implements BaseComponent,
     private boolean enabled = true;
     private int lifetime = 200;
     private int particleSize = 3;
-    private int spriteTypeEnabled = 0;
+
     private int particleRGB;
 
     public enum SpriteType{
         LIGHTNING,
+        LIGHTNING_ALT,
         LIZARD,
         MOMA
     }
@@ -79,6 +79,7 @@ public class PowerMode3 implements BaseComponent,
     private Map<String,String> configMap = new HashMap<String,String>(){{
         put("basicParticleEnabled", "true");
         put("sprite"+ SpriteType.LIGHTNING + "Enabled", "false");
+        put("sprite"+ SpriteType.LIGHTNING_ALT + "Enabled", "false");
         put("sprite"+ SpriteType.LIZARD + "Enabled", "false");
 
         put("sprite"+ SpriteType.MOMA+ "Enabled", "false");

@@ -30,6 +30,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private JCheckBox MOMAEmitTopCheckBox;
     private JPanel myCustomCreatePanel;
     private JCheckBox enableBasicParticleCheckBox;
+    private JCheckBox lightningAltCheckBox;
 
     public MenuConfigurableUI(PowerMode3 powerMode3) {
         isEnabledCheckBox.setSelected(powerMode3.isEnabled());
@@ -46,6 +47,9 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
         if(powerMode3.getSpriteTypeEnabled(PowerMode3.SpriteType.LIGHTNING)){
             enableLightningCheckBox.setSelected(true);
+        }
+        if(powerMode3.getSpriteTypeEnabled(PowerMode3.SpriteType.LIGHTNING_ALT)){
+            lightningAltCheckBox.setSelected(true);
         }
         if(powerMode3.getSpriteTypeEnabled(PowerMode3.SpriteType.LIZARD)){
             enableLizardCheckBox.setSelected(true);
@@ -122,6 +126,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
         //lightning
         settings.setSpriteTypeEnabled(enableLightningCheckBox.isSelected(), PowerMode3.SpriteType.LIGHTNING);
+        settings.setSpriteTypeEnabled(lightningAltCheckBox.isSelected(), PowerMode3.SpriteType.LIGHTNING_ALT);
         //lizard
         settings.setSpriteTypeEnabled(enableLizardCheckBox.isSelected(), PowerMode3.SpriteType.LIZARD);
         //MOMA
