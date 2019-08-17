@@ -1,11 +1,8 @@
 package com.cschar.pmode3.ui;
 
 import com.cschar.pmode3.PowerMode3;
-import com.intellij.util.ui.JBUI;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
 
 public class LightningConfigUI {
     private JPanel mainLightningPanel;

@@ -13,17 +13,16 @@
 
 package com.bmesta.powermode;
 
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.ui.JBColor;
+
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 import java.util.Iterator;
-
-import javax.swing.*;
-
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.ui.JBColor;
 
 /**
  * @author Baptiste Mesta

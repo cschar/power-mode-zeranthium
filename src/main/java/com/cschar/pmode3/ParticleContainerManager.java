@@ -18,8 +18,7 @@ import com.intellij.openapi.editor.ScrollingModel;
 import com.intellij.openapi.editor.VisualPosition;
 import com.intellij.openapi.editor.event.EditorFactoryAdapter;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,8 +26,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
-import com.intellij.psi.*;
-import com.intellij.psi.util.PsiTreeUtil;
 
 /**
  * @author Baptiste Mesta
@@ -98,30 +95,36 @@ class ParticleContainerManager extends EditorFactoryAdapter {
 
         int offset = editor.getCaretModel().getOffset();
         PsiElement element = psiFile.findElementAt(offset);
-        //infoBuilder.append("Element at caret: ").append(element).append("\n");
+        StringBuilder sb = new StringBuilder();
+        sb.append("Element at caret: ").append(element).append("\n");
         if (element != null) {
-            //PsiMethod containingMethod = PsiTreeUtil.getParentOfType(element, PsiMethod.class);
-//
-//            if (containingMethod != null) {
-//                PsiClass containingClass = containingMethod.getContainingClass();
-//                infoBuilder
-//                        .append("Containing class: ")
-//                        .append(containingClass != null ? containingClass.getName() : "none")
-//                        .append("\n");
-//
-//                infoBuilder.append("Local variables:\n");
-//                containingMethod.accept(new JavaRecursiveElementVisitor() {
-//                    @Override
-//                    public void visitLocalVariable(PsiLocalVariable variable) {
-//                        super.visitLocalVariable(variable);
-//                        infoBuilder.append(variable.getName()).append("\n");
-//                    }
-//                });
-//            }
+            PsiMethod containingMethod = PsiTreeUtil.getParentOfType(element, PsiMethod.class);
+////
+            if (containingMethod != null) {
+                PsiClass containingClass = containingMethod.getContainingClass();
+                sb
+                        .append("Containing class: ")
+                        .append(containingClass != null ? containingClass.getName() : "none")
+                        .append("\n");
+
+                sb.append("Local variables:\n");
+
+//                Java Recursive Element Visitor doesnt compile?!?!
+                containingMethod.accept(new JavaRecursiveElementVisitor() {
+                    @Override
+                    public void visitLocalVariable(PsiLocalVariable variable) {
+                        super.visitLocalVariable(variable);
+                        sb.append(variable.getName()).append("\n");
+                    }
+                });
+            }
         }
+        System.out.println(sb.toString());
+
 
         if (particleContainer != null) {
-            particleContainer.updatePsi(point);
+  //          particleContainer.update(point);
+//            particleContainer.updatePsi(point);
         }
     }
 

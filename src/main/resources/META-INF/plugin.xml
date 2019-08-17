@@ -1,29 +1,26 @@
 <idea-plugin>
-    <id>main.java.dk.lost_world</id>
-    <name>pluginnn</name>
+    <id>com.cschar.zeranthium</id>
+    <name>Plugin display name here</name>
     <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
 
     <description><![CDATA[
-    test description <h1> yes </h1> must be lgneth greater than 40
+    Enter short description for your plugin here.<br>
+    <em>most HTML tags may be used</em>
     ]]></description>
 
-    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
-         on how to target different products -->
-    <!-- uncomment to enable plugin in all products
-    <depends>com.intellij.modules.lang</depends>
-    -->
 
-<!--    see config options here-->
-<!--    https://www.jetbrains.org/intellij/sdk/docs/basics/plugin_structure/plugin_configuration_file.html-->
+
+    <!--    see config options here-->
+    <!--    https://www.jetbrains.org/intellij/sdk/docs/basics/plugin_structure/plugin_configuration_file.html-->
     <application-components>
-<!--        <component>-->
-<!--            <implementation-class>com.cschar.pmode3.MyBaseComponent</implementation-class>-->
-<!--        </component>-->
+        <!--        <component>-->
+        <!--            <implementation-class>com.cschar.com.cschar.pmode3.MyBaseComponent</implementation-class>-->
+        <!--        </component>-->
         <component>
             <implementation-class>com.cschar.pmode3.PowerMode3</implementation-class>
             <!-- Component's interface class -->
-<!--            how do i use this?-->
-<!--            <interface-class>com.cschar.pmode3.MenuConfigurableUI</interface-class>-->
+            <!--            how do i use this?-->
+            <!--            <interface-class>com.cschar.com.cschar.pmode3.MenuConfigurableUI</interface-class>-->
         </component>`
 
 
@@ -31,8 +28,8 @@
 
     <extensions defaultExtensionNs="com.intellij">
 
-<!--        see file below for an explanation -->
-<!--        com.intellij.openapi.options.ConfigurableEP-->
+        <!--        see file below for an explanation -->
+        <!--        com.intellij.openapi.options.ConfigurableEP-->
 
         <applicationConfigurable groupId="appearance"
                                  groupWeight="20"
@@ -40,22 +37,22 @@
                                  displayName="Power mode 3 3 3"
                                  instance="com.cschar.pmode3.PowerMode3Configurable" />
 
-<!--        <toolWindow id="My Sample Tool Window"-->
-<!--                    icon="/plus.png"-->
-<!--                    anchor="right"-->
-<!--                    factoryClass="dk.lost_world.DummyWindowFactory"/>-->
+        <!--        <toolWindow id="My Sample Tool Window"-->
+        <!--                    icon="/plus.png"-->
+        <!--                    anchor="right"-->
+        <!--                    factoryClass="dk.dk.lost_world.DummyWindowFactory"/>-->
 
     </extensions>
 
     <actions>
 
 
-<!--        <action id="EditorIllustration"-->
-<!--                class="dk.lost_world.TypeActionBooma"-->
-<!--                text="Editor Handler [][][]"-->
-<!--                description="illustrates how to plug an action in ">-->
+        <!--        <action id="EditorIllustration"-->
+        <!--                class="dk.dk.lost_world.TypeActionBooma"-->
+        <!--                text="Editor Handler [][][]"-->
+        <!--                description="illustrates how to plug an action in ">-->
 
-<!--            <add-to-group group-id="EditorPopupMenu" anchor="last"/>-->
-<!--        </action>-->
+        <!--            <add-to-group group-id="EditorPopupMenu" anchor="last"/>-->
+        <!--        </action>-->
     </actions>
 </idea-plugin>

@@ -8,7 +8,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.editor.CaretModel;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
+
 public class SearchAction extends AnAction
 {
     /**

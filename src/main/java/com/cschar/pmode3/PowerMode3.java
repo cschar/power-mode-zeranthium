@@ -18,12 +18,14 @@ package com.cschar.pmode3;
  */
 
 
-
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.BaseComponent;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;
@@ -49,7 +51,7 @@ import java.util.Map;
 
         //./build/idea-sandbox/config/options/power.mode3.xml
         storages = {@Storage(value = "$APP_CONFIG$/power.mode3.xml")}
-        //storages = {@Storage("com.cschar.pmode3.xml")}
+        //storages = {@Storage("com.cschar.com.cschar.pmode3.xml")}
 )
 public class PowerMode3 implements BaseComponent,
         PersistentStateComponent<PowerMode3> {
@@ -152,6 +154,20 @@ public class PowerMode3 implements BaseComponent,
             public void execute(@NotNull final Editor editor, final char c, @NotNull final DataContext dataContext) {
 
                 PsiFile psiFile = dataContext.getData(CommonDataKeys.PSI_FILE);
+
+                //https://intellij-support.jetbrains.com/hc/en-us/community/posts/206150409-How-do-I-get-to-PSI-from-a-document-or-editor-
+                //ALternative way to get Psifile directly from editor
+//                final EditorEx editor = (EditorEx) CommonDataKeys.EDITOR.getData(e.getDataContext());
+//                if (editor != null) {
+//                    final Project project = editor.getProject();
+//                    if (project != null) {
+//                        final PsiFile psiFile = PsiManager.getInstance(project).findFile(editor.getVirtualFile());
+//                        if (psiFile != null) {
+//                            final CaretModel caretModel = editor.getCaretModel();
+//                            PsiElement element = psiFile.findElementAt(caretModel.getOffset());
+//                        }
+//                    }
+//                }
 
                 updateEditor(editor, psiFile);
                 rawHandler.execute(editor, c, dataContext);

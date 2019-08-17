@@ -120,7 +120,7 @@ public class ParticleSpriteLightningAlt extends Particle{
                         frame = 0;
                         life = 0;
                     }
-                    System.out.println(String.format("frame %d - life %d", frame, life));
+//                    System.out.println(String.format("frame %d - life %d", frame, life));
                 }
 
                 g2d.drawImage(ParticleSpriteLightningAlt.sprites.get(frame), at, null);

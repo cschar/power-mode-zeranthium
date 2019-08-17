@@ -18,18 +18,12 @@
 package com.cschar.pmode3;
 
 
-import com.intellij.util.ui.UIUtil;
-import dk.lost_world.MyTypedHandler;
-import kotlin.random.Random;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
-
-
 import java.util.concurrent.ThreadLocalRandom;
 
 

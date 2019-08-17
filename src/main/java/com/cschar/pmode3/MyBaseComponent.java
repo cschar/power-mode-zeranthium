@@ -1,6 +1,5 @@
 package com.cschar.pmode3;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.components.BaseComponent;
 import com.intellij.openapi.editor.Editor;

@@ -17,8 +17,6 @@
 
 package com.cschar.pmode3;
 
-import com.intellij.openapi.editor.Editor;
-
 import java.awt.*;
 
 public class ParticleSpriteLizard extends Particle{

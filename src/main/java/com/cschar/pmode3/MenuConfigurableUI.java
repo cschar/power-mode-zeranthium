@@ -7,13 +7,11 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
 import org.jetbrains.annotations.NotNull;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
 public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private JPanel mainPanel;

@@ -3,21 +3,10 @@ package dk.lost_world;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.ToolWindow;
-
-import javax.swing.*;
-import java.util.Calendar;
-
-
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.awt.RelativePoint;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Calendar;
 
 class DummyWindow {
     private JLabel zomLabel;

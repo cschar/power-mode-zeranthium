@@ -13,19 +13,17 @@
 
 package com.bmesta.powermode;
 
-import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.swing.*;
-
-import org.jetbrains.annotations.NotNull;
-
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollingModel;
 import com.intellij.openapi.editor.VisualPosition;
 import com.intellij.openapi.editor.event.EditorFactoryAdapter;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
+import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Baptiste Mesta

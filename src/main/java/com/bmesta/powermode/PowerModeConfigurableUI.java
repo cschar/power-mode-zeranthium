@@ -1,10 +1,10 @@
 package com.bmesta.powermode;
 
-import javax.swing.*;
-
 import com.intellij.openapi.options.ConfigurableUi;
 import com.intellij.openapi.options.ConfigurationException;
 import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
 
 /**
  * @author Baptiste Mesta
