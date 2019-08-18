@@ -130,6 +130,31 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
     }
 
+    public void addParticleUsingAnchors(int x, int y, Point[] anchors) {
+        //TODO configurable
+        PowerMode3 settings = PowerMode3.getInstance();
+
+        int dx, dy;
+        dx = (int) (Math.random() * 4) * (Math.random() > 0.5 ? -1 : 1);
+        dy = (int) (Math.random() * -3 - 1);
+
+//        int size = (int) (Math.random() * 3 + 1);
+        int size = (int) (Math.random() * settings.getParticleSize() + 1);
+        //int life = 45;
+        int life = settings.getLifetime();
+
+
+        if (settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LIZARD)){
+            for(Point p: anchors){
+                System.out.println(String.format("spawning point( %d, %d) to go to anchor: x:%d - y:%d", x,y, p.x,p.y));
+                final ParticleSpriteLizardAnchor e = new ParticleSpriteLizardAnchor(x, y, dx, dy, p.x, p.y, size, life, Color.GREEN);
+                particles.add(e);
+            }
+        }
+
+
+    }
+
     public void renderParticles(Graphics g) {
         for (Particle particle : particles) {
             particle.render(g);
@@ -147,8 +172,16 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         this.repaint();
     }
 
-    public void updatePsi(Point point){
-
+    public void updateWithAnchors(Point point, Point[] anchors){
+        PowerMode3 settings = PowerMode3.getInstance();
+        //TODO configurable
+        for (int i = 0; i < 1; i++) {
+            //addParticle(point.x, point.y);
+            addParticleUsingAnchors(point.x, point.y, anchors);
+        }
+       // shakeEditor(parent, 5, 5, shakeDir);
+        shakeDir = !shakeDir;
+        this.repaint();
     }
 
     @Override

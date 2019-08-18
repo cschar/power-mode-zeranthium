@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -92,8 +93,19 @@ class ParticleContainerManager extends EditorFactoryAdapter {
         final ParticleContainer particleContainer = particleContainers.get(editor);
 
         if (particleContainer != null) {
-            particleContainer.update(point);
+//            particleContainer.update(point);
+
+            Point[] anchors = getAnchors(psiFile,editor,particleContainer);
+            particleContainer.updateWithAnchors(point, anchors);
         }
+
+
+    }
+
+    public Point[] getAnchors(PsiFile psiFile, Editor editor, ParticleContainer particleContainer){
+
+        ScrollingModel scrollingModel = editor.getScrollingModel();
+
 
         PsiElementFilter whiteSpaceFilter = new PsiElementFilter() {
             @Override
@@ -121,7 +133,7 @@ class ParticleContainerManager extends EditorFactoryAdapter {
         for ( PsiElement e: allTopLevelElements) {
             System.out.print(String.format("%s (%s) - ", e, e.getClass()));
 //            System.out.print("-- text: " + e.getText()); //gets all text of class from start to end bracket
-        // class is of type PsiClassImpl
+            // class is of type PsiClassImpl
         }
         System.out.println();
 
@@ -134,15 +146,24 @@ class ParticleContainerManager extends EditorFactoryAdapter {
         //https://www.jetbrains.org/intellij/sdk/docs/basics/architectural_overview/psi_elements.html#how-do-i-get-a-psi-element
         int offset = editor.getCaretModel().getOffset();
 
-        for(int i =0; i < 100; i++){
-            int surroundOffset = offset - 50 + i;
+        ArrayList<Point> points = new ArrayList<Point>();
+        int searchLength = 200;
+        for(int i =0; i < searchLength; i++){
+            int surroundOffset = offset - (searchLength/2) + i;
             if(surroundOffset <= 0){ continue; }
-
             PsiElement e = PsiUtil.getElementAtOffset(psiFile, surroundOffset);
+            if(e.toString() == "PsiWhiteSpace"){
+                continue;
+            }
+
             if(e.toString().contains("PsiJavaToken:RBRACE") || e.toString().contains("PsiJavaToken:LBRACE")){
                 System.out.print(String.format(" %d - ", i));
                 Point offsetPoint = editor.offsetToXY(surroundOffset);
-                particleContainer.update(offsetPoint);
+                offsetPoint.x = offsetPoint.x - scrollingModel.getHorizontalScrollOffset();
+                offsetPoint.y = offsetPoint.y - scrollingModel.getVerticalScrollOffset();
+
+                points.add(offsetPoint);
+                //particleContainer.update(offsetPoint);
                 //need some method like
                 // particleContainer.updateANCHORS(offsetPoint);
                 // then any particle in system that users "Anchors" will act accordingly
@@ -155,35 +176,18 @@ class ParticleContainerManager extends EditorFactoryAdapter {
             //PsiJavaToken:RBRACE
             //PsiJavaToken:LBRACE
         }
-//        CaretModel cm = editor.getCaretModel();
 
-
-
-
-//        Point point = editor.visualPositionToXY(visualPosition);
-//        ScrollingModel scrollingModel = editor.getScrollingModel();
-//        point.x = point.x - scrollingModel.getHorizontalScrollOffset();
-//        point.y = point.y - scrollingModel.getVerticalScrollOffset();
 
         PsiElement element = psiFile.findElementAt(offset);
-
         StringBuilder sb = new StringBuilder();
         sb.append("Element at caret: ").append(element).append("\n");
-
 
         if (element != null) {
             PsiElement nextLeaf = PsiTreeUtil.nextLeaf(element);
             sb.append(String.format("Next Leaf: %s \n",nextLeaf));
             sb.append(String.format("Prev Leaf: %s \n", PsiTreeUtil.prevLeaf(element)));
             sb.append(String.format("Common Parent: %s \n", PsiTreeUtil.findCommonParent(element)));
-
-
-
-
-
-
             PsiMethod containingMethod = PsiTreeUtil.getParentOfType(element, PsiMethod.class);
-////
             if (containingMethod != null) {
                 PsiClass containingClass = containingMethod.getContainingClass();
                 sb
@@ -193,7 +197,6 @@ class ParticleContainerManager extends EditorFactoryAdapter {
 
                 sb.append("Local variables:\n");
 
-//                Java Recursive Element Visitor doesnt compile?!?!
                 containingMethod.accept(new JavaRecursiveElementVisitor() {
                     @Override
                     public void visitLocalVariable(PsiLocalVariable variable) {
@@ -205,11 +208,7 @@ class ParticleContainerManager extends EditorFactoryAdapter {
         }
         System.out.println(sb.toString());
 
-
-        if (particleContainer != null) {
-  //          particleContainer.update(point);
-//            particleContainer.updatePsi(point);
-        }
+        return points.toArray(new Point[points.size()]);
     }
 
     public void dispose() {
