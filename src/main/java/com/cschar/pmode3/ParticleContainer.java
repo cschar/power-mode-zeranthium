@@ -94,11 +94,11 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
         }
 
-        if (settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LIZARD)){
-            final ParticleSpriteLizard e = new ParticleSpriteLizard(x, y, dx, dy, size, lifeSetting, Color.GREEN);
-            particles.add(e);
-
-        }
+//        if (settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LIZARD)){
+//            final ParticleSpriteLizard e = new ParticleSpriteLizard(x, y, dx, dy, size, lifeSetting, Color.GREEN);
+//            particles.add(e);
+//
+//        }
 
         if (settings.getSpriteTypeEnabled(PowerMode3.SpriteType.MOMA)){
 

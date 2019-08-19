@@ -1,5 +1,6 @@
 package com.cschar.pmode3.ui;
 
+import com.cschar.pmode3.ParticleSpriteLightningAlt;
 import com.cschar.pmode3.PowerMode3;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.ui.JBColor;
@@ -15,9 +16,12 @@ public class LightningConfig extends JPanel {
     PowerMode3 settings;
 
     private JTextField chanceOfLightningTextField;
+    private Color originalColorInner;
+    private Color originalColorOuter;
 
     public LightningConfig(PowerMode3 settings){
         this.settings = settings;
+
 
         mainPanel = new JPanel();
         mainPanel.setMaximumSize(new Dimension(1000,300));
@@ -33,9 +37,22 @@ public class LightningConfig extends JPanel {
         mainPanel.add(secondCol);
 
 
+        //save values so we can check if we need to reload sprites
+        String colorRGBInner = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "inner Beam Color");
+        if(colorRGBInner != null){
+            Color originalColor = new Color(Integer.parseInt(colorRGBInner));
+            this.originalColorInner =  originalColor;
+        }
+        String colorRGBOuter = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "outer Beam Color");
+        if(colorRGBOuter != null){
+            Color originalColorOuter = new Color(Integer.parseInt(colorRGBOuter));
+            this.originalColorOuter =  originalColorOuter;
+        }
 
-        JPanel innerBeamColorPanel = ConfigPanel.getColorPickerPanel("inner Beam Color", PowerMode3.SpriteType.LIGHTNING_ALT, settings);
-        JPanel outerBeamColorPanel = ConfigPanel.getColorPickerPanel("outer Beam Color", PowerMode3.SpriteType.LIGHTNING_ALT, settings);
+
+
+        JPanel innerBeamColorPanel = ConfigPanel.getColorPickerPanel("inner Beam Color", PowerMode3.SpriteType.LIGHTNING, settings);
+        JPanel outerBeamColorPanel = ConfigPanel.getColorPickerPanel("outer Beam Color", PowerMode3.SpriteType.LIGHTNING, settings);
         secondCol.add(innerBeamColorPanel);
         secondCol.add(outerBeamColorPanel);
 
@@ -80,6 +97,24 @@ public class LightningConfig extends JPanel {
                 0, 100,
                 "chance lightning spawns on keypress");
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "chanceOfLightning", String.valueOf(chanceOfLightning));
+
+
+
+        this.reloadSprites();
+    }
+
+    public void reloadSprites(){
+        //Only load new sprites when we are closing UI
+        String colorRGBInner = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "inner Beam Color");
+        Color newColorInner = new Color(Integer.parseInt(colorRGBInner));
+
+        String colorRGBOuter = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "outer Beam Color");
+        Color newColorOuter = new Color(Integer.parseInt(colorRGBOuter));
+
+        if(this.originalColorInner.getRGB() != newColorInner.getRGB() ||
+           this.originalColorOuter.getRGB() != newColorOuter.getRGB()) {
+            ParticleSpriteLightningAlt.reloadSpritesWithColors(newColorInner, newColorOuter);
+        }
     }
 
     public JPanel getConfigPanel(){

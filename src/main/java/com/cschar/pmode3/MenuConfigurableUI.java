@@ -24,7 +24,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private JCheckBox enableMOMACheckBox;
     private JCheckBox MOMAEmitBottomCheckBox;
     private JCheckBox MOMAEmitTopCheckBox;
-    private JPanel myCustomCreatePanel;
+    private JPanel theCustomCreatePanel;
     private JCheckBox enableBasicParticleCheckBox;
     private JCheckBox lightningAltCheckBox;
     private JTextField maxPsiSearchDistanceTextField;
@@ -130,7 +130,9 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
         //Lizard CUSTOM
         this.lizardConfig.saveValues(Integer.parseInt(maxPsiSearchDistanceTextField.getText()));
+
         this.lightningConfig.saveValues();
+
 
     }
 
@@ -159,28 +161,32 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         PowerMode3 settings = PowerMode3.getInstance();
         // TODO: place custom component creation code here
         System.out.println("custom create");
-        myCustomCreatePanel = new JPanel();
-        myCustomCreatePanel.setBorder(new EmptyBorder(10, 10, 200, 10));
+        theCustomCreatePanel = new JPanel();
+        theCustomCreatePanel.setBorder(new EmptyBorder(10, 10, 200, 10));
         //https://docs.oracle.com/javase/tutorial/uiswing/layout/visual.html
-        myCustomCreatePanel.setLayout(new BoxLayout(myCustomCreatePanel, BoxLayout.PAGE_AXIS));
+        theCustomCreatePanel.setLayout(new BoxLayout(theCustomCreatePanel, BoxLayout.PAGE_AXIS));
 
 
-        this.myCustomCreatePanel.add(this.createSpacer());
+        this.theCustomCreatePanel.add(this.createSpacer());
 
         this.lightningConfig = new LightningConfig(settings);
-        this.myCustomCreatePanel.add(lightningConfig.getConfigPanel());
+        this.theCustomCreatePanel.add(lightningConfig.getConfigPanel());
 
 //        LightningConfigPanel lightningConf = new LightningConfigPanel(PowerMode3.getInstance());
 //        this.myCustomCreatePanel.add(lightningConf);
 
-        this.myCustomCreatePanel.add(this.createSpacer());
+        this.theCustomCreatePanel.add(this.createSpacer());
         this.lizardConfig = new LizardConfig(settings);
-        this.myCustomCreatePanel.add(lizardConfig.getConfigPanel());
-        this.myCustomCreatePanel.add(this.createSpacer());
+        this.theCustomCreatePanel.add(lizardConfig.getConfigPanel());
+        this.theCustomCreatePanel.add(this.createSpacer());
 
 //        lizardConfigPanel.maxPsiAnchorDistanceTextField.setText();
 //        LizardConfigPanel lizardConf = new LizardConfigPanel(PowerMode3.getInstance());
 //        this.myCustomCreatePanel.add(lizardConf);
+
+        JPanel footerPanel = new JPanel();
+        footerPanel.setMinimumSize(new Dimension(100, 300));
+        this.theCustomCreatePanel.add(footerPanel);
     }
 
 
