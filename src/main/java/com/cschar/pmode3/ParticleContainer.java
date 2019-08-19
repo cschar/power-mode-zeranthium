@@ -89,7 +89,10 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         }
 
         if (settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LIGHTNING_ALT)){
-            final ParticleSpriteLightningAlt e = new ParticleSpriteLightningAlt(x, y, dx, dy, size, lifeSetting, Color.ORANGE, LightningConfig.CHANCE_OF_LIGHTNING(settings));
+            final ParticleSpriteLightningAlt e = new ParticleSpriteLightningAlt(x, y, dx, dy, size, lifeSetting, Color.ORANGE,
+                    LightningConfig.CHANCE_OF_LIGHTNING(settings),
+                    LightningConfig.INNER_BEAM_ENABLED(settings),
+                    LightningConfig.OUTER_BEAM_ENABLED(settings));
             particles.add(e);
 
         }
@@ -151,7 +154,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
             Color lizardColor = new Color(Integer.parseInt(colorRGB));
 
             for(Point p: anchors){
-                System.out.println(String.format("spawning point( %d, %d) to go to anchor: x:%d - y:%d", x,y, p.x,p.y));
+//                System.out.println(String.format("spawning point( %d, %d) to go to anchor: x:%d - y:%d", x,y, p.x,p.y));
                 final ParticleSpriteLizardAnchor e = new ParticleSpriteLizardAnchor(x, y, dx, dy, p.x, p.y, size, life, lizardColor);
                 particles.add(e);
             }

@@ -15,6 +15,9 @@ public class LightningConfig extends JPanel {
     JPanel mainPanel;
     PowerMode3 settings;
 
+    private JCheckBox innerBeamEnabledCheckBox;
+    private JCheckBox outerBeamEnabledCheckBox;
+
     private JTextField chanceOfLightningTextField;
     private Color originalColorInner;
     private Color originalColorOuter;
@@ -53,8 +56,18 @@ public class LightningConfig extends JPanel {
 
         JPanel innerBeamColorPanel = ConfigPanel.getColorPickerPanel("inner Beam Color", PowerMode3.SpriteType.LIGHTNING, settings);
         JPanel outerBeamColorPanel = ConfigPanel.getColorPickerPanel("outer Beam Color", PowerMode3.SpriteType.LIGHTNING, settings);
-        secondCol.add(innerBeamColorPanel);
-        secondCol.add(outerBeamColorPanel);
+
+        JPanel innerBeamJPanel = new JPanel();
+        this.innerBeamEnabledCheckBox = new JCheckBox("is enabled?", true);
+        innerBeamJPanel.add(innerBeamEnabledCheckBox);
+        innerBeamJPanel.add(innerBeamColorPanel);
+        secondCol.add(innerBeamJPanel);
+
+        JPanel outerBeamJPanel = new JPanel();
+        this.outerBeamEnabledCheckBox = new JCheckBox("is enabled?", true);
+        outerBeamJPanel.add(outerBeamEnabledCheckBox);
+        outerBeamJPanel.add(outerBeamColorPanel);
+        secondCol.add(outerBeamJPanel);
 
         this.chanceOfLightningTextField = new JTextField();
         JLabel chanceOfLightningLabel = new JLabel("Chance of Lightning per particle (0-100)");
@@ -81,12 +94,42 @@ public class LightningConfig extends JPanel {
         }
     }
 
+    public static boolean INNER_BEAM_ENABLED(PowerMode3 settings){
+
+        String isEnabled = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "innerBeamEnabled");
+        if(isEnabled != null){
+            return Boolean.valueOf(isEnabled);
+        }else{
+            return false;
+        }
+    }
+
+    public static boolean OUTER_BEAM_ENABLED(PowerMode3 settings){
+
+        String isEnabled = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "outerBeamEnabled");
+        if(isEnabled != null){
+            return Boolean.valueOf(isEnabled);
+        }else{
+            return false;
+        }
+    }
+
     public void loadValues(){
         String chanceOfLightning = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "chanceOfLightning");
         if(chanceOfLightning != null){
             this.chanceOfLightningTextField.setText(chanceOfLightning);
         }else{
             this.chanceOfLightningTextField.setText("0");
+        }
+
+        String isInnerBeamEnabled = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "innerBeamEnabled");
+        if(isInnerBeamEnabled != null){
+            this.innerBeamEnabledCheckBox.setSelected(Boolean.valueOf(isInnerBeamEnabled));
+        }
+
+        String isOuterBeamEnabled = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "outerBeamEnabled");
+        if(isOuterBeamEnabled != null){
+            this.outerBeamEnabledCheckBox.setSelected(Boolean.valueOf(isOuterBeamEnabled));
         }
 
     }
@@ -98,6 +141,9 @@ public class LightningConfig extends JPanel {
                 "chance lightning spawns on keypress");
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "chanceOfLightning", String.valueOf(chanceOfLightning));
 
+
+        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "innerBeamEnabled", String.valueOf(innerBeamEnabledCheckBox.isSelected()));
+        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "outerBeamEnabled", String.valueOf(outerBeamEnabledCheckBox.isSelected()));
 
 
         this.reloadSprites();

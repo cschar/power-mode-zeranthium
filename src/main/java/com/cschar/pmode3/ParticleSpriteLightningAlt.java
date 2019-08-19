@@ -79,7 +79,7 @@ public class ParticleSpriteLightningAlt extends Particle{
         }
 
         for(int i=1; i <= 20; i++){
-            BufferedImage tmp = loadSprite(String.format("/blender/lightning2/outer/Image0%03d.png", i));
+            BufferedImage tmp = loadSprite(String.format("/blender/lightning2/outer2/Image0%03d.png", i));
             BufferedImage resized_image =  Scalr.resize(tmp, Scalr.Method.BALANCED,
                     tmp.getWidth()/2, tmp.getHeight()/2);
             BufferedImage colored = colorImage(resized_image, colorOuter);
@@ -122,7 +122,7 @@ public class ParticleSpriteLightningAlt extends Particle{
         }
 
         for(int i=1; i <= 20; i++){
-            BufferedImage tmp = loadSprite(String.format("/blender/lightning2/outer/Image0%03d.png", i));
+            BufferedImage tmp = loadSprite(String.format("/blender/lightning2/outer2/Image0%03d.png", i));
             BufferedImage resized_image =  Scalr.resize(tmp, Scalr.Method.BALANCED,
                     tmp.getWidth()/2, tmp.getHeight()/2);
             spritesOuter.add(resized_image);
@@ -148,11 +148,16 @@ public class ParticleSpriteLightningAlt extends Particle{
     private int origX,origY;
 
     private boolean makeLightningBeam = false;
+    private boolean innerBeam = false;
+    private boolean outerBeam = false;
 
-    public ParticleSpriteLightningAlt(int x, int y, int dx, int dy, int size, int life, Color c, int lightningChance) {
+    public ParticleSpriteLightningAlt(int x, int y, int dx, int dy, int size, int life, Color c,
+                                      int lightningChance, boolean innerBeam, boolean outerBeam) {
         super(x,y,dx,dy,size,life,c);
         sprite = sprites.get(0);
 
+        this.innerBeam = innerBeam;
+        this.outerBeam = outerBeam;
         origX = x;
         origY = y;
 
@@ -194,7 +199,11 @@ public class ParticleSpriteLightningAlt extends Particle{
                 at.translate(-sprite.getWidth()/2,
                                  -sprite.getHeight()); //move image 100% up so lightning lands at bottom
 
-//            Composite originalComposite = g2d.getComposite();
+
+                    //We could make it taller, the lower down on the editor it goes
+//                at.scale(1.0f,1.1f);
+//                at.translate(0.0f, -sprite.getHeight()*0.1f);
+
 
 
                 //every X updates, increment frame, this controls how fast it animates
@@ -210,8 +219,24 @@ public class ParticleSpriteLightningAlt extends Particle{
                 g2d.setComposite(makeComposite(0.5f));
                 g2d.setComposite(makeComposite(0.7f));
 //                g2d.drawImage(ParticleSpriteLightningAlt.sprites.get(frame), at, null);
-                g2d.drawImage(ParticleSpriteLightningAlt.spritesOuter.get(frame), at, null);
-                g2d.drawImage(ParticleSpriteLightningAlt.spritesInner.get(frame), at, null);
+                if(innerBeam) {
+                    g2d.drawImage(ParticleSpriteLightningAlt.spritesInner.get(frame), at, null);
+                }
+                if(outerBeam){
+                    g2d.drawImage(ParticleSpriteLightningAlt.spritesOuter.get(frame), at, null);
+                }
+
+
+                //flip it to extend 200% length. looks weird
+//                at = new AffineTransform();
+//                at.translate((int)origX ,(int)origY );
+//                at.translate(-sprite.getWidth()/2,
+//                        0);
+//                at.scale(1.0f,-1.0f);
+//                at.translate(0, sprite.getHeight());
+//
+//                g2d.drawImage(ParticleSpriteLightningAlt.spritesOuter.get(frame), at, null);
+//                g2d.drawImage(ParticleSpriteLightningAlt.spritesInner.get(frame), at, null);
             }
 
             g2d.dispose();
