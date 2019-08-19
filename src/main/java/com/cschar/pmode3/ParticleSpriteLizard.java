@@ -24,42 +24,6 @@ public class ParticleSpriteLizard extends Particle{
     public ParticleSpriteLizard(int x, int y, int dx, int dy, int size, int life, Color c) {
         super(x,y,dx,dy,size,life,c);
 
-        //TODO
-        ///ues PSI to get outer class and send particle from caret to class xy position
-        //https://github.com/JetBrains/intellij-sdk-docs/blob/master/code_samples/psi_demo/src/com/intellij/tutorials/psi/PsiNavigationDemoAction.java
-
-        //Editor editor = anActionEvent.getData(CommonDataKeys.EDITOR);
-        //PsiFile psiFile = anActionEvent.getData(CommonDataKeys.PSI_FILE);
-        //if (editor == null || psiFile == null) return;
-        //int offset = editor.getCaretModel().getOffset();
-
-        //final StringBuilder infoBuilder = new StringBuilder();
-        //PsiElement element = psiFile.findElementAt(offset);
-        //infoBuilder.append("Element at caret: ").append(element).append("\n");
-//        if (element != null) {
-//            PsiMethod containingMethod = PsiTreeUtil.getParentOfType(element, PsiMethod.class);
-//            infoBuilder
-//                    .append("Containing method: ")
-//                    .append(containingMethod != null ? containingMethod.getName() : "none")
-//                    .append("\n");
-//            if (containingMethod != null) {
-//                PsiClass containingClass = containingMethod.getContainingClass();
-//                infoBuilder
-//                        .append("Containing class: ")
-//                        .append(containingClass != null ? containingClass.getName() : "none")
-//                        .append("\n");
-//
-//                infoBuilder.append("Local variables:\n");
-//                containingMethod.accept(new JavaRecursiveElementVisitor() {
-//                    @Override
-//                    public void visitLocalVariable(PsiLocalVariable variable) {
-//                        super.visitLocalVariable(variable);
-//                        infoBuilder.append(variable.getName()).append("\n");
-//                    }
-//                });
-//            }
-//        }
-
     }
 
     public boolean update() {

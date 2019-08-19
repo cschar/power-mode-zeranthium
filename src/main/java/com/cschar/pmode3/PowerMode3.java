@@ -64,10 +64,16 @@ public class PowerMode3 implements BaseComponent,
     Color particleColor;
 
     private boolean enabled = true;
+    private int shakeDistance = 5;
+    private int numOfParticles = 7;
     private int lifetime = 200;
     private int particleSize = 3;
+    private int maxPsiSearchDistance = 200;  //amount of total characters searched around caret for anchors
 
     private int particleRGB;
+
+
+
 
     public enum SpriteType{
         LIGHTNING,
@@ -118,7 +124,13 @@ public class PowerMode3 implements BaseComponent,
         return Boolean.parseBoolean(configMap.get("basicParticleEnabled"));
     }
 
+    public void setSpriteTypeProperty(SpriteType type, String property, String value){
+        configMap.put(String.format("sprite%s_%s", type, property), value);
+    }
 
+    public String getSpriteTypeProperty(SpriteType type, String property){
+        return configMap.get(String.format("sprite%s_%s", type, property));
+    }
 
 
 
@@ -244,7 +256,13 @@ public class PowerMode3 implements BaseComponent,
         this.particleColor = new JBColor(new Color(particleRGB), new Color(particleRGB));
     }
 
+    public int getMaxPsiSearchDistance() {  return maxPsiSearchDistance; }
+    public void setMaxPsiSearchDistance(int maxPsiSearchDistance) {this.maxPsiSearchDistance = maxPsiSearchDistance;}
 
+    public int getNumOfParticles() {  return numOfParticles;   }
+    public void setNumOfParticles(int numOfParticles) { this.numOfParticles = numOfParticles;  }
+    public int getShakeDistance() {  return shakeDistance;  }
+    public void setShakeDistance(int shakeDistance) {   this.shakeDistance = shakeDistance;  }
 
 }
 

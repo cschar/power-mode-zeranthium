@@ -38,7 +38,11 @@ class ParticleContainerManager extends EditorFactoryAdapter {
     private Thread thread;
     private Map<Editor, ParticleContainer> particleContainers = new HashMap<>();
 
+    private PowerMode3 settings;
+
     public ParticleContainerManager() {
+        //this.settings = PowerMode3.getInstance();
+
         thread = new Thread(new Runnable() {
 
             @Override
@@ -106,19 +110,6 @@ class ParticleContainerManager extends EditorFactoryAdapter {
 
         ScrollingModel scrollingModel = editor.getScrollingModel();
 
-
-        PsiElementFilter whiteSpaceFilter = new PsiElementFilter() {
-            @Override
-            public boolean isAccepted(@NotNull PsiElement psiElement) {
-                if (psiElement.toString() == "PsiWhiteSpace"){
-                    return false;
-                }else {
-                    return true;
-                }
-            }
-        };
-
-
         PsiElement dummyHead;
         PsiElement firstChild = psiFile.getFirstChild();
         dummyHead = firstChild;
@@ -147,7 +138,10 @@ class ParticleContainerManager extends EditorFactoryAdapter {
         int offset = editor.getCaretModel().getOffset();
 
         ArrayList<Point> points = new ArrayList<Point>();
-        int searchLength = 200;
+//        int searchLength = 200;
+        int searchLength = PowerMode3.getInstance().getMaxPsiSearchDistance();
+//        int searchLength = settings.getMaxPsiSearchDistance();
+
         for(int i =0; i < searchLength; i++){
             int surroundOffset = offset - (searchLength/2) + i;
             if(surroundOffset <= 0){ continue; }
@@ -177,36 +171,6 @@ class ParticleContainerManager extends EditorFactoryAdapter {
             //PsiJavaToken:LBRACE
         }
 
-
-        PsiElement element = psiFile.findElementAt(offset);
-        StringBuilder sb = new StringBuilder();
-        sb.append("Element at caret: ").append(element).append("\n");
-
-        if (element != null) {
-            PsiElement nextLeaf = PsiTreeUtil.nextLeaf(element);
-            sb.append(String.format("Next Leaf: %s \n",nextLeaf));
-            sb.append(String.format("Prev Leaf: %s \n", PsiTreeUtil.prevLeaf(element)));
-            sb.append(String.format("Common Parent: %s \n", PsiTreeUtil.findCommonParent(element)));
-            PsiMethod containingMethod = PsiTreeUtil.getParentOfType(element, PsiMethod.class);
-            if (containingMethod != null) {
-                PsiClass containingClass = containingMethod.getContainingClass();
-                sb
-                        .append("Containing class: ")
-                        .append(containingClass != null ? containingClass.getName() : "none")
-                        .append("\n");
-
-                sb.append("Local variables:\n");
-
-                containingMethod.accept(new JavaRecursiveElementVisitor() {
-                    @Override
-                    public void visitLocalVariable(PsiLocalVariable variable) {
-                        super.visitLocalVariable(variable);
-                        sb.append(variable.getName()).append("\n");
-                    }
-                });
-            }
-        }
-        System.out.println(sb.toString());
 
         return points.toArray(new Point[points.size()]);
     }

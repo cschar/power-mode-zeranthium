@@ -1,6 +1,6 @@
 package com.cschar.pmode3;
 
-import com.cschar.pmode3.ui.LightningConfigUI;
+import com.cschar.pmode3.ui.LizardConfigPanel;
 import com.intellij.openapi.options.ConfigurableUi;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.ui.JBColor;
@@ -16,7 +16,6 @@ import java.awt.event.ActionListener;
 public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private JPanel mainPanel;
     private JTextField lifetimeTextField;
-    private JLabel isEnabledLabel;
     private JCheckBox isEnabledCheckBox;
     private JSlider sliderMaxSize;
     private JButton chooseColorButton;
@@ -29,10 +28,17 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private JPanel myCustomCreatePanel;
     private JCheckBox enableBasicParticleCheckBox;
     private JCheckBox lightningAltCheckBox;
+    private JTextField maxPsiSearchDistanceTextField;
+    private JTextField numOfParticlesTextField;
+    private JTextField shakeDistanceTextField;
 
     public MenuConfigurableUI(PowerMode3 powerMode3) {
         isEnabledCheckBox.setSelected(powerMode3.isEnabled());
+
+        shakeDistanceTextField.setText(Integer.toString(powerMode3.getShakeDistance()));
+        numOfParticlesTextField.setText(Integer.toString(powerMode3.getNumOfParticles()));
         lifetimeTextField.setText(Integer.toString(powerMode3.getLifetime()));
+        maxPsiSearchDistanceTextField.setText(Integer.toString(powerMode3.getMaxPsiSearchDistance()));
         sliderMaxSize.setValue(powerMode3.getParticleSize());
 
         particleColorLabel.setOpaque(true); //to show background  https://stackoverflow.com/a/2380328/403403
@@ -101,22 +107,15 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
     @Override
     public void apply(@NotNull PowerMode3 settings) throws ConfigurationException {
-        int newLifetime;
-        int min = 5;
-        int max = 500;
+        settings.setEnabled(isEnabledCheckBox.isSelected());
+        settings.setShakeDistance(getJTextFieldWithinBounds(shakeDistanceTextField, 0, 30, "Distance to shake editor in pixels when typing"));
+        settings.setNumOfParticles(getJTextFieldWithinBounds(numOfParticlesTextField, 0, 10, "Number of Particles per keystroke"));
+        settings.setLifetime(getJTextFieldWithinBounds(lifetimeTextField, 5, 500, "Lifetime"));
+        settings.setMaxPsiSearchDistance(getJTextFieldWithinBounds(maxPsiSearchDistanceTextField,
+                10, 1000, "Max Psi/Anchor Search Distance"));
 
 
-        String errorMsg = String.format("Please give a lifetime between %d-%d", min,max);
-        try {
-            newLifetime = Integer.parseInt(lifetimeTextField.getText());
-            if (newLifetime < min || newLifetime > max) {
-               throw new ConfigurationException(errorMsg);
-            }
-        } catch (NumberFormatException e){
-            throw new ConfigurationException(errorMsg);
-        }
 
-        settings.setLifetime(newLifetime);
         settings.setParticleSize(sliderMaxSize.getValue());
 
         //basic particle
@@ -163,23 +162,23 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         //https://docs.oracle.com/javase/tutorial/uiswing/layout/visual.html
         myCustomCreatePanel.setLayout(new BoxLayout(myCustomCreatePanel, BoxLayout.PAGE_AXIS));
 
-        JLabel jj = new JLabel();
-        jj.setText("Lightning Options");
-        this.myCustomCreatePanel.add(jj);
-
-
-        LightningConfigUI lightningConfigUI = new LightningConfigUI(PowerMode3.getInstance());
-        lightningConfigUI.imagePreviewPanel.setBackground(Color.WHITE);
-
-        ImageIcon imageIcon = new ImageIcon(getClass().getResource("/blender/lightning/lightning10101.png"));
-        imageIcon = new ImageIcon(imageIcon.getImage().getScaledInstance(100,100, Image.SCALE_DEFAULT));
-        lightningConfigUI.imagePreviewLabel.setIcon(new ImageIcon(getClass().getResource("/blender/lightning/lightning10101.png")));
-        lightningConfigUI.imagePreviewLabel.setIcon(imageIcon);
-
-        JComponent p = lightningConfigUI.getComponent();
-        p.setMaximumSize(new Dimension(1000,400));
-
-        this.myCustomCreatePanel.add(p);
+//        JLabel jj = new JLabel();
+//        jj.setText("Lightning Options");
+//        this.myCustomCreatePanel.add(jj);
+//
+//
+//        LightningConfigUI lightningConfigUI = new LightningConfigUI(PowerMode3.getInstance());
+//        lightningConfigUI.imagePreviewPanel.setBackground(Color.WHITE);
+//
+//        ImageIcon imageIcon = new ImageIcon(getClass().getResource("/blender/lightning/lightning10101.png"));
+//        imageIcon = new ImageIcon(imageIcon.getImage().getScaledInstance(100,100, Image.SCALE_DEFAULT));
+//        lightningConfigUI.imagePreviewLabel.setIcon(new ImageIcon(getClass().getResource("/blender/lightning/lightning10101.png")));
+//        lightningConfigUI.imagePreviewLabel.setIcon(imageIcon);
+//
+//        JComponent p = lightningConfigUI.getComponent();
+//        p.setMaximumSize(new Dimension(1000,400));
+//
+//        this.myCustomCreatePanel.add(p);
 
         this.myCustomCreatePanel.add(this.createSpacer());
 
@@ -235,6 +234,9 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         this.myCustomCreatePanel.add(this.createSpacer());
         this.myCustomCreatePanel.add(lizardPanel);
 
+        this.myCustomCreatePanel.add(this.createSpacer());
+        LizardConfigPanel lizardConf = new LizardConfigPanel(PowerMode3.getInstance());
+        this.myCustomCreatePanel.add(lizardConf);
     }
 
 
@@ -245,6 +247,21 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         spacer1.setBackground(Color.lightGray);
 
         return spacer1;
+    }
+
+
+    private int getJTextFieldWithinBounds(JTextField j, int min, int max, String name) throws ConfigurationException{
+        int newValue;
+        String errorMsg = String.format("%s : Please give a value between %d-%d", name, min,max);
+        try {
+            newValue = Integer.parseInt(j.getText());
+            if (newValue < min || newValue > max) {
+                throw new ConfigurationException(errorMsg);
+            }
+        } catch (NumberFormatException e){
+            throw new ConfigurationException(errorMsg);
+        }
+        return newValue;
     }
 
 }

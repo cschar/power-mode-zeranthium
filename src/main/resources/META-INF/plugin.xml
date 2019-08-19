@@ -34,7 +34,7 @@
         <applicationConfigurable groupId="appearance"
                                  groupWeight="20"
                                  id="power.mode3"
-                                 displayName="Power mode 3 3 3"
+                                 displayName="Power mode 3 - Zeranthium"
                                  instance="com.cschar.pmode3.PowerMode3Configurable" />
 
         <!--        <toolWindow id="My Sample Tool Window"-->
