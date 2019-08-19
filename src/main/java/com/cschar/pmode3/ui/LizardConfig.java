@@ -34,6 +34,7 @@ public class LizardConfig extends JPanel {
         JLabel headerLabel = new JLabel("Lizard Options");
         headerLabel.setFont(new Font ("Arial", Font.BOLD, 20));
         secondCol.add(headerLabel);
+        mainPanel.add(secondCol);
 
         JPanel lizardColorPanel = ConfigPanel.getColorPickerPanel("Lizard Color", PowerMode3.SpriteType.LIZARD, settings);
         secondCol.add(lizardColorPanel);
@@ -48,7 +49,7 @@ public class LizardConfig extends JPanel {
 
         secondCol.add(lop1);
 
-        mainPanel.add(secondCol);
+
 
 
         this.loadValues();
