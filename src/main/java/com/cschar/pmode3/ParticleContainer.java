@@ -13,6 +13,7 @@
 
 package com.cschar.pmode3;
 
+import com.cschar.pmode3.ui.LightningConfig;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 
@@ -68,9 +69,9 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
     }
 
-    public void addParticle(int x, int y) {
+    public void addParticle(int x, int y, PowerMode3 settings) {
         //TODO configurable
-        PowerMode3 settings = PowerMode3.getInstance();
+//        PowerMode3 settings = PowerMode3.getInstance();
 
         int dx, dy;
         dx = (int) (Math.random() * 4) * (Math.random() > 0.5 ? -1 : 1);
@@ -88,7 +89,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         }
 
         if (settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LIGHTNING_ALT)){
-            final ParticleSpriteLightningAlt e = new ParticleSpriteLightningAlt(x, y, dx, dy, size, lifeSetting, Color.ORANGE);
+            final ParticleSpriteLightningAlt e = new ParticleSpriteLightningAlt(x, y, dx, dy, size, lifeSetting, Color.ORANGE, LightningConfig.CHANCE_OF_LIGHTNING(settings));
             particles.add(e);
 
         }
@@ -181,7 +182,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
         //TODO call once, then have each spriteType use its own specified # of particles
         for (int i = 0; i < settings.getNumOfParticles(); i++) {
-            addParticle(point.x, point.y);
+            addParticle(point.x, point.y, settings);
         }
 
         addParticleUsingAnchors(point.x, point.y, anchors, settings);
