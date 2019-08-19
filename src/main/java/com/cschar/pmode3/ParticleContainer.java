@@ -160,6 +160,13 @@ public class ParticleContainer extends JComponent implements ComponentListener {
             }
         }
 
+        if(settings.getSpriteTypeEnabled(PowerMode3.SpriteType.VINE)){
+            for(Point p: anchors){
+                final ParticleSpriteVineAnchor e = new ParticleSpriteVineAnchor(x, y, dx, dy, p.x, p.y, size, life, Color.GREEN);
+                particles.add(e);
+            }
+        }
+
 
     }
 

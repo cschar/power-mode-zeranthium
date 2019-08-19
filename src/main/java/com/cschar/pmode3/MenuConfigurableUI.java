@@ -30,6 +30,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private JTextField maxPsiSearchDistanceTextField;
     private JTextField numOfParticlesTextField;
     private JTextField shakeDistanceTextField;
+    private JCheckBox enableVineCheckBox;
 
 
     private LightningConfig lightningConfig;
@@ -64,6 +65,9 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         }
         if(powerMode3.getSpriteTypeEnabled(PowerMode3.SpriteType.MOMA)){
             enableMOMACheckBox.setSelected(true);
+        }
+        if(powerMode3.getSpriteTypeEnabled(PowerMode3.SpriteType.VINE)){
+            enableVineCheckBox.setSelected(true);
         }
 
         boolean[] topBotEnabled = powerMode3.getSpriteTypeDirections(PowerMode3.SpriteType.MOMA);
@@ -124,6 +128,8 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         settings.setSpriteTypeEnabled(enableMOMACheckBox.isSelected(), PowerMode3.SpriteType.MOMA);
         settings.setSpriteTypeDirections(PowerMode3.SpriteType.MOMA, MOMAEmitTopCheckBox.isSelected(), MOMAEmitBottomCheckBox.isSelected());
 
+        //Vine
+        settings.setSpriteTypeEnabled(enableVineCheckBox.isSelected(), PowerMode3.SpriteType.VINE);
 
         //LightningALT CUSTOM
 

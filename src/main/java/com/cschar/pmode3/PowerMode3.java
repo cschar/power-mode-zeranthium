@@ -79,7 +79,8 @@ public class PowerMode3 implements BaseComponent,
         LIGHTNING,
         LIGHTNING_ALT,
         LIZARD,
-        MOMA
+        MOMA,
+        VINE
     }
 
     //consider JSON https://stackabuse.com/reading-and-writing-json-in-java/ ??
@@ -90,9 +91,12 @@ public class PowerMode3 implements BaseComponent,
         put("sprite"+ SpriteType.LIGHTNING_ALT + "Enabled", "false");
         put("sprite"+ SpriteType.LIZARD + "Enabled", "false");
 
+
         put("sprite"+ SpriteType.MOMA+ "Enabled", "false");
         put(String.format("sprite%sEmitTop", SpriteType.MOMA), "true");
         put(String.format("sprite%sEmitBottom", SpriteType.MOMA), "true");
+
+        put("sprite"+ SpriteType.VINE + "Enabled", "false");
     }};
 
 
