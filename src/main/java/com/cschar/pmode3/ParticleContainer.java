@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -39,7 +40,9 @@ public class ParticleContainer extends JComponent implements ComponentListener {
     private final JComponent parent;
     private final Editor editor;
     private boolean shakeDir;
-    private ArrayList<Particle> particles = new ArrayList<>(50);
+    ConcurrentLinkedQueue<Particle> particles = new ConcurrentLinkedQueue<Particle>();
+
+//    private ArrayList<Particle> particles = new ArrayList<>(50);
 
     public ParticleContainer(Editor editor) {
         this.editor = editor;
@@ -49,6 +52,8 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         setVisible(true);
         parent.addComponentListener(this);
     }
+
+
 
     private void shakeEditor(JComponent parent, int dx, int dy, boolean dir) {
         final Rectangle bounds = parent.getBounds();
@@ -63,14 +68,23 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
     public void updateParticles() {
         if (!particles.isEmpty()) {
-            ArrayList<Particle> tempParticles = new ArrayList<>(particles);
-            final Iterator<Particle> particleIterator = tempParticles.iterator();
+//            ArrayList<Particle> tempParticles = new ArrayList<>(particles);
+//            final Iterator<Particle> particleIterator = tempParticles.iterator();
+//            while (particleIterator.hasNext()) {
+//                if (particleIterator.next().update()) {
+//                    particleIterator.remove();
+//                }
+//            }
+//            particles = tempParticles;
+
+//            ConcurrentLinkedQueue <Particle> tempParticles = new ConcurrentLinkedQueue<>(particles);
+            final Iterator<Particle> particleIterator = particles.iterator();
             while (particleIterator.hasNext()) {
                 if (particleIterator.next().update()) {
                     particleIterator.remove();
                 }
             }
-            particles = tempParticles;
+//            particles = tempParticles;
             this.repaint();
         }
 
@@ -164,14 +178,16 @@ public class ParticleContainer extends JComponent implements ComponentListener {
             int maxPsiSearch = LizardConfig.MAX_PSI_SEARCH(settings);
             int chanceOfSpawn =  LizardConfig.CHANCE_OF_SPAWN(settings);
             int maxAnchorsToUse = LizardConfig.MAX_ANCHORS_TO_USE(settings);
+            int anchorsUsed = 0;
 
             ArrayList<Anchor> anchorList = new ArrayList<Anchor>(Arrays.asList(anchors));
             Collections.shuffle(anchorList);
-
-            int anchorsUsed = 0;
-            for(Anchor a: anchorList){
-                if(anchorsUsed >= maxAnchorsToUse) break;
+//            for(Anchor a: anchorList){
+            for(int i =0; i < anchorList.size(); i++){
+                Anchor a = anchorList.get(i);
 //            for(Anchor a: anchors){
+                if(anchorsUsed >= maxAnchorsToUse) break;
+
                 if( Math.abs(a.anchorOffset - a.cursorOffset) > (maxPsiSearch) ){
                     continue;
                 }
@@ -182,7 +198,8 @@ public class ParticleContainer extends JComponent implements ComponentListener {
                 }
 
                 anchorsUsed += 1;
-                final ParticleSpriteLizardAnchor e = new ParticleSpriteLizardAnchor(x, y, dx, dy, a.p.x, a.p.y, size, life, lizardColor);
+                final ParticleSpriteLizardAnchor e = new ParticleSpriteLizardAnchor(x, y, dx, dy, i,
+                        size, life, lizardColor, anchors, particles);
                 particles.add(e);
             }
         }

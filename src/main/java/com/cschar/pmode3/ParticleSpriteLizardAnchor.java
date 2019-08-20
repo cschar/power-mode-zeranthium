@@ -26,6 +26,8 @@ import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Logger;
 
@@ -65,16 +67,31 @@ public class ParticleSpriteLizardAnchor extends Particle{
     int dir2anchorX;
     int dir2anchorY;
 
+    private Anchor[] anchors;
+    private ConcurrentLinkedQueue<Particle> parentList;
+    private ParticleContainer parent;
+
+    private int anchorIndex;
+
     private BufferedImage sprite;
 
-    public ParticleSpriteLizardAnchor(int x, int y, int dx, int dy,
-                                      int anchorX, int anchorY, int size, int life, Color c) {
+    private Anchor anchorDest;
+
+    public ParticleSpriteLizardAnchor(int x, int y, int dx, int dy, int anchorIndex, int size, int life, Color c,
+                                      Anchor[] anchors, ConcurrentLinkedQueue<Particle> parentList) {
         super(x,y,dx,dy,size,life,c);
         sprite = sprites.get(0);
 
+        this.anchors = anchors;
+        this.parentList = parentList;
+
+        this.anchorIndex = anchorIndex;
+
         this.maxLife = life;
-        this.anchorX = anchorX;
-        this.anchorY = anchorY;
+        this.anchorX = anchors[anchorIndex].p.x;
+        this.anchorY = anchors[anchorIndex].p.y;
+//        this.anchorX = anchorX;
+//        this.anchorY = anchorY;
         this.initialX = x;
         this.initialY = y;
 
@@ -104,9 +121,10 @@ public class ParticleSpriteLizardAnchor extends Particle{
         //strategy 1
         //Goes fast -> slow until distance 10.. then FAST
         if(Math.abs(distX) > 100){
-            this.dir2anchorX = distX/50;
+//            this.dir2anchorX = distX/50;
+            this.dir2anchorX = distX/25;
         }else if(Math.abs(distX) > 50){
-            this.dir2anchorX = distX/10;
+            this.dir2anchorX = distX/8;
         }else if(Math.abs(distX) > 10) {
             this.dir2anchorX = distX/5;
         }else{
@@ -133,59 +151,56 @@ public class ParticleSpriteLizardAnchor extends Particle{
             frameDir = -1;
         }
 
+        if(dir2anchorX == 0 && dir2anchorY == 0){
+            life -= 6;   //if were standing still, decay faster
+        }
 
         x += dir2anchorX;
         y += dir2anchorY;
 
 
         life--;
+
+        if(life <= 0 && this.anchors != null){
+
+
+            if(this.anchorIndex > (this.anchors.length / 2) + 1) {  //jump down
+                if (this.anchorIndex < this.anchors.length - 1) { // don't spawn if we're at last anchor
+//                int nextIndex = this.anchorIndex + 1;
+                    int nextIndex = ThreadLocalRandom.current().nextInt(this.anchorIndex, this.anchors.length + 1);
+
+                    if (nextIndex == this.anchors.length) {
+                        //dont jump, just fade away
+                    } else {
+                        final ParticleSpriteLizardAnchor nextTransition = new ParticleSpriteLizardAnchor(this.x, this.y, 0, 0,
+                                nextIndex, this.size, this.maxLife, this.c, anchors, this.parentList);
+
+                        this.parentList.add(nextTransition);
+                    }
+                }
+            }else{ //jump up
+                if (this.anchorIndex != 0) { // don't spawn if we're at top of screen
+//                int nextIndex = this.anchorIndex + 1;
+                    int nextIndex = ThreadLocalRandom.current().nextInt(0, this.anchorIndex+1);
+
+                    if (nextIndex == this.anchorIndex) {
+                        //dont jump, just fade away
+                    } else {
+                        final ParticleSpriteLizardAnchor nextTransition = new ParticleSpriteLizardAnchor(this.x, this.y, 0, 0,
+                                nextIndex, this.size, this.maxLife, this.c, anchors, this.parentList);
+
+                        this.parentList.add(nextTransition);
+                    }
+                }
+            }
+
+
+        }
         return life <= 0;
     }
 
     public boolean update(){
         return this.updateLizardAnim();
-    }
-
-    boolean updateOld() {
-
-
-        int distX = (anchorX - x);
-        int distY = (anchorY - y);
-
-
-        //strategy 1
-        //Goes fast -> slow until distance 10.. then FAST
-        if(Math.abs(distX) > 100){
-            this.dir2anchorX = distX/50;
-        }else if(Math.abs(distX) > 50){
-            this.dir2anchorX = distX/8;
-        }else if(Math.abs(distX) > 10) {
-            this.dir2anchorX = distX/3;
-        }else{
-            this.dir2anchorX = distX/2;
-        }
-
-        if(Math.abs(distY) > 100){
-            this.dir2anchorY = distY/50;
-        }else if(Math.abs(distY) > 50){
-            this.dir2anchorY = distY/10;
-        }else if(Math.abs(distY) > 10) {
-            this.dir2anchorY = distY/5;
-        }else{
-            this.dir2anchorY = distY/2;
-        }
-
-
-//        if(life > this.maxLife - 50){
-//            x += dx;
-//            y += dy;
-//        }else{
-            x += dir2anchorX;
-            y += dir2anchorY;
-//        }
-
-        life--;
-        return life <= 0;
     }
 
 
