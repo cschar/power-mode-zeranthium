@@ -24,7 +24,10 @@ import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author Baptiste Mesta
@@ -150,17 +153,35 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         int life = settings.getLifetime();
 
 
+        int lizard_chance = LizardConfig.CHANCE_PER_KEY_PRESS(settings);
+        int r = ThreadLocalRandom.current().nextInt(1, 100 +1);
+        if (settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LIZARD) && (r <= lizard_chance)){
 
-        if (settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LIZARD)){
+
             String colorRGB = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIZARD, "lizardColor");
             Color lizardColor = new Color(Integer.parseInt(colorRGB));
 
             int maxPsiSearch = LizardConfig.MAX_PSI_SEARCH(settings);
-            for(Anchor a: anchors){
+            int chanceOfSpawn =  LizardConfig.CHANCE_OF_SPAWN(settings);
+            int maxAnchorsToUse = LizardConfig.MAX_ANCHORS_TO_USE(settings);
+
+            ArrayList<Anchor> anchorList = new ArrayList<Anchor>(Arrays.asList(anchors));
+            Collections.shuffle(anchorList);
+
+            int anchorsUsed = 0;
+            for(Anchor a: anchorList){
+                if(anchorsUsed >= maxAnchorsToUse) break;
+//            for(Anchor a: anchors){
                 if( Math.abs(a.anchorOffset - a.cursorOffset) > (maxPsiSearch) ){
                     continue;
                 }
 
+                r = ThreadLocalRandom.current().nextInt(1, 100 +1);
+                if(r > chanceOfSpawn){
+                    continue;
+                }
+
+                anchorsUsed += 1;
                 final ParticleSpriteLizardAnchor e = new ParticleSpriteLizardAnchor(x, y, dx, dy, a.p.x, a.p.y, size, life, lizardColor);
                 particles.add(e);
             }

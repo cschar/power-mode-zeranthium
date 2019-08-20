@@ -91,5 +91,14 @@ public class Config extends JPanel {
         }
     }
 
+    public static int getIntProperty(PowerMode3 settings, PowerMode3.SpriteType type, String propertyName, int defaultValue){
+        String property = settings.getSpriteTypeProperty(type, propertyName);
+        if(property != null){
+            return Integer.parseInt(property);
+        }else{
+            return defaultValue;
+        }
+    }
+
 
 }

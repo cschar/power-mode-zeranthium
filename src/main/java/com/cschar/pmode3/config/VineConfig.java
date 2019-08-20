@@ -99,6 +99,7 @@ public class VineConfig extends JPanel {
                 0, maxPsiSearchLimit,
                 "Distance to Psi Anchors will use when spawning vines (cannot be greater than max defined at top)");
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.VINE, "maxPsiSearchDistance", String.valueOf(vinePsiDistance));
+
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.VINE, "spriteEnabled", String.valueOf(spriteEnabled.isSelected()));
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.VINE, "growFromRight", String.valueOf(growFromRight.isSelected()));
     }
@@ -106,23 +107,12 @@ public class VineConfig extends JPanel {
 
 
     public static boolean USE_SPRITES(PowerMode3 settings){
-        String spriteEnabled = settings.getSpriteTypeProperty(PowerMode3.SpriteType.VINE, "spriteEnabled");
-        if(spriteEnabled != null){
-            return Boolean.parseBoolean(spriteEnabled);
-        }else{
-            return false;
-        }
+        return Config.getBoolProperty(settings, PowerMode3.SpriteType.VINE,"spriteEnabled");
     }
 
 
     public static int MAX_PSI_SEARCH(PowerMode3 settings) {
         return Config.getIntProperty(settings, PowerMode3.SpriteType.VINE,"maxPsiSearchDistance");
-//        String value = settings.getSpriteTypeProperty(PowerMode3.SpriteType.VINE, "maxPsiSearchDistance");
-//        if(value != null){
-//            return Integer.parseInt(value);
-//        }else{
-//            return 0;
-//        }
     }
 
     public static boolean GROW_FROM_RIGHT(PowerMode3 settings){

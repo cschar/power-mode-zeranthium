@@ -83,34 +83,6 @@ public class LightningConfig extends JPanel {
 
     }
 
-    public static int CHANCE_OF_LIGHTNING(PowerMode3 settings){
-        String chanceOfLightning = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "chanceOfLightning");
-        if(chanceOfLightning != null){
-            return Integer.parseInt(chanceOfLightning);
-        }else{
-            return 0;
-        }
-    }
-
-    public static boolean INNER_BEAM_ENABLED(PowerMode3 settings){
-
-        String isEnabled = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "innerBeamEnabled");
-        if(isEnabled != null){
-            return Boolean.valueOf(isEnabled);
-        }else{
-            return false;
-        }
-    }
-
-    public static boolean OUTER_BEAM_ENABLED(PowerMode3 settings){
-
-        String isEnabled = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "outerBeamEnabled");
-        if(isEnabled != null){
-            return Boolean.valueOf(isEnabled);
-        }else{
-            return false;
-        }
-    }
 
     public void loadValues(){
         String chanceOfLightning = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "chanceOfLightning");
@@ -165,5 +137,17 @@ public class LightningConfig extends JPanel {
         return this.mainPanel;
     }
 
+
+    public static int CHANCE_OF_LIGHTNING(PowerMode3 settings){
+        return Config.getIntProperty(settings, PowerMode3.SpriteType.LIGHTNING, "chanceOfLightning");
+    }
+
+    public static boolean INNER_BEAM_ENABLED(PowerMode3 settings){
+        return Config.getBoolProperty(settings, PowerMode3.SpriteType.LIGHTNING, "innerBeamEnabled");
+    }
+
+    public static boolean OUTER_BEAM_ENABLED(PowerMode3 settings){
+        return Config.getBoolProperty(settings, PowerMode3.SpriteType.LIGHTNING, "outerBeamEnabled");
+    }
 
 }
