@@ -32,6 +32,8 @@ import java.util.Map;
 
 /**
  * @author Baptiste Mesta
+ *
+ * modified by cschar
  */
 class ParticleContainerManager extends EditorFactoryAdapter {
 
@@ -104,6 +106,12 @@ class ParticleContainerManager extends EditorFactoryAdapter {
         }
 
 
+    }
+
+    public class AnchorPoint{
+        Point p;
+        int anchorOffset;
+        int cursorOffset;
     }
 
     public Point[] getAnchors(PsiFile psiFile, Editor editor, ParticleContainer particleContainer){

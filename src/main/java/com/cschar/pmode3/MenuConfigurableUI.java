@@ -12,6 +12,8 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 
 public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private JPanel mainPanel;
@@ -38,8 +40,10 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private LizardConfig lizardConfig;
     private VineConfig vineConfig;
 
+    PowerMode3 settings;
     //Constructor is called _AFTER_ createUIComponents when using IntelliJ GUI designer
     public MenuConfigurableUI(PowerMode3 powerMode3) {
+        settings = powerMode3;
         isEnabledCheckBox.setSelected(powerMode3.isEnabled());
 
         shakeDistanceTextField.setText(Integer.toString(powerMode3.getShakeDistance()));
@@ -155,13 +159,29 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-//        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-//        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-//        scrollPane.setBounds(50, 30, 700, 200);
 
-//        JPanel contentPane = new JPanel(null);
-//        contentPane.setPreferredSize(new Dimension(500, 400));
-//        contentPane.add(scrollPane);
+
+        scrollPane.getVerticalScrollBar().getValue();
+        scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+            @Override
+            public void adjustmentValueChanged(AdjustmentEvent e) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        settings.setScrollBarPosition(e.getValue());
+//                        PowerMode3.getInstance().setScrollBarPosition(e.getValue());
+                    }
+                });
+            }
+        });
+
+        //https://stackoverflow.com/a/46204157/403403
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                scrollPane.getVerticalScrollBar().setValue(settings.getScrollBarPosition());
+            }
+        });
 
 //        return contentPane;
         return scrollPane;

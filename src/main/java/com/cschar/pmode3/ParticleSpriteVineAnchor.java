@@ -146,31 +146,37 @@ public class ParticleSpriteVineAnchor extends Particle{
             }else{
                 x = tmpx;
                 y = tmpy;
-            }
-            float angleIncr = 0;
 
-            //add squiggle movement
-            x += ((radius / 10) + 5 * randXSquiggleOffset) * Math.sin((5 * randXSquiggleOffset) * curAngle);
-            y += (radius / 10) * Math.sin((5 * randYSquiggleOffset) * curAngle);
+                float angleIncr = -0.05f;
 
-            if(spawnsFromBelow) {
-                angleIncr = -0.05f;
-            }else {
-                angleIncr = -0.05f;
+                //add squiggle movement
+                x += ((radius / 10) + 5 * randXSquiggleOffset) * Math.sin((5 * randXSquiggleOffset) * curAngle);
+                y += (radius / 10) * Math.sin((5 * randYSquiggleOffset) * curAngle);
+
+
+                curAngle += angleIncr;  // clockwise  --  on bottom
+//            prevPoints.add(new Point(x,y));
+                prevPoints.add(new VinePoint(x,y, curAngle, spawnsFromBelow));
             }
+
+
+
+
+//            if(spawnsFromBelow) {
+//                angleIncr = -0.05f;
+//            }else {
+//                angleIncr = -0.05f;
+//            }
 
             //so particles dont go infront of text, less Looping aesthetic though
 //                if(spawnsFromRight && !spawnsFromBelow){
-//                    angleIncr = 0.05f;
+//                    angleIncr *= -1;
 //                }
 //                if(spawnsFromRight && spawnsFromBelow){
-//                    angleIncr = 0.05f;
+//                    angleIncr *= -1;
 //                }
 
 
-            curAngle += angleIncr;  // clockwise  --  on bottom
-//            prevPoints.add(new Point(x,y));
-            prevPoints.add(new VinePoint(x,y, curAngle, spawnsFromBelow));
         } //if life % 2 == 0
 
 
@@ -179,10 +185,11 @@ public class ParticleSpriteVineAnchor extends Particle{
     }
 
     boolean isNearEnd(int x, int y){
+        int dist = 20;
         if(spawnsFromBelow){ //add height for caretline
-            return (Math.abs(x - initialX) < 15 && Math.abs(y - (initialY + 20)) < 15);
+            return (Math.abs(x - initialX) < dist && Math.abs(y - (initialY + 20)) < dist);
         }else{
-            return (Math.abs(x - initialX) < 15 && Math.abs(y - initialY) < 15);
+            return (Math.abs(x - initialX) < dist && Math.abs(y - initialY) < dist);
         }
     }
 
@@ -197,7 +204,7 @@ public class ParticleSpriteVineAnchor extends Particle{
                 g2d.setColor(Color.CYAN);
             }
 
-            g2d.drawString(String.format("anchorAngle %.3f (cur: %.3f) ", initAnchorAngle, curAngle), anchorX - 20, anchorY-30);
+//            g2d.drawString(String.format("anchorAngle %.3f (cur: %.3f) ", initAnchorAngle, curAngle), anchorX - 20, anchorY-30);
             g2d.fillRect(x - (8 / 2), y - (8 / 2), 8, 8);
 
             for( VinePoint p: prevPoints){
@@ -219,10 +226,6 @@ public class ParticleSpriteVineAnchor extends Particle{
                         -sprite.getHeight() / 2 - 15); // around bracket height
 
 
-//            if(this.anchorX < this.initialX){ //flip image
-//                at.scale(-1.0f, 1.0f);
-//                at.translate(-1*sprite.getWidth(), 0);  //* -1 now actually sends it RIght on screen
-//            }
 
                 g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.9f));
 //            g2d.drawImage(sprite, at, null);
@@ -250,10 +253,6 @@ public class ParticleSpriteVineAnchor extends Particle{
                     }
 
 
-//                if(this.anchorX < this.initialX){ //flip image
-//                    at.scale(-1.0f, 1.0f);
-//                    at.translate(-1*sprite.getWidth(), 0);  //* -1 now actually sends it RIght on screen
-//                }
                     g2d.drawImage(sprite, at, null);
                 }
             }

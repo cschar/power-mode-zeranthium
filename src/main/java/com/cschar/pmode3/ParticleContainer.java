@@ -27,6 +27,8 @@ import java.util.Iterator;
 
 /**
  * @author Baptiste Mesta
+ *
+ * Modified by cschar
  */
 public class ParticleContainer extends JComponent implements ComponentListener {
 
@@ -136,8 +138,6 @@ public class ParticleContainer extends JComponent implements ComponentListener {
     }
 
     public void addParticleUsingAnchors(int x, int y, Point[] anchors, PowerMode3 settings) {
-        //TODO configurable
-
 
         int dx, dy;
         dx = (int) (Math.random() * 4) * (Math.random() > 0.5 ? -1 : 1);

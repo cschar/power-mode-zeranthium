@@ -63,6 +63,10 @@ public class PowerMode3 implements BaseComponent,
     @com.intellij.util.xmlb.annotations.Transient
     Color particleColor;
 
+
+    private int scrollBarPosition = 0;
+//    public String scrollBarPosition2 = "0";
+
     private boolean enabled = true;
     private int shakeDistance = 5;
     private int numOfParticles = 7;
@@ -268,5 +272,7 @@ public class PowerMode3 implements BaseComponent,
     public int getShakeDistance() {  return shakeDistance;  }
     public void setShakeDistance(int shakeDistance) {   this.shakeDistance = shakeDistance;  }
 
+    public int getScrollBarPosition() {   return scrollBarPosition;  }
+    public void setScrollBarPosition(int scrollBarPosition) {  this.scrollBarPosition = scrollBarPosition; }
 }
 
