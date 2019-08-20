@@ -14,6 +14,7 @@
 package com.cschar.pmode3;
 
 import com.cschar.pmode3.ui.LightningConfig;
+import com.cschar.pmode3.ui.VineConfig;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 
@@ -162,7 +163,8 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
         if(settings.getSpriteTypeEnabled(PowerMode3.SpriteType.VINE)){
             for(Point p: anchors){
-                final ParticleSpriteVineAnchor e = new ParticleSpriteVineAnchor(x, y, dx, dy, p.x, p.y, size, life, Color.GREEN);
+                final ParticleSpriteVineAnchor e = new ParticleSpriteVineAnchor(x, y, dx, dy, p.x, p.y,
+                        size, life, Color.GREEN, VineConfig.USE_SPRITES(settings));
                 particles.add(e);
             }
         }

@@ -52,13 +52,13 @@ public class ParticleSpriteVineAnchor extends Particle{
     double curAngle;
     double adjacent;
 
-
+    private boolean useSprite;
     private boolean spawnsFromBelow = false;
     private boolean spawnsFromRight = false;
     public ParticleSpriteVineAnchor(int x, int y, int dx, int dy,
-                                    int anchorX, int anchorY, int size, int life, Color c) {
+                                    int anchorX, int anchorY, int size, int life, Color c, boolean useSprite) {
         super(x,y,dx,dy,size,life,c);
-
+        this.useSprite = useSprite;
         sprite = ParticleUtils.loadSprite(String.format("/blender/vine/0001.png"));
         int scale = 4;
         sprite  =  Scalr.resize(sprite, Scalr.Method.BALANCED,
@@ -191,9 +191,6 @@ public class ParticleSpriteVineAnchor extends Particle{
 
         if (life > 0) {
             Graphics2D g2d = (Graphics2D) g.create();
-//            final AffineTransform identity = new AffineTransform();
-//            g2d.setTransform(identity);
-
 
             g2d.setColor(c);
             if(anchorY > initialY) {
@@ -201,28 +198,25 @@ public class ParticleSpriteVineAnchor extends Particle{
             }
 
             g2d.drawString(String.format("anchorAngle %.3f (cur: %.3f) ", initAnchorAngle, curAngle), anchorX - 20, anchorY-30);
-
             g2d.fillRect(x - (8 / 2), y - (8 / 2), 8, 8);
 
-//            for( Point p: prevPoints){
             for( VinePoint p: prevPoints){
                 g2d.fillRect((int) p.p.x - (4 / 2), (int) p.p.y - (4 / 2), 4, 4);
             }
-
-//            g2d.setColor(Color.RED);
-//            g2d.fillRect(midPoint.x - (8 / 2), midPoint.y - (8 / 2), 8, 8);
+//            g2d.setColor(Color.RED);  g2d.fillRect(midPoint.x - (8 / 2), midPoint.y - (8 / 2), 8, 8);
 
             g2d.setColor(Color.ORANGE);
             g2d.fillRect(anchorX - (8 / 2), anchorY - (8 / 2), 8, 8);
 
 
-            //Draw sprites
+            if(useSprite) {
+                //Draw sprites
 
-            AffineTransform at = new AffineTransform();
+                AffineTransform at = new AffineTransform();
 
-            at.translate(x , y );
-            at.translate(-sprite.getWidth()/2,
-                    -sprite.getHeight()/2 - 15); // around bracket height
+                at.translate(x, y);
+                at.translate(-sprite.getWidth() / 2,
+                        -sprite.getHeight() / 2 - 15); // around bracket height
 
 
 //            if(this.anchorX < this.initialX){ //flip image
@@ -230,38 +224,38 @@ public class ParticleSpriteVineAnchor extends Particle{
 //                at.translate(-1*sprite.getWidth(), 0);  //* -1 now actually sends it RIght on screen
 //            }
 
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.9f));
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.9f));
 //            g2d.drawImage(sprite, at, null);
 
 
-            Iterator<VinePoint> iter =  prevPoints.iterator();
-            while(iter.hasNext()){
-                VinePoint p = iter.next();
-                if(iter.hasNext()){ //skip every 2nd point
-                    p = iter.next();
-                }
+                Iterator<VinePoint> iter = prevPoints.iterator();
+                while (iter.hasNext()) {
+                    VinePoint p = iter.next();
+                    if (iter.hasNext()) { //skip every 2nd point
+                        p = iter.next();
+                    }
 
-                at = new AffineTransform();
+                    at = new AffineTransform();
 
 //                at.rotate(curAngle);
-                at.translate(p.p.x , p.p.y );
-                at.translate(-sprite.getWidth()/2,
-                        -sprite.getHeight()/2 - 15); // around bracket height
-                if(p.spawnsFromBelow) {
-                    at.rotate(Math.PI / 2);
-                    at.rotate(p.angle);
-                }else{
-                    at.rotate(-1* (Math.PI / 2));
-                    at.rotate(-1*p.angle);
-                }
-
+                    at.translate(p.p.x, p.p.y);
+                    at.translate(-sprite.getWidth() / 2,
+                            -sprite.getHeight() / 2 - 15); // around bracket height
+                    if (p.spawnsFromBelow) {
+                        at.rotate(Math.PI / 2);
+                        at.rotate(p.angle);
+                    } else {
+                        at.rotate(-1 * (Math.PI / 2));
+                        at.rotate(-1 * p.angle);
+                    }
 
 
 //                if(this.anchorX < this.initialX){ //flip image
 //                    at.scale(-1.0f, 1.0f);
 //                    at.translate(-1*sprite.getWidth(), 0);  //* -1 now actually sends it RIght on screen
 //                }
-                g2d.drawImage(sprite, at, null);
+                    g2d.drawImage(sprite, at, null);
+                }
             }
 
             g2d.dispose();

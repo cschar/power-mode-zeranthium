@@ -2,6 +2,7 @@ package com.cschar.pmode3;
 
 import com.cschar.pmode3.ui.LightningConfig;
 import com.cschar.pmode3.ui.LizardConfig;
+import com.cschar.pmode3.ui.VineConfig;
 import com.intellij.openapi.options.ConfigurableUi;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.ui.JBColor;
@@ -35,6 +36,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
     private LightningConfig lightningConfig;
     private LizardConfig lizardConfig;
+    private VineConfig vineConfig;
 
     //Constructor is called _AFTER_ createUIComponents when using IntelliJ GUI designer
     public MenuConfigurableUI(PowerMode3 powerMode3) {
@@ -77,6 +79,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         //already initialized from createUIComponents below
         this.lizardConfig.loadValues();
         this.lightningConfig.loadValues();
+        this.vineConfig.loadValues();
     }
 
 
@@ -134,10 +137,13 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         //LightningALT CUSTOM
 
 
-        //Lizard CUSTOM
-        this.lizardConfig.saveValues(Integer.parseInt(maxPsiSearchDistanceTextField.getText()));
+
+        //save values
+        int maxPsiSearch = Integer.parseInt(maxPsiSearchDistanceTextField.getText());
+        this.lizardConfig.saveValues(maxPsiSearch);
 
         this.lightningConfig.saveValues();
+        this.vineConfig.saveValues(maxPsiSearch);
 
 
     }
@@ -186,9 +192,10 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         this.theCustomCreatePanel.add(lizardConfig.getConfigPanel());
         this.theCustomCreatePanel.add(this.createSpacer());
 
-//        lizardConfigPanel.maxPsiAnchorDistanceTextField.setText();
-//        LizardConfigPanel lizardConf = new LizardConfigPanel(PowerMode3.getInstance());
-//        this.myCustomCreatePanel.add(lizardConf);
+
+        this.vineConfig = new VineConfig(settings);
+        this.theCustomCreatePanel.add(vineConfig.getConfigPanel());
+        this.theCustomCreatePanel.add(this.createSpacer());
 
         JPanel footerPanel = new JPanel();
         footerPanel.setMinimumSize(new Dimension(100, 300));

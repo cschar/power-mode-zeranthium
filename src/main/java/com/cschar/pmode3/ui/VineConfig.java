@@ -12,13 +12,11 @@ public class VineConfig extends JPanel {
     PowerMode3 settings;
 
     public JTextField maxPsiAnchorDistanceTextField;
+    JCheckBox spriteEnabled;
 
     public VineConfig(PowerMode3 settings){
         this.settings = settings;
-//        this.add(new JLabel("Lizard options"));
 
-        //LIZARD
-        //Build without GUI designer
 
         mainPanel = new JPanel();
         mainPanel.setMaximumSize(new Dimension(1000,300));
@@ -28,15 +26,15 @@ public class VineConfig extends JPanel {
 
         JPanel secondCol = new JPanel();
         secondCol.setLayout(new BoxLayout(secondCol, BoxLayout.PAGE_AXIS));
-        JLabel headerLabel = new JLabel("Lizard Options");
+        JLabel headerLabel = new JLabel("Vine Options");
         headerLabel.setFont(new Font ("Arial", Font.BOLD, 20));
         secondCol.add(headerLabel);
         mainPanel.add(secondCol);
 
-        JPanel lizardColorPanel = ConfigPanel.getColorPickerPanel("Lizard Color", PowerMode3.SpriteType.LIZARD, settings);
-        secondCol.add(lizardColorPanel);
+        JPanel vineColorPanel = ConfigPanel.getColorPickerPanel("Vine Color", PowerMode3.SpriteType.VINE, settings);
+        secondCol.add(vineColorPanel);
 
-        //lizard density
+
         JPanel lop1 = new JPanel();
         lop1.add(new JLabel("Psi Anchor Scan Distance: "));
         this.maxPsiAnchorDistanceTextField = new JTextField("");
@@ -46,6 +44,11 @@ public class VineConfig extends JPanel {
 
         secondCol.add(lop1);
 
+        JPanel spriteEnabledPanel = new JPanel();
+        spriteEnabledPanel.add(new JLabel("Use Sprite "));
+        this.spriteEnabled = new JCheckBox("Sprite Enabled?");
+        spriteEnabledPanel.add(spriteEnabled);
+        firstCol.add(spriteEnabledPanel);
 
 
 
@@ -59,20 +62,36 @@ public class VineConfig extends JPanel {
 
 
     public void loadValues(){
-        String psiSearchDistance = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIZARD, "maxPsiSearchDistance");
+        String psiSearchDistance = settings.getSpriteTypeProperty(PowerMode3.SpriteType.VINE, "maxPsiSearchDistance");
         if(psiSearchDistance != null){
             this.maxPsiAnchorDistanceTextField.setText(psiSearchDistance);
         }else{
             this.maxPsiAnchorDistanceTextField.setText("0");
         }
 
+        String spriteEnabled = settings.getSpriteTypeProperty(PowerMode3.SpriteType.VINE, "spriteEnabled");
+        if(spriteEnabled != null){
+            this.spriteEnabled.setSelected(Boolean.valueOf(spriteEnabled));
+        }else{
+            this.spriteEnabled.setSelected(false);
+        }
     }
 
     public void saveValues(int maxPsiSearchLimit) throws ConfigurationException {
 
-        int lizardPsiDistance = ConfigPanel.getJTextFieldWithinBounds(this.maxPsiAnchorDistanceTextField,
+        int vinePsiDistance = ConfigPanel.getJTextFieldWithinBounds(this.maxPsiAnchorDistanceTextField,
                 0, maxPsiSearchLimit,
-                "Distance to Psi Anchors will use when spawning lizards (cannot be greater than max defined at top)");
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LIZARD, "maxPsiSearchDistance", String.valueOf(lizardPsiDistance));
+                "Distance to Psi Anchors will use when spawning vines (cannot be greater than max defined at top)");
+        settings.setSpriteTypeProperty(PowerMode3.SpriteType.VINE, "maxPsiSearchDistance", String.valueOf(vinePsiDistance));
+        settings.setSpriteTypeProperty(PowerMode3.SpriteType.VINE, "spriteEnabled", String.valueOf(spriteEnabled.isSelected()));
+    }
+
+    public static boolean USE_SPRITES(PowerMode3 settings){
+        String spriteEnabled = settings.getSpriteTypeProperty(PowerMode3.SpriteType.VINE, "spriteEnabled");
+        if(spriteEnabled != null){
+            return Boolean.parseBoolean(spriteEnabled);
+        }else{
+            return false;
+        }
     }
 }
