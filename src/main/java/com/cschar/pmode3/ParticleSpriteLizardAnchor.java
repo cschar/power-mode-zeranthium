@@ -31,17 +31,7 @@ import java.util.logging.Logger;
 
 public class ParticleSpriteLizardAnchor extends Particle{
 
-    private static BufferedImage loadSprite(String name){
-        try {
-            return ImageIO.read(ParticleSpriteLightningAlt.class.getResource(name));
-        } catch (IOException e) {
-            Logger logger  = Logger.getLogger(ParticleSpriteLightningAlt.class.getName());
-            logger.severe("error loading image file: " + name);
-//            System.out.println("error loading image");
-            e.printStackTrace();
-        }
-        return null;
-    }
+
 
 
 
@@ -52,7 +42,7 @@ public class ParticleSpriteLizardAnchor extends Particle{
 
         sprites = new ArrayList<BufferedImage>();
         for(int i=1; i <= 10; i++){
-            BufferedImage tmp = loadSprite(String.format("/blender/lizard/0%03d.png", i));
+            BufferedImage tmp = ParticleUtils.loadSprite(String.format("/blender/lizard/0%03d.png", i));
             BufferedImage resized_image =  Scalr.resize(tmp, Scalr.Method.BALANCED,
                     tmp.getWidth()/3, tmp.getHeight()/3);
             sprites.add(resized_image);
@@ -168,9 +158,9 @@ public class ParticleSpriteLizardAnchor extends Particle{
         if(Math.abs(distX) > 100){
             this.dir2anchorX = distX/50;
         }else if(Math.abs(distX) > 50){
-            this.dir2anchorX = distX/10;
+            this.dir2anchorX = distX/8;
         }else if(Math.abs(distX) > 10) {
-            this.dir2anchorX = distX/5;
+            this.dir2anchorX = distX/3;
         }else{
             this.dir2anchorX = distX/2;
         }

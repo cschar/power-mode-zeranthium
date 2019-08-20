@@ -17,8 +17,13 @@
 
 package com.cschar.pmode3;
 
+import javafx.geometry.Point3D;
+import org.imgscalr.Scalr;
+
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -42,20 +47,22 @@ public class ParticleSpriteVineAnchor extends Particle{
 
     double radius;
 
-    double initAngle;
+
     double initAnchorAngle;
     double curAngle;
     double adjacent;
 
-    double K_initAnchorAngle;
 
-    boolean spawnsFromBelow = false;
-    boolean spawnsFromRight = false;
+    private boolean spawnsFromBelow = false;
+    private boolean spawnsFromRight = false;
     public ParticleSpriteVineAnchor(int x, int y, int dx, int dy,
                                     int anchorX, int anchorY, int size, int life, Color c) {
         super(x,y,dx,dy,size,life,c);
 
-
+        sprite = ParticleUtils.loadSprite(String.format("/blender/vine/0001.png"));
+        int scale = 4;
+        sprite  =  Scalr.resize(sprite, Scalr.Method.BALANCED,
+                sprite.getWidth()/scale, sprite.getHeight()/scale);
 
         this.maxLife = life;
         this.anchorX = anchorX;
@@ -89,19 +96,36 @@ public class ParticleSpriteVineAnchor extends Particle{
 
         curAngle = initAnchorAngle;
 
-        prevPoints = new ConcurrentLinkedQueue<Point>();
+        prevPoints = new ConcurrentLinkedQueue<VinePoint>();
 
 
         randYSquiggleOffset = ThreadLocalRandom.current().nextDouble(0.0f, 1.0f);
         randXSquiggleOffset = ThreadLocalRandom.current().nextDouble(0.0f, 1.0f);
+
+
+
+
     }
+
+    class VinePoint{
+        public VinePoint(int x, int y, double angle, boolean spawnsFromBelow){
+            this.p = new Point(x,y);
+            this.angle = angle;
+            this.spawnsFromBelow = spawnsFromBelow;
+        }
+        Point p;
+        double angle;
+        boolean spawnsFromBelow;
+    }
+
+
 
 
     double randYSquiggleOffset;
     double randXSquiggleOffset;
-    ConcurrentLinkedQueue<Point> prevPoints;
 
-    double angleDiff = 0.0f;
+    ConcurrentLinkedQueue<VinePoint> prevPoints;
+
     boolean hasFoundEnd = false;
     public boolean update() {
 
@@ -124,11 +148,11 @@ public class ParticleSpriteVineAnchor extends Particle{
                 y = tmpy;
             }
             float angleIncr = 0;
-            if(life < maxLife - 10) {
-                //add squiggle movement
-                x += ((radius / 10) + 5 * randXSquiggleOffset) * Math.sin((5 * randXSquiggleOffset) * curAngle);
-                y += (radius / 10) * Math.sin((5 * randYSquiggleOffset) * curAngle);
-            }
+
+            //add squiggle movement
+            x += ((radius / 10) + 5 * randXSquiggleOffset) * Math.sin((5 * randXSquiggleOffset) * curAngle);
+            y += (radius / 10) * Math.sin((5 * randYSquiggleOffset) * curAngle);
+
             if(spawnsFromBelow) {
                 angleIncr = -0.05f;
             }else {
@@ -145,7 +169,8 @@ public class ParticleSpriteVineAnchor extends Particle{
 
 
             curAngle += angleIncr;  // clockwise  --  on bottom
-            prevPoints.add(new Point(x,y));
+//            prevPoints.add(new Point(x,y));
+            prevPoints.add(new VinePoint(x,y, curAngle, spawnsFromBelow));
         } //if life % 2 == 0
 
 
@@ -179,16 +204,65 @@ public class ParticleSpriteVineAnchor extends Particle{
 
             g2d.fillRect(x - (8 / 2), y - (8 / 2), 8, 8);
 
-            for( Point p: prevPoints){
-                g2d.fillRect(p.x - (4 / 2), p.y - (4 / 2), 4, 4);
+//            for( Point p: prevPoints){
+            for( VinePoint p: prevPoints){
+                g2d.fillRect((int) p.p.x - (4 / 2), (int) p.p.y - (4 / 2), 4, 4);
             }
 
-            g2d.setColor(Color.RED);
-            g2d.fillRect(midPoint.x - (8 / 2), midPoint.y - (8 / 2), 8, 8);
+//            g2d.setColor(Color.RED);
+//            g2d.fillRect(midPoint.x - (8 / 2), midPoint.y - (8 / 2), 8, 8);
 
             g2d.setColor(Color.ORANGE);
             g2d.fillRect(anchorX - (8 / 2), anchorY - (8 / 2), 8, 8);
 
+
+            //Draw sprites
+
+            AffineTransform at = new AffineTransform();
+
+            at.translate(x , y );
+            at.translate(-sprite.getWidth()/2,
+                    -sprite.getHeight()/2 - 15); // around bracket height
+
+
+//            if(this.anchorX < this.initialX){ //flip image
+//                at.scale(-1.0f, 1.0f);
+//                at.translate(-1*sprite.getWidth(), 0);  //* -1 now actually sends it RIght on screen
+//            }
+
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.9f));
+//            g2d.drawImage(sprite, at, null);
+
+
+            Iterator<VinePoint> iter =  prevPoints.iterator();
+            while(iter.hasNext()){
+                VinePoint p = iter.next();
+                if(iter.hasNext()){ //skip every 2nd point
+                    p = iter.next();
+                }
+
+                at = new AffineTransform();
+
+//                at.rotate(curAngle);
+                at.translate(p.p.x , p.p.y );
+                at.translate(-sprite.getWidth()/2,
+                        -sprite.getHeight()/2 - 15); // around bracket height
+                if(p.spawnsFromBelow) {
+                    at.rotate(Math.PI / 2);
+                    at.rotate(p.angle);
+                }else{
+                    at.rotate(-1* (Math.PI / 2));
+                    at.rotate(-1*p.angle);
+                }
+
+
+
+//                if(this.anchorX < this.initialX){ //flip image
+//                    at.scale(-1.0f, 1.0f);
+//                    at.translate(-1*sprite.getWidth(), 0);  //* -1 now actually sends it RIght on screen
+//                }
+                g2d.drawImage(sprite, at, null);
+            }
 
             g2d.dispose();
         }
