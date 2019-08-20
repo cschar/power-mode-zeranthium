@@ -187,7 +187,10 @@ public class ParticleSpriteVineAnchor extends Particle{
     boolean isNearEnd(int x, int y){
         int dist = 20;
         if(spawnsFromBelow){ //add height for caretline
-            return (Math.abs(x - initialX) < dist && Math.abs(y - (initialY + 20)) < dist);
+            return (Math.abs(x - initialX) < dist &&
+
+                    (Math.abs(y - (initialY + 20)) < dist ||     //incase bottom 1 comes from right then loops top
+                     Math.abs(y - (initialY - 5)) < dist));
         }else{
             return (Math.abs(x - initialX) < dist && Math.abs(y - initialY) < dist);
         }
@@ -199,6 +202,7 @@ public class ParticleSpriteVineAnchor extends Particle{
         if (life > 0) {
             Graphics2D g2d = (Graphics2D) g.create();
 
+
             g2d.setColor(c);
             if(anchorY > initialY) {
                 g2d.setColor(Color.CYAN);
@@ -207,6 +211,7 @@ public class ParticleSpriteVineAnchor extends Particle{
 //            g2d.drawString(String.format("anchorAngle %.3f (cur: %.3f) ", initAnchorAngle, curAngle), anchorX - 20, anchorY-30);
             g2d.fillRect(x - (8 / 2), y - (8 / 2), 8, 8);
 
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
             for( VinePoint p: prevPoints){
                 g2d.fillRect((int) p.p.x - (4 / 2), (int) p.p.y - (4 / 2), 4, 4);
             }
