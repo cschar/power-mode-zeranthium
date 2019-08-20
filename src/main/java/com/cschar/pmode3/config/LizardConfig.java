@@ -1,13 +1,10 @@
-package com.cschar.pmode3.ui;
+package com.cschar.pmode3.config;
 
 import com.cschar.pmode3.PowerMode3;
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.ui.JBColor;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class LizardConfig extends JPanel {
 
@@ -27,6 +24,7 @@ public class LizardConfig extends JPanel {
         mainPanel.setMaximumSize(new Dimension(1000,300));
         mainPanel.setLayout(new GridLayout(0,2));
         JPanel firstCol = new JPanel();
+        firstCol.setLayout(new BoxLayout(firstCol, BoxLayout.PAGE_AXIS));
         mainPanel.add(firstCol);
 
         JPanel secondCol = new JPanel();
@@ -36,7 +34,7 @@ public class LizardConfig extends JPanel {
         secondCol.add(headerLabel);
         mainPanel.add(secondCol);
 
-        JPanel lizardColorPanel = ConfigPanel.getColorPickerPanel("Lizard Color", PowerMode3.SpriteType.LIZARD, settings);
+        JPanel lizardColorPanel = Config.getColorPickerPanel("Lizard Color", PowerMode3.SpriteType.LIZARD, settings);
         secondCol.add(lizardColorPanel);
 
         //lizard density
@@ -73,9 +71,20 @@ public class LizardConfig extends JPanel {
 
     public void saveValues(int maxPsiSearchLimit) throws ConfigurationException {
 
-        int lizardPsiDistance = ConfigPanel.getJTextFieldWithinBounds(this.maxPsiAnchorDistanceTextField,
+        int lizardPsiDistance = Config.getJTextFieldWithinBounds(this.maxPsiAnchorDistanceTextField,
                 0, maxPsiSearchLimit,
                 "Distance to Psi Anchors will use when spawning lizards (cannot be greater than max defined at top)");
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.LIZARD, "maxPsiSearchDistance", String.valueOf(lizardPsiDistance));
+    }
+
+
+
+    public static int MAX_PSI_SEARCH(PowerMode3 settings) {
+        String value = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIZARD, "maxPsiSearchDistance");
+        if(value != null){
+            return Integer.parseInt(value);
+        }else{
+            return 0;
+        }
     }
 }

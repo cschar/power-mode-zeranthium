@@ -1,21 +1,19 @@
-package com.cschar.pmode3.ui;
+package com.cschar.pmode3.config;
 
-import com.bmesta.powermode.PowerMode;
 import com.cschar.pmode3.PowerMode3;
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.ui.JBColor;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ConfigPanel extends JPanel {
+public class Config extends JPanel {
 
     JPanel mainPanel;
     PowerMode3 settings;
 
-    public ConfigPanel(PowerMode3 settings){
+    public Config(PowerMode3 settings){
         this.settings = settings;
     }
 
@@ -73,4 +71,25 @@ public class ConfigPanel extends JPanel {
         }
         return newValue;
     }
+
+
+    public static boolean getBoolProperty(PowerMode3 settings, PowerMode3.SpriteType type, String propertyName){
+        String property = settings.getSpriteTypeProperty(type, propertyName);
+        if(property != null){
+            return Boolean.parseBoolean(property);
+        }else{
+            return false;
+        }
+    }
+
+    public static int getIntProperty(PowerMode3 settings, PowerMode3.SpriteType type, String propertyName){
+        String property = settings.getSpriteTypeProperty(type, propertyName);
+        if(property != null){
+            return Integer.parseInt(property);
+        }else{
+            return 0;
+        }
+    }
+
+
 }

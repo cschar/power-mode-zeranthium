@@ -1,6 +1,5 @@
-package com.cschar.pmode3.ui;
+package com.cschar.pmode3.config;
 
-import com.bmesta.powermode.PowerMode;
 import com.cschar.pmode3.PowerMode3;
 import com.intellij.openapi.options.ConfigurationException;
 
@@ -14,6 +13,7 @@ public class VineConfig extends JPanel {
 
     public JTextField maxPsiAnchorDistanceTextField;
     JCheckBox spriteEnabled;
+    JCheckBox growFromRight;
 
     public VineConfig(PowerMode3 settings){
         this.settings = settings;
@@ -23,6 +23,7 @@ public class VineConfig extends JPanel {
         mainPanel.setMaximumSize(new Dimension(1000,300));
         mainPanel.setLayout(new GridLayout(0,2));
         JPanel firstCol = new JPanel();
+        firstCol.setLayout(new BoxLayout(firstCol, BoxLayout.PAGE_AXIS));
         mainPanel.add(firstCol);
 
         JPanel secondCol = new JPanel();
@@ -32,7 +33,7 @@ public class VineConfig extends JPanel {
         secondCol.add(headerLabel);
         mainPanel.add(secondCol);
 
-        JPanel vineColorPanel = ConfigPanel.getColorPickerPanel("Vine Color", PowerMode3.SpriteType.VINE, settings);
+        JPanel vineColorPanel = Config.getColorPickerPanel("Vine Color", PowerMode3.SpriteType.VINE, settings);
         secondCol.add(vineColorPanel);
 
 
@@ -50,6 +51,11 @@ public class VineConfig extends JPanel {
         this.spriteEnabled = new JCheckBox("Sprite Enabled?");
         spriteEnabledPanel.add(spriteEnabled);
         firstCol.add(spriteEnabledPanel);
+
+
+        this.growFromRight = new JCheckBox("Grow From Right?");
+
+        firstCol.add(this.growFromRight);
 
 
 
@@ -77,16 +83,24 @@ public class VineConfig extends JPanel {
             this.spriteEnabled.setSelected(false);
         }
 
+        String growFromRight = settings.getSpriteTypeProperty(PowerMode3.SpriteType.VINE, "growFromRight");
+        if(growFromRight != null){
+            this.growFromRight.setSelected(Boolean.valueOf(growFromRight));
+        }else{
+            this.growFromRight.setSelected(false);
+        }
+
 
     }
 
     public void saveValues(int maxPsiSearchLimit) throws ConfigurationException {
 
-        int vinePsiDistance = ConfigPanel.getJTextFieldWithinBounds(this.maxPsiAnchorDistanceTextField,
+        int vinePsiDistance = Config.getJTextFieldWithinBounds(this.maxPsiAnchorDistanceTextField,
                 0, maxPsiSearchLimit,
                 "Distance to Psi Anchors will use when spawning vines (cannot be greater than max defined at top)");
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.VINE, "maxPsiSearchDistance", String.valueOf(vinePsiDistance));
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.VINE, "spriteEnabled", String.valueOf(spriteEnabled.isSelected()));
+        settings.setSpriteTypeProperty(PowerMode3.SpriteType.VINE, "growFromRight", String.valueOf(growFromRight.isSelected()));
     }
 
 
@@ -102,13 +116,20 @@ public class VineConfig extends JPanel {
 
 
     public static int MAX_PSI_SEARCH(PowerMode3 settings) {
-        String value = settings.getSpriteTypeProperty(PowerMode3.SpriteType.VINE, "maxPsiSearchDistance");
-        if(value != null){
-            return Integer.parseInt(value);
-        }else{
-            return 0;
-        }
+        return Config.getIntProperty(settings, PowerMode3.SpriteType.VINE,"maxPsiSearchDistance");
+//        String value = settings.getSpriteTypeProperty(PowerMode3.SpriteType.VINE, "maxPsiSearchDistance");
+//        if(value != null){
+//            return Integer.parseInt(value);
+//        }else{
+//            return 0;
+//        }
     }
+
+    public static boolean GROW_FROM_RIGHT(PowerMode3 settings){
+        return Config.getBoolProperty(settings, PowerMode3.SpriteType.VINE,"growFromRight");
+    }
+
+
 
 
 }

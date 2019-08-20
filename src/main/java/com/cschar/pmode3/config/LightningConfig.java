@@ -1,14 +1,11 @@
-package com.cschar.pmode3.ui;
+package com.cschar.pmode3.config;
 
 import com.cschar.pmode3.ParticleSpriteLightningAlt;
 import com.cschar.pmode3.PowerMode3;
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.ui.JBColor;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class LightningConfig extends JPanel {
 
@@ -30,6 +27,7 @@ public class LightningConfig extends JPanel {
         mainPanel.setMaximumSize(new Dimension(1000,300));
         mainPanel.setLayout(new GridLayout(0,2));
         JPanel firstCol = new JPanel();
+        firstCol.setLayout(new BoxLayout(firstCol, BoxLayout.PAGE_AXIS));
         mainPanel.add(firstCol);
 
         JPanel secondCol = new JPanel();
@@ -54,8 +52,8 @@ public class LightningConfig extends JPanel {
 
 
 
-        JPanel innerBeamColorPanel = ConfigPanel.getColorPickerPanel("inner Beam Color", PowerMode3.SpriteType.LIGHTNING, settings);
-        JPanel outerBeamColorPanel = ConfigPanel.getColorPickerPanel("outer Beam Color", PowerMode3.SpriteType.LIGHTNING, settings);
+        JPanel innerBeamColorPanel = Config.getColorPickerPanel("inner Beam Color", PowerMode3.SpriteType.LIGHTNING, settings);
+        JPanel outerBeamColorPanel = Config.getColorPickerPanel("outer Beam Color", PowerMode3.SpriteType.LIGHTNING, settings);
 
         JPanel innerBeamJPanel = new JPanel();
         this.innerBeamEnabledCheckBox = new JCheckBox("is enabled?", true);
@@ -136,7 +134,7 @@ public class LightningConfig extends JPanel {
 
     public void saveValues() throws ConfigurationException {
 
-        int chanceOfLightning = ConfigPanel.getJTextFieldWithinBounds(this.chanceOfLightningTextField,
+        int chanceOfLightning = Config.getJTextFieldWithinBounds(this.chanceOfLightningTextField,
                 0, 100,
                 "chance lightning spawns on keypress");
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "chanceOfLightning", String.valueOf(chanceOfLightning));

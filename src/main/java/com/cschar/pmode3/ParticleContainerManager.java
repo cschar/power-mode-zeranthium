@@ -141,8 +141,8 @@ class ParticleContainerManager extends EditorFactoryAdapter {
         int searchLength = PowerMode3.getInstance().getMaxPsiSearchDistance();
 //        int searchLength = settings.getMaxPsiSearchDistance();
 
-        for(int i =0; i < searchLength; i++){
-            int anchorOffset = caretOffset - (searchLength/2) + i;
+        for(int i =0; i < searchLength*2; i++){
+            int anchorOffset = caretOffset - (searchLength) + i;
             if(anchorOffset <= 0){ continue; }
             PsiElement e = PsiUtil.getElementAtOffset(psiFile, anchorOffset);
             if(e.toString() == "PsiWhiteSpace"){

@@ -13,8 +13,9 @@
 
 package com.cschar.pmode3;
 
-import com.cschar.pmode3.ui.LightningConfig;
-import com.cschar.pmode3.ui.VineConfig;
+import com.cschar.pmode3.config.LightningConfig;
+import com.cschar.pmode3.config.LizardConfig;
+import com.cschar.pmode3.config.VineConfig;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 
@@ -154,8 +155,12 @@ public class ParticleContainer extends JComponent implements ComponentListener {
             String colorRGB = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIZARD, "lizardColor");
             Color lizardColor = new Color(Integer.parseInt(colorRGB));
 
+            int maxPsiSearch = LizardConfig.MAX_PSI_SEARCH(settings);
             for(Anchor a: anchors){
-//                System.out.println(String.format("spawning point( %d, %d) to go to anchor: x:%d - y:%d", x,y, p.x,p.y));
+                if( Math.abs(a.anchorOffset - a.cursorOffset) > (maxPsiSearch) ){
+                    continue;
+                }
+
                 final ParticleSpriteLizardAnchor e = new ParticleSpriteLizardAnchor(x, y, dx, dy, a.p.x, a.p.y, size, life, lizardColor);
                 particles.add(e);
             }
@@ -164,10 +169,14 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         if(settings.getSpriteTypeEnabled(PowerMode3.SpriteType.VINE)){
             int maxPsiSearch = VineConfig.MAX_PSI_SEARCH(settings);
             for(Anchor a: anchors){
-                System.out.println(String.format("anchor offset %d  %d", a.anchorOffset, a.cursorOffset));
-                if( Math.abs(a.anchorOffset - a.cursorOffset) > (maxPsiSearch/2) ){
+                if( Math.abs(a.anchorOffset - a.cursorOffset) > (maxPsiSearch) ){
                     continue;
                 }
+
+                if(!VineConfig.GROW_FROM_RIGHT(settings) && ((x - a.p.x) < 0) ){
+                    continue;
+                }
+
                 final ParticleSpriteVineAnchor e = new ParticleSpriteVineAnchor(x, y, dx, dy, a.p.x, a.p.y,
                         size, life, Color.GREEN, VineConfig.USE_SPRITES(settings));
                 particles.add(e);

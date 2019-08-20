@@ -1,8 +1,8 @@
 package com.cschar.pmode3;
 
-import com.cschar.pmode3.ui.LightningConfig;
-import com.cschar.pmode3.ui.LizardConfig;
-import com.cschar.pmode3.ui.VineConfig;
+import com.cschar.pmode3.config.LightningConfig;
+import com.cschar.pmode3.config.LizardConfig;
+import com.cschar.pmode3.config.VineConfig;
 import com.intellij.openapi.options.ConfigurableUi;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.ui.JBColor;

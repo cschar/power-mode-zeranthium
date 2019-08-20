@@ -53,14 +53,18 @@ public class ParticleSpriteVineAnchor extends Particle{
     double adjacent;
 
     private boolean useSprite;
+
     private boolean spawnsFromBelow = false;
     private boolean spawnsFromRight = false;
     public ParticleSpriteVineAnchor(int x, int y, int dx, int dy,
-                                    int anchorX, int anchorY, int size, int life, Color c, boolean useSprite) {
+                                    int anchorX, int anchorY, int size, int life, Color c,
+                                    boolean useSprite) {
         super(x,y,dx,dy,size,life,c);
         this.useSprite = useSprite;
+
+
         sprite = ParticleUtils.loadSprite(String.format("/blender/vine/0001.png"));
-        int scale = 4;
+        int scale = 6;
         sprite  =  Scalr.resize(sprite, Scalr.Method.BALANCED,
                 sprite.getWidth()/scale, sprite.getHeight()/scale);
 
@@ -202,6 +206,8 @@ public class ParticleSpriteVineAnchor extends Particle{
         if (life > 0) {
             Graphics2D g2d = (Graphics2D) g.create();
 
+            //set alpha based on lifetime
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f *(life / (float) maxLife)));
 
             g2d.setColor(c);
             if(anchorY > initialY) {
@@ -211,7 +217,7 @@ public class ParticleSpriteVineAnchor extends Particle{
 //            g2d.drawString(String.format("anchorAngle %.3f (cur: %.3f) ", initAnchorAngle, curAngle), anchorX - 20, anchorY-30);
             g2d.fillRect(x - (8 / 2), y - (8 / 2), 8, 8);
 
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+
             for( VinePoint p: prevPoints){
                 g2d.fillRect((int) p.p.x - (4 / 2), (int) p.p.y - (4 / 2), 4, 4);
             }
@@ -224,15 +230,15 @@ public class ParticleSpriteVineAnchor extends Particle{
             if(useSprite) {
                 //Draw sprites
 
-                AffineTransform at = new AffineTransform();
 
-                at.translate(x, y);
-                at.translate(-sprite.getWidth() / 2,
-                        -sprite.getHeight() / 2 - 15); // around bracket height
+                AffineTransform at;
 
-
-
-                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.9f));
+                //skip first
+//                at = new AffineTransform();
+//                at.translate(x, y);
+//                at.translate(-sprite.getWidth() / 2,
+//                        -sprite.getHeight() / 2 - 15); // around bracket height
+//            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.9f));
 //            g2d.drawImage(sprite, at, null);
 
 
@@ -256,6 +262,7 @@ public class ParticleSpriteVineAnchor extends Particle{
                         at.rotate(-1 * (Math.PI / 2));
                         at.rotate(-1 * p.angle);
                     }
+                    at.translate(0, 15); //brings it down
 
 
                     g2d.drawImage(sprite, at, null);
