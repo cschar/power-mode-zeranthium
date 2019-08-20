@@ -137,7 +137,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
     }
 
-    public void addParticleUsingAnchors(int x, int y, Point[] anchors, PowerMode3 settings) {
+    public void addParticleUsingAnchors(int x, int y, Anchor[] anchors, PowerMode3 settings) {
 
         int dx, dy;
         dx = (int) (Math.random() * 4) * (Math.random() > 0.5 ? -1 : 1);
@@ -154,16 +154,21 @@ public class ParticleContainer extends JComponent implements ComponentListener {
             String colorRGB = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIZARD, "lizardColor");
             Color lizardColor = new Color(Integer.parseInt(colorRGB));
 
-            for(Point p: anchors){
+            for(Anchor a: anchors){
 //                System.out.println(String.format("spawning point( %d, %d) to go to anchor: x:%d - y:%d", x,y, p.x,p.y));
-                final ParticleSpriteLizardAnchor e = new ParticleSpriteLizardAnchor(x, y, dx, dy, p.x, p.y, size, life, lizardColor);
+                final ParticleSpriteLizardAnchor e = new ParticleSpriteLizardAnchor(x, y, dx, dy, a.p.x, a.p.y, size, life, lizardColor);
                 particles.add(e);
             }
         }
 
         if(settings.getSpriteTypeEnabled(PowerMode3.SpriteType.VINE)){
-            for(Point p: anchors){
-                final ParticleSpriteVineAnchor e = new ParticleSpriteVineAnchor(x, y, dx, dy, p.x, p.y,
+            int maxPsiSearch = VineConfig.MAX_PSI_SEARCH(settings);
+            for(Anchor a: anchors){
+                System.out.println(String.format("anchor offset %d  %d", a.anchorOffset, a.cursorOffset));
+                if( Math.abs(a.anchorOffset - a.cursorOffset) > (maxPsiSearch/2) ){
+                    continue;
+                }
+                final ParticleSpriteVineAnchor e = new ParticleSpriteVineAnchor(x, y, dx, dy, a.p.x, a.p.y,
                         size, life, Color.GREEN, VineConfig.USE_SPRITES(settings));
                 particles.add(e);
             }
@@ -189,7 +194,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 //        this.repaint();
 //    }
 
-    public void updateWithAnchors(Point point, Point[] anchors){
+    public void updateWithAnchors(Point point, Anchor[] anchors){
         PowerMode3 settings = PowerMode3.getInstance();
 
         //TODO call once, then have each spriteType use its own specified # of particles

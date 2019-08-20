@@ -18,14 +18,11 @@ import com.intellij.openapi.editor.event.EditorFactoryAdapter;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
 import com.intellij.psi.*;
 
-import com.intellij.psi.util.PsiElementFilter;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -101,20 +98,14 @@ class ParticleContainerManager extends EditorFactoryAdapter {
         if (particleContainer != null) {
 //            particleContainer.update(point);
 
-            Point[] anchors = getAnchors(psiFile,editor,particleContainer);
+            Anchor[] anchors = getAnchors(psiFile,editor,particleContainer);
             particleContainer.updateWithAnchors(point, anchors);
         }
 
 
     }
 
-    public class AnchorPoint{
-        Point p;
-        int anchorOffset;
-        int cursorOffset;
-    }
-
-    public Point[] getAnchors(PsiFile psiFile, Editor editor, ParticleContainer particleContainer){
+    public Anchor[] getAnchors(PsiFile psiFile, Editor editor, ParticleContainer particleContainer){
 
         ScrollingModel scrollingModel = editor.getScrollingModel();
 
@@ -143,28 +134,29 @@ class ParticleContainerManager extends EditorFactoryAdapter {
         //System.out.println(String.format("filtered elements: %d", PsiTreeUtil.collectElements(dummyHead,psf).length));
 
         //https://www.jetbrains.org/intellij/sdk/docs/basics/architectural_overview/psi_elements.html#how-do-i-get-a-psi-element
-        int offset = editor.getCaretModel().getOffset();
+        int caretOffset = editor.getCaretModel().getOffset();
 
-        ArrayList<Point> points = new ArrayList<Point>();
+        ArrayList<Anchor> points = new ArrayList<Anchor>();
 //        int searchLength = 200;
         int searchLength = PowerMode3.getInstance().getMaxPsiSearchDistance();
 //        int searchLength = settings.getMaxPsiSearchDistance();
 
         for(int i =0; i < searchLength; i++){
-            int surroundOffset = offset - (searchLength/2) + i;
-            if(surroundOffset <= 0){ continue; }
-            PsiElement e = PsiUtil.getElementAtOffset(psiFile, surroundOffset);
+            int anchorOffset = caretOffset - (searchLength/2) + i;
+            if(anchorOffset <= 0){ continue; }
+            PsiElement e = PsiUtil.getElementAtOffset(psiFile, anchorOffset);
             if(e.toString() == "PsiWhiteSpace"){
                 continue;
             }
 
             if(e.toString().contains("PsiJavaToken:RBRACE") || e.toString().contains("PsiJavaToken:LBRACE")){
                 System.out.print(String.format(" %d - ", i));
-                Point offsetPoint = editor.offsetToXY(surroundOffset);
+                Point offsetPoint = editor.offsetToXY(anchorOffset);
                 offsetPoint.x = offsetPoint.x - scrollingModel.getHorizontalScrollOffset();
                 offsetPoint.y = offsetPoint.y - scrollingModel.getVerticalScrollOffset();
 
-                points.add(offsetPoint);
+                Anchor anchor = new Anchor(offsetPoint,anchorOffset, caretOffset);
+                points.add(anchor);
                 //particleContainer.update(offsetPoint);
                 //need some method like
                 // particleContainer.updateANCHORS(offsetPoint);
@@ -180,7 +172,7 @@ class ParticleContainerManager extends EditorFactoryAdapter {
         }
 
 
-        return points.toArray(new Point[points.size()]);
+        return points.toArray(new Anchor[points.size()]);
     }
 
     public void dispose() {

@@ -1,5 +1,6 @@
 package com.cschar.pmode3.ui;
 
+import com.bmesta.powermode.PowerMode;
 import com.cschar.pmode3.PowerMode3;
 import com.intellij.openapi.options.ConfigurationException;
 
@@ -75,6 +76,8 @@ public class VineConfig extends JPanel {
         }else{
             this.spriteEnabled.setSelected(false);
         }
+
+
     }
 
     public void saveValues(int maxPsiSearchLimit) throws ConfigurationException {
@@ -86,6 +89,8 @@ public class VineConfig extends JPanel {
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.VINE, "spriteEnabled", String.valueOf(spriteEnabled.isSelected()));
     }
 
+
+
     public static boolean USE_SPRITES(PowerMode3 settings){
         String spriteEnabled = settings.getSpriteTypeProperty(PowerMode3.SpriteType.VINE, "spriteEnabled");
         if(spriteEnabled != null){
@@ -94,4 +99,16 @@ public class VineConfig extends JPanel {
             return false;
         }
     }
+
+
+    public static int MAX_PSI_SEARCH(PowerMode3 settings) {
+        String value = settings.getSpriteTypeProperty(PowerMode3.SpriteType.VINE, "maxPsiSearchDistance");
+        if(value != null){
+            return Integer.parseInt(value);
+        }else{
+            return 0;
+        }
+    }
+
+
 }
