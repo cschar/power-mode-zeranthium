@@ -1,58 +1,33 @@
 <idea-plugin>
-    <id>com.cschar.zeranthium</id>
-    <name>Plugin display name here</name>
-    <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+    <id>com.cschar.powermode3-zeranthium</id>
+    <name>Powermode 3 - Zeranthium</name>
+<!--    <vendor email="support@yourcompany.com">YourCompany</vendor>-->
 
-    <description><![CDATA[
-    Enter short description for your plugin here.<br>
-    <em>most HTML tags may be used</em>
-    ]]></description>
+    <description>  Power Mode 3 - Zeranthium
+
+        a fun extension to add graphics to typing events.
+
+    </description>
 
 
 
     <!--    see config options here-->
     <!--    https://www.jetbrains.org/intellij/sdk/docs/basics/plugin_structure/plugin_configuration_file.html-->
     <application-components>
-        <!--        <component>-->
-        <!--            <implementation-class>com.cschar.com.cschar.pmode3.MyBaseComponent</implementation-class>-->
-        <!--        </component>-->
         <component>
             <implementation-class>com.cschar.pmode3.PowerMode3</implementation-class>
-            <!-- Component's interface class -->
-            <!--            how do i use this?-->
-            <!--            <interface-class>com.cschar.com.cschar.pmode3.MenuConfigurableUI</interface-class>-->
-        </component>`
-
-
+        </component>
     </application-components>
 
     <extensions defaultExtensionNs="com.intellij">
-
-        <!--        see file below for an explanation -->
-        <!--        com.intellij.openapi.options.ConfigurableEP-->
-
         <applicationConfigurable groupId="appearance"
                                  groupWeight="20"
                                  id="power.mode3"
                                  displayName="Power mode 3 - Zeranthium"
                                  instance="com.cschar.pmode3.PowerMode3Configurable" />
-
-        <!--        <toolWindow id="My Sample Tool Window"-->
-        <!--                    icon="/plus.png"-->
-        <!--                    anchor="right"-->
-        <!--                    factoryClass="dk.dk.lost_world.DummyWindowFactory"/>-->
-
     </extensions>
 
     <actions>
 
-
-        <!--        <action id="EditorIllustration"-->
-        <!--                class="dk.dk.lost_world.TypeActionBooma"-->
-        <!--                text="Editor Handler [][][]"-->
-        <!--                description="illustrates how to plug an action in ">-->
-
-        <!--            <add-to-group group-id="EditorPopupMenu" anchor="last"/>-->
-        <!--        </action>-->
     </actions>
 </idea-plugin>
