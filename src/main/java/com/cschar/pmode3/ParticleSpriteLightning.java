@@ -60,7 +60,7 @@ public class ParticleSpriteLightning extends Particle{
 
     private boolean makeLightningBeam = false;
 
-    public ParticleSpriteLightning(int x, int y, int dx, int dy, int size, int life, Color c) {
+    public ParticleSpriteLightning(int x, int y, int dx, int dy, int size, int life, Color c, int chanceOfSpawn) {
         super(x,y,dx,dy,size,life,c);
         sprite = sprites.get(0);
 
@@ -69,7 +69,7 @@ public class ParticleSpriteLightning extends Particle{
 
         int randomNum = ThreadLocalRandom.current().nextInt(1, 100 +1);
 //        System.out.println(randomNum);
-        if(randomNum < 10){
+        if(randomNum <= chanceOfSpawn){
             makeLightningBeam = true;
             this.life = 1000;
         }
@@ -96,7 +96,6 @@ public class ParticleSpriteLightning extends Particle{
         if (life > 0) {
             Graphics2D g2d = (Graphics2D) g.create();
             g2d.setColor(c);
-            g2d.fillRect(origX - (size / 2), origY - (size / 2), size, size);
 
             if (makeLightningBeam) {
                 AffineTransform at = new AffineTransform();

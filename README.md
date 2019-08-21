@@ -7,9 +7,3 @@ TODO: everything
 - lightning
 - lizards
 - plant growth using wave collapse function?
-
-
-
-
-maybes:
-- text to speech hook fires if word heard 

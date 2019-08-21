@@ -116,10 +116,10 @@ public class LightningConfig extends JPanel {
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "outerBeamEnabled", String.valueOf(outerBeamEnabledCheckBox.isSelected()));
 
 
-        this.reloadSprites();
+        this.reloadSpritesIfChanged();
     }
 
-    public void reloadSprites(){
+    public void reloadSpritesIfChanged(){
         //Only load new sprites when we are closing UI
         String colorRGBInner = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "inner Beam Color");
         Color newColorInner = new Color(Integer.parseInt(colorRGBInner));
@@ -132,6 +132,7 @@ public class LightningConfig extends JPanel {
             ParticleSpriteLightningAlt.reloadSpritesWithColors(newColorInner, newColorOuter);
         }
     }
+
 
     public JPanel getConfigPanel(){
         return this.mainPanel;
@@ -149,5 +150,17 @@ public class LightningConfig extends JPanel {
     public static boolean OUTER_BEAM_ENABLED(PowerMode3 settings){
         return Config.getBoolProperty(settings, PowerMode3.SpriteType.LIGHTNING, "outerBeamEnabled");
     }
+
+    public static Color OUTER_BEAM_COLOR(PowerMode3 settings){
+        String colorRGBOuter = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "outer Beam Color");
+        return new Color(Integer.parseInt(colorRGBOuter));
+    }
+
+    public static Color INNER_BEAM_COLOR(PowerMode3 settings){
+        String colorRGBInner = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "inner Beam Color");
+        return new Color(Integer.parseInt(colorRGBInner));
+
+    }
+
 
 }

@@ -69,13 +69,11 @@ public class ParticleSpriteLizardAnchor extends Particle{
 
     private Anchor[] anchors;
     private ConcurrentLinkedQueue<Particle> parentList;
-    private ParticleContainer parent;
+
 
     private int anchorIndex;
-
     private BufferedImage sprite;
 
-    private Anchor anchorDest;
 
     public ParticleSpriteLizardAnchor(int x, int y, int dx, int dy, int anchorIndex, int size, int life, Color c,
                                       Anchor[] anchors, ConcurrentLinkedQueue<Particle> parentList) {
@@ -98,16 +96,11 @@ public class ParticleSpriteLizardAnchor extends Particle{
         this.dir2anchorX = ((anchorX - initialX)/70);
         this.dir2anchorY = (anchorY - initialY)/70;
 
-        astate = anim_state.standing;
+
     }
 
 
-    enum anim_state {
-        standing,
-        jumping
-    }
 
-    private anim_state astate;
     private int frameDir = 1;
     private int frame = 0;
 
@@ -118,8 +111,6 @@ public class ParticleSpriteLizardAnchor extends Particle{
         int distY = (anchorY - y);
 
 
-        //strategy 1
-        //Goes fast -> slow until distance 10.. then FAST
         if(Math.abs(distX) > 100){
 //            this.dir2anchorX = distX/50;
             this.dir2anchorX = distX/25;
@@ -237,16 +228,6 @@ public class ParticleSpriteLizardAnchor extends Particle{
 
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
             g2d.drawImage(sprites.get(frame), at, null);
-
-//            if(frameDir > 0) {
-//                g2d.drawImage(sprites.get(frame), at, null);
-//            }
-//            if(frameDir < 0){
-//                g2d.drawImage(sprites.get(frame), at, null);
-//            }
-
-
-
 
             g2d.dispose();
         }

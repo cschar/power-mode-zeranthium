@@ -18,6 +18,7 @@
 package com.cschar.pmode3;
 
 
+import com.cschar.pmode3.config.LightningConfig;
 import com.intellij.util.ui.UIUtil;
 import org.imgscalr.Scalr;
 
@@ -63,79 +64,110 @@ public class ParticleSpriteLightningAlt extends Particle{
         return image;
     }
 
-    public static void reloadSpritesWithColors(Color colorInner, Color colorOuter){
+    public static void reloadSpritesWithColors(Color colorInner, Color colorOuter) {
 
 
         spritesInner = new ArrayList<BufferedImage>();
         spritesOuter = new ArrayList<BufferedImage>();
+        spritesBoth = new ArrayList<BufferedImage>();
 
-        for(int i=1; i <= 20; i++){
+
+        for (int i = 1; i <= 20; i++) {
             BufferedImage tmp = loadSprite(String.format("/blender/lightning2/inner/Image0%03d.png", i));
-            BufferedImage resized_image =  Scalr.resize(tmp, Scalr.Method.BALANCED,
-                    tmp.getWidth()/2, tmp.getHeight()/2);
+            BufferedImage resized_image = Scalr.resize(tmp, Scalr.Method.BALANCED,
+                    tmp.getWidth() / 2, tmp.getHeight() / 2);
             BufferedImage colored = colorImage(resized_image, colorInner);
 
             spritesInner.add(colored);
         }
 
-        for(int i=1; i <= 20; i++){
+        for (int i = 1; i <= 20; i++) {
             BufferedImage tmp = loadSprite(String.format("/blender/lightning2/outer2/Image0%03d.png", i));
-            BufferedImage resized_image =  Scalr.resize(tmp, Scalr.Method.BALANCED,
-                    tmp.getWidth()/2, tmp.getHeight()/2);
+            BufferedImage resized_image = Scalr.resize(tmp, Scalr.Method.BALANCED,
+                    tmp.getWidth() / 2, tmp.getHeight() / 2);
             BufferedImage colored = colorImage(resized_image, colorOuter);
 
             spritesOuter.add(colored);
         }
 
 
-        sprites = new ArrayList<BufferedImage>();
+        //This is so inefficient lol but i can't figure out another way to remove 'outline' created when
+//        //drawing both inner and outer beam sprites over one another
+        for( int i= 0; i< 20; i++){
+            BufferedImage inner = spritesInner.get(i);
+            BufferedImage outer = loadSprite(String.format("/blender/lightning2/outer2/Image0%03d.png", i+1));
+            BufferedImage resized_image = Scalr.resize(outer, Scalr.Method.BALANCED,
+                    outer.getWidth() / 2, outer.getHeight() / 2);
+            BufferedImage colored = colorImage(resized_image, colorOuter);
 
-        for(int i=1; i <= 20; i++){
-            BufferedImage tmp = loadSprite(String.format("/blender/lightning2/0%03d.png", i));
-            BufferedImage resized_image =  Scalr.resize(tmp, Scalr.Method.BALANCED,
-                    tmp.getWidth()/2, tmp.getHeight()/2);
+            Graphics g = colored.getGraphics();
+            for(int j=0; j<15; j++) {
+                g.drawImage(inner, 0, 0, null);
+            }
+            g.dispose();
+            spritesBoth.add(colored);
 
-            BufferedImage colored = colorImage(resized_image, colorInner);
-            sprites.add(colored);
+            g.dispose();
 
-//            sprites.add(resized_image);
+            //WHy is this image larger/??
+//            BufferedImage inner = spritesInner.get(i);
+//            BufferedImage outer = spritesOuter.get(i);
+//            BufferedImage both = UIUtil.createImage(inner.getWidth(),
+//                    inner.getHeight(), inner.getType());
+//            Graphics bothG = both.createGraphics();
+//
+//            bothG.drawImage(outer, 0, 0, null);
+//
+//            for(int j=0; j<5; j++) {
+//                bothG.drawImage(inner, 0, 0, null);
+//            }
+//            bothG.dispose();
+//            spritesBoth.add(both);
+
+
+//
+
         }
+
+
+//        sprites = new ArrayList<BufferedImage>();
+//
+//        for(int i=1; i <= 20; i++){
+//            BufferedImage tmp = loadSprite(String.format("/blender/lightning2/0%03d.png", i));
+//            BufferedImage resized_image =  Scalr.resize(tmp, Scalr.Method.BALANCED,
+//                    tmp.getWidth()/2, tmp.getHeight()/2);
+//
+//
+//            sprites.add(resized_image);
+//        }
+
     }
 
 
 
-    static ArrayList<BufferedImage> sprites;
-
+//    static ArrayList<BufferedImage> sprites;
     static ArrayList<BufferedImage> spritesInner;
     static ArrayList<BufferedImage> spritesOuter;
+    static ArrayList<BufferedImage> spritesBoth;
 
     static {
 
         spritesInner = new ArrayList<BufferedImage>();
         spritesOuter = new ArrayList<BufferedImage>();
+        spritesBoth = new ArrayList<BufferedImage>();
+        PowerMode3 settings = PowerMode3.getInstance();
 
-        for(int i=1; i <= 20; i++){
-            BufferedImage tmp = loadSprite(String.format("/blender/lightning2/inner/Image0%03d.png", i));
-            BufferedImage resized_image =  Scalr.resize(tmp, Scalr.Method.BALANCED,
-                    tmp.getWidth()/2, tmp.getHeight()/2);
-            spritesInner.add(resized_image);
-        }
 
-        for(int i=1; i <= 20; i++){
-            BufferedImage tmp = loadSprite(String.format("/blender/lightning2/outer2/Image0%03d.png", i));
-            BufferedImage resized_image =  Scalr.resize(tmp, Scalr.Method.BALANCED,
-                    tmp.getWidth()/2, tmp.getHeight()/2);
-            spritesOuter.add(resized_image);
-        }
+        reloadSpritesWithColors(LightningConfig.INNER_BEAM_COLOR(settings), LightningConfig.OUTER_BEAM_COLOR(settings));
 
-        sprites = new ArrayList<BufferedImage>();
-        for(int i=1; i <= 20; i++){
-            BufferedImage tmp = loadSprite(String.format("/blender/lightning2/0%03d.png", i));
-            BufferedImage resized_image =  Scalr.resize(tmp, Scalr.Method.BALANCED,
-                    tmp.getWidth()/2, tmp.getHeight()/2);
-            sprites.add(resized_image);
-
-        }
+//        sprites = new ArrayList<BufferedImage>();
+//        for(int i=1; i <= 20; i++){
+//            BufferedImage tmp = loadSprite(String.format("/blender/lightning2/0%03d.png", i));
+//            BufferedImage resized_image =  Scalr.resize(tmp, Scalr.Method.BALANCED,
+//                    tmp.getWidth()/2, tmp.getHeight()/2);
+//            sprites.add(resized_image);
+//
+//        }
         System.out.println("LightningSpritesTwo initialized");
 
 
@@ -154,7 +186,8 @@ public class ParticleSpriteLightningAlt extends Particle{
     public ParticleSpriteLightningAlt(int x, int y, int dx, int dy, int size, int life, Color c,
                                       int lightningChance, boolean innerBeam, boolean outerBeam) {
         super(x,y,dx,dy,size,life,c);
-        sprite = sprites.get(0);
+//        sprite = sprites.get(0);
+        sprite = spritesInner.get(0);
 
         this.innerBeam = innerBeam;
         this.outerBeam = outerBeam;
@@ -180,6 +213,7 @@ public class ParticleSpriteLightningAlt extends Particle{
 
     private AlphaComposite makeComposite(float alpha) {
         int type = AlphaComposite.SRC_OVER;
+
         return(AlphaComposite.getInstance(type, alpha));
     }
 
@@ -187,10 +221,17 @@ public class ParticleSpriteLightningAlt extends Particle{
     @Override
     public void render(Graphics g) {
 
+
         if (life > 0) {
             Graphics2D g2d = (Graphics2D) g.create();
-            //g2d.setColor(c);
-            //g2d.fillRect(origX - (size / 2), origY - (size / 2), size, size);
+
+
+            g2d.setStroke(new Stroke() {
+                @Override
+                public Shape createStrokedShape(Shape p) {
+                    return p;
+                }
+            });
 
             if (makeLightningBeam) {
                 AffineTransform at = new AffineTransform();
@@ -209,34 +250,23 @@ public class ParticleSpriteLightningAlt extends Particle{
                 //every X updates, increment frame, this controls how fast it animates
                 if( this.life % 2 == 0){
                     frame += 1;
-                    if (frame >= ParticleSpriteLightningAlt.sprites.size()){
+                    if (frame >= ParticleSpriteLightningAlt.spritesInner.size()){
                         frame = 0;
                         life = 0;
                     }
-//                    System.out.println(String.format("frame %d - life %d", frame, life));
                 }
 
                 g2d.setComposite(makeComposite(0.5f));
                 g2d.setComposite(makeComposite(0.7f));
 //                g2d.drawImage(ParticleSpriteLightningAlt.sprites.get(frame), at, null);
-                if(innerBeam) {
+                if(innerBeam && !outerBeam) {
                     g2d.drawImage(ParticleSpriteLightningAlt.spritesInner.get(frame), at, null);
-                }
-                if(outerBeam){
+                }else if(outerBeam && !innerBeam){
                     g2d.drawImage(ParticleSpriteLightningAlt.spritesOuter.get(frame), at, null);
                 }
-
-
-                //flip it to extend 200% length. looks weird
-//                at = new AffineTransform();
-//                at.translate((int)origX ,(int)origY );
-//                at.translate(-sprite.getWidth()/2,
-//                        0);
-//                at.scale(1.0f,-1.0f);
-//                at.translate(0, sprite.getHeight());
-//
-//                g2d.drawImage(ParticleSpriteLightningAlt.spritesOuter.get(frame), at, null);
-//                g2d.drawImage(ParticleSpriteLightningAlt.spritesInner.get(frame), at, null);
+                else if(innerBeam && outerBeam){
+                    g2d.drawImage(ParticleSpriteLightningAlt.spritesBoth.get(frame), at, null);
+                }
             }
 
             g2d.dispose();

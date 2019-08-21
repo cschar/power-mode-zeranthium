@@ -120,15 +120,14 @@ class ParticleContainerManager extends EditorFactoryAdapter {
         }
         System.out.println(String.format("top level children length: %d", allTopLevelElements.size()));
 
-        for ( PsiElement e: allTopLevelElements) {
-            System.out.print(String.format("%s (%s) - ", e, e.getClass()));
+//        for ( PsiElement e: allTopLevelElements) {
+//            System.out.print(String.format("%s (%s) - ", e, e.getClass()));
 //            System.out.print("-- text: " + e.getText()); //gets all text of class from start to end bracket
             // class is of type PsiClassImpl
-        }
-        System.out.println();
+//        }
+//        System.out.println();
 
 //        PsiClass
-
         //PsiUtil.getTopLevelClass()
 
         //System.out.println(String.format("filtered elements: %d", PsiTreeUtil.collectElements(dummyHead,psf).length));
@@ -150,7 +149,7 @@ class ParticleContainerManager extends EditorFactoryAdapter {
             }
 
             if(e.toString().contains("PsiJavaToken:RBRACE") || e.toString().contains("PsiJavaToken:LBRACE")){
-                System.out.print(String.format(" %d - ", i));
+//                System.out.print(String.format(" %d - ", i));
                 Point offsetPoint = editor.offsetToXY(anchorOffset);
                 offsetPoint.x = offsetPoint.x - scrollingModel.getHorizontalScrollOffset();
                 offsetPoint.y = offsetPoint.y - scrollingModel.getVerticalScrollOffset();

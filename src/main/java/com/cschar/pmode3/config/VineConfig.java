@@ -69,26 +69,11 @@ public class VineConfig extends JPanel {
 
 
     public void loadValues(){
-        String psiSearchDistance = settings.getSpriteTypeProperty(PowerMode3.SpriteType.VINE, "maxPsiSearchDistance");
-        if(psiSearchDistance != null){
-            this.maxPsiAnchorDistanceTextField.setText(psiSearchDistance);
-        }else{
-            this.maxPsiAnchorDistanceTextField.setText("0");
-        }
 
-        String spriteEnabled = settings.getSpriteTypeProperty(PowerMode3.SpriteType.VINE, "spriteEnabled");
-        if(spriteEnabled != null){
-            this.spriteEnabled.setSelected(Boolean.valueOf(spriteEnabled));
-        }else{
-            this.spriteEnabled.setSelected(false);
-        }
 
-        String growFromRight = settings.getSpriteTypeProperty(PowerMode3.SpriteType.VINE, "growFromRight");
-        if(growFromRight != null){
-            this.growFromRight.setSelected(Boolean.valueOf(growFromRight));
-        }else{
-            this.growFromRight.setSelected(false);
-        }
+        this.maxPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.VINE,"maxPsiSearchDistance")));
+        this.spriteEnabled.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.VINE,"spriteEnabled"));
+        this.growFromRight.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.VINE,"growFromRight"));
 
 
     }
