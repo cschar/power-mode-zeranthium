@@ -3,7 +3,11 @@ package com.cschar.pmode3;
 import com.intellij.openapi.options.ConfigurableBase;
 import org.jetbrains.annotations.NotNull;
 
-
+/**
+ * @author Baptiste Mesta
+ *
+ * Modified by cschar
+ */
 public class PowerMode3Configurable extends ConfigurableBase<MenuConfigurableUI, PowerMode3> {
 
     private final PowerMode3 settings;

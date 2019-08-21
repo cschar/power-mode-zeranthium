@@ -42,6 +42,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+
+/**
+ * @author Baptiste Mesta
+ *
+ * modified by cschar
+ */
+
 //https://corochann.com/intellij-plugin-development-introduction-persiststatecomponent-903.html
 
 //This will save this object as state

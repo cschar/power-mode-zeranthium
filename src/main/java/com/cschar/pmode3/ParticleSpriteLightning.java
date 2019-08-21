@@ -113,7 +113,7 @@ public class ParticleSpriteLightning extends Particle{
                         frame = 0;
                         life = 0;
                     }
-                    System.out.println(String.format("frame %d - life %d", frame, life));
+
                 }
                 g2d.drawImage(ParticleSpriteLightning.sprites.get(frame), at, null);
             }

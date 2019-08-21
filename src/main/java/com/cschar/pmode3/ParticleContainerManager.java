@@ -109,28 +109,23 @@ class ParticleContainerManager extends EditorFactoryAdapter {
 
         ScrollingModel scrollingModel = editor.getScrollingModel();
 
-        PsiElement dummyHead;
-        PsiElement firstChild = psiFile.getFirstChild();
-        dummyHead = firstChild;
-        ArrayList<PsiElement> allTopLevelElements = new ArrayList<PsiElement>();
-
-        while(firstChild != null){
-            allTopLevelElements.add(firstChild);
-            firstChild = firstChild.getNextSibling();
-        }
-        System.out.println(String.format("top level children length: %d", allTopLevelElements.size()));
-
+//        PsiElement firstChild = psiFile.getFirstChild();
+//        ArrayList<PsiElement> allTopLevelElements = new ArrayList<PsiElement>();
+//
+//        while(firstChild != null){
+//            allTopLevelElements.add(firstChild);
+//            firstChild = firstChild.getNextSibling();
+//        }
+//        System.out.println(String.format("top level children length: %d", allTopLevelElements.size()));
 //        for ( PsiElement e: allTopLevelElements) {
 //            System.out.print(String.format("%s (%s) - ", e, e.getClass()));
 //            System.out.print("-- text: " + e.getText()); //gets all text of class from start to end bracket
             // class is of type PsiClassImpl
 //        }
 //        System.out.println();
-
 //        PsiClass
         //PsiUtil.getTopLevelClass()
 
-        //System.out.println(String.format("filtered elements: %d", PsiTreeUtil.collectElements(dummyHead,psf).length));
 
         //https://www.jetbrains.org/intellij/sdk/docs/basics/architectural_overview/psi_elements.html#how-do-i-get-a-psi-element
         int caretOffset = editor.getCaretModel().getOffset();
@@ -156,12 +151,6 @@ class ParticleContainerManager extends EditorFactoryAdapter {
 
                 Anchor anchor = new Anchor(offsetPoint,anchorOffset, caretOffset);
                 points.add(anchor);
-                //particleContainer.update(offsetPoint);
-                //need some method like
-                // particleContainer.updateANCHORS(offsetPoint);
-                // then any particle in system that users "Anchors" will act accordingly
-                //  E.g   LizardSpriteAnchor  --> towards anchor movement
-                //        LizardSprite      ---> normal movement
             }
 
 

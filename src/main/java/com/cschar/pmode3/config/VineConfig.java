@@ -33,8 +33,10 @@ public class VineConfig extends JPanel {
         secondCol.add(headerLabel);
         mainPanel.add(secondCol);
 
-        JPanel vineColorPanel = Config.getColorPickerPanel("Vine Color", PowerMode3.SpriteType.VINE, settings);
-        secondCol.add(vineColorPanel);
+        JPanel vineTopColorPanel = Config.getColorPickerPanel("Vine Top Color", PowerMode3.SpriteType.VINE, settings);
+        JPanel vineBottomColorPanel = Config.getColorPickerPanel("Vine Bottom Color", PowerMode3.SpriteType.VINE, settings);
+        secondCol.add(vineTopColorPanel);
+        secondCol.add(vineBottomColorPanel);
 
 
         JPanel lop1 = new JPanel();
@@ -102,6 +104,14 @@ public class VineConfig extends JPanel {
 
     public static boolean GROW_FROM_RIGHT(PowerMode3 settings){
         return Config.getBoolProperty(settings, PowerMode3.SpriteType.VINE,"growFromRight");
+    }
+
+    public static Color VINE_TOP_COLOR(PowerMode3 settings){
+        return Config.getColorProperty(settings, PowerMode3.SpriteType.VINE,"Vine Top Color");
+    }
+
+    public static Color VINE_BOTTOM_COLOR(PowerMode3 settings){
+        return Config.getColorProperty(settings, PowerMode3.SpriteType.VINE,"Vine Bottom Color");
     }
 
 

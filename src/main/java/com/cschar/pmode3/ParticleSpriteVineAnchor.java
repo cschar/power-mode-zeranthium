@@ -30,18 +30,18 @@ import java.util.concurrent.ThreadLocalRandom;
 public class ParticleSpriteVineAnchor extends Particle{
 
 
-    int anchorX;
-    int anchorY;
-    int initialX;
-    int initialY;
+    private int anchorX;
+    private int anchorY;
+    private int initialX;
+    private int initialY;
 
-    int maxLife;
+    private int maxLife;
 
 
     int dir2anchorX;
     int dir2anchorY;
 
-    Point midPoint;
+    private Point midPoint;
 
     private BufferedImage sprite;
 
@@ -56,12 +56,16 @@ public class ParticleSpriteVineAnchor extends Particle{
 
     private boolean spawnsFromBelow = false;
     private boolean spawnsFromRight = false;
-    public ParticleSpriteVineAnchor(int x, int y, int dx, int dy,
-                                    int anchorX, int anchorY, int size, int life, Color c,
-                                    boolean useSprite) {
-        super(x,y,dx,dy,size,life,c);
-        this.useSprite = useSprite;
 
+    private Color topVineColor;
+    private Color bottomVineColor;
+    public ParticleSpriteVineAnchor(int x, int y, int dx, int dy,
+                                    int anchorX, int anchorY, int size, int life, Color topVine, Color botVine,
+                                    boolean useSprite) {
+        super(x,y,dx,dy,size,life,topVine);
+        this.useSprite = useSprite;
+        this.topVineColor = topVine;
+        this.bottomVineColor = botVine;
 
         sprite = ParticleUtils.loadSprite(String.format("/blender/vine/0001.png"));
         int scale = 6;
@@ -209,9 +213,11 @@ public class ParticleSpriteVineAnchor extends Particle{
             //set alpha based on lifetime
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f *(life / (float) maxLife)));
 
-            g2d.setColor(c);
+
             if(anchorY > initialY) {
-                g2d.setColor(Color.CYAN);
+                g2d.setColor(this.bottomVineColor);
+            }else{
+                g2d.setColor(this.topVineColor);
             }
 
 

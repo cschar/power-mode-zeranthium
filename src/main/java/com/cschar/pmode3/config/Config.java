@@ -100,5 +100,15 @@ public class Config extends JPanel {
         }
     }
 
+    public static Color getColorProperty(PowerMode3 settings, PowerMode3.SpriteType type, String propertyName){
+
+        String colorRGB = settings.getSpriteTypeProperty(type, propertyName);
+        if(colorRGB != null){
+            return new Color(Integer.parseInt(colorRGB));
+        }else{
+            return Color.GRAY;
+        }
+    }
+
 
 }
