@@ -43,11 +43,15 @@ public class LightningConfig extends JPanel {
         if(colorRGBInner != null){
             Color originalColor = new Color(Integer.parseInt(colorRGBInner));
             this.originalColorInner =  originalColor;
+        }else{
+            this.originalColorInner = Color.WHITE;
         }
         String colorRGBOuter = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "outer Beam Color");
         if(colorRGBOuter != null){
             Color originalColorOuter = new Color(Integer.parseInt(colorRGBOuter));
             this.originalColorOuter =  originalColorOuter;
+        }else{
+            this.originalColorOuter = Color.GREEN;
         }
 
 

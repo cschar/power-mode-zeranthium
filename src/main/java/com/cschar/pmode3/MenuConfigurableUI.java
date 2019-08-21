@@ -194,6 +194,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         // TODO: place custom component creation code here
         System.out.println("custom create");
         theCustomCreatePanel = new JPanel();
+        theCustomCreatePanel.setOpaque(false);
         theCustomCreatePanel.setBorder(new EmptyBorder(10, 10, 200, 10));
         //https://docs.oracle.com/javase/tutorial/uiswing/layout/visual.html
         theCustomCreatePanel.setLayout(new BoxLayout(theCustomCreatePanel, BoxLayout.PAGE_AXIS));
@@ -204,8 +205,6 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         this.lightningConfig = new LightningConfig(settings);
         this.theCustomCreatePanel.add(lightningConfig.getConfigPanel());
 
-//        LightningConfigPanel lightningConf = new LightningConfigPanel(PowerMode3.getInstance());
-//        this.myCustomCreatePanel.add(lightningConf);
 
         this.theCustomCreatePanel.add(this.createSpacer());
         this.lizardConfig = new LizardConfig(settings);

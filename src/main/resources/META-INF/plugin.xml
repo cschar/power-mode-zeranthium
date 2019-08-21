@@ -1,12 +1,41 @@
 <idea-plugin>
-    <id>com.cschar.powermode3-zeranthium</id>
-    <name>Powermode 3 - Zeranthium</name>
-<!--    <vendor email="support@yourcompany.com">YourCompany</vendor>-->
+    <id>com.cschar.powermode3zeranthium</id>
+    <name>Powermode - Zeranthium</name>
+    <vendor email="codyscharfe@gmail.com">cody scharfe</vendor>
 
-    <description>  Power Mode 3 - Zeranthium
+    <description><![CDATA[
+        <h1>Power Mode - Zeranthium </h1>
 
-        a fun extension to add graphics to typing events.
+        <h2> Get Weirder... </h2>
 
+        <span>Based on Power Mode from Baptiste Mesta on Github.</span>
+        <span>Inspired by Power Mode II by axaluss.</span>
+        <img width="100" height="100" src="../blender/vine/0001.png" />
+
+        <h2>Features</h2>
+        <ul>
+
+            <li>Feature 1</li>
+            <li>Feature 2</li>
+
+        </ul>
+        <h2>Usage</h2>
+        <ol>
+            <li>Install the plugin</li>
+            <li>Settings can be found in Preferences > Appearance > Power Mode - Zeranthium </li>
+        </ol>
+
+        <a href="https://github.com/axaluss/power-mode-intellij-plugin/releases/latest"><img
+                width="40"
+                src="https://raw.githubusercontent.com/axaluss/power-mode-intellij-plugin/master/images/download.png"/>
+            Latest Release Download</a>
+        <br/>
+        <a href="https://www.paypal.me/AlexanderThom">
+            <img style="width:100px; height: 100px;"
+                 src="https://raw.githubusercontent.com/axaluss/power-mode-intellij-plugin/master/images/beer.png"/>
+            Want to pass me a Beer?
+        </a>
+        ]]>
     </description>
 
 

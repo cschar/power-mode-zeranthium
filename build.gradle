@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'com.cschar'
-version '1.0-SNAPSHOT'
+version '1.0'
 
 sourceCompatibility = 1.8
 
@@ -16,16 +16,19 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
     // https://mvnrepository.com/artifact/org.imgscalr/imgscalr-lib
-    implementation files('/Applications/IntelliJ IDEA CE.app/Contents/plugins/java/lib/java-api.jar')
+  //  implementation files('/Applications/IntelliJ IDEA CE.app/Contents/plugins/java/lib/java-api.jar')
     implementation group: 'org.imgscalr', name: 'imgscalr-lib', version: '4.2'
 }
+
+
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
     version '2019.2'
+    plugins 'java'
 }
 patchPluginXml {
     changeNotes """
       Add change notes here.<br>
-      <em>most HTML tags may be used</em>"""
+      <em>most HTML tags may be used Test</em>"""
 }
