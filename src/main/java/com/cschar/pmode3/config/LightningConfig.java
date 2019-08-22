@@ -51,13 +51,13 @@ public class LightningConfig extends JPanel {
             Color originalColorOuter = new Color(Integer.parseInt(colorRGBOuter));
             this.originalColorOuter =  originalColorOuter;
         }else{
-            this.originalColorOuter = Color.GREEN;
+            this.originalColorOuter = Color.CYAN;
         }
 
 
 
-        JPanel innerBeamColorPanel = Config.getColorPickerPanel("inner Beam Color", PowerMode3.SpriteType.LIGHTNING, settings);
-        JPanel outerBeamColorPanel = Config.getColorPickerPanel("outer Beam Color", PowerMode3.SpriteType.LIGHTNING, settings);
+        JPanel innerBeamColorPanel = Config.getColorPickerPanel("inner Beam Color", PowerMode3.SpriteType.LIGHTNING, settings, this.originalColorInner);
+        JPanel outerBeamColorPanel = Config.getColorPickerPanel("outer Beam Color", PowerMode3.SpriteType.LIGHTNING, settings, this.originalColorOuter);
 
         JPanel innerBeamJPanel = new JPanel();
         this.innerBeamEnabledCheckBox = new JCheckBox("is enabled?", true);

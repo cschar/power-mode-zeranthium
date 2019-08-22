@@ -18,7 +18,7 @@ public class Config extends JPanel {
     }
 
 
-    public static JPanel getColorPickerPanel(String labelTextKey, PowerMode3.SpriteType spriteType, PowerMode3 settings){
+    public static JPanel getColorPickerPanel(String labelTextKey, PowerMode3.SpriteType spriteType, PowerMode3 settings, Color defaultColor){
         //Lizard color
         JPanel colorPickerPanel = new JPanel();
         JLabel colorLabel = new JLabel(labelTextKey);
@@ -29,10 +29,10 @@ public class Config extends JPanel {
         colorPickerPanel.add(colorPreviewLabel);
         if(settings.getSpriteTypeProperty(spriteType, labelTextKey) == null){
 
-            colorPreviewLabel.setBackground(Color.GRAY);
+            colorPreviewLabel.setBackground(defaultColor);
 //            colorLabel.setBackground(Color.GRAY);
             settings.setSpriteTypeProperty(spriteType, labelTextKey,
-                    String.valueOf(Color.GRAY.getRGB()));
+                    String.valueOf(defaultColor.getRGB()));
         }else{
             String colorRGB = settings.getSpriteTypeProperty(spriteType, labelTextKey);
             Color newColor = new Color(Integer.parseInt(colorRGB));
@@ -85,6 +85,15 @@ public class Config extends JPanel {
             return Boolean.parseBoolean(property);
         }else{
             return false;
+        }
+    }
+
+    public static boolean getBoolProperty(PowerMode3 settings, PowerMode3.SpriteType type, String propertyName, boolean defaultValue){
+        String property = settings.getSpriteTypeProperty(type, propertyName);
+        if(property != null){
+            return Boolean.parseBoolean(property);
+        }else{
+            return defaultValue;
         }
     }
 

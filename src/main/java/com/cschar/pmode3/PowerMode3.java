@@ -202,9 +202,13 @@ public class PowerMode3 implements BaseComponent,
         });
     }
 
-    private void updateEditor(@NotNull final Editor editor, @NotNull final PsiFile psiFile) {
+    private void updateEditor(@NotNull final Editor editor, final PsiFile psiFile) {
         //TODO configurable
-        particleContainerManager.update(editor, psiFile);
+        if(psiFile == null){
+
+        }else {
+            particleContainerManager.update(editor, psiFile);
+        }
     }
 
 

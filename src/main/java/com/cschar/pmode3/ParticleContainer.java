@@ -15,6 +15,7 @@ package com.cschar.pmode3;
 
 import com.cschar.pmode3.config.LightningConfig;
 import com.cschar.pmode3.config.LizardConfig;
+import com.cschar.pmode3.config.MOMAConfig;
 import com.cschar.pmode3.config.VineConfig;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
@@ -127,8 +128,10 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
         if (settings.getSpriteTypeEnabled(PowerMode3.SpriteType.MOMA)){
 
+            Color squareOneColor = MOMAConfig.ONE_SQUARE_COLOR(settings);
+            Color squareTwoColor = MOMAConfig.TWO_SQUARE_COLOR(settings);
             if(settings.getSpriteTypeDirections(PowerMode3.SpriteType.MOMA)[0]) {
-                final ParticleSpriteMOMA e = new ParticleSpriteMOMA(x, y, dx, dy, size, lifeSetting, settings.particleColor);
+                final ParticleSpriteMOMA e = new ParticleSpriteMOMA(x, y, dx, dy, size, lifeSetting, squareOneColor, squareTwoColor);
                 particles.add(e);
             }
             if(settings.getSpriteTypeDirections(PowerMode3.SpriteType.MOMA)[1]) {
@@ -136,7 +139,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
                 int momaDy = (int) (Math.random() * 3 + 1);
                 int momaY = y + 60;
 
-                final ParticleSpriteMOMA e3 = new ParticleSpriteMOMA(x, momaY, momaDx, momaDy, size, lifeSetting, settings.particleColor);
+                final ParticleSpriteMOMA e3 = new ParticleSpriteMOMA(x, momaY, momaDx, momaDy, size, lifeSetting, squareOneColor, squareTwoColor);
                 particles.add(e3);
             }
         }
@@ -177,19 +180,25 @@ public class ParticleContainer extends JComponent implements ComponentListener {
             Color lizardColor = new Color(Integer.parseInt(colorRGB));
 
             int maxPsiSearch = LizardConfig.MAX_PSI_SEARCH(settings);
+            int minPsiSearch = LizardConfig.MIN_PSI_SEARCH(settings);
             int chanceOfSpawn =  LizardConfig.CHANCE_OF_SPAWN(settings);
             int maxAnchorsToUse = LizardConfig.MAX_ANCHORS_TO_USE(settings);
             int anchorsUsed = 0;
 
             ArrayList<Anchor> anchorList = new ArrayList<Anchor>(Arrays.asList(anchors));
-            Collections.shuffle(anchorList);
+//            Collections.shuffle(anchorList);
 //            for(Anchor a: anchorList){
+            System.out.println(minPsiSearch);
             for(int i =0; i < anchorList.size(); i++){
                 Anchor a = anchorList.get(i);
 //            for(Anchor a: anchors){
                 if(anchorsUsed >= maxAnchorsToUse) break;
 
                 if( Math.abs(a.anchorOffset - a.cursorOffset) > (maxPsiSearch) ){
+                    continue;
+                }
+                if( Math.abs(a.anchorOffset - a.cursorOffset) < (minPsiSearch) ){
+                    System.out.println(String.format("%d - %d", a.anchorOffset, a.cursorOffset));
                     continue;
                 }
 

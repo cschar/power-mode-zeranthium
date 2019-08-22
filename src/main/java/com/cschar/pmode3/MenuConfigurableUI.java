@@ -2,6 +2,7 @@ package com.cschar.pmode3;
 
 import com.cschar.pmode3.config.LightningConfig;
 import com.cschar.pmode3.config.LizardConfig;
+import com.cschar.pmode3.config.MOMAConfig;
 import com.cschar.pmode3.config.VineConfig;
 import com.intellij.openapi.options.ConfigurableUi;
 import com.intellij.openapi.options.ConfigurationException;
@@ -39,6 +40,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private LightningConfig lightningConfig;
     private LizardConfig lizardConfig;
     private VineConfig vineConfig;
+    private MOMAConfig momaConfig;
 
     PowerMode3 settings;
     //Constructor is called _AFTER_ createUIComponents when using IntelliJ GUI designer
@@ -214,6 +216,10 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
         this.vineConfig = new VineConfig(settings);
         this.theCustomCreatePanel.add(vineConfig.getConfigPanel());
+        this.theCustomCreatePanel.add(this.createSpacer());
+
+        this.momaConfig = new MOMAConfig(settings);
+        this.theCustomCreatePanel.add(momaConfig.getConfigPanel());
         this.theCustomCreatePanel.add(this.createSpacer());
 
         JPanel footerPanel = new JPanel();

@@ -26,9 +26,14 @@ public class ParticleSpriteMOMA extends Particle{
 
     private BufferedImage sprite;
 
+    Color oneSquareColor;
+    Color twoSquareColor;
 
-    public ParticleSpriteMOMA(int x, int y, int dx, int dy, int size, int life, Color c) {
+    public ParticleSpriteMOMA(int x, int y, int dx, int dy, int size, int life, Color c, Color c2) {
         super(x,y,dx,dy,size,life,c);
+
+        this.oneSquareColor = c;
+        this.twoSquareColor = c2;
 
     }
 
@@ -48,27 +53,27 @@ public class ParticleSpriteMOMA extends Particle{
     }
 
     private Rectangle
-            blueSquare = new Rectangle(gap+offset, gap+offset, width,
+            oneSquare = new Rectangle(gap+offset, gap+offset, width,
             width),
-            redSquare = new Rectangle(gap, gap, width, width);
+            twoSquare = new Rectangle(gap, gap, width, width);
 
     private void drawSquares(Graphics2D g2d, float alpha) {
         Composite originalComposite = g2d.getComposite();
 
         g2d.setComposite(makeComposite(alpha));
-        g2d.setPaint(Color.blue);
-        g2d.fill(blueSquare);
+        g2d.setPaint(oneSquareColor);
+        g2d.fill(oneSquare);
 
-        g2d.setPaint(Color.red);
-        g2d.fill(redSquare);
+        g2d.setPaint(twoSquareColor);
+        g2d.fill(twoSquare);
         g2d.setComposite(originalComposite);
     }
 
     @Override
     public void render(Graphics g) {
-        blueSquare = new Rectangle(x - (size / 2) - 50, y - (size / 2) - 55, width,   width);
+        oneSquare = new Rectangle(x - (size / 2) - 50, y - (size / 2) - 55, width,   width);
 
-        redSquare = new Rectangle(x - (size / 2), y - (size / 2), width*2, width*2);
+        twoSquare = new Rectangle(x - (size / 2), y - (size / 2), width*2, width*2);
 
         if (life > 0) {
             Graphics2D g2d = (Graphics2D) g.create();

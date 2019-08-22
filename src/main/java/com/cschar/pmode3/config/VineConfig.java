@@ -34,8 +34,8 @@ public class VineConfig extends JPanel {
         secondCol.add(headerLabel);
         mainPanel.add(secondCol);
 
-        JPanel vineTopColorPanel = Config.getColorPickerPanel("Vine Top Color", PowerMode3.SpriteType.VINE, settings);
-        JPanel vineBottomColorPanel = Config.getColorPickerPanel("Vine Bottom Color", PowerMode3.SpriteType.VINE, settings);
+        JPanel vineTopColorPanel = Config.getColorPickerPanel("Vine Top Color", PowerMode3.SpriteType.VINE, settings, Color.GREEN);
+        JPanel vineBottomColorPanel = Config.getColorPickerPanel("Vine Bottom Color", PowerMode3.SpriteType.VINE, settings, Color.CYAN);
         secondCol.add(vineTopColorPanel);
         secondCol.add(vineBottomColorPanel);
 
