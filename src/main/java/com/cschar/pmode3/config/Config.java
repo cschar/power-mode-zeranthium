@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 
 public class Config extends JPanel {
 
-    JPanel mainPanel;
+
     PowerMode3 settings;
 
     public Config(PowerMode3 settings){
@@ -22,17 +22,22 @@ public class Config extends JPanel {
         //Lizard color
         JPanel colorPickerPanel = new JPanel();
         JLabel colorLabel = new JLabel(labelTextKey);
+        JLabel colorPreviewLabel = new JLabel("[----]");
+        colorPreviewLabel.setOpaque(true);
         colorLabel.setOpaque(true); //to show background  https://stackoverflow.com/a/2380328/403403
         colorPickerPanel.add(colorLabel);
+        colorPickerPanel.add(colorPreviewLabel);
         if(settings.getSpriteTypeProperty(spriteType, labelTextKey) == null){
 
-            colorLabel.setBackground(Color.GRAY);
+            colorPreviewLabel.setBackground(Color.GRAY);
+//            colorLabel.setBackground(Color.GRAY);
             settings.setSpriteTypeProperty(spriteType, labelTextKey,
                     String.valueOf(Color.GRAY.getRGB()));
         }else{
             String colorRGB = settings.getSpriteTypeProperty(spriteType, labelTextKey);
             Color newColor = new Color(Integer.parseInt(colorRGB));
-            colorLabel.setBackground(newColor);
+//            colorLabel.setBackground(newColor);
+            colorPreviewLabel.setBackground(newColor);
         };
 
 
@@ -47,7 +52,8 @@ public class Config extends JPanel {
                         prevColor);
 
                 if(newColor != null) {
-                    colorLabel.setBackground(newColor);
+//                    colorLabel.setBackground(newColor);
+                    colorPreviewLabel.setBackground(newColor);
                     settings.setSpriteTypeProperty(spriteType, labelTextKey,
                             String.valueOf(newColor.getRGB()));
                 }

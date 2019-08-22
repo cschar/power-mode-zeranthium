@@ -23,12 +23,27 @@ import org.imgscalr.Scalr;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ParticleSpriteVineAnchor extends Particle{
 
+    static ArrayList<BufferedImage> eyeSprites;
+
+    static int EYE_SPRITE_SCALE = 2;
+//    static {
+//        eyeSprites = new ArrayList<BufferedImage>();
+//        for(int i=2; i <= 63; i++){
+//            BufferedImage tmp = ParticleUtils.loadSprite(String.format("/blender/vine/eye/0%03d.png", i));
+//            BufferedImage resized = Scalr.resize(tmp, Scalr.Method.BALANCED,
+//                    tmp.getWidth()/EYE_SPRITE_SCALE, tmp.getHeight()/EYE_SPRITE_SCALE);
+//            eyeSprites.add(resized);
+//
+//        }
+//        System.out.println("Vine eye sprites initialized");
+//    }
 
     private int anchorX;
     private int anchorY;
@@ -44,6 +59,7 @@ public class ParticleSpriteVineAnchor extends Particle{
     private Point midPoint;
 
     private BufferedImage sprite;
+    private BufferedImage sprite2;
 
     double radius;
 
@@ -67,10 +83,14 @@ public class ParticleSpriteVineAnchor extends Particle{
         this.topVineColor = topVine;
         this.bottomVineColor = botVine;
 
-        sprite = ParticleUtils.loadSprite(String.format("/blender/vine/0001.png"));
-        int scale = 6;
+        sprite = ParticleUtils.loadSprite(String.format("/blender/vine/000.png"));
+        sprite2 = ParticleUtils.loadSprite(String.format("/blender/vine/0002.png"));
+
+        int scale2 = 5;
         sprite  =  Scalr.resize(sprite, Scalr.Method.BALANCED,
-                sprite.getWidth()/scale, sprite.getHeight()/scale);
+                sprite.getWidth()/EYE_SPRITE_SCALE, sprite.getHeight()/EYE_SPRITE_SCALE);
+        sprite2  =  Scalr.resize(sprite2, Scalr.Method.BALANCED,
+                sprite2.getWidth()/scale2, sprite2.getHeight()/scale2);
 
         this.maxLife = life;
         this.anchorX = anchorX;
@@ -151,15 +171,25 @@ public class ParticleSpriteVineAnchor extends Particle{
             int tmpy = (int) circleY + midPoint.y;
             if(isNearEnd(tmpx,tmpy)) {
                 hasFoundEnd = true;
+
             }else{
                 x = tmpx;
                 y = tmpy;
 
                 float angleIncr = -0.05f;
 
+                float squiggleBlendX = 1;
+
+                float squiggleBlendY = 1;
+
+                float rampUpLife = 15;
+                if(life + rampUpLife > maxLife){
+                    squiggleBlendX = (maxLife - life) / rampUpLife;
+                    squiggleBlendY = (maxLife - life) / rampUpLife;
+                }
                 //add squiggle movement
-                x += ((radius / 10) + 5 * randXSquiggleOffset) * Math.sin((5 * randXSquiggleOffset) * curAngle);
-                y += (radius / 10) * Math.sin((5 * randYSquiggleOffset) * curAngle);
+                x += squiggleBlendX * ((radius / 10) + 5 * randXSquiggleOffset) * Math.sin((5 * randXSquiggleOffset) * curAngle);
+                y += squiggleBlendY * (radius / 10) * Math.sin((5 * randYSquiggleOffset) * curAngle);
 
 
                 curAngle += angleIncr;  // clockwise  --  on bottom
@@ -211,9 +241,8 @@ public class ParticleSpriteVineAnchor extends Particle{
             Graphics2D g2d = (Graphics2D) g.create();
 
             //set alpha based on lifetime
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f *(life / (float) maxLife)));
-
-
+            float PARTICLE_ALPHA_MAX = 0.8f;
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, PARTICLE_ALPHA_MAX *(life / (float) maxLife)));
             if(anchorY > initialY) {
                 g2d.setColor(this.bottomVineColor);
             }else{
@@ -221,11 +250,11 @@ public class ParticleSpriteVineAnchor extends Particle{
             }
 
 
-            g2d.fillRect(x - (8 / 2), y - (8 / 2), 8, 8);
-
-
-            for( VinePoint p: prevPoints){
-                g2d.fillRect((int) p.p.x - (4 / 2), (int) p.p.y - (4 / 2), 4, 4);
+            if(!useSprite) {
+                g2d.fillRect(x - (8 / 2), y - (8 / 2), 8, 8);
+                for (VinePoint p : prevPoints) {
+                    g2d.fillRect((int) p.p.x - (4 / 2), (int) p.p.y - (4 / 2), 4, 4);
+                }
             }
 
             //debug
@@ -237,50 +266,121 @@ public class ParticleSpriteVineAnchor extends Particle{
 
             if(useSprite) {
                 //Draw sprites
-
-
-                AffineTransform at;
-
-                //skip first
-//                at = new AffineTransform();
-//                at.translate(x, y);
-//                at.translate(-sprite.getWidth() / 2,
-//                        -sprite.getHeight() / 2 - 15); // around bracket height
-//            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.9f));
-//            g2d.drawImage(sprite, at, null);
-
-
-                Iterator<VinePoint> iter = prevPoints.iterator();
-                while (iter.hasNext()) {
-                    VinePoint p = iter.next();
-                    if (iter.hasNext()) { //skip every 2nd point
-                        p = iter.next();
-                    }
-
-                    at = new AffineTransform();
-
-//                at.rotate(curAngle);
-                    at.translate(p.p.x, p.p.y);
-                    at.translate(-sprite.getWidth() / 2,
-                            -sprite.getHeight() / 2 - 15); // around bracket height
-                    if (p.spawnsFromBelow) {
-                        at.rotate(Math.PI / 2);
-                        at.rotate(p.angle);
-                    } else {
-                        at.rotate(-1 * (Math.PI / 2));
-                        at.rotate(-1 * p.angle);
-                    }
-                    at.translate(0, 15); //brings it down
-
-
-                    g2d.drawImage(sprite, at, null);
-                }
+                renderSprites(g2d);
             }
 
             g2d.dispose();
         }
 
 
+    }
+
+    private static boolean doDeathAnimation = false;
+    private int deathFrame = 1;
+    private float VINE_ALPHA = 0.7f;
+    private float HEAD_ALPHA = 0.9f;
+    private void renderSprites(Graphics2D g2d){
+
+
+        AffineTransform at;
+
+        if(hasFoundEnd){
+            VINE_ALPHA -= 0.02f;
+            if(VINE_ALPHA < 0){
+                VINE_ALPHA = 0.0f;
+            }
+            HEAD_ALPHA -= 0.01f;
+            if(HEAD_ALPHA < 0){
+                HEAD_ALPHA = 0.0f;
+            }
+            //snap to specific Y line above and below caret
+//                    if(y < initialY){
+//                        y = initialY - 35;
+//                    }else if(y > initialY){
+//                        y = initialY + 55;
+//                    }
+        }
+        if(VINE_ALPHA > 0.01f) {
+            Iterator<VinePoint> iter = prevPoints.iterator();
+            int maxSize = prevPoints.size();
+            int count = 0;
+            while (iter.hasNext()) {
+                count += 1;
+                if (count + 2 > maxSize) {
+                    break;
+                }
+                VinePoint p = iter.next();
+                if (iter.hasNext()) { //skip every 2nd point
+                    p = iter.next();
+                }
+
+                at = new AffineTransform();
+                at.translate(p.p.x, p.p.y);
+
+                if (p.spawnsFromBelow) {
+                    at.rotate(Math.PI / 2);
+                    at.rotate(p.angle);
+                } else {
+                    at.rotate(-1 * (Math.PI / 2));
+                    at.rotate(-1 * p.angle);
+                }
+
+                at.translate(-sprite2.getWidth() / 2,
+                        -sprite2.getHeight() / 2); // around bracket height
+
+
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, VINE_ALPHA));
+                g2d.drawImage(sprite2, at, null);
+
+            }
+        }
+        at = new AffineTransform();
+        at.translate(x, y);
+        at.translate(-sprite.getWidth() / 2,
+                -sprite.getHeight() / 2); // around bracket height
+
+
+//                if(y > initialY){
+//                    at.scale(1.0f, -1.0f);
+//                    at.translate(0.0f, -sprite.getHeight() - 50);
+//                }
+
+
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, HEAD_ALPHA));
+
+
+//        if (hasFoundEnd && doDeathAnimation){
+//
+//            if( this.life % 2 == 0){
+//                deathFrame += 1;
+//                if (deathFrame >= ParticleSpriteVineAnchor.eyeSprites.size()){
+//                    deathFrame = ParticleSpriteVineAnchor.eyeSprites.size() - 1;
+//                    life = 0;
+//                }
+//            }
+//
+//            g2d.drawImage(ParticleSpriteVineAnchor.eyeSprites.get(deathFrame), at, null);
+//        }else if(!doDeathAnimation){
+            g2d.drawImage(sprite, at, null);
+
+
+            g2d.setColor(Color.BLACK);
+            int offsetX = (int) (0.1f * (initialX - x));
+            int offsetY = (int) (0.1f * (initialY - y));
+            int d = 7; //limit eye shifts
+            if (offsetX < 0) {
+                offsetX = Math.max(offsetX, -d);
+            } else {
+                offsetX = Math.min(offsetX, d);
+            }
+            if (offsetY < 0) {
+                offsetY = Math.max(offsetY, -d);
+            } else {
+                offsetY = Math.min(offsetY, d);
+            }
+
+            g2d.fillOval(x + 7 + offsetX, y - 3 + offsetY, 4, 4);
+       // }
     }
 
 }
