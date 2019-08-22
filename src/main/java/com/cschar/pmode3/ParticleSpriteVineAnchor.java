@@ -30,20 +30,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class ParticleSpriteVineAnchor extends Particle{
 
-    static ArrayList<BufferedImage> eyeSprites;
+    private static int EYE_SPRITE_SCALE = 2;
 
-    static int EYE_SPRITE_SCALE = 2;
-//    static {
-//        eyeSprites = new ArrayList<BufferedImage>();
-//        for(int i=2; i <= 63; i++){
-//            BufferedImage tmp = ParticleUtils.loadSprite(String.format("/blender/vine/eye/0%03d.png", i));
-//            BufferedImage resized = Scalr.resize(tmp, Scalr.Method.BALANCED,
-//                    tmp.getWidth()/EYE_SPRITE_SCALE, tmp.getHeight()/EYE_SPRITE_SCALE);
-//            eyeSprites.add(resized);
-//
-//        }
-//        System.out.println("Vine eye sprites initialized");
-//    }
 
     private int anchorX;
     private int anchorY;
@@ -149,12 +137,12 @@ public class ParticleSpriteVineAnchor extends Particle{
 
 
 
-    double randYSquiggleOffset;
-    double randXSquiggleOffset;
+    private double randYSquiggleOffset;
+    private double randXSquiggleOffset;
 
     ConcurrentLinkedQueue<VinePoint> prevPoints;
 
-    boolean hasFoundEnd = false;
+    private boolean hasFoundEnd = false;
     public boolean update() {
 
 
@@ -284,21 +272,18 @@ public class ParticleSpriteVineAnchor extends Particle{
 
         AffineTransform at;
 
+        if(life < 30){
+            HEAD_ALPHA -= 0.01f;
+            if(HEAD_ALPHA < 0){
+                HEAD_ALPHA = 0.0f;
+            }
+        }
         if(hasFoundEnd){
             VINE_ALPHA -= 0.02f;
             if(VINE_ALPHA < 0){
                 VINE_ALPHA = 0.0f;
             }
-            HEAD_ALPHA -= 0.01f;
-            if(HEAD_ALPHA < 0){
-                HEAD_ALPHA = 0.0f;
-            }
-            //snap to specific Y line above and below caret
-//                    if(y < initialY){
-//                        y = initialY - 35;
-//                    }else if(y > initialY){
-//                        y = initialY + 55;
-//                    }
+
         }
         if(VINE_ALPHA > 0.01f) {
             Iterator<VinePoint> iter = prevPoints.iterator();
@@ -315,12 +300,14 @@ public class ParticleSpriteVineAnchor extends Particle{
                 }
 
                 at = new AffineTransform();
-                at.translate(p.p.x, p.p.y);
+
 
                 if (p.spawnsFromBelow) {
+                    at.translate(p.p.x, p.p.y + 30);
                     at.rotate(Math.PI / 2);
                     at.rotate(p.angle);
                 } else {
+                    at.translate(p.p.x, p.p.y - 10);
                     at.rotate(-1 * (Math.PI / 2));
                     at.rotate(-1 * p.angle);
                 }
@@ -339,7 +326,11 @@ public class ParticleSpriteVineAnchor extends Particle{
         at.translate(-sprite.getWidth() / 2,
                 -sprite.getHeight() / 2); // around bracket height
 
-
+        if(spawnsFromBelow) {
+            at.translate(0, 30);
+        }else{
+            at.translate(0, -10);
+        }
 //                if(y > initialY){
 //                    at.scale(1.0f, -1.0f);
 //                    at.translate(0.0f, -sprite.getHeight() - 50);
@@ -349,18 +340,6 @@ public class ParticleSpriteVineAnchor extends Particle{
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, HEAD_ALPHA));
 
 
-//        if (hasFoundEnd && doDeathAnimation){
-//
-//            if( this.life % 2 == 0){
-//                deathFrame += 1;
-//                if (deathFrame >= ParticleSpriteVineAnchor.eyeSprites.size()){
-//                    deathFrame = ParticleSpriteVineAnchor.eyeSprites.size() - 1;
-//                    life = 0;
-//                }
-//            }
-//
-//            g2d.drawImage(ParticleSpriteVineAnchor.eyeSprites.get(deathFrame), at, null);
-//        }else if(!doDeathAnimation){
             g2d.drawImage(sprite, at, null);
 
 
@@ -374,13 +353,20 @@ public class ParticleSpriteVineAnchor extends Particle{
                 offsetX = Math.min(offsetX, d);
             }
             if (offsetY < 0) {
-                offsetY = Math.max(offsetY, -d);
+                offsetY = -d;
+//                offsetY = Math.max(offsetY, -d);
             } else {
-                offsetY = Math.min(offsetY, d);
+                offsetY = d;
+//                offsetY = Math.min(offsetY, d);
             }
 
-            g2d.fillOval(x + 7 + offsetX, y - 3 + offsetY, 4, 4);
-       // }
+            int pupilSize = 4;
+            if(spawnsFromBelow) {
+                g2d.fillOval(x + 7 + offsetX, y - 5 + offsetY + 30, pupilSize, pupilSize);
+            }else{
+                g2d.fillOval(x + 7 + offsetX, y - 5 + offsetY - 10, pupilSize, pupilSize);
+            }
+
     }
 
 }
