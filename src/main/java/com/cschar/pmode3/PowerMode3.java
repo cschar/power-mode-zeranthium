@@ -111,18 +111,6 @@ public class PowerMode3 implements BaseComponent,
     }};
 
 
-    //good lord
-    boolean[] getSpriteTypeDirections(SpriteType type){
-        boolean[] directions = new boolean[]{
-                Boolean.parseBoolean(configMap.get("sprite" + type + "EmitTop")),
-                Boolean.parseBoolean(configMap.get("sprite" + type + "EmitBottom"))
-        };
-        return directions;
-    }
-    void setSpriteTypeDirections(SpriteType type, Boolean top, Boolean bottom){
-        configMap.put(String.format("sprite%sEmitTop", type), top.toString());
-        configMap.put(String.format("sprite%sEmitBottom", type), bottom.toString());
-    }
 
     void setSpriteTypeEnabled(Boolean enabled, SpriteType type){
         configMap.put("sprite" + type + "Enabled", enabled.toString());

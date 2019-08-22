@@ -15,6 +15,10 @@ public class MOMAConfig extends JPanel {
     private JCheckBox oneSquareEnabledCheckBox;
     private JCheckBox twoSquareEnabledCheckBox;
 
+    private JCheckBox emitTopCheckBox;
+    private JCheckBox emitBottomCheckBox;
+
+
     private JTextField chanceOfLightningTextField;
     private Color colorOne = Color.red;
     private Color colorTwo = Color.blue;
@@ -50,20 +54,33 @@ public class MOMAConfig extends JPanel {
 
 
 
-        JPanel oneSquareColorPanel = Config.getColorPickerPanel("one Square Color", PowerMode3.SpriteType.MOMA, settings, this.colorOne);
-        JPanel outerBeamColorPanel = Config.getColorPickerPanel("two Square Color", PowerMode3.SpriteType.MOMA, settings, this.colorTwo);
+
+
 
         JPanel oneSquareJPanel = new JPanel();
         this.oneSquareEnabledCheckBox = new JCheckBox("is enabled?", true);
         oneSquareJPanel.add(oneSquareEnabledCheckBox);
+        JPanel oneSquareColorPanel = Config.getColorPickerPanel("one Square Color", PowerMode3.SpriteType.MOMA, settings, this.colorOne);
         oneSquareJPanel.add(oneSquareColorPanel);
         secondCol.add(oneSquareJPanel);
 
         JPanel outerBeamJPanel = new JPanel();
         this.twoSquareEnabledCheckBox = new JCheckBox("is enabled?", true);
         outerBeamJPanel.add(twoSquareEnabledCheckBox);
+        JPanel outerBeamColorPanel = Config.getColorPickerPanel("two Square Color", PowerMode3.SpriteType.MOMA, settings, this.colorTwo);
         outerBeamJPanel.add(outerBeamColorPanel);
         secondCol.add(outerBeamJPanel);
+
+
+        JPanel checkboxPanel = new JPanel();
+        emitTopCheckBox = new JCheckBox("emit from top?", true);
+        checkboxPanel.add(emitTopCheckBox);
+        firstCol.add(checkboxPanel);
+
+        checkboxPanel = new JPanel();
+        emitBottomCheckBox = new JCheckBox("emit from bottom?", true);
+        checkboxPanel.add(emitBottomCheckBox);
+        firstCol.add(checkboxPanel);
 
 
 
@@ -80,6 +97,8 @@ public class MOMAConfig extends JPanel {
         this.oneSquareEnabledCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.MOMA,"oneSquareEnabled", true));
         this.twoSquareEnabledCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.MOMA,"twoSquareEnabled", true));
 
+        this.emitTopCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.MOMA,"emitTopEnabled", true));
+        this.emitBottomCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.MOMA,"emitBottomEnabled", true));
 
     }
 
@@ -89,6 +108,8 @@ public class MOMAConfig extends JPanel {
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.MOMA, "oneSquareEnabled", String.valueOf(oneSquareEnabledCheckBox.isSelected()));
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.MOMA, "twoSquareEnabled", String.valueOf(twoSquareEnabledCheckBox.isSelected()));
 
+        settings.setSpriteTypeProperty(PowerMode3.SpriteType.MOMA, "emitTopEnabled", String.valueOf(emitTopCheckBox.isSelected()));
+        settings.setSpriteTypeProperty(PowerMode3.SpriteType.MOMA, "emitBottomEnabled", String.valueOf(emitBottomCheckBox.isSelected()));
 
     }
 
@@ -119,5 +140,12 @@ public class MOMAConfig extends JPanel {
 
     }
 
+    public static boolean EMIT_TOP(PowerMode3 settings){
+        return Config.getBoolProperty(settings, PowerMode3.SpriteType.MOMA, "emitTopEnabled");
+    }
+
+    public static boolean EMIT_BOTTOM(PowerMode3 settings){
+        return Config.getBoolProperty(settings, PowerMode3.SpriteType.MOMA, "emitBottomEnabled");
+    }
 
 }

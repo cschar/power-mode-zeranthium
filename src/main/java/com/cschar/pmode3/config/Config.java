@@ -126,4 +126,13 @@ public class Config extends JPanel {
     }
 
 
+    public static JPanel generateCheckboxPanel(JCheckBox checkbox, String message){
+        JPanel checkboxPanel = new JPanel();
+        checkbox = new JCheckBox(message, true);
+        checkboxPanel.add(checkbox);
+        return checkboxPanel;
+
+    }
+
+
 }

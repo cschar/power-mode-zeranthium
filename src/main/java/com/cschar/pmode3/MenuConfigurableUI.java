@@ -26,8 +26,6 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private JCheckBox enableLightningCheckBox;
     private JCheckBox enableLizardCheckBox;
     private JCheckBox enableMOMACheckBox;
-    private JCheckBox MOMAEmitBottomCheckBox;
-    private JCheckBox MOMAEmitTopCheckBox;
     private JPanel theCustomCreatePanel;
     private JCheckBox enableBasicParticleCheckBox;
     private JCheckBox lightningAltCheckBox;
@@ -78,14 +76,12 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
             enableVineCheckBox.setSelected(true);
         }
 
-        boolean[] topBotEnabled = powerMode3.getSpriteTypeDirections(PowerMode3.SpriteType.MOMA);
-        MOMAEmitTopCheckBox.setSelected(topBotEnabled[0]);
-        MOMAEmitBottomCheckBox.setSelected(topBotEnabled[1]);
 
         //already initialized from createUIComponents below
         this.lizardConfig.loadValues();
         this.lightningConfig.loadValues();
         this.vineConfig.loadValues();
+        this.momaConfig.loadValues();
     }
 
 
@@ -135,7 +131,6 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         settings.setSpriteTypeEnabled(enableLizardCheckBox.isSelected(), PowerMode3.SpriteType.LIZARD);
         //MOMA
         settings.setSpriteTypeEnabled(enableMOMACheckBox.isSelected(), PowerMode3.SpriteType.MOMA);
-        settings.setSpriteTypeDirections(PowerMode3.SpriteType.MOMA, MOMAEmitTopCheckBox.isSelected(), MOMAEmitBottomCheckBox.isSelected());
 
         //Vine
         settings.setSpriteTypeEnabled(enableVineCheckBox.isSelected(), PowerMode3.SpriteType.VINE);
@@ -150,6 +145,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
         this.lightningConfig.saveValues();
         this.vineConfig.saveValues(maxPsiSearch);
+        this.momaConfig.saveValues();
 
 
     }

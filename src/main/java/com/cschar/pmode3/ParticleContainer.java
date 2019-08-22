@@ -130,11 +130,11 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
             Color squareOneColor = MOMAConfig.ONE_SQUARE_COLOR(settings);
             Color squareTwoColor = MOMAConfig.TWO_SQUARE_COLOR(settings);
-            if(settings.getSpriteTypeDirections(PowerMode3.SpriteType.MOMA)[0]) {
+            if(MOMAConfig.EMIT_TOP(settings)) {
                 final ParticleSpriteMOMA e = new ParticleSpriteMOMA(x, y, dx, dy, size, lifeSetting, squareOneColor, squareTwoColor);
                 particles.add(e);
             }
-            if(settings.getSpriteTypeDirections(PowerMode3.SpriteType.MOMA)[1]) {
+            if(MOMAConfig.EMIT_BOTTOM(settings)) {
                 int momaDx = (int) (Math.random() * 4) * (Math.random() > 0.5 ? -1 : 1);
                 int momaDy = (int) (Math.random() * 3 + 1);
                 int momaY = y + 60;
