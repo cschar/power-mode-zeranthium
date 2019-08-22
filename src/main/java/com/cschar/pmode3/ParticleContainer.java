@@ -206,9 +206,13 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         }
 
         if(settings.getSpriteTypeEnabled(PowerMode3.SpriteType.VINE)){
+            int minPsiSearch = VineConfig.MIN_PSI_SEARCH(settings);
             int maxPsiSearch = VineConfig.MAX_PSI_SEARCH(settings);
             for(Anchor a: anchors){
                 if( Math.abs(a.anchorOffset - a.cursorOffset) > (maxPsiSearch) ){
+                    continue;
+                }
+                if( Math.abs(a.anchorOffset - a.cursorOffset) < (minPsiSearch) ){
                     continue;
                 }
 

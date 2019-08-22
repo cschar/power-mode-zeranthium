@@ -12,6 +12,7 @@ public class VineConfig extends JPanel {
     PowerMode3 settings;
 
     public JTextField maxPsiAnchorDistanceTextField;
+    public JTextField minPsiAnchorDistanceTextField;
     JCheckBox spriteEnabled;
     JCheckBox growFromRight;
 
@@ -40,13 +41,18 @@ public class VineConfig extends JPanel {
 
 
         JPanel lop1 = new JPanel();
-        lop1.add(new JLabel("Psi Anchor Scan Distance: "));
+        lop1.add(new JLabel("Max Psi Anchor Scan Distance: "));
         this.maxPsiAnchorDistanceTextField = new JTextField("");
-
         this.maxPsiAnchorDistanceTextField.setMinimumSize(new Dimension(50,20));
         lop1.add(maxPsiAnchorDistanceTextField);
-
         secondCol.add(lop1);
+
+        JPanel minPsi = new JPanel();
+        minPsi.add(new JLabel("Min Psi Anchor Scan Distance: "));
+        this.minPsiAnchorDistanceTextField = new JTextField("");
+        this.minPsiAnchorDistanceTextField.setMinimumSize(new Dimension(50,20));
+        minPsi.add(minPsiAnchorDistanceTextField);
+        secondCol.add(minPsi);
 
         JPanel spriteEnabledPanel = new JPanel();
         spriteEnabledPanel.add(new JLabel("Use Sprite "));
@@ -73,7 +79,8 @@ public class VineConfig extends JPanel {
     public void loadValues(){
 
 
-        this.maxPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.VINE,"maxPsiSearchDistance")));
+        this.minPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.VINE,"minPsiSearchDistance", 100)));
+        this.maxPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.VINE,"maxPsiSearchDistance", 300)));
         this.spriteEnabled.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.VINE,"spriteEnabled"));
         this.growFromRight.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.VINE,"growFromRight"));
 
@@ -82,10 +89,16 @@ public class VineConfig extends JPanel {
 
     public void saveValues(int maxPsiSearchLimit) throws ConfigurationException {
 
-        int vinePsiDistance = Config.getJTextFieldWithinBounds(this.maxPsiAnchorDistanceTextField,
+        int minVinePsiDistance = Config.getJTextFieldWithinBounds(this.minPsiAnchorDistanceTextField,
                 0, maxPsiSearchLimit,
-                "Distance to Psi Anchors will use when spawning vines (cannot be greater than max defined at top)");
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.VINE, "maxPsiSearchDistance", String.valueOf(vinePsiDistance));
+                "Min Distance to Psi Anchors will use when spawning vines (cannot be greater than max defined at top)");
+        settings.setSpriteTypeProperty(PowerMode3.SpriteType.VINE, "minPsiSearchDistance", String.valueOf(minVinePsiDistance));
+
+
+        int maxVinePsiDistance = Config.getJTextFieldWithinBounds(this.maxPsiAnchorDistanceTextField,
+                0, maxPsiSearchLimit,
+                "Max Distance to Psi Anchors will use when spawning vines (cannot be greater than max defined at top)");
+        settings.setSpriteTypeProperty(PowerMode3.SpriteType.VINE, "maxPsiSearchDistance", String.valueOf(maxVinePsiDistance));
 
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.VINE, "spriteEnabled", String.valueOf(spriteEnabled.isSelected()));
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.VINE, "growFromRight", String.valueOf(growFromRight.isSelected()));
@@ -100,6 +113,10 @@ public class VineConfig extends JPanel {
 
     public static int MAX_PSI_SEARCH(PowerMode3 settings) {
         return Config.getIntProperty(settings, PowerMode3.SpriteType.VINE,"maxPsiSearchDistance");
+    }
+
+    public static int MIN_PSI_SEARCH(PowerMode3 settings) {
+        return Config.getIntProperty(settings, PowerMode3.SpriteType.VINE,"minPsiSearchDistance");
     }
 
     public static boolean GROW_FROM_RIGHT(PowerMode3 settings){
