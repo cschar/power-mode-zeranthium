@@ -238,6 +238,7 @@ public class ParticleSpriteVineAnchor extends Particle{
             }
 
 
+
             if(!useSprite) {
                 g2d.fillRect(x - (8 / 2), y - (8 / 2), 8, 8);
                 for (VinePoint p : prevPoints) {
@@ -360,7 +361,8 @@ public class ParticleSpriteVineAnchor extends Particle{
 //                offsetY = Math.min(offsetY, d);
             }
 
-            int pupilSize = 4;
+
+            int pupilSize = 6;
             if(spawnsFromBelow) {
                 g2d.fillOval(x + 7 + offsetX, y - 5 + offsetY + 30, pupilSize, pupilSize);
             }else{

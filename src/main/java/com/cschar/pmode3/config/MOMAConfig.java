@@ -1,6 +1,5 @@
 package com.cschar.pmode3.config;
 
-import com.cschar.pmode3.ParticleSpriteLightningAlt;
 import com.cschar.pmode3.PowerMode3;
 import com.intellij.openapi.options.ConfigurationException;
 

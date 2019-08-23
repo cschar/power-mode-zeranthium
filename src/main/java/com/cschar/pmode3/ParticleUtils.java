@@ -8,9 +8,9 @@ import java.util.logging.Logger;
 public class ParticleUtils {
     public static BufferedImage loadSprite(String name){
         try {
-            return ImageIO.read(ParticleSpriteLightningAlt.class.getResource(name));
+            return ImageIO.read(ParticleSpriteLightning.class.getResource(name));
         } catch (IOException e) {
-            Logger logger  = Logger.getLogger(ParticleSpriteLightningAlt.class.getName());
+            Logger logger  = Logger.getLogger(ParticleSpriteLightning.class.getName());
             logger.severe("error loading image file: " + name);
 //            System.out.println("error loading image");
             e.printStackTrace();

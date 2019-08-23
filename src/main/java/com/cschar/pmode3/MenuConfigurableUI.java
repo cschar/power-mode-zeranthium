@@ -1,9 +1,6 @@
 package com.cschar.pmode3;
 
-import com.cschar.pmode3.config.LightningConfig;
-import com.cschar.pmode3.config.LizardConfig;
-import com.cschar.pmode3.config.MOMAConfig;
-import com.cschar.pmode3.config.VineConfig;
+import com.cschar.pmode3.config.*;
 import com.intellij.openapi.options.ConfigurableUi;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.ui.JBColor;
@@ -36,6 +33,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
 
     private LightningConfig lightningConfig;
+    private LightningAltConfig lightningAltConfig;
     private LizardConfig lizardConfig;
     private VineConfig vineConfig;
     private MOMAConfig momaConfig;
@@ -80,6 +78,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         //already initialized from createUIComponents below
         this.lizardConfig.loadValues();
         this.lightningConfig.loadValues();
+        this.lightningAltConfig.loadValues();
         this.vineConfig.loadValues();
         this.momaConfig.loadValues();
     }
@@ -142,7 +141,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         //save values
         int maxPsiSearch = Integer.parseInt(maxPsiSearchDistanceTextField.getText());
         this.lizardConfig.saveValues(maxPsiSearch);
-
+        this.lightningAltConfig.saveValues();
         this.lightningConfig.saveValues();
         this.vineConfig.saveValues(maxPsiSearch);
         this.momaConfig.saveValues();
@@ -202,6 +201,10 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
         this.lightningConfig = new LightningConfig(settings);
         this.theCustomCreatePanel.add(lightningConfig.getConfigPanel());
+
+        this.theCustomCreatePanel.add(this.createSpacer());
+        this.lightningAltConfig = new LightningAltConfig(settings);
+        this.theCustomCreatePanel.add(lightningAltConfig);
 
 
         this.theCustomCreatePanel.add(this.createSpacer());

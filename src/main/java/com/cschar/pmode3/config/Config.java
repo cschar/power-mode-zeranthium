@@ -61,14 +61,33 @@ public class Config extends JPanel {
         });
         colorPickerPanel.add(colorPickerButton);
 
+
+        colorPickerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        colorPickerPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+        colorPickerPanel.setMaximumSize(new Dimension(500, 50));
+
         return colorPickerPanel;
     }
 
-    public static int getJTextFieldWithinBounds(JTextField j, int min, int max, String name) throws ConfigurationException {
+    public static int getJTextFieldWithinBoundsInt(JTextField j, int min, int max, String name) throws ConfigurationException {
         int newValue;
         String errorMsg = String.format("%s : Please give a value between %d-%d", name, min,max);
         try {
             newValue = Integer.parseInt(j.getText());
+            if (newValue < min || newValue > max) {
+                throw new ConfigurationException(errorMsg);
+            }
+        } catch (NumberFormatException e){
+            throw new ConfigurationException(errorMsg);
+        }
+        return newValue;
+    }
+
+    public static float getJTextFieldWithinBoundsFloat(JTextField j, float min, float max, String name) throws ConfigurationException {
+        float newValue;
+        String errorMsg = String.format("%s : Please give a value between %.3f-%.3f", name, min,max);
+        try {
+            newValue = Float.parseFloat(j.getText());
             if (newValue < min || newValue > max) {
                 throw new ConfigurationException(errorMsg);
             }
@@ -122,6 +141,15 @@ public class Config extends JPanel {
             return new Color(Integer.parseInt(colorRGB));
         }else{
             return Color.GRAY;
+        }
+    }
+
+    public static float getFloatProperty(PowerMode3 settings, PowerMode3.SpriteType type, String propertyName, float defaultValue){
+        String property = settings.getSpriteTypeProperty(type, propertyName);
+        if(property != null){
+            return Float.parseFloat(property);
+        }else{
+            return defaultValue;
         }
     }
 

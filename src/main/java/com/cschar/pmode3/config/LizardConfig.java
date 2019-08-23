@@ -71,7 +71,7 @@ public class LizardConfig extends JPanel {
         minPsi.setLayout(new FlowLayout(FlowLayout.RIGHT));
         minPsi.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
         minPsi.setMaximumSize(new Dimension(500, 50));
-        minPsi.setBackground(Color.YELLOW);
+//        minPsi.setBackground(Color.YELLOW);
         secondCol.add(minPsi);
 
         this.chancePerKeyPressTextField = new JTextField();
@@ -82,7 +82,7 @@ public class LizardConfig extends JPanel {
         chancePerKeyPressPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         chancePerKeyPressPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
         chancePerKeyPressPanel.setMaximumSize(new Dimension(400, 50));
-        chancePerKeyPressPanel.setBackground(Color.lightGray);
+//        chancePerKeyPressPanel.setBackground(Color.lightGray);
         secondCol.add(chancePerKeyPressPanel);
 
         this.chanceOfSpawnTextField = new JTextField();
@@ -93,7 +93,7 @@ public class LizardConfig extends JPanel {
         chancePanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         chancePanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
         chancePanel.setMaximumSize(new Dimension(400, 50));
-        chancePanel.setBackground(Color.lightGray);
+//        chancePanel.setBackground(Color.lightGray);
         secondCol.add(chancePanel);
 
         this.maxAnchorsToUse = new JTextField();
@@ -105,7 +105,7 @@ public class LizardConfig extends JPanel {
         maxAnchorsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         maxAnchorsPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
         maxAnchorsPanel.setMaximumSize(new Dimension(500, 50));
-        maxAnchorsPanel.setBackground(Color.yellow);
+//        maxAnchorsPanel.setBackground(Color.yellow);
         secondCol.add(maxAnchorsPanel);
 
 
@@ -132,31 +132,31 @@ public class LizardConfig extends JPanel {
 
     public void saveValues(int maxPsiSearchLimit) throws ConfigurationException {
 
-        int minLizardPsiDistance = Config.getJTextFieldWithinBounds(this.minPsiAnchorDistanceTextField,
+        int minLizardPsiDistance = Config.getJTextFieldWithinBoundsInt(this.minPsiAnchorDistanceTextField,
                 0, maxPsiSearchLimit,
                 "Min Distance to Psi Anchors will use when spawning lizards (cannot be greater than max defined at top)");
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.LIZARD, "minPsiSearchDistance",
                 String.valueOf(minLizardPsiDistance));
 
-        int maxLizardPsiDistance = Config.getJTextFieldWithinBounds(this.maxPsiAnchorDistanceTextField,
+        int maxLizardPsiDistance = Config.getJTextFieldWithinBoundsInt(this.maxPsiAnchorDistanceTextField,
                 0, maxPsiSearchLimit,
                 "Max Distance to Psi Anchors will use when spawning lizards (cannot be greater than max defined at top)");
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.LIZARD, "maxPsiSearchDistance",
                 String.valueOf(maxLizardPsiDistance));
 
-        int chancePerKeyPress = Config.getJTextFieldWithinBounds(this.chancePerKeyPressTextField,
+        int chancePerKeyPress = Config.getJTextFieldWithinBoundsInt(this.chancePerKeyPressTextField,
                 0, 100,
                 "chance lizards spawn per keypress");
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.LIZARD, "chancePerKeyPress",
                 String.valueOf(chancePerKeyPress));
 
-        int chanceOfSpawn = Config.getJTextFieldWithinBounds(this.chanceOfSpawnTextField,
+        int chanceOfSpawn = Config.getJTextFieldWithinBoundsInt(this.chanceOfSpawnTextField,
                 0, 100,
                 "chance lizard spawns for anchor");
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.LIZARD, "chanceOfSpawn",
                 String.valueOf(chanceOfSpawn));
 
-        int maxAnchorsToUse = Config.getJTextFieldWithinBounds(this.maxAnchorsToUse,
+        int maxAnchorsToUse = Config.getJTextFieldWithinBoundsInt(this.maxAnchorsToUse,
                 1, 100,
                 "max anchors to use when spawning lizards");
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.LIZARD, "maxAnchorsToUse",

@@ -1,6 +1,6 @@
 package com.cschar.pmode3.config;
 
-import com.cschar.pmode3.ParticleSpriteLightningAlt;
+import com.cschar.pmode3.ParticleSpriteLightning;
 import com.cschar.pmode3.PowerMode3;
 import com.intellij.openapi.options.ConfigurationException;
 
@@ -16,8 +16,8 @@ public class LightningConfig extends JPanel {
     private JCheckBox outerBeamEnabledCheckBox;
 
     private JTextField chanceOfLightningTextField;
-    private Color originalColorInner;
-    private Color originalColorOuter;
+    private Color originalColorInner = Color.WHITE;
+    private Color originalColorOuter = Color.CYAN;
 
     public LightningConfig(PowerMode3 settings){
         this.settings = settings;
@@ -34,6 +34,7 @@ public class LightningConfig extends JPanel {
         secondCol.setLayout(new BoxLayout(secondCol, BoxLayout.PAGE_AXIS));
         JLabel headerLabel = new JLabel("Lightning Options");
         headerLabel.setFont(new Font ("Arial", Font.BOLD, 20));
+        headerLabel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
         secondCol.add(headerLabel);
         mainPanel.add(secondCol);
 
@@ -43,15 +44,11 @@ public class LightningConfig extends JPanel {
         if(colorRGBInner != null){
             Color originalColor = new Color(Integer.parseInt(colorRGBInner));
             this.originalColorInner =  originalColor;
-        }else{
-            this.originalColorInner = Color.WHITE;
         }
         String colorRGBOuter = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "outer Beam Color");
         if(colorRGBOuter != null){
             Color originalColorOuter = new Color(Integer.parseInt(colorRGBOuter));
             this.originalColorOuter =  originalColorOuter;
-        }else{
-            this.originalColorOuter = Color.CYAN;
         }
 
 
@@ -63,12 +60,18 @@ public class LightningConfig extends JPanel {
         this.innerBeamEnabledCheckBox = new JCheckBox("is enabled?", true);
         innerBeamJPanel.add(innerBeamEnabledCheckBox);
         innerBeamJPanel.add(innerBeamColorPanel);
+        innerBeamJPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        innerBeamJPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+        innerBeamJPanel.setMaximumSize(new Dimension(500, 50));
         secondCol.add(innerBeamJPanel);
 
         JPanel outerBeamJPanel = new JPanel();
         this.outerBeamEnabledCheckBox = new JCheckBox("is enabled?", true);
         outerBeamJPanel.add(outerBeamEnabledCheckBox);
         outerBeamJPanel.add(outerBeamColorPanel);
+        outerBeamJPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        outerBeamJPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+        outerBeamJPanel.setMaximumSize(new Dimension(500, 50));
         secondCol.add(outerBeamJPanel);
 
         this.chanceOfLightningTextField = new JTextField();
@@ -76,8 +79,9 @@ public class LightningConfig extends JPanel {
         JPanel chancePanel = new JPanel();
         chancePanel.add(chanceOfLightningLabel);
         chancePanel.add(chanceOfLightningTextField);
-
-
+        chancePanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        chancePanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+        chancePanel.setMaximumSize(new Dimension(500, 50));
 
         secondCol.add(chancePanel);
 
@@ -96,6 +100,8 @@ public class LightningConfig extends JPanel {
             this.chanceOfLightningTextField.setText("0");
         }
 
+
+
         String isInnerBeamEnabled = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "innerBeamEnabled");
         if(isInnerBeamEnabled != null){
             this.innerBeamEnabledCheckBox.setSelected(Boolean.valueOf(isInnerBeamEnabled));
@@ -110,7 +116,7 @@ public class LightningConfig extends JPanel {
 
     public void saveValues() throws ConfigurationException {
 
-        int chanceOfLightning = Config.getJTextFieldWithinBounds(this.chanceOfLightningTextField,
+        int chanceOfLightning = Config.getJTextFieldWithinBoundsInt(this.chanceOfLightningTextField,
                 0, 100,
                 "chance lightning spawns on keypress");
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "chanceOfLightning", String.valueOf(chanceOfLightning));
@@ -133,7 +139,7 @@ public class LightningConfig extends JPanel {
 
         if(this.originalColorInner.getRGB() != newColorInner.getRGB() ||
            this.originalColorOuter.getRGB() != newColorOuter.getRGB()) {
-            ParticleSpriteLightningAlt.reloadSpritesWithColors(newColorInner, newColorOuter);
+            ParticleSpriteLightning.reloadSpritesWithColors(newColorInner, newColorOuter);
         }
     }
 

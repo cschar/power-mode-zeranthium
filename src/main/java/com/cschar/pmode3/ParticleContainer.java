@@ -13,10 +13,7 @@
 
 package com.cschar.pmode3;
 
-import com.cschar.pmode3.config.LightningConfig;
-import com.cschar.pmode3.config.LizardConfig;
-import com.cschar.pmode3.config.MOMAConfig;
-import com.cschar.pmode3.config.VineConfig;
+import com.cschar.pmode3.config.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 
@@ -26,7 +23,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ThreadLocalRandom;
@@ -104,15 +100,17 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         int life = 45;
         int lifeSetting = settings.getLifetime();
 
-        if (settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LIGHTNING)){
-            final ParticleSpriteLightning e = new ParticleSpriteLightning(x, y, dx, dy, size, lifeSetting, Color.ORANGE,
-                    LightningConfig.CHANCE_OF_LIGHTNING(settings));
+        if (settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LIGHTNING_ALT)){
+            final ParticleSpriteLightningAlt e = new ParticleSpriteLightningAlt(x, y, dx, dy, size, lifeSetting,
+                    Color.ORANGE,
+                    LightningAltConfig.CHANCE_PER_KEY_PRESS(settings),
+                    LightningAltConfig.MAX_ALPHA(settings));
             particles.add(e);
 
         }
 
-        if (settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LIGHTNING_ALT)){
-            final ParticleSpriteLightningAlt e = new ParticleSpriteLightningAlt(x, y, dx, dy, size, lifeSetting, Color.ORANGE,
+        if (settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LIGHTNING)){
+            final ParticleSpriteLightning e = new ParticleSpriteLightning(x, y, dx, dy, size, lifeSetting, Color.ORANGE,
                     LightningConfig.CHANCE_OF_LIGHTNING(settings),
                     LightningConfig.INNER_BEAM_ENABLED(settings),
                     LightningConfig.OUTER_BEAM_ENABLED(settings));
