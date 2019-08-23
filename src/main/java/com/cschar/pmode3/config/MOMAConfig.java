@@ -31,7 +31,7 @@ public class MOMAConfig extends JPanel {
         mainPanel.setMaximumSize(new Dimension(1000,300));
         mainPanel.setLayout(new GridLayout(0,2));
         JPanel firstCol = new JPanel();
-        firstCol.setLayout(new BoxLayout(firstCol, BoxLayout.PAGE_AXIS));
+        firstCol.setLayout(new BoxLayout(firstCol, BoxLayout.Y_AXIS));
         mainPanel.add(firstCol);
 
         JPanel secondCol = new JPanel();
@@ -73,13 +73,21 @@ public class MOMAConfig extends JPanel {
 
 
         JPanel checkboxPanel = new JPanel();
+        checkboxPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         emitTopCheckBox = new JCheckBox("emit from top?", true);
         checkboxPanel.add(emitTopCheckBox);
+        checkboxPanel.setMaximumSize(new Dimension(300, 50));
+        checkboxPanel.setAlignmentX( Component.LEFT_ALIGNMENT );//0.0
+//        checkboxPanel.setBackground(Color.cyan);
         firstCol.add(checkboxPanel);
 
         checkboxPanel = new JPanel();
+        checkboxPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         emitBottomCheckBox = new JCheckBox("emit from bottom?", true);
         checkboxPanel.add(emitBottomCheckBox);
+        checkboxPanel.setMaximumSize(new Dimension(300, 50));
+//        checkboxPanel.setBackground(Color.cyan);
+        checkboxPanel.setAlignmentX( Component.LEFT_ALIGNMENT );//0.0
         firstCol.add(checkboxPanel);
 
 
