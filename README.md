@@ -5,7 +5,21 @@ based off of: https://github.com/baptistemesta/power-mode-intellij-plugin
 
 TODO: everything
 - hotkey to activate (bonus: configurable?)
-- lightning
+- lightning sparks
+- Fiddle heads
+```
+  xxxxxxx
+ x   xxxxxxxxxx
+ x   x  x     x
+ x   xxxx     x
+ x           xxx
+ x           xxx    lantern style hanging
+ x
+ x
+ x
+ ```
+- glyph chain (3-4 glyph thing) (gold)
+- TOKEN callout with decoration above
 
 
 Done;
