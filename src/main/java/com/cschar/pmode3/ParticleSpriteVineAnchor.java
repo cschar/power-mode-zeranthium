@@ -247,10 +247,10 @@ public class ParticleSpriteVineAnchor extends Particle{
             }
 
             //debug
-//            g2d.drawString(String.format("anchorAngle %.3f (cur: %.3f) ", initAnchorAngle, curAngle), anchorX - 20, anchorY-30);
-//            g2d.setColor(Color.RED);  g2d.fillRect(midPoint.x - (8 / 2), midPoint.y - (8 / 2), 8, 8);
-//            g2d.setColor(Color.ORANGE);
-//            g2d.fillRect(anchorX - (8 / 2), anchorY - (8 / 2), 8, 8);
+            g2d.drawString(String.format("anchorAngle %.3f (cur: %.3f) ", initAnchorAngle, curAngle), anchorX - 20, anchorY-30);
+            g2d.setColor(Color.RED);  g2d.fillRect(midPoint.x - (8 / 2), midPoint.y - (8 / 2), 8, 8);
+            g2d.setColor(Color.ORANGE);
+            g2d.fillRect(anchorX - (8 / 2), anchorY - (8 / 2), 8, 8);
 
 
             if(useSprite) {

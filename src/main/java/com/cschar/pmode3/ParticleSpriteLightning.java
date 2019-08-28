@@ -57,6 +57,7 @@ public class ParticleSpriteLightning extends Particle{
                 pixels[0] = newColor.getRed();
                 pixels[1] = newColor.getGreen();
                 pixels[2] = newColor.getBlue();
+
                 raster.setPixel(xx, yy, pixels);
             }
         }

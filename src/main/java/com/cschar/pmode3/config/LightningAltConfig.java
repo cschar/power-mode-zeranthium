@@ -32,7 +32,7 @@ public class LightningAltConfig extends BaseConfig {
 
     public void loadValues(){
         super.loadValues();
-        this.maxAlphaTextField.setText(String.valueOf(Config.getFloatProperty(settings, spriteType,"maxAlphaTextField", 0.5f)));
+        this.maxAlphaTextField.setText(String.valueOf(Config.getFloatProperty(settings, spriteType,"maxAlpha", 0.5f)));
         this.sparksEnabled.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.LIGHTNING_ALT,"sparksEnabled", true));
 
     }
