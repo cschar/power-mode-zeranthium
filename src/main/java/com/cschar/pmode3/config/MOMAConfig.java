@@ -13,14 +13,16 @@ public class MOMAConfig extends JPanel {
 
     private JCheckBox oneSquareEnabledCheckBox;
     private JCheckBox twoSquareEnabledCheckBox;
+    private JCheckBox threeSquareEnabledCheckBox;
 
     private JCheckBox emitTopCheckBox;
     private JCheckBox emitBottomCheckBox;
 
 
     private JTextField chanceOfLightningTextField;
-    private Color colorOne = Color.red;
-    private Color colorTwo = Color.blue;
+    private static Color colorOne = Color.red;
+    private static Color colorTwo = Color.blue;
+    private static Color colorThree = Color.WHITE;
 
     public MOMAConfig(PowerMode3 settings){
         this.settings = settings;
@@ -30,14 +32,19 @@ public class MOMAConfig extends JPanel {
         mainPanel.setMaximumSize(new Dimension(1000,300));
         mainPanel.setLayout(new GridLayout(0,2));
         JPanel firstCol = new JPanel();
-        firstCol.setLayout(new BoxLayout(firstCol, BoxLayout.Y_AXIS));
+        firstCol.setLayout(new BoxLayout(firstCol, BoxLayout.PAGE_AXIS));
         mainPanel.add(firstCol);
 
         JPanel secondCol = new JPanel();
-        secondCol.setLayout(new BoxLayout(secondCol, BoxLayout.PAGE_AXIS));
+        secondCol.setLayout(new BoxLayout(secondCol, BoxLayout.Y_AXIS));
+        JPanel headerPanel = new JPanel();
         JLabel headerLabel = new JLabel("MOMA Options");
         headerLabel.setFont(new Font ("Arial", Font.BOLD, 20));
-        secondCol.add(headerLabel);
+        headerPanel.add(headerLabel);
+        headerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        headerPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        headerPanel.setMaximumSize(new Dimension(300,100));
+        secondCol.add(headerPanel);
         mainPanel.add(secondCol);
 
 
@@ -56,20 +63,39 @@ public class MOMAConfig extends JPanel {
 
 
 
+
         JPanel oneSquareJPanel = new JPanel();
         this.oneSquareEnabledCheckBox = new JCheckBox("is enabled?", true);
         oneSquareJPanel.add(oneSquareEnabledCheckBox);
         JPanel oneSquareColorPanel = Config.getColorPickerPanel("one Square Color", PowerMode3.SpriteType.MOMA, settings, this.colorOne);
         oneSquareJPanel.add(oneSquareColorPanel);
+        oneSquareJPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        oneSquareJPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+        oneSquareJPanel.setMaximumSize(new Dimension(500, 50));
         secondCol.add(oneSquareJPanel);
 
-        JPanel outerBeamJPanel = new JPanel();
+        JPanel twoSquareJPanel = new JPanel();
         this.twoSquareEnabledCheckBox = new JCheckBox("is enabled?", true);
-        outerBeamJPanel.add(twoSquareEnabledCheckBox);
-        JPanel outerBeamColorPanel = Config.getColorPickerPanel("two Square Color", PowerMode3.SpriteType.MOMA, settings, this.colorTwo);
-        outerBeamJPanel.add(outerBeamColorPanel);
-        secondCol.add(outerBeamJPanel);
+        twoSquareJPanel.add(twoSquareEnabledCheckBox);
+        JPanel twoSquareColorPanel = Config.getColorPickerPanel("two Square Color", PowerMode3.SpriteType.MOMA, settings, this.colorTwo);
+        twoSquareJPanel.add(twoSquareColorPanel);
+        twoSquareJPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        twoSquareJPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+        twoSquareJPanel.setMaximumSize(new Dimension(500, 50));
+        secondCol.add(twoSquareJPanel);
 
+        JPanel threeSquareJPanel = new JPanel();
+        this.threeSquareEnabledCheckBox = new JCheckBox("is enabled?", true);
+        threeSquareJPanel.add(threeSquareEnabledCheckBox);
+        JPanel threeSquareColorPanel = Config.getColorPickerPanel("three Square Color", PowerMode3.SpriteType.MOMA, settings, this.colorThree);
+        threeSquareJPanel.add(threeSquareColorPanel);
+        threeSquareJPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        threeSquareJPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+        threeSquareJPanel.setMaximumSize(new Dimension(500, 50));
+        secondCol.add(threeSquareJPanel);
+
+
+        //Col 1
 
         JPanel checkboxPanel = new JPanel();
         checkboxPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -103,6 +129,7 @@ public class MOMAConfig extends JPanel {
 
         this.oneSquareEnabledCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.MOMA,"oneSquareEnabled", true));
         this.twoSquareEnabledCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.MOMA,"twoSquareEnabled", true));
+        this.threeSquareEnabledCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.MOMA,"threeSquareEnabled", true));
 
         this.emitTopCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.MOMA,"emitTopEnabled", true));
         this.emitBottomCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.MOMA,"emitBottomEnabled", true));
@@ -114,6 +141,7 @@ public class MOMAConfig extends JPanel {
 
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.MOMA, "oneSquareEnabled", String.valueOf(oneSquareEnabledCheckBox.isSelected()));
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.MOMA, "twoSquareEnabled", String.valueOf(twoSquareEnabledCheckBox.isSelected()));
+        settings.setSpriteTypeProperty(PowerMode3.SpriteType.MOMA, "threeSquareEnabled", String.valueOf(twoSquareEnabledCheckBox.isSelected()));
 
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.MOMA, "emitTopEnabled", String.valueOf(emitTopCheckBox.isSelected()));
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.MOMA, "emitBottomEnabled", String.valueOf(emitBottomCheckBox.isSelected()));
@@ -136,14 +164,27 @@ public class MOMAConfig extends JPanel {
         return Config.getBoolProperty(settings, PowerMode3.SpriteType.MOMA, "twoSquareEnabled");
     }
 
+    public static boolean THREE_SQUARE_ENABLED(PowerMode3 settings){
+        return Config.getBoolProperty(settings, PowerMode3.SpriteType.MOMA, "threeSquareEnabled");
+    }
+
     public static Color ONE_SQUARE_COLOR(PowerMode3 settings){
-        String RGB = settings.getSpriteTypeProperty(PowerMode3.SpriteType.MOMA, "one Square Color");
-        return new Color(Integer.parseInt(RGB));
+        return Config.getColorProperty(settings, PowerMode3.SpriteType.MOMA, "one Square Color", colorOne);
+//        String RGB = settings.getSpriteTypeProperty(PowerMode3.SpriteType.MOMA, "one Square Color");
+//        return new Color(Integer.parseInt(RGB));
     }
 
     public static Color TWO_SQUARE_COLOR(PowerMode3 settings){
-        String RGB = settings.getSpriteTypeProperty(PowerMode3.SpriteType.MOMA, "two Square Color");
-        return new Color(Integer.parseInt(RGB));
+        return Config.getColorProperty(settings, PowerMode3.SpriteType.MOMA, "two Square Color", colorTwo);
+//        String RGB = settings.getSpriteTypeProperty(PowerMode3.SpriteType.MOMA, "two Square Color");
+//        return new Color(Integer.parseInt(RGB));
+
+    }
+
+    public static Color THREE_SQUARE_COLOR(PowerMode3 settings){
+        return Config.getColorProperty(settings, PowerMode3.SpriteType.MOMA, "three Square Color", colorThree);
+//        String RGB = settings.getSpriteTypeProperty(PowerMode3.SpriteType.MOMA, "three Square Color");
+//        return new Color(Integer.parseInt(RGB));
 
     }
 

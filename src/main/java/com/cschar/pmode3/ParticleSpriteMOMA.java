@@ -29,16 +29,22 @@ public class ParticleSpriteMOMA extends Particle{
 
     Color oneSquareColor;
     Color twoSquareColor;
+    Color threeSquareColor;
+
+    private boolean[] squaresEnabled;
 
     double threeSquareExtender;
     int maxLife;
 
     int growRandom;
-    public ParticleSpriteMOMA(int x, int y, int dx, int dy, int size, int life, Color c, Color c2) {
-        super(x,y,dx,dy,size,life,c);
+    public ParticleSpriteMOMA(int x, int y, int dx, int dy, int size, int life,
+                              Color[] colors, boolean[] enabled) {
+        super(x,y,dx,dy,size,life,colors[0]);
         this.maxLife = life;
-        this.oneSquareColor = c;
-        this.twoSquareColor = c2;
+        this.oneSquareColor = colors[0];
+        this.twoSquareColor = colors[1];
+        this.threeSquareColor = colors[2];
+        this.squaresEnabled = enabled;
 
         threeSquareExtender = ThreadLocalRandom.current().nextDouble(0.0f, 1.0f);
         growRandom = ThreadLocalRandom.current().nextInt(0,100);
@@ -51,10 +57,7 @@ public class ParticleSpriteMOMA extends Particle{
         return life <= 0;
     }
 
-    private AlphaComposite makeComposite(float alpha) {
-        int type = AlphaComposite.SRC_OVER;
-        return(AlphaComposite.getInstance(type, alpha));
-    }
+
 
 
     private static int gap=10, width=60, offset=20;
@@ -83,39 +86,49 @@ public class ParticleSpriteMOMA extends Particle{
 //            at.rotate(Math.PI/2 + angle);
 
 
-            g2d.setComposite(makeComposite(0.2f));
-            g2d.setPaint(oneSquareColor);
-            g2d.fill(oneSquare);
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
+            if(squaresEnabled[0]) {
+                g2d.setPaint(oneSquareColor);
+                g2d.fill(oneSquare);
+            }
+            if(squaresEnabled[1]) {
+                g2d.setPaint(twoSquareColor);
+                g2d.fill(twoSquare);
+            }
 
-            g2d.setPaint(twoSquareColor);
-            g2d.fill(twoSquare);
-
-            g2d.setComposite(makeComposite(0.8f));
-            g2d.setPaint(Color.WHITE); //TODO color3 config
-            //Barnett Newman !?
+            if(squaresEnabled[2]) {
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f));
+                g2d.setPaint(threeSquareColor);
+                //Barnett Newman !?
 
 //            int newWidth = width*2 + (int) (threeSquareExtender * 2000 * incr);
-            int newWidth = 10*(maxLife - life);
-            g2d.fillRect(x -(size /2), y - 2*(size),
-                    newWidth, 30);
+                int newWidth = 10 * (maxLife - life);
+                int rectHeight = 30; //
+                g2d.fillRect(x - (size / 2), y - 2 * (size),
+                        newWidth, rectHeight);
 
-            int bifurcationThreshold = 100; // less than X life, and grow
-            int growthSpot = 150 + growRandom;
-            if(life < bifurcationThreshold){
-                int newHeight = 10*(bifurcationThreshold - life);
-                if(dy > 0 ) { //moving down
-                    g2d.fillRect(x - (size / 2) + growthSpot, y - 2 * (size),
-                            30, newHeight);
-                    g2d.setPaint(twoSquareColor);
-                    g2d.fillRect(x - (size / 2) + growthSpot, y - 2 * (size),
-                            newWidth - growthSpot, newHeight);
-                }else{
-                    g2d.fillRect(x - (size / 2) + growthSpot, y - 2 * (size) - newHeight,
-                            30, newHeight);
+                int bifurcationThreshold = 100; // less than X life, and grow
+                int growthSpot = 150 + growRandom;
+                if (life < bifurcationThreshold) {
+                    int newHeight = 10 * (bifurcationThreshold - life);
+                    if (dy > 0) { //moving down
 
-                    g2d.setPaint(twoSquareColor);
-                    g2d.fillRect(x - (size / 2) + growthSpot, y - 2 * (size) - newHeight,
-                            newWidth - growthSpot, newHeight);
+                        rectHeight = 0; //cover line
+                        g2d.setPaint(twoSquareColor);
+                        g2d.fillRect(x - (size / 2) + growthSpot, y - 2 * (size) + rectHeight,
+                                30, newHeight);
+
+
+                        g2d.fillRect(x - (size / 2) + growthSpot, y - 2 * (size) + rectHeight,
+                                newWidth - growthSpot, newHeight);
+                    } else {
+
+                        g2d.setPaint(twoSquareColor);
+                        g2d.fillRect(x - (size / 2) + growthSpot, y - 2 * (size) - newHeight,
+                                30, newHeight);
+                        g2d.fillRect(x - (size / 2) + growthSpot, y - 2 * (size) - newHeight,
+                                newWidth - growthSpot, newHeight);
+                    }
                 }
             }
 

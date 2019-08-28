@@ -126,18 +126,31 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
         if (settings.getSpriteTypeEnabled(PowerMode3.SpriteType.MOMA)){
 
-            Color squareOneColor = MOMAConfig.ONE_SQUARE_COLOR(settings);
-            Color squareTwoColor = MOMAConfig.TWO_SQUARE_COLOR(settings);
+
+            Color[] colors = new Color[]{
+            MOMAConfig.ONE_SQUARE_COLOR(settings),
+            MOMAConfig.TWO_SQUARE_COLOR(settings),
+            MOMAConfig.THREE_SQUARE_COLOR(settings)
+            };
+
+            boolean[] enabled = new boolean[]{MOMAConfig.ONE_SQUARE_ENABLED(settings),
+                                                MOMAConfig.TWO_SQUARE_ENABLED(settings),
+                                                MOMAConfig.THREE_SQUARE_ENABLED(settings)};
+            int momaY;
             if(MOMAConfig.EMIT_TOP(settings)) {
-                final ParticleSpriteMOMA e = new ParticleSpriteMOMA(x, y, dx, dy, size, lifeSetting, squareOneColor, squareTwoColor);
+                momaY = y - 30;
+                //LOL this constructor
+                final ParticleSpriteMOMA e = new ParticleSpriteMOMA(x, momaY, dx, dy, size, lifeSetting,
+                        colors, enabled);
                 particles.add(e);
             }
             if(MOMAConfig.EMIT_BOTTOM(settings)) {
                 int momaDx = (int) (Math.random() * 4) * (Math.random() > 0.5 ? -1 : 1);
                 int momaDy = (int) (Math.random() * 3 + 1);
-                int momaY = y + 60;
+                momaY = y + 60;
 
-                final ParticleSpriteMOMA e3 = new ParticleSpriteMOMA(x, momaY, momaDx, momaDy, size, lifeSetting, squareOneColor, squareTwoColor);
+                final ParticleSpriteMOMA e3 = new ParticleSpriteMOMA(x, momaY, momaDx, momaDy, size, lifeSetting,
+                        colors, enabled);
                 particles.add(e3);
             }
         }

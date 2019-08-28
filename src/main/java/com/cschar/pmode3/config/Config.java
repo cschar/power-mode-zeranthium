@@ -144,6 +144,16 @@ public class Config extends JPanel {
         }
     }
 
+    public static Color getColorProperty(PowerMode3 settings, PowerMode3.SpriteType type, String propertyName, Color defaultValue){
+
+        String colorRGB = settings.getSpriteTypeProperty(type, propertyName);
+        if(colorRGB != null){
+            return new Color(Integer.parseInt(colorRGB));
+        }else{
+            return defaultValue;
+        }
+    }
+
     public static float getFloatProperty(PowerMode3 settings, PowerMode3.SpriteType type, String propertyName, float defaultValue){
         String property = settings.getSpriteTypeProperty(type, propertyName);
         if(property != null){
