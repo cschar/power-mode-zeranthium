@@ -14,6 +14,7 @@ public class VineConfig extends JPanel {
     public JTextField maxPsiAnchorDistanceTextField;
     public JTextField minPsiAnchorDistanceTextField;
     JCheckBox spriteEnabled;
+    JCheckBox sprite2Enabled;
     JCheckBox growFromRight;
 
     public VineConfig(PowerMode3 settings){
@@ -70,6 +71,14 @@ public class VineConfig extends JPanel {
         spriteEnabledPanel.setMaximumSize(new Dimension(500, 50));
         firstCol.add(spriteEnabledPanel);
 
+        JPanel sprite2EnabledPanel = new JPanel();
+        this.sprite2Enabled = new JCheckBox("Sprite2 Enabled?");
+        sprite2EnabledPanel.add(sprite2Enabled);
+        sprite2EnabledPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        sprite2EnabledPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        sprite2EnabledPanel.setMaximumSize(new Dimension(500, 50));
+        firstCol.add(sprite2EnabledPanel);
+
 
         this.growFromRight = new JCheckBox("Grow From Right?");
         this.growFromRight.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -92,6 +101,7 @@ public class VineConfig extends JPanel {
         this.minPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.VINE,"minPsiSearchDistance", 100)));
         this.maxPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.VINE,"maxPsiSearchDistance", 300)));
         this.spriteEnabled.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.VINE,"spriteEnabled"));
+        this.sprite2Enabled.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.VINE,"sprite2Enabled"));
         this.growFromRight.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.VINE,"growFromRight"));
 
 
@@ -111,13 +121,18 @@ public class VineConfig extends JPanel {
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.VINE, "maxPsiSearchDistance", String.valueOf(maxVinePsiDistance));
 
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.VINE, "spriteEnabled", String.valueOf(spriteEnabled.isSelected()));
+        settings.setSpriteTypeProperty(PowerMode3.SpriteType.VINE, "sprite2Enabled", String.valueOf(sprite2Enabled.isSelected()));
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.VINE, "growFromRight", String.valueOf(growFromRight.isSelected()));
     }
 
 
 
-    public static boolean USE_SPRITES(PowerMode3 settings){
+    public static boolean USE_SPRITE(PowerMode3 settings){
         return Config.getBoolProperty(settings, PowerMode3.SpriteType.VINE,"spriteEnabled");
+    }
+
+    public static boolean USE_SPRITE2(PowerMode3 settings){
+        return Config.getBoolProperty(settings, PowerMode3.SpriteType.VINE,"sprite2Enabled");
     }
 
 

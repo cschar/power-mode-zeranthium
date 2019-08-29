@@ -107,9 +107,9 @@ public class ParticleSpriteMOMA extends Particle{
                 g2d.fillRect(x - (size / 2), y - 2 * (size),
                         newWidth, rectHeight);
 
-                int bifurcationThreshold = 100; // less than X life, and grow
+                int bifurcationThreshold = 50; // less than X life, and grow
                 int growthSpot = 150 + growRandom;
-                if (life < bifurcationThreshold) {
+                if ((maxLife - life) < bifurcationThreshold) {
                     int newHeight = 10 * (bifurcationThreshold - life);
                     if (dy > 0) { //moving down
 

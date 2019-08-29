@@ -240,11 +240,17 @@ public class ParticleContainer extends JComponent implements ComponentListener {
                     continue;
                 }
 
-                final ParticleSpriteVineAnchor e = new ParticleSpriteVineAnchor(x, y, dx, dy, a.p.x, a.p.y,
+//                final ParticleSpriteVineAnchor e = new ParticleSpriteVineAnchor(x, y, dx, dy, a.p.x, a.p.y,
+//                        size, life,
+//                        VineConfig.VINE_TOP_COLOR(settings),
+//                        VineConfig.VINE_BOTTOM_COLOR(settings),
+//                        VineConfig.USE_SPRITE(settings));
+
+                final ParticleSpriteVineAnchorAnimated e = new ParticleSpriteVineAnchorAnimated(x, y, dx, dy, a.p.x, a.p.y,
                         size, life,
                         VineConfig.VINE_TOP_COLOR(settings),
                         VineConfig.VINE_BOTTOM_COLOR(settings),
-                        VineConfig.USE_SPRITES(settings));
+                        VineConfig.USE_SPRITE2(settings));
                 particles.add(e);
             }
         }
