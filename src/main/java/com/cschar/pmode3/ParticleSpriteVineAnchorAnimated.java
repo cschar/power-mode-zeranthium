@@ -163,6 +163,7 @@ public class ParticleSpriteVineAnchorAnimated extends Particle{
     ConcurrentLinkedQueue<VinePoint> prevPoints;
 
     private boolean hasFoundEnd = false;
+    private boolean hasDoneFirstUpdate = false;
     public boolean update() {
 
 
@@ -183,21 +184,20 @@ public class ParticleSpriteVineAnchorAnimated extends Particle{
                 hasFoundEnd = true;
 
             }else{
+                hasDoneFirstUpdate = true;
                 x = tmpx;
                 y = (int) ovalY + midPoint.y;
 //                y = tmpy;
 
                 float angleIncr = -0.05f;
 
-                float squiggleBlendX = 1;
-
-                float squiggleBlendY = 1;
-
-                float rampUpLife = 15;
-                if(life + rampUpLife > maxLife){
-                    squiggleBlendX = (maxLife - life) / rampUpLife;
-                    squiggleBlendY = (maxLife - life) / rampUpLife;
-                }
+//                float squiggleBlendX = 1;
+//                float squiggleBlendY = 1;
+//                float rampUpLife = 15;
+//                if(life + rampUpLife > maxLife){
+//                    squiggleBlendX = (maxLife - life) / rampUpLife;
+//                    squiggleBlendY = (maxLife - life) / rampUpLife;
+//                }
                 //add squiggle movement
 //                x += squiggleBlendX * ((radius / 10) + 5 * randXSquiggleOffset) * Math.sin((5 * randXSquiggleOffset) * curAngle);
 //                y += squiggleBlendY * (radius / 10) * Math.sin((5 * randYSquiggleOffset) * curAngle);
@@ -312,6 +312,7 @@ public class ParticleSpriteVineAnchorAnimated extends Particle{
         }
         if(VINE_ALPHA > 0.01f) {
             Iterator<VinePoint> iter = prevPoints.iterator();
+
             int maxSize = prevPoints.size();
             int count = 0;
             while (iter.hasNext()) {
@@ -350,81 +351,71 @@ public class ParticleSpriteVineAnchorAnimated extends Particle{
         }
 
 
-        at = new AffineTransform();
+
+
+        if(hasDoneFirstUpdate) {
+
+            at = new AffineTransform();
 //        at.scale(0.5,0.5);
-        if (spawnsFromBelow) {
-            at.translate(x, y + 40);
+            if (spawnsFromBelow) {
+                at.translate(x, y + 40);
 //            at.rotate(Math.PI / 2);
 //            at.rotate(Math.PI);
 //            at.rotate(curAngle);
-        } else {
-            at.translate(x, y - 20);
+            } else {
+                at.translate(x, y - 20);
 //            at.rotate(-1 * (Math.PI / 2));
 //            at.rotate(-1 * Math.PI);
 //            at.rotate(-1 * curAngle);
-        }
-
-//        at.translate((int)x ,(int)y );
-        at.translate(-sprite.getWidth()/2,
-                -sprite.getHeight()/2);
-
-
-
-
-//        if(spawnsFromBelow) {
-//            at.translate(0, 30);
-//        }else{
-//            at.translate(0, -10);
-//        }
-//                if(y > initialY){
-//                    at.scale(1.0f, -1.0f);
-//                    at.translate(0.0f, -sprite.getHeight() - 50);
-//                }
-
-
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, HEAD_ALPHA));
-
-
-        if( this.life % 2 == 0){
-            frame += 1;
-            if (frame >= flyerSprites.size()){
-                frame = 0;
             }
 
-        }
-        g2d.drawImage(flyerSprites.get(frame), at, null);
+            at.translate(-sprite.getWidth()/2,
+                    -sprite.getHeight()/2);
 
 
 
-        //Draw Eyeball
-
-
-            g2d.setColor(Color.BLACK);
-            double offsetX =  (0.1f * (initialX - x));
-            double offsetY =  (0.1f * (initialY - y));
-            int d = 3; //limit eye shifts
-            if (offsetX > 0) {
-                offsetX = Math.min(offsetX, d);
-            } else {
-                offsetX = Math.max(offsetX, -d);
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, HEAD_ALPHA));
+            if (this.life % 2 == 0) {
+                frame += 1;
+                if (frame >= flyerSprites.size()) {
+                    frame = 0;
+                }
             }
-            if (offsetY < 0) {
-                offsetY = -d;
+            g2d.drawImage(flyerSprites.get(frame), at, null);
+
+            drawEyeball(g2d);
+        }
+
+    }
+
+    public void drawEyeball(Graphics2D g2d){
+
+
+        g2d.setColor(Color.BLACK);
+        double offsetX =  (0.1f * (initialX - x));
+        double offsetY =  (0.1f * (initialY - y));
+        int d = 3; //limit eye shifts
+        if (offsetX > 0) {
+            offsetX = Math.min(offsetX, d);
+        } else {
+            offsetX = Math.max(offsetX, -d);
+        }
+        if (offsetY < 0) {
+            offsetY = -d;
 //                offsetY = Math.max(offsetY, -d);
-            } else {
-                offsetY = d;
+        } else {
+            offsetY = d;
 //                offsetY = Math.min(offsetY, d);
-            }
+        }
 
 
-            int pupilSize = 4;
-            if(spawnsFromBelow) {
-                g2d.fillOval(x + 7 + (int)offsetX + 67, y - 5 + (int)offsetY + 28, pupilSize, pupilSize);
-            }else{
-                //from top
-                g2d.fillOval(x + 7 + (int)offsetX + 67, y - 5 + (int)offsetY - 32, pupilSize, pupilSize);
-            }
-
+        int pupilSize = 4;
+        if(spawnsFromBelow) {
+            g2d.fillOval(x + 7 + (int)offsetX + 67, y - 5 + (int)offsetY + 28, pupilSize, pupilSize);
+        }else{
+            //from top
+            g2d.fillOval(x + 7 + (int)offsetX + 67, y - 5 + (int)offsetY - 32, pupilSize, pupilSize);
+        }
     }
 
 }

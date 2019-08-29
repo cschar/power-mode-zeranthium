@@ -225,7 +225,9 @@ public class ParticleContainer extends JComponent implements ComponentListener {
             }
         }
 
-        if(settings.getSpriteTypeEnabled(PowerMode3.SpriteType.VINE)){
+        int vine_chance = VineConfig.CHANCE_PER_KEY_PRESS(settings);
+        r = ThreadLocalRandom.current().nextInt(1, 100 +1);
+        if(settings.getSpriteTypeEnabled(PowerMode3.SpriteType.VINE) && (r <= vine_chance)){
             int minPsiSearch = VineConfig.MIN_PSI_SEARCH(settings);
             int maxPsiSearch = VineConfig.MAX_PSI_SEARCH(settings);
             for(Anchor a: anchors){
@@ -240,18 +242,24 @@ public class ParticleContainer extends JComponent implements ComponentListener {
                     continue;
                 }
 
-//                final ParticleSpriteVineAnchor e = new ParticleSpriteVineAnchor(x, y, dx, dy, a.p.x, a.p.y,
-//                        size, life,
-//                        VineConfig.VINE_TOP_COLOR(settings),
-//                        VineConfig.VINE_BOTTOM_COLOR(settings),
-//                        VineConfig.USE_SPRITE(settings));
 
-                final ParticleSpriteVineAnchorAnimated e = new ParticleSpriteVineAnchorAnimated(x, y, dx, dy, a.p.x, a.p.y,
-                        size, life,
-                        VineConfig.VINE_TOP_COLOR(settings),
-                        VineConfig.VINE_BOTTOM_COLOR(settings),
-                        VineConfig.USE_SPRITE2(settings));
-                particles.add(e);
+
+                if(VineConfig.USE_SPRITE2(settings)) {
+                    //TODO combine classes
+                    final ParticleSpriteVineAnchorAnimated e = new ParticleSpriteVineAnchorAnimated(x, y, dx, dy, a.p.x, a.p.y,
+                            size, life,
+                            VineConfig.VINE_TOP_COLOR(settings),
+                            VineConfig.VINE_BOTTOM_COLOR(settings),
+                            VineConfig.USE_SPRITE2(settings));
+                    particles.add(e);
+                }else{
+                    final ParticleSpriteVineAnchor e = new ParticleSpriteVineAnchor(x, y, dx, dy, a.p.x, a.p.y,
+                            size, life,
+                            VineConfig.VINE_TOP_COLOR(settings),
+                            VineConfig.VINE_BOTTOM_COLOR(settings),
+                            VineConfig.USE_SPRITE(settings));
+                    particles.add(e);
+                }
             }
         }
 

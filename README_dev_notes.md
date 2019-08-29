@@ -6,6 +6,10 @@ PsiElement tree
 
 
 
+how to correctly scale/rotate/translate with
+AFFINE transformation:
+https://math.stackexchange.com/a/820632
+
 
 To RUn project:
 

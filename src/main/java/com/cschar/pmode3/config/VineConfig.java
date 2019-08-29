@@ -5,6 +5,8 @@ import com.intellij.openapi.options.ConfigurationException;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class VineConfig extends JPanel {
 
@@ -13,6 +15,7 @@ public class VineConfig extends JPanel {
 
     public JTextField maxPsiAnchorDistanceTextField;
     public JTextField minPsiAnchorDistanceTextField;
+    public JTextField chancePerKeyPressTextField;
     JCheckBox spriteEnabled;
     JCheckBox sprite2Enabled;
     JCheckBox growFromRight;
@@ -63,6 +66,18 @@ public class VineConfig extends JPanel {
         minPsi.setMaximumSize(new Dimension(500, 50));
         secondCol.add(minPsi);
 
+        this.chancePerKeyPressTextField = new JTextField();
+        JLabel chancePerKeyPressLabel = new JLabel("Chance per keypress (0-100)");
+        JPanel chancePerKeyPressPanel = new JPanel();
+        chancePerKeyPressPanel.add(chancePerKeyPressLabel);
+        chancePerKeyPressPanel.add(chancePerKeyPressTextField);
+        chancePerKeyPressPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        chancePerKeyPressPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+        chancePerKeyPressPanel.setMaximumSize(new Dimension(400, 50));
+        chancePerKeyPressPanel.setBackground(Color.lightGray);
+        secondCol.add(chancePerKeyPressPanel);
+
+
         JPanel spriteEnabledPanel = new JPanel();
         this.spriteEnabled = new JCheckBox("Sprite Enabled?");
         spriteEnabledPanel.add(spriteEnabled);
@@ -70,6 +85,14 @@ public class VineConfig extends JPanel {
         spriteEnabledPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         spriteEnabledPanel.setMaximumSize(new Dimension(500, 50));
         firstCol.add(spriteEnabledPanel);
+        this.spriteEnabled.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(spriteEnabled.isSelected()){
+                    sprite2Enabled.setSelected(false);
+                }
+            }
+        });
 
         JPanel sprite2EnabledPanel = new JPanel();
         this.sprite2Enabled = new JCheckBox("Sprite2 Enabled?");
@@ -78,6 +101,14 @@ public class VineConfig extends JPanel {
         sprite2EnabledPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         sprite2EnabledPanel.setMaximumSize(new Dimension(500, 50));
         firstCol.add(sprite2EnabledPanel);
+        this.sprite2Enabled.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(sprite2Enabled.isSelected()){
+                    spriteEnabled.setSelected(false);
+                }
+            }
+        });
 
 
         this.growFromRight = new JCheckBox("Grow From Right?");
@@ -100,6 +131,8 @@ public class VineConfig extends JPanel {
 
         this.minPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.VINE,"minPsiSearchDistance", 100)));
         this.maxPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.VINE,"maxPsiSearchDistance", 300)));
+        this.chancePerKeyPressTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.VINE,"chancePerKeyPress")));
+
         this.spriteEnabled.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.VINE,"spriteEnabled"));
         this.sprite2Enabled.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.VINE,"sprite2Enabled"));
         this.growFromRight.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.VINE,"growFromRight"));
@@ -119,6 +152,13 @@ public class VineConfig extends JPanel {
                 0, maxPsiSearchLimit,
                 "Max Distance to Psi Anchors will use when spawning vines (cannot be greater than max defined at top)");
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.VINE, "maxPsiSearchDistance", String.valueOf(maxVinePsiDistance));
+
+        int chancePerKeyPress = Config.getJTextFieldWithinBoundsInt(this.chancePerKeyPressTextField,
+                0, 100,
+                "chance per keypress");
+        settings.setSpriteTypeProperty(PowerMode3.SpriteType.VINE, "chancePerKeyPress",
+                String.valueOf(chancePerKeyPress));
+
 
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.VINE, "spriteEnabled", String.valueOf(spriteEnabled.isSelected()));
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.VINE, "sprite2Enabled", String.valueOf(sprite2Enabled.isSelected()));
@@ -154,6 +194,10 @@ public class VineConfig extends JPanel {
 
     public static Color VINE_BOTTOM_COLOR(PowerMode3 settings){
         return Config.getColorProperty(settings, PowerMode3.SpriteType.VINE,"Vine Bottom Color");
+    }
+
+    public static int CHANCE_PER_KEY_PRESS(PowerMode3 settings){
+        return Config.getIntProperty(settings, PowerMode3.SpriteType.VINE, "chancePerKeyPress");
     }
 
 

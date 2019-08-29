@@ -345,28 +345,29 @@ public class ParticleSpriteVineAnchor extends Particle{
 
 
             g2d.setColor(Color.BLACK);
-            int offsetX = (int) (0.1f * (initialX - x));
-            int offsetY = (int) (0.1f * (initialY - y));
+            double offsetX =  (0.1f * (initialX - x));
+            double offsetY =  (0.1f * (initialY - y));
             int d = 7; //limit eye shifts
-            if (offsetX < 0) {
-                offsetX = Math.max(offsetX, -d);
-            } else {
+            if (offsetX > 0) {
                 offsetX = Math.min(offsetX, d);
+            } else {
+                offsetX = Math.max(offsetX, -d);
             }
             if (offsetY < 0) {
                 offsetY = -d;
-//                offsetY = Math.max(offsetY, -d);
+    //                offsetY = Math.max(offsetY, -d);
             } else {
                 offsetY = d;
-//                offsetY = Math.min(offsetY, d);
+    //                offsetY = Math.min(offsetY, d);
             }
+
 
 
             int pupilSize = 6;
             if(spawnsFromBelow) {
-                g2d.fillOval(x + 7 + offsetX, y - 5 + offsetY + 30, pupilSize, pupilSize);
+                g2d.fillOval(x + 7 + (int)offsetX, y - 5 + (int)offsetY + 30, pupilSize, pupilSize);
             }else{
-                g2d.fillOval(x + 7 + offsetX, y - 5 + offsetY - 10, pupilSize, pupilSize);
+                g2d.fillOval(x + 7 + (int)offsetX, y - 5 + (int)offsetY - 10, pupilSize, pupilSize);
             }
 
     }
