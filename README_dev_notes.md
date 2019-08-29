@@ -16,7 +16,7 @@ Snags I ran into:
 
 - NO PSIMethod ?!!?
 Because in module_settings SDK needed to be switched
-from 1.8 to INtellij_Plugin_SDK
+from 1.8 to Intellij_Plugin_SDK
 
 -  ./gradlew runIde -- doesnt work when JavaRecursiveElementVisitor is used
    solution: had to add java-api.jar to gradle build path (see settings.gradle file)
