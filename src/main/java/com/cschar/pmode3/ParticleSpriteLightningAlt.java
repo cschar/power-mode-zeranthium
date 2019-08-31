@@ -32,7 +32,6 @@ import java.util.concurrent.ThreadLocalRandom;
 public class ParticleSpriteLightningAlt extends Particle{
 
     private static ArrayList<BufferedImage> sprites;
-    private static BufferedImage[] sparkSpriteArray;
 
     static {
 
@@ -41,36 +40,12 @@ public class ParticleSpriteLightningAlt extends Particle{
             sprites.add(ParticleUtils.loadSprite(String.format("/blender/lightningAlt/main/lightning10%03d.png", i)));
         }
 
-        sparkSpriteArray = new BufferedImage[]{
-                ParticleUtils.loadSprite(String.format("/blender/lightningAlt/spark4/0150.png")),
-                ParticleUtils.loadSprite(String.format("/blender/lightningAlt/spark5/0150.png")),
-                ParticleUtils.loadSprite(String.format("/blender/lightningAlt/spark6/0150.png"))
-        };
 
         System.out.println("LightningSprites initialized");
     }
 
-    private static SparkData[] sparkData;
-    public static void reloadSparkSpriteArray(SparkData[] data){
-        sparkData = data;
+    public static SparkData[] sparkData;
 
-        int enabled = 0;
-        for(SparkData d : data){
-            if(d.enabled){
-                enabled++;
-            }
-        }
-        sparkSpriteArray = new BufferedImage[enabled];
-
-        for (SparkData datum : data) {
-            if (datum.enabled) {
-                sparkSpriteArray[enabled - 1] = ParticleUtils.loadSprite(datum.path);
-                enabled--;
-            }
-        }
-
-        System.out.println("Reloaded LightningAlt sparkSpriteArray");
-    }
 
     private BufferedImage sprite;
 
@@ -103,7 +78,15 @@ public class ParticleSpriteLightningAlt extends Particle{
 
         //arhghrgh my eyes!!!
         this.makeSparks = sparksEnabled;
-        if(sparkSpriteArray.length == 0){
+
+        int enabled = 0;
+        for(SparkData d : sparkData){
+            if(d.enabled){
+                enabled++;
+            }
+        }
+
+        if(enabled == 0){
             this.makeSparks = false;
         }else {
             int sumWeight = 0;

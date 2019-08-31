@@ -20,8 +20,8 @@ public class MOMAConfig extends JPanel {
 
 
     private JTextField chanceOfLightningTextField;
-    private static Color colorOne = Color.red;
-    private static Color colorTwo = Color.blue;
+    private static Color colorOne = Color.yellow;
+    private static Color colorTwo = Color.red;
     private static Color colorThree = Color.WHITE;
 
     public MOMAConfig(PowerMode3 settings){

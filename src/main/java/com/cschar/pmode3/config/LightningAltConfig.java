@@ -9,9 +9,12 @@ import com.intellij.util.ui.JBUI;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class LightningAltConfig extends BaseConfig {
 
@@ -29,7 +32,7 @@ public class LightningAltConfig extends BaseConfig {
         sparksEnabledPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         sparksEnabledPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         sparksEnabledPanel.setMaximumSize(new Dimension(500, 50));
-        sparksEnabledPanel.setBackground(Color.ORANGE);
+//        sparksEnabledPanel.setBackground(Color.ORANGE);
         sparksEnabledPanel.setOpaque(true);
 //        firstCol.setBackground(Color.GREEN);
         firstCol.setOpaque(true);
@@ -86,13 +89,13 @@ public class LightningAltConfig extends BaseConfig {
         table.setCellSelectionEnabled(false);
         table.setColumnSelectionAllowed(false);
         table.setRowSelectionAllowed(false);
-        table.setBorder(JBUI.Borders.empty(10));
+//        table.setBorder(JBUI.Borders.empty(10));
         table.setPreferredScrollableViewportSize(new Dimension(400,
                 table.getRowHeight() * LightningAltConfig.sparkData.length));
         table.getTableHeader().setReorderingAllowed(false);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 //        table.setBackground(Color.yellow);
-        table.setOpaque(true);
+//        table.setOpaque(true);
         // adding it to JScrollPane
         JScrollPane sp = ScrollPaneFactory.createScrollPane(table);
 //        sp.setMaximumSize(new Dimension(470,350));
@@ -106,6 +109,19 @@ public class LightningAltConfig extends BaseConfig {
         colModel.getColumn(2).setPreferredWidth(300);
 
 
+        //make table transparent
+        table.setOpaque(false);
+        table.setShowGrid(false);
+        table.getTableHeader().setOpaque(false);
+
+        ((DefaultTableCellRenderer)table.getDefaultRenderer(Object.class)).setOpaque(false);
+//        ((DefaultTableCellRenderer)table.getDefaultRenderer(Integer.class)).setOpaque(false);
+        ((DefaultTableCellRenderer)table.getDefaultRenderer(String.class)).setOpaque(false);
+        ((DefaultTableCellRenderer)table.getDefaultRenderer(ImageIcon.class)).setOpaque(false);
+
+        sp.setOpaque(false);
+        sp.getViewport().setOpaque(false);
+        sp.setBorder(BorderFactory.createEmptyBorder());
 
 
         return sp;
@@ -119,6 +135,7 @@ public class LightningAltConfig extends BaseConfig {
         this.maxAlphaTextField.setText(String.valueOf(Config.getFloatProperty(settings, spriteType,"maxAlpha", 0.5f)));
         this.sparksEnabled.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.LIGHTNING_ALT,"sparksEnabled", true));
 
+        //sparkData is loaded on settings instantiation
     }
 
     public void saveValues() throws ConfigurationException {
@@ -127,7 +144,9 @@ public class LightningAltConfig extends BaseConfig {
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING_ALT, "sparksEnabled", String.valueOf(sparksEnabled.isSelected()));
 
 
-        ParticleSpriteLightningAlt.reloadSparkSpriteArray(sparkData);
+        ParticleSpriteLightningAlt.sparkData = sparkData;
+        settings.setSerializedSparkData(sparkData);
+//        settings.setSerializedSparkData(SparksTableModel.data);
     }
 
 
@@ -143,11 +162,12 @@ public class LightningAltConfig extends BaseConfig {
         return Config.getBoolProperty(settings, PowerMode3.SpriteType.LIGHTNING_ALT, "sparksEnabled");
     }
 
-    static SparkData[] sparkData = new SparkData[]{
-            new SparkData(true, 10, true,"/blender/lightningAlt/spark4/0150.png"),
-            new SparkData(true, 30, true,"/blender/lightningAlt/spark5/0150.png"),
-            new SparkData(true, 60, true,"/blender/lightningAlt/spark6/0150.png")
-    };
+    static SparkData[] sparkData;
+
+    public static void setSparkData(SparkData[] data){
+        sparkData = data;
+        ParticleSpriteLightningAlt.sparkData = data;
+    }
 }
 
 

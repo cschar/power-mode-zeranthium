@@ -18,6 +18,8 @@ package com.cschar.pmode3;
  */
 
 
+import com.cschar.pmode3.config.LightningAltConfig;
+import com.cschar.pmode3.config.SparkData;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
@@ -38,6 +40,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -79,7 +83,7 @@ public class PowerMode3 implements BaseComponent,
     private int numOfParticles = 7;
     private int lifetime = 200;
     private int particleSize = 3;
-    private int maxPsiSearchDistance = 200;  //amount of total characters searched around caret for anchors
+    private int maxPsiSearchDistance = 400;  //amount of total characters searched around caret for anchors
 
     private int particleRGB;
 
@@ -94,8 +98,12 @@ public class PowerMode3 implements BaseComponent,
         VINE
     }
 
-//    @com.intellij.util.xmlb.annotations.CollectionBean
-//    public ArrayList<SparkData>
+    @com.intellij.util.xmlb.annotations.XCollection
+    private ArrayList<String[]> sparkDataStringArrays = new ArrayList<String[]>(){{
+        add(new String[]{"true","6","/blender/lightningAlt/spark4/0150.png"});
+        add(new String[]{"true","30","/blender/lightningAlt/spark5/0150.png"});
+        add(new String[]{"true","80","/blender/lightningAlt/spark6/0150.png"});
+    }};
 
     //consider JSON https://stackabuse.com/reading-and-writing-json-in-java/ ??
     @com.intellij.util.xmlb.annotations.MapAnnotation  //this tells it to copy its inner values, wont serialize without it
@@ -236,15 +244,35 @@ public class PowerMode3 implements BaseComponent,
         XmlSerializerUtil.copyBean(state, this);
 
 //        this.particleColor = JBColor.darkGray;
+
+        LightningAltConfig.setSparkData(this.deserializeSparkData());
     }
 
 
+    public SparkData[] deserializeSparkData(){
+        System.out.println("deserializing spark data");
+        ArrayList<SparkData> sd = new ArrayList<SparkData>();
+        for(String[] s: sparkDataStringArrays){
+            sd.add(new SparkData(Boolean.parseBoolean(s[0]), Integer.parseInt(s[1]),false, s[2]));
+        }
+        return sd.toArray(new SparkData[sd.size()]);
+    }
+
+    public void setSerializedSparkData(SparkData[] sparkData){
+        ArrayList<String[]> serialized = new ArrayList<>();
+        for( SparkData d: sparkData){
+               serialized.add(new String[]{String.valueOf(d.enabled), String.valueOf(d.roundRobinAmount), String.valueOf(d.path)});
+        }
+        this.sparkDataStringArrays = serialized;
+    }
 
     @Override
     public void noStateLoaded() {
 //        this.setParticleColor(c);
         System.out.println("NO State loaded previously");
          this.setParticleRGB(JBColor.darkGray.getRGB());
+
+        LightningAltConfig.setSparkData(this.deserializeSparkData());
     }
 
     public boolean isEnabled() {

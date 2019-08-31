@@ -12,7 +12,11 @@ public class SparkData{
     public boolean enabled=true;
     public boolean customPathEnabled =true;
     public String path="/tmp";
+
+
     public ImageIcon previewIcon;
+
+
     public BufferedImage image;
 
     public SparkData(boolean enabled, int roundRobinAmount, boolean customPathEnabled, String path) {

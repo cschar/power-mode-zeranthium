@@ -33,7 +33,7 @@ public class ParticleSpriteMOMA extends Particle{
 
     private boolean[] squaresEnabled;
 
-    double threeSquareExtender;
+
     int maxLife;
 
     int growRandom;
@@ -46,7 +46,7 @@ public class ParticleSpriteMOMA extends Particle{
         this.threeSquareColor = colors[2];
         this.squaresEnabled = enabled;
 
-        threeSquareExtender = ThreadLocalRandom.current().nextDouble(0.0f, 1.0f);
+
         growRandom = ThreadLocalRandom.current().nextInt(0,100);
     }
 
@@ -107,9 +107,9 @@ public class ParticleSpriteMOMA extends Particle{
                 g2d.fillRect(x - (size / 2), y - 2 * (size),
                         newWidth, rectHeight);
 
-                int bifurcationThreshold = 50; // less than X life, and grow
+                int bifurcationThreshold = 80; // when only this amount of life left, grow branch
                 int growthSpot = 150 + growRandom;
-                if ((maxLife - life) < bifurcationThreshold) {
+                if ((life) < bifurcationThreshold) {
                     int newHeight = 10 * (bifurcationThreshold - life);
                     if (dy > 0) { //moving down
 

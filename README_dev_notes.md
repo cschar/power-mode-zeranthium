@@ -25,7 +25,8 @@ from 1.8 to Intellij_Plugin_SDK
 -  ./gradlew runIde -- doesnt work when JavaRecursiveElementVisitor is used
    solution: had to add java-api.jar to gradle build path (see settings.gradle file)
 
-
+- If serialized options are messed up
+--- delete  build/idea-sandbox/config/options/power.mode3.xml
 
 
 
