@@ -26,7 +26,7 @@ public abstract class BaseConfig extends JPanel {
         this.title = title;
 
         this.setMaximumSize(new Dimension(1000,300));
-        this.setLayout(new GridLayout(0,2));
+        this.setLayout(new GridLayout(0,2)); //as many rows as necessary
         firstCol = new JPanel();
         firstCol.setLayout(new BoxLayout(firstCol, BoxLayout.PAGE_AXIS));
         this.add(firstCol);

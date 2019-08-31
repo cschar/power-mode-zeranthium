@@ -94,6 +94,9 @@ public class PowerMode3 implements BaseComponent,
         VINE
     }
 
+//    @com.intellij.util.xmlb.annotations.CollectionBean
+//    public ArrayList<SparkData>
+
     //consider JSON https://stackabuse.com/reading-and-writing-json-in-java/ ??
     @com.intellij.util.xmlb.annotations.MapAnnotation  //this tells it to copy its inner values, wont serialize without it
     private Map<String,String> configMap = new HashMap<String,String>(){{

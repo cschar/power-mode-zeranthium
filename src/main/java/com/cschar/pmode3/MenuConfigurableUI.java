@@ -183,6 +183,8 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 //        return contentPane;
         return scrollPane;
 //        return this.mainPanel;
+
+
     }
 
     //https://www.jetbrains.com/help/idea/creating-form-initialization-code.html

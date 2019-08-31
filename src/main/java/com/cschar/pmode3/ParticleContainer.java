@@ -104,7 +104,8 @@ public class ParticleContainer extends JComponent implements ComponentListener {
             final ParticleSpriteLightningAlt e = new ParticleSpriteLightningAlt(x, y, dx, dy, size, lifeSetting,
                     Color.ORANGE,
                     LightningAltConfig.CHANCE_PER_KEY_PRESS(settings),
-                    LightningAltConfig.MAX_ALPHA(settings));
+                    LightningAltConfig.MAX_ALPHA(settings),
+                    LightningAltConfig.SPARKS_ENABLED(settings));
             particles.add(e);
 
         }

@@ -18,6 +18,8 @@
 package com.cschar.pmode3;
 
 
+import com.cschar.pmode3.config.SparkData;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -28,53 +30,59 @@ import java.util.concurrent.ThreadLocalRandom;
 
 
 public class ParticleSpriteLightningAlt extends Particle{
-    private static BufferedImage loadSprite(String name){
-        try {
-            return ImageIO.read(ParticleSpriteLightningAlt.class.getResource(name));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
-    static ArrayList<BufferedImage> sprites;
-    static ArrayList<BufferedImage> sparkSprites;
+    private static ArrayList<BufferedImage> sprites;
+    private static BufferedImage[] sparkSpriteArray;
 
     static {
 
-        sparkSprites = new ArrayList<BufferedImage>();
         sprites = new ArrayList<BufferedImage>();
-        for(int i=152; i <= 159; i++){
-            sparkSprites.add(loadSprite(String.format("/blender/lightningAlt/spark1/0%03d.png", i)));
-        }
         for(int i=1; i <= 150; i++){
-            sprites.add(loadSprite(String.format("/blender/lightningAlt/main/lightning10%03d.png", i)));
+            sprites.add(ParticleUtils.loadSprite(String.format("/blender/lightningAlt/main/lightning10%03d.png", i)));
         }
-
 
         sparkSpriteArray = new BufferedImage[]{
-                loadSprite(String.format("/blender/lightningAlt/spark4/0150.png")),
-                loadSprite(String.format("/blender/lightningAlt/spark5/0150.png")),
-                loadSprite(String.format("/blender/lightningAlt/spark6/0150.png"))
+                ParticleUtils.loadSprite(String.format("/blender/lightningAlt/spark4/0150.png")),
+                ParticleUtils.loadSprite(String.format("/blender/lightningAlt/spark5/0150.png")),
+                ParticleUtils.loadSprite(String.format("/blender/lightningAlt/spark6/0150.png"))
         };
 
         System.out.println("LightningSprites initialized");
     }
+
+    private static SparkData[] sparkData;
+    public static void reloadSparkSpriteArray(SparkData[] data){
+        sparkData = data;
+
+        int enabled = 0;
+        for(SparkData d : data){
+            if(d.enabled){
+                enabled++;
+            }
+        }
+        sparkSpriteArray = new BufferedImage[enabled];
+
+        for (SparkData datum : data) {
+            if (datum.enabled) {
+                sparkSpriteArray[enabled - 1] = ParticleUtils.loadSprite(datum.path);
+                enabled--;
+            }
+        }
+
+        System.out.println("Reloaded LightningAlt sparkSpriteArray");
+    }
+
     private BufferedImage sprite;
-    private BufferedImage spark1Sprite;
 
-    private BufferedImage spark3Sprite;
 
-    private static BufferedImage[] sparkSpriteArray;
 
     private int frame = 0;
-    private int spark1Frame = 0;
+
 
     private int origX,origY;
 
     private boolean makeLightningBeam = false;
-    private boolean makeSpark1 = false;
-    private boolean makespark3 = false;
+
     private boolean makeSparks = true;
 
     private float maxAlpha;
@@ -88,17 +96,46 @@ public class ParticleSpriteLightningAlt extends Particle{
     BufferedImage tmpSprite;
 
     public ParticleSpriteLightningAlt(int x, int y, int dx, int dy,
-                                      int size, int life, Color c, int chanceOfSpawn, float maxAlpha) {
+                                      int size, int life, Color c, int chanceOfSpawn, float maxAlpha, boolean sparksEnabled) {
         super(x,y,dx,dy,size,life,c);
         sprite = sprites.get(0);
-        spark1Sprite = sparkSprites.get(0);
-        spark3Sprite = loadSprite(String.format("/blender/lightningAlt/spark4/0150.png"));
 
 
+        //arhghrgh my eyes!!!
+        this.makeSparks = sparksEnabled;
+        if(sparkSpriteArray.length == 0){
+            this.makeSparks = false;
+        }else {
+            int sumWeight = 0;
+            for(SparkData d: sparkData){
+                    if(d.enabled){
+                        sumWeight += d.roundRobinAmount;
+                    }
+            }
 
-//        int r = ThreadLocalRandom.current().nextInt(0, sparkSpriteArray.length);
-        int r = 1;
-        tmpSprite = sparkSpriteArray[r];
+            int weightChance = ThreadLocalRandom.current().nextInt(0, sumWeight);
+
+            int winnerIndex = 0;
+            int limit = 0;
+            for(SparkData d: sparkData){
+                if(d.enabled){
+                    limit += d.roundRobinAmount;
+                    if(weightChance <= limit){
+                        break;
+                    }
+                }
+                winnerIndex += 1;
+            }
+            if(winnerIndex == sparkData.length){
+                winnerIndex--;
+            }
+
+            tmpSprite = sparkData[winnerIndex].image;
+
+            //doesnt use weights
+//            int r = ThreadLocalRandom.current().nextInt(0, sparkSpriteArray.length);
+//            tmpSprite = sparkSpriteArray[r];
+        }
 
         this.maxAlpha = maxAlpha;
         this.maxLife = life;
@@ -108,7 +145,7 @@ public class ParticleSpriteLightningAlt extends Particle{
         origY = y;
 
         randomNum = ThreadLocalRandom.current().nextInt(1, 100 +1);
-//        System.out.println(randomNum);
+
         if(randomNum <= chanceOfSpawn){
             makeLightningBeam = true;
             this.life = 1000;
@@ -144,34 +181,11 @@ public class ParticleSpriteLightningAlt extends Particle{
             Graphics2D g2d = (Graphics2D) g.create();
             g2d.setColor(c);
 
-            if(makeSpark1){
-                AffineTransform at = new AffineTransform();
-                at.translate((int)origX ,(int)origY );
-                at.translate(-spark1Sprite.getWidth()/2,
-                        -spark1Sprite.getHeight()); //move image 100% up so lightning lands at bottom
-
-
-                g2d.setComposite(makeComposite(this.maxAlpha));
-
-                //every X updates, increment frame, this controls how fast it animates
-                if( this.life % 15 == 0){
-                    spark1Frame += 1;
-                    if (spark1Frame >= ParticleSpriteLightningAlt.sparkSprites.size()){
-                        spark1Frame = ParticleSpriteLightningAlt.sparkSprites.size() - 1;
-                        makeSpark1 = false;
-                    }
-
-                }
-                g2d.drawImage(ParticleSpriteLightningAlt.sparkSprites.get(spark1Frame), at, null);
-            }
-
 
             if(makeSparks){
                 if(life > 50) {
                     //TODO: config
                     // - (min/max scale size)
-                    // - select which sprites to use
-                    // - round robin (with amt before next sprite) / random?
 
                     if(SPARK_ALPHA > 0.9){
                         SPARK_ALPHA -= 0.01f;
@@ -215,65 +229,6 @@ public class ParticleSpriteLightningAlt extends Particle{
 
                     g2d.setColor(Color.YELLOW);
 //                    g2d.drawString(String.format("r %d ", randomNum), origX - 200, origY-30 + randomNum);
-                    g2d.fillRect(x - (size / 2), y - (size / 2), size, size);
-
-                }
-            }
-
-            if(makespark3){
-                //TODO make a spark lifespan
-                if(life > 50) {
-                    SPARK_ALPHA -= 0.01f;
-                    if(SPARK_ALPHA < 0){
-                        SPARK_ALPHA = 0.0f;
-                    }
-                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, SPARK_ALPHA));
-
-                    AffineTransform at;
-                    double arcSpace = (randomNum / 100.0)*(Math.PI*0.5) - (Math.PI/2)*0.8;
-
-
-                    if(randomNum > 10) {
-                        at = new AffineTransform();
-                        at.scale(0.5, 0.5);
-                        at.translate((int) origX * 2, (int) origY * 2);
-                        // -'ve radians ---> rotate counter clockwise wtf?
-                        at.rotate((arcSpace));
-                        at.translate((-spark3Sprite.getWidth() / 2.0),
-                                (-spark3Sprite.getHeight())); //move image 100% up so lightning lands at bottom
-
-                        g2d.drawImage(spark3Sprite, at, null);
-//                    }else{
-                    }
-                        at = new AffineTransform();
-                        at.translate((int) origX, (int) origY);
-                        // -'ve radians ---> rotate counter clockwise wtf?
-                        at.rotate(arcSpace);
-                        at.translate(-spark3Sprite.getWidth() / 2,
-                                -spark3Sprite.getHeight()); //move image 100% up so lightning lands at bottom
-
-                        g2d.drawImage(spark3Sprite, at, null);
-//                    }
-
-
-
-
-
-
-                    //every X updates, increment frame, this controls how fast it animates
-//                if( this.life % 2 == 0){
-//                    spark1Frame += 1;
-//                    if (spark1Frame >= ParticleSpriteLightningAlt.sparkSprites.size()){
-//                        spark1Frame = ParticleSpriteLightningAlt.sparkSprites.size() - 1;
-//                        makeSpark1 = false;
-//                    }
-//
-//                }
-
-                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
-
-                    g2d.setColor(Color.YELLOW);
-                    g2d.drawString(String.format("r %d ", randomNum), origX - 200, origY-30);
                     g2d.fillRect(x - (size / 2), y - (size / 2), size, size);
 
                 }
