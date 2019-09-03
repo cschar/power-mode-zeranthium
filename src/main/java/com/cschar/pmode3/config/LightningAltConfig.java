@@ -2,7 +2,9 @@ package com.cschar.pmode3.config;
 
 import com.cschar.pmode3.ParticleSpriteLightningAlt;
 import com.cschar.pmode3.PowerMode3;
+import com.intellij.openapi.fileChooser.*;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.JBUI;
@@ -10,11 +12,13 @@ import com.intellij.util.ui.JBUI;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class LightningAltConfig extends BaseConfig {
 
@@ -43,7 +47,7 @@ public class LightningAltConfig extends BaseConfig {
         sparkConfigPanel = createSparkConfig();
         firstCol.add(sparkConfigPanel);
 
-//        secondCol.setBackground(Color.yellow);
+
         secondCol.setOpaque(true);
 
     }
@@ -105,8 +109,12 @@ public class LightningAltConfig extends BaseConfig {
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         TableColumnModel colModel=table.getColumnModel();
         colModel.getColumn(0).setPreferredWidth(80);
-        colModel.getColumn(1).setPreferredWidth(120);
-        colModel.getColumn(2).setPreferredWidth(300);
+        colModel.getColumn(1).setPreferredWidth(100);
+        colModel.getColumn(2).setPreferredWidth(80);
+        colModel.getColumn(3).setPreferredWidth(80);
+        colModel.getColumn(4).setPreferredWidth(80);
+        colModel.getColumn(5).setPreferredWidth(80);
+
 
 
         //make table transparent
@@ -117,7 +125,16 @@ public class LightningAltConfig extends BaseConfig {
         ((DefaultTableCellRenderer)table.getDefaultRenderer(Object.class)).setOpaque(false);
 //        ((DefaultTableCellRenderer)table.getDefaultRenderer(Integer.class)).setOpaque(false);
         ((DefaultTableCellRenderer)table.getDefaultRenderer(String.class)).setOpaque(false);
-        ((DefaultTableCellRenderer)table.getDefaultRenderer(ImageIcon.class)).setOpaque(false);
+//        ((DefaultTableCellRenderer)table.getDefaultRenderer(ImageIcon.class)).setOpaque(false);
+
+
+        TableCellRenderer buttonRenderer = new JTableButtonRenderer();
+        table.getColumn("set path").setCellRenderer(buttonRenderer);
+//        table.setDefaultRenderer(JButton.class, new JTableButtonRenderer());
+        table.addMouseListener(new JTableButtonMouseListener(table));
+
+        TableCellRenderer pathRenderer = new CellHighlighterRenderer();
+        table.getColumn("path").setCellRenderer(pathRenderer);
 
         sp.setOpaque(false);
         sp.getViewport().setOpaque(false);
@@ -142,6 +159,11 @@ public class LightningAltConfig extends BaseConfig {
         super.saveValues();
 
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING_ALT, "sparksEnabled", String.valueOf(sparksEnabled.isSelected()));
+
+        float maxAlpha = Config.getJTextFieldWithinBoundsFloat(this.maxAlphaTextField,
+                0.0f, 1.0f, "Max alpha");
+        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING_ALT, "maxAlpha",
+                String.valueOf(maxAlpha));
 
 
         ParticleSpriteLightningAlt.sparkData = sparkData;
@@ -170,6 +192,83 @@ public class LightningAltConfig extends BaseConfig {
     }
 }
 
+class JTableButtonRenderer implements TableCellRenderer {
+    @Override public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        JButton button = (JButton)value;
+
+        button.setBackground(Color.lightGray);
+        button.setBorder(JBUI.Borders.empty(20,2));
+
+        return button;
+    }
+}
+
+
+
+class PathRenderer implements TableCellRenderer {
+    @Override public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        JButton button = (JButton)value;
+
+        button.setBackground(Color.lightGray);
+        button.setBorder(JBUI.Borders.empty(20,2));
+
+        return button;
+    }
+}
+
+class JTableButtonMouseListener extends MouseAdapter {
+    private final JTable table;
+
+    public JTableButtonMouseListener(JTable table) {
+        this.table = table;
+    }
+
+    public void mouseClicked(MouseEvent e) {
+        int column = table.getColumnModel().getColumnIndexAtX(e.getX()); // get the coloum of the button
+        int row    = e.getY()/table.getRowHeight(); //get the row of the button
+
+        /*Checking the row or column is valid or not*/
+        if (row < table.getRowCount() && row >= 0 && column < table.getColumnCount() && column >= 0) {
+            Object value = table.getValueAt(row, column);
+            if (value instanceof JButton) {
+                /*perform a click event*/
+                ((JButton)value).doClick();
+            }
+        }
+    }
+}
+
+class CellHighlighterRenderer extends JLabel implements TableCellRenderer {
+
+    public CellHighlighterRenderer() {
+        setOpaque(true); // Or color won't be displayed!
+    }
+
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        String val = (String)value;
+        Color c;
+
+
+
+
+        if (SparksTableModel.data[row].customPathValid) {
+            c = Color.WHITE;
+            setText(row + " -- " + val);
+        }else if(SparksTableModel.data[row].customPath != ""){
+            c = Color.RED;
+            setText(row + " -- " +  "!!Error loading path!!: " + val);
+        }else{
+            c = Color.WHITE;
+//            c = Color.CYAN;
+            setText(row + "");
+        }
+
+        setBackground(c);
+
+        return this;
+    }
+}
 
 class SparksTableModel extends AbstractTableModel {
 
@@ -179,16 +278,20 @@ class SparksTableModel extends AbstractTableModel {
     private final String[] columnNames = new String[]{
             "preview",
             "enabled?",
-            "weighted amount (1-100)",
-//            "custom?",
-//            "path"
+            "weight",
+//            "weighted amount (1-100)",
+            "custom?",
+            "set path",
+            "path",
+
     };
 
 
 
 
+
     private final Class[] columnClasses = new Class[]{
-            ImageIcon.class, Boolean.class, Integer.class, Boolean.class, String.class
+            ImageIcon.class, Boolean.class, Integer.class, Boolean.class,  JButton.class,String.class
     };
 
     @Override
@@ -222,22 +325,43 @@ class SparksTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int row, int column) {
 
-
+//https://stackoverflow.com/questions/13833688/adding-jbutton-to-jtable
 //        ImageIcon.class, Boolean.class, Integer.class, Boolean.class, String.class
-
-
+//
 
         switch (column) {
             case 0:
+//                return previewIcon;
                 return data[row].previewIcon;
             case 1:
                 return data[row].enabled;
             case 2:
-                return data[row].roundRobinAmount;
+                return data[row].weightedAmount;
             case 3:
                 return data[row].customPathEnabled;
             case 4:
-                return data[row].path;
+                final JButton button = new JButton("Set path");
+                button.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent arg0) {
+
+
+                        FileChooserDescriptor fd = new FileChooserDescriptor(true,false,false,false,false,false);
+                        FileChooserDialog fcDialog = FileChooserFactory.getInstance().createFileChooser(fd, null, null);
+
+
+                        VirtualFile[] vfs = fcDialog.choose(null,null,null);
+                        if(vfs.length != 0){
+                            data[row].customPath = vfs[0].getPath();
+                            data[row].setImage(vfs[0].getPath(), false);
+
+
+                        }
+
+                    }
+                });
+                return button;
+            case 5:
+                return data[row].customPath;
         }
 
         throw new IllegalArgumentException();
@@ -260,13 +384,15 @@ class SparksTableModel extends AbstractTableModel {
                 int v = (Integer) value;
                 v = Math.max(1, v);
                 v = Math.min(v,100);
-                data[row].roundRobinAmount = v;
+                data[row].weightedAmount = v;
                 return;
             case 3:
                 //custom path enabled
                 data[row].customPathEnabled = (Boolean) value;
                 return;
-            case 4:  //new path entered
+            case 4:  //button clicked
+                return;
+            case 5:  //new path entered
                 return;
 
 

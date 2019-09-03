@@ -20,11 +20,9 @@ package com.cschar.pmode3;
 
 import com.cschar.pmode3.config.SparkData;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -92,7 +90,7 @@ public class ParticleSpriteLightningAlt extends Particle{
             int sumWeight = 0;
             for(SparkData d: sparkData){
                     if(d.enabled){
-                        sumWeight += d.roundRobinAmount;
+                        sumWeight += d.weightedAmount;
                     }
             }
 
@@ -102,7 +100,7 @@ public class ParticleSpriteLightningAlt extends Particle{
             int limit = 0;
             for(SparkData d: sparkData){
                 if(d.enabled){
-                    limit += d.roundRobinAmount;
+                    limit += d.weightedAmount;
                     if(weightChance <= limit){
                         break;
                     }
