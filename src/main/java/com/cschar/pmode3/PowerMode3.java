@@ -97,6 +97,7 @@ public class PowerMode3 implements BaseComponent,
         VINE
     }
 
+    //enabled,weight,defaultPath,customPath
     @com.intellij.util.xmlb.annotations.XCollection
     private ArrayList<String[]> sparkDataStringArrays = new ArrayList<String[]>(){{
         add(new String[]{"true","6","/blender/lightningAlt/spark4/0150.png",""});
@@ -238,11 +239,8 @@ public class PowerMode3 implements BaseComponent,
     public void loadState(@NotNull PowerMode3 state) {
         System.out.println("prevous state found -- setting up...");
 
-//        Color c = new Color(particleRGB);
-//        this.setParticleColor(c);
         XmlSerializerUtil.copyBean(state, this);
 
-//        this.particleColor = JBColor.darkGray;
 
         LightningAltConfig.setSparkData(this.deserializeSparkData());
     }
@@ -253,7 +251,7 @@ public class PowerMode3 implements BaseComponent,
         ArrayList<SparkData> sd = new ArrayList<SparkData>();
         for(String[] s: sparkDataStringArrays){
             sd.add(new SparkData(Boolean.parseBoolean(s[0]), Integer.parseInt(s[1]),
-                    false, s[2], s[3]));
+                     s[2], s[3]));
         }
         return sd.toArray(new SparkData[sd.size()]);
     }

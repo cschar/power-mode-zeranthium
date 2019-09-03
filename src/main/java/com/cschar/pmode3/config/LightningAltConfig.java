@@ -44,7 +44,7 @@ public class LightningAltConfig extends BaseConfig {
 
 
 
-        sparkConfigPanel = createSparkConfig();
+        sparkConfigPanel = createSparkConfigTable();
         firstCol.add(sparkConfigPanel);
 
 
@@ -52,35 +52,7 @@ public class LightningAltConfig extends BaseConfig {
 
     }
 
-    public JComponent createSparkConfig(){
-//        JPanel sparkTable = new JPanel();
-//        sparkTable.setLayout(new GridLayout(0,6)); //as many rows as necessary
-//        sparkTable.setMaximumSize(new Dimension(400,500));
-//        sparkTable.setBackground(Color.GRAY);
-//        sparkTable.setOpaque(true);
-//        // #, enabled, # of RR, image preview, custom path?, path
-//        JPanel empty = new JPanel();
-//        sparkTable.add(empty);
-//        JCheckBox isRandom = new JCheckBox("is random?");
-//        sparkTable.add(isRandom);
-//        JCheckBox isRoundRobin = new JCheckBox("is RoundRObin?");
-//        sparkTable.add(isRoundRobin);
-//        JLabel preview = new JLabel("preview");
-//        sparkTable.add(preview);
-//        JLabel useCustom = new JLabel("use custom?");
-//        sparkTable.add(useCustom);
-//        JLabel useCustomPath = new JLabel("custom path:");
-//        sparkTable.add(useCustomPath);
-//
-//        for(int i = 0; i < 10; i++){
-//            for(int j = 0; j < 6; j++){
-//                sparkTable.add(new JLabel(String.format("row %d-%d",i,j)));
-//            }
-//        }
-//        return sparkTable;
-
-
-
+    public JComponent createSparkConfigTable(){
 
         JBTable table = new JBTable();
 
@@ -112,8 +84,8 @@ public class LightningAltConfig extends BaseConfig {
         colModel.getColumn(1).setPreferredWidth(100);
         colModel.getColumn(2).setPreferredWidth(80);
         colModel.getColumn(3).setPreferredWidth(80);
-        colModel.getColumn(4).setPreferredWidth(80);
-        colModel.getColumn(5).setPreferredWidth(80);
+        colModel.getColumn(4).setPreferredWidth(100);
+        colModel.getColumn(5).setPreferredWidth(60);
 
 
 
@@ -130,11 +102,13 @@ public class LightningAltConfig extends BaseConfig {
 
         TableCellRenderer buttonRenderer = new JTableButtonRenderer();
         table.getColumn("set path").setCellRenderer(buttonRenderer);
-//        table.setDefaultRenderer(JButton.class, new JTableButtonRenderer());
+        table.getColumn("reset").setCellRenderer(buttonRenderer);
         table.addMouseListener(new JTableButtonMouseListener(table));
 
-        TableCellRenderer pathRenderer = new CellHighlighterRenderer();
+        TableCellRenderer pathRenderer = new CustomPathCellHighlighterRenderer();
         table.getColumn("path").setCellRenderer(pathRenderer);
+
+
 
         sp.setOpaque(false);
         sp.getViewport().setOpaque(false);
@@ -195,7 +169,6 @@ public class LightningAltConfig extends BaseConfig {
 class JTableButtonRenderer implements TableCellRenderer {
     @Override public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         JButton button = (JButton)value;
-
         button.setBackground(Color.lightGray);
         button.setBorder(JBUI.Borders.empty(20,2));
 
@@ -204,17 +177,6 @@ class JTableButtonRenderer implements TableCellRenderer {
 }
 
 
-
-class PathRenderer implements TableCellRenderer {
-    @Override public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        JButton button = (JButton)value;
-
-        button.setBackground(Color.lightGray);
-        button.setBorder(JBUI.Borders.empty(20,2));
-
-        return button;
-    }
-}
 
 class JTableButtonMouseListener extends MouseAdapter {
     private final JTable table;
@@ -238,9 +200,9 @@ class JTableButtonMouseListener extends MouseAdapter {
     }
 }
 
-class CellHighlighterRenderer extends JLabel implements TableCellRenderer {
+class CustomPathCellHighlighterRenderer extends JLabel implements TableCellRenderer {
 
-    public CellHighlighterRenderer() {
+    public CustomPathCellHighlighterRenderer() {
         setOpaque(true); // Or color won't be displayed!
     }
 
@@ -253,7 +215,8 @@ class CellHighlighterRenderer extends JLabel implements TableCellRenderer {
 
 
         if (SparksTableModel.data[row].customPathValid) {
-            c = Color.WHITE;
+//            c = Color.WHITE;
+            c = Color.lightGray;
             setText(row + " -- " + val);
         }else if(SparksTableModel.data[row].customPath != ""){
             c = Color.RED;
@@ -261,7 +224,7 @@ class CellHighlighterRenderer extends JLabel implements TableCellRenderer {
         }else{
             c = Color.WHITE;
 //            c = Color.CYAN;
-            setText(row + "");
+            setText(row + " -- ");
         }
 
         setBackground(c);
@@ -280,9 +243,10 @@ class SparksTableModel extends AbstractTableModel {
             "enabled?",
             "weight",
 //            "weighted amount (1-100)",
-            "custom?",
+
             "set path",
             "path",
+            "reset"
 
     };
 
@@ -291,7 +255,7 @@ class SparksTableModel extends AbstractTableModel {
 
 
     private final Class[] columnClasses = new Class[]{
-            ImageIcon.class, Boolean.class, Integer.class, Boolean.class,  JButton.class,String.class
+            ImageIcon.class, Boolean.class, Integer.class, JButton.class,  JButton.class,String.class
     };
 
     @Override
@@ -318,7 +282,13 @@ class SparksTableModel extends AbstractTableModel {
 
     @Override
     public boolean isCellEditable(int row, int column) {
-        return true;
+        switch (column) {
+            case 0:
+            case 4:
+                return false;
+            default:
+                return true;
+        }
     }
 
 
@@ -338,40 +308,50 @@ class SparksTableModel extends AbstractTableModel {
             case 2:
                 return data[row].weightedAmount;
             case 3:
-                return data[row].customPathEnabled;
-            case 4:
                 final JButton button = new JButton("Set path");
-                button.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent arg0) {
+                button.addActionListener(arg0 -> {
 
 
-                        FileChooserDescriptor fd = new FileChooserDescriptor(true,false,false,false,false,false);
-                        FileChooserDialog fcDialog = FileChooserFactory.getInstance().createFileChooser(fd, null, null);
+                    FileChooserDescriptor fd = new FileChooserDescriptor(true,false,false,false,false,false);
+                    FileChooserDialog fcDialog = FileChooserFactory.getInstance().createFileChooser(fd, null, null);
 
 
-                        VirtualFile[] vfs = fcDialog.choose(null,null,null);
-                        if(vfs.length != 0){
-                            data[row].customPath = vfs[0].getPath();
-                            data[row].setImage(vfs[0].getPath(), false);
+                    VirtualFile[] vfs = fcDialog.choose(null);
+                    if(vfs.length != 0){
+                        data[row].customPath = vfs[0].getPath();
+                        data[row].setImage(vfs[0].getPath(), false);
 
-
-                        }
-
+                        this.fireTableDataChanged();
                     }
+
                 });
                 return button;
-            case 5:
+            case 4:
                 return data[row].customPath;
+            case 5:
+                final JButton resetButton = new JButton("reset");
+                resetButton.addActionListener(arg0 -> {
+                    System.out.println("RESET");
+                    data[row].setImage(data[row].defaultPath, true);
+                    data[row].customPath = "";
+                    data[row].customPathValid = false;
+
+                    this.fireTableDataChanged();
+                });
+                return resetButton;
+
         }
 
         throw new IllegalArgumentException();
     }
 
 
+
     @Override
     public void setValueAt(Object value, int row, int column) {
 
 //        ImageIcon.class, Boolean.class, Integer.class, Boolean.class, String.class
+
 
 
         switch (column) {
@@ -386,13 +366,11 @@ class SparksTableModel extends AbstractTableModel {
                 v = Math.min(v,100);
                 data[row].weightedAmount = v;
                 return;
-            case 3:
-                //custom path enabled
-                data[row].customPathEnabled = (Boolean) value;
+            case 3:   //button clicked
                 return;
-            case 4:  //button clicked
+            case 4:   // custom path
                 return;
-            case 5:  //new path entered
+            case 5:    //reset button clicked
                 return;
 
 

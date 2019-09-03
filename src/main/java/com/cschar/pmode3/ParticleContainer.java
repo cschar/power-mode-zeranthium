@@ -188,8 +188,8 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         if (settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LIZARD) && (r <= lizard_chance)){
 
 
-            String colorRGB = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIZARD, "lizardColor");
-            Color lizardColor = new Color(Integer.parseInt(colorRGB));
+//            String colorRGB = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIZARD, "lizardColor");
+//            Color lizardColor = new Color(Integer.parseInt(colorRGB));
 
             int maxPsiSearch = LizardConfig.MAX_PSI_SEARCH(settings);
             int minPsiSearch = LizardConfig.MIN_PSI_SEARCH(settings);
@@ -200,7 +200,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
             ArrayList<Anchor> anchorList = new ArrayList<Anchor>(Arrays.asList(anchors));
 //            Collections.shuffle(anchorList);
 //            for(Anchor a: anchorList){
-            System.out.println(minPsiSearch);
+
             for(int i =0; i < anchorList.size(); i++){
                 Anchor a = anchorList.get(i);
 //            for(Anchor a: anchors){
@@ -210,7 +210,6 @@ public class ParticleContainer extends JComponent implements ComponentListener {
                     continue;
                 }
                 if( Math.abs(a.anchorOffset - a.cursorOffset) < (minPsiSearch) ){
-                    System.out.println(String.format("%d - %d", a.anchorOffset, a.cursorOffset));
                     continue;
                 }
 
@@ -221,7 +220,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
                 anchorsUsed += 1;
                 final ParticleSpriteLizardAnchor e = new ParticleSpriteLizardAnchor(x, y, dx, dy, i,
-                        size, life, lizardColor, anchors, particles);
+                        size, life, Color.GREEN, anchors, particles);
                 particles.add(e);
             }
         }

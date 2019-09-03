@@ -170,8 +170,10 @@ public class ParticleSpriteLightningAlt extends Particle{
 
                     if(SPARK_ALPHA > 0.9){
                         SPARK_ALPHA -= 0.01f;
+//                        SPARK_ALPHA -= 0.02f;
                     }else{
-                        SPARK_ALPHA -= 0.02f;
+//                        SPARK_ALPHA -= 0.02f;
+                        SPARK_ALPHA -= 0.04f;
                     }
 
                     if(SPARK_ALPHA < 0){

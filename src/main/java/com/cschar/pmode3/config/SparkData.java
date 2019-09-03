@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public class SparkData{
     public int weightedAmount =100;
     public boolean enabled=true;
-    public boolean customPathEnabled =true;
+
     public String defaultPath;
     public String customPath;
 
@@ -26,10 +26,9 @@ public class SparkData{
 
     public BufferedImage image;
 
-    public SparkData(boolean enabled, int weightedAmount, boolean customPathEnabled, String defaultPath, String customPath) {
+    public SparkData(boolean enabled, int weightedAmount, String defaultPath, String customPath) {
         this.weightedAmount = weightedAmount;
         this.enabled = enabled;
-        this.customPathEnabled = customPathEnabled;
         this.customPath = customPath;
         this.defaultPath = defaultPath;
 
