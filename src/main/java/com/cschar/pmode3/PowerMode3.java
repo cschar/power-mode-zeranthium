@@ -100,9 +100,9 @@ public class PowerMode3 implements BaseComponent,
     //enabled,weight,defaultPath,customPath
     @com.intellij.util.xmlb.annotations.XCollection
     private ArrayList<String[]> sparkDataStringArrays = new ArrayList<String[]>(){{
-        add(new String[]{"true","6","/blender/lightningAlt/spark4/0150.png",""});
-        add(new String[]{"true","30","/blender/lightningAlt/spark5/0150.png",""});
-        add(new String[]{"true","80","/blender/lightningAlt/spark6/0150.png",""});
+        add(new String[]{"true","1.0f","6","/blender/lightningAlt/spark4/0150.png",""});
+        add(new String[]{"true","1.0f","30","/blender/lightningAlt/spark5/0150.png",""});
+        add(new String[]{"true","1.0f","80","/blender/lightningAlt/spark6/0150.png",""});
     }};
 
     //consider JSON https://stackabuse.com/reading-and-writing-json-in-java/ ??
@@ -250,8 +250,8 @@ public class PowerMode3 implements BaseComponent,
         System.out.println("deserializing spark data");
         ArrayList<SparkData> sd = new ArrayList<SparkData>();
         for(String[] s: sparkDataStringArrays){
-            sd.add(new SparkData(Boolean.parseBoolean(s[0]), Integer.parseInt(s[1]),
-                     s[2], s[3]));
+            sd.add(new SparkData(Boolean.parseBoolean(s[0]), Float.parseFloat(s[1]), Integer.parseInt(s[2]),
+                     s[3], s[4]));
         }
         return sd.toArray(new SparkData[sd.size()]);
     }
@@ -259,7 +259,7 @@ public class PowerMode3 implements BaseComponent,
     public void setSerializedSparkData(SparkData[] sparkData){
         ArrayList<String[]> serialized = new ArrayList<>();
         for( SparkData d: sparkData){
-               serialized.add(new String[]{String.valueOf(d.enabled), String.valueOf(d.weightedAmount),
+               serialized.add(new String[]{String.valueOf(d.enabled), String.valueOf(d.scale), String.valueOf(d.weightedAmount),
                        String.valueOf(d.defaultPath), String.valueOf(d.customPath)});
         }
         this.sparkDataStringArrays = serialized;

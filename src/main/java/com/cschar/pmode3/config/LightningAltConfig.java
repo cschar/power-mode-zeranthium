@@ -80,12 +80,13 @@ public class LightningAltConfig extends BaseConfig {
 //        sp.setAlignmentX(Component.RIGHT_ALIGNMENT);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         TableColumnModel colModel=table.getColumnModel();
+
         colModel.getColumn(0).setPreferredWidth(80);
-        colModel.getColumn(1).setPreferredWidth(100);
-        colModel.getColumn(2).setPreferredWidth(80);
+        colModel.getColumn(1).setPreferredWidth(80);
+        colModel.getColumn(2).setPreferredWidth(60);
         colModel.getColumn(3).setPreferredWidth(80);
         colModel.getColumn(4).setPreferredWidth(100);
-        colModel.getColumn(5).setPreferredWidth(60);
+        colModel.getColumn(5).setPreferredWidth(50);
 
 
 
@@ -238,9 +239,11 @@ class SparksTableModel extends AbstractTableModel {
     static SparkData[] data = LightningAltConfig.sparkData;
 
 
-    private final String[] columnNames = new String[]{
+
+    public static final String[] columnNames = new String[]{
             "preview",
             "enabled?",
+            "scale",
             "weight",
 //            "weighted amount (1-100)",
 
@@ -255,11 +258,20 @@ class SparksTableModel extends AbstractTableModel {
 
 
     private final Class[] columnClasses = new Class[]{
-            ImageIcon.class, Boolean.class, Integer.class, JButton.class,  JButton.class,String.class
+            ImageIcon.class,
+            Boolean.class,
+            Float.class,
+            Integer.class,
+            JButton.class,
+            String.class,
+            JButton.class
     };
 
     @Override
     public int getRowCount() {
+
+
+
         return data.length;
     }
 
@@ -284,7 +296,7 @@ class SparksTableModel extends AbstractTableModel {
     public boolean isCellEditable(int row, int column) {
         switch (column) {
             case 0:
-            case 4:
+            case 5:
                 return false;
             default:
                 return true;
@@ -306,8 +318,10 @@ class SparksTableModel extends AbstractTableModel {
             case 1:
                 return data[row].enabled;
             case 2:
-                return data[row].weightedAmount;
+                return data[row].scale;
             case 3:
+                return data[row].weightedAmount;
+            case 4:
                 final JButton button = new JButton("Set path");
                 button.addActionListener(arg0 -> {
 
@@ -326,9 +340,9 @@ class SparksTableModel extends AbstractTableModel {
 
                 });
                 return button;
-            case 4:
-                return data[row].customPath;
             case 5:
+                return data[row].customPath;
+            case 6:
                 final JButton resetButton = new JButton("reset");
                 resetButton.addActionListener(arg0 -> {
                     System.out.println("RESET");
@@ -339,6 +353,7 @@ class SparksTableModel extends AbstractTableModel {
                     this.fireTableDataChanged();
                 });
                 return resetButton;
+
 
         }
 
@@ -360,17 +375,23 @@ class SparksTableModel extends AbstractTableModel {
             case 1:  //enabled
                 data[row].enabled = (Boolean) value;
                 return;
-            case 2: //round robin number, 1-->100
+            case 2:
+                float f = (Float) value;
+                f = Math.max(0.0f, f);
+                f = Math.min(f,2.0f);
+                data[row].scale = (Float) f;
+                return;
+            case 3: //round robin number, 1-->100
                 int v = (Integer) value;
                 v = Math.max(1, v);
                 v = Math.min(v,100);
                 data[row].weightedAmount = v;
                 return;
-            case 3:   //button clicked
+            case 4:   //button clicked
                 return;
-            case 4:   // custom path
+            case 5:   // custom path
                 return;
-            case 5:    //reset button clicked
+            case 6:    //reset button clicked
                 return;
 
 

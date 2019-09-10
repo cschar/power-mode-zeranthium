@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 
 public class SparkData{
     public int weightedAmount =100;
+    public float scale=1.0f;
     public boolean enabled=true;
 
     public String defaultPath;
@@ -26,9 +27,10 @@ public class SparkData{
 
     public BufferedImage image;
 
-    public SparkData(boolean enabled, int weightedAmount, String defaultPath, String customPath) {
+    public SparkData(boolean enabled, float scale, int weightedAmount, String defaultPath, String customPath) {
         this.weightedAmount = weightedAmount;
         this.enabled = enabled;
+        this.scale = scale;
         this.customPath = customPath;
         this.defaultPath = defaultPath;
 

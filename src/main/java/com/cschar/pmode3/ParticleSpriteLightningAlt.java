@@ -32,19 +32,14 @@ public class ParticleSpriteLightningAlt extends Particle{
     private static ArrayList<BufferedImage> sprites;
 
     static {
-
         sprites = new ArrayList<BufferedImage>();
         for(int i=1; i <= 150; i++){
             sprites.add(ParticleUtils.loadSprite(String.format("/blender/lightningAlt/main/lightning10%03d.png", i)));
         }
-
-
         System.out.println("LightningSprites initialized");
     }
 
     public static SparkData[] sparkData;
-
-
     private BufferedImage sprite;
 
 
@@ -56,17 +51,17 @@ public class ParticleSpriteLightningAlt extends Particle{
 
     private boolean makeLightningBeam = false;
 
-    private boolean makeSparks = true;
-
+    private boolean makeSparks;
     private float maxAlpha;
 
-    int randomNum;
+    private int randomNum;
 
-    int maxLife;
-    int sparkLife;
+    private int maxLife;
+    private int sparkLife;
     private float SPARK_ALPHA = 0.99f;
+    private float spriteScale = 1.0f;
 
-    BufferedImage tmpSprite;
+    private BufferedImage tmpSprite;
 
     public ParticleSpriteLightningAlt(int x, int y, int dx, int dy,
                                       int size, int life, Color c, int chanceOfSpawn, float maxAlpha, boolean sparksEnabled) {
@@ -86,7 +81,7 @@ public class ParticleSpriteLightningAlt extends Particle{
 
         if(enabled == 0){
             this.makeSparks = false;
-        }else {
+        }else { //get winning sprite to render based on weights
             int sumWeight = 0;
             for(SparkData d: sparkData){
                     if(d.enabled){
@@ -110,12 +105,8 @@ public class ParticleSpriteLightningAlt extends Particle{
             if(winnerIndex == sparkData.length){
                 winnerIndex--;
             }
-
             tmpSprite = sparkData[winnerIndex].image;
-
-            //doesnt use weights
-//            int r = ThreadLocalRandom.current().nextInt(0, sparkSpriteArray.length);
-//            tmpSprite = sparkSpriteArray[r];
+            this.spriteScale = sparkData[winnerIndex].scale;
         }
 
         this.maxAlpha = maxAlpha;
@@ -132,10 +123,6 @@ public class ParticleSpriteLightningAlt extends Particle{
             this.life = 1000;
         }
 
-        randomNum = ThreadLocalRandom.current().nextInt(1, 100 +1);
-//        if(randomNum > 50){
-//            makeSpark1 = true;
-//        }
     }
 
     public boolean update() {
@@ -147,10 +134,6 @@ public class ParticleSpriteLightningAlt extends Particle{
 
 
 
-    private AlphaComposite makeComposite(float alpha) {
-        int type = AlphaComposite.SRC_OVER;
-        return(AlphaComposite.getInstance(type, alpha));
-    }
 
 
 
@@ -165,8 +148,6 @@ public class ParticleSpriteLightningAlt extends Particle{
 
             if(makeSparks){
                 if(life > 50) {
-                    //TODO: config
-                    // - (min/max scale size)
 
                     if(SPARK_ALPHA > 0.9){
                         SPARK_ALPHA -= 0.01f;
@@ -186,33 +167,26 @@ public class ParticleSpriteLightningAlt extends Particle{
                     double arcSpace = (randomNum / 100.0)*(Math.PI*0.5) - (Math.PI/2)*0.6;
 
 
-                    if(randomNum > 10) {
-                        at = new AffineTransform();
-                        at.scale(0.5, 0.5);
-                        at.translate((int) origX * 2, (int) origY * 2);
-                        // -'ve radians ---> rotate counter clockwise wtf?
-                        at.rotate((arcSpace));
-                        at.translate((-tmpSprite.getWidth() / 2.0),
-                                (-tmpSprite.getHeight())); //move image 100% up so lightning lands at bottom
 
-                        g2d.drawImage(tmpSprite, at, null);
-//                    }else{
-                    }
-//                    at = new AffineTransform();
-//                    at.translate((int) origX, (int) origY);
-//                    // -'ve radians ---> rotate counter clockwise wtf?
-//                    at.rotate(arcSpace);
-//                    at.translate(-tmpSprite.getWidth() / 2,
-//                            -tmpSprite.getHeight()); //move image 100% up so lightning lands at bottom
-//
-//                    g2d.drawImage(tmpSprite, at, null);
+                    at = new AffineTransform();
+//                  at.scale(0.5, 0.5);
+//                  at.translate((int) origX * 2, (int) origY * 2);
+                    at.scale(this.spriteScale, this.spriteScale);
+                    at.translate((int) origX * (1/this.spriteScale), (int) origY * (1/this.spriteScale));
+
+                    // -'ve radians ---> rotate counter clockwise ...
+                    at.rotate((arcSpace));
+                    at.translate((-tmpSprite.getWidth() / 2.0),
+                            (-tmpSprite.getHeight())); //move image 100% up so lightning lands at bottom
+
+                    g2d.drawImage(tmpSprite, at, null);
 
 
-                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 
-                    g2d.setColor(Color.YELLOW);
-//                    g2d.drawString(String.format("r %d ", randomNum), origX - 200, origY-30 + randomNum);
-                    g2d.fillRect(x - (size / 2), y - (size / 2), size, size);
+//                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+//                    g2d.setColor(Color.YELLOW);
+////                    g2d.drawString(String.format("r %d ", randomNum), origX - 200, origY-30 + randomNum);
+//                    g2d.fillRect(x - (size / 2), y - (size / 2), size, size);
 
                 }
             }
@@ -225,9 +199,8 @@ public class ParticleSpriteLightningAlt extends Particle{
                 at.translate(-sprite.getWidth()/2,
                                  -sprite.getHeight()); //move image 100% up so lightning lands at bottom
 
-//            Composite originalComposite = g2d.getComposite();
-                g2d.setComposite(makeComposite(this.maxAlpha));
-//                g2d.setComposite(makeComposite(0.5f));
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.maxAlpha));
+
 
                 //every X updates, increment frame, this controls how fast it animates
                 if( this.life % 2 == 0){
@@ -236,7 +209,6 @@ public class ParticleSpriteLightningAlt extends Particle{
                         frame = 0;
                         life = 0;
                     }
-
                 }
                 g2d.drawImage(ParticleSpriteLightningAlt.sprites.get(frame), at, null);
             }
