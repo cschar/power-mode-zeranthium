@@ -19,7 +19,9 @@ package com.cschar.pmode3;
 
 
 import com.cschar.pmode3.config.LightningAltConfig;
-import com.cschar.pmode3.config.SparkData;
+import com.cschar.pmode3.config.Mandala2Config;
+import com.cschar.pmode3.config.SpriteData;
+import com.cschar.pmode3.config.SpriteDataAnimated;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
@@ -93,7 +95,8 @@ public class PowerMode3 implements BaseComponent,
         LIGHTNING_ALT,
         LIZARD,
         MOMA,
-        VINE
+        VINE,
+        MANDALA
     }
 
     //enabled,weight,defaultPath,customPath
@@ -102,6 +105,12 @@ public class PowerMode3 implements BaseComponent,
         add(new String[]{"true","1.0f","6","/blender/lightningAlt/spark4/0150.png",""});
         add(new String[]{"true","1.0f","30","/blender/lightningAlt/spark5/0150.png",""});
         add(new String[]{"true","1.0f","80","/blender/lightningAlt/spark6/0150.png",""});
+    }};
+
+    @com.intellij.util.xmlb.annotations.XCollection
+    private ArrayList<String[]> mandalaDataStringArrays = new ArrayList<String[]>(){{
+        add(new String[]{"true","1.0f","3","/blender/mandala1/",""});
+        add(new String[]{"true","1.0f","2","/blender/mandala2/",""});
     }};
 
     //consider JSON https://stackabuse.com/reading-and-writing-json-in-java/ ??
@@ -115,10 +124,9 @@ public class PowerMode3 implements BaseComponent,
 
 
         put("sprite"+ SpriteType.MOMA+ "Enabled", "false");
-        put(String.format("sprite%sEmitTop", SpriteType.MOMA), "true");
-        put(String.format("sprite%sEmitBottom", SpriteType.MOMA), "true");
 
         put("sprite"+ SpriteType.VINE + "Enabled", "false");
+        put("sprite"+ SpriteType.MANDALA + "Enabled", "false");
     }};
 
 
@@ -234,36 +242,58 @@ public class PowerMode3 implements BaseComponent,
         XmlSerializerUtil.copyBean(state, this);
 
 
-        LightningAltConfig.setSparkData(this.deserializeSparkData());
+        LightningAltConfig.setSparkData(this.deserializeSpriteData());
+        Mandala2Config.setSpriteDataAnimated(this.deserializeSpriteDataAnimated());
     }
 
 
-    public SparkData[] deserializeSparkData(){
-        System.out.println("deserializing spark data");
-        ArrayList<SparkData> sd = new ArrayList<SparkData>();
+    public SpriteData[] deserializeSpriteData(){
+        ArrayList<SpriteData> sd = new ArrayList<SpriteData>();
         for(String[] s: sparkDataStringArrays){
-            sd.add(new SparkData(Boolean.parseBoolean(s[0]), Float.parseFloat(s[1]), Integer.parseInt(s[2]),
+            sd.add(new SpriteData(Boolean.parseBoolean(s[0]), Float.parseFloat(s[1]), Integer.parseInt(s[2]),
                      s[3], s[4]));
         }
-        return sd.toArray(new SparkData[sd.size()]);
+        return sd.toArray(new SpriteData[sd.size()]);
     }
 
-    public void setSerializedSparkData(SparkData[] sparkData){
+    public void setSerializedSparkData(SpriteData[] sparkData){
         ArrayList<String[]> serialized = new ArrayList<>();
-        for( SparkData d: sparkData){
+        for( SpriteData d: sparkData){
                serialized.add(new String[]{String.valueOf(d.enabled), String.valueOf(d.scale), String.valueOf(d.weightedAmount),
                        String.valueOf(d.defaultPath), String.valueOf(d.customPath)});
         }
         this.sparkDataStringArrays = serialized;
     }
 
+    public ArrayList<SpriteDataAnimated> deserializeSpriteDataAnimated(){
+        System.out.println("deserializing sprite data animated");
+        ArrayList<SpriteDataAnimated> sd = new ArrayList<SpriteDataAnimated>();
+        for(String[] s: mandalaDataStringArrays){
+            sd.add(new SpriteDataAnimated(Boolean.parseBoolean(s[0]),
+                                          Float.parseFloat(s[1]),
+                                          Integer.parseInt(s[2]),
+                    s[3], s[4]));
+        }
+        return sd;
+    }
+
+    public void setSerializedSpriteDataAnimated(ArrayList<SpriteDataAnimated> spriteData){
+        ArrayList<String[]> serialized = new ArrayList<>();
+        for( SpriteDataAnimated d: spriteData){
+            serialized.add(new String[]{String.valueOf(d.enabled), String.valueOf(d.scale), String.valueOf(d.speedRate),
+                    String.valueOf(d.defaultPath), String.valueOf(d.customPath)});
+        }
+        this.mandalaDataStringArrays = serialized;
+    }
+
     @Override
     public void noStateLoaded() {
-//        this.setParticleColor(c);
         System.out.println("NO State loaded previously");
-         this.setParticleRGB(JBColor.darkGray.getRGB());
+        this.setParticleRGB(JBColor.darkGray.getRGB());
 
-        LightningAltConfig.setSparkData(this.deserializeSparkData());
+
+        LightningAltConfig.setSparkData(this.deserializeSpriteData());
+        Mandala2Config.setSpriteDataAnimated(this.deserializeSpriteDataAnimated());
     }
 
     public boolean isEnabled() {

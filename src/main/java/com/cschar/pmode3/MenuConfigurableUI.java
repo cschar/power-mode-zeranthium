@@ -37,6 +37,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private LizardConfig lizardConfig;
     private VineConfig vineConfig;
     private MOMAConfig momaConfig;
+    private Mandala2Config mandala2Config;
 
     PowerMode3 settings;
     //Constructor is called _AFTER_ createUIComponents when using IntelliJ GUI designer
@@ -71,6 +72,9 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         if(powerMode3.getSpriteTypeEnabled(PowerMode3.SpriteType.VINE)){
             enableVineCheckBox.setSelected(true);
         }
+        if(powerMode3.getSpriteTypeEnabled(PowerMode3.SpriteType.MANDALA)){
+            enableMandalaCheckbox.setSelected(true);
+        }
 
 
         //already initialized from createUIComponents below
@@ -80,6 +84,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         this.lightningAltConfig.loadValues();
         this.vineConfig.loadValues();
         this.momaConfig.loadValues();
+        this.mandala2Config.loadValues();
     }
 
 
@@ -121,7 +126,9 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         //Vine
         settings.setSpriteTypeEnabled(enableVineCheckBox.isSelected(), PowerMode3.SpriteType.VINE);
 
-        //LightningALT CUSTOM
+        settings.setSpriteTypeEnabled(enableMandalaCheckbox.isSelected(), PowerMode3.SpriteType.MANDALA);
+
+
 
 
 
@@ -133,6 +140,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         this.lightningConfig.saveValues();
         this.vineConfig.saveValues(maxPsiSearch);
         this.momaConfig.saveValues();
+        this.mandala2Config.saveValues();
 
 
     }
@@ -191,7 +199,10 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         this.theCustomCreatePanel.add(this.basicParticleConfig);
 
         this.theCustomCreatePanel.add(this.createSpacer());
+        this.mandala2Config = new Mandala2Config(settings);
+        this.theCustomCreatePanel.add(mandala2Config);
 
+        this.theCustomCreatePanel.add(this.createSpacer());
         this.lightningConfig = new LightningConfig(settings);
         this.theCustomCreatePanel.add(lightningConfig.getConfigPanel());
 

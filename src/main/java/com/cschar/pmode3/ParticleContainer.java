@@ -100,6 +100,17 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         int life = 45;
         int lifeSetting = settings.getLifetime();
 
+
+        if(settings.getSpriteTypeEnabled(PowerMode3.SpriteType.MANDALA)){
+            //update static value for all other rings still spawned.
+            ParticleSpriteMandalaRing.cursorX = x;
+            ParticleSpriteMandalaRing.cursorY = y;
+            final ParticleSpriteMandalaRing e = new ParticleSpriteMandalaRing(x,y,dx,dy,size,lifeSetting, Color.GREEN, 0);
+            final ParticleSpriteMandalaRing e1 = new ParticleSpriteMandalaRing(x,y,dx,dy,size,lifeSetting, Color.GREEN, 1);
+            particles.add(e);
+            particles.add(e1);
+        }
+
         if (settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LIGHTNING_ALT)){
             final ParticleSpriteLightningAlt e = new ParticleSpriteLightningAlt(x, y, dx, dy, size, lifeSetting,
                     Color.ORANGE,

@@ -18,7 +18,7 @@
 package com.cschar.pmode3;
 
 
-import com.cschar.pmode3.config.SparkData;
+import com.cschar.pmode3.config.SpriteData;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -39,7 +39,7 @@ public class ParticleSpriteLightningAlt extends Particle{
         System.out.println("LightningSprites initialized");
     }
 
-    public static SparkData[] sparkData;
+    public static SpriteData[] sparkData;
     private BufferedImage sprite;
 
 
@@ -73,7 +73,7 @@ public class ParticleSpriteLightningAlt extends Particle{
         this.makeSparks = sparksEnabled;
 
         int enabled = 0;
-        for(SparkData d : sparkData){
+        for(SpriteData d : sparkData){
             if(d.enabled){
                 enabled++;
             }
@@ -83,7 +83,7 @@ public class ParticleSpriteLightningAlt extends Particle{
             this.makeSparks = false;
         }else { //get winning sprite to render based on weights
             int sumWeight = 0;
-            for(SparkData d: sparkData){
+            for(SpriteData d: sparkData){
                     if(d.enabled){
                         sumWeight += d.weightedAmount;
                     }
@@ -93,7 +93,7 @@ public class ParticleSpriteLightningAlt extends Particle{
 
             int winnerIndex = 0;
             int limit = 0;
-            for(SparkData d: sparkData){
+            for(SpriteData d: sparkData){
                 if(d.enabled){
                     limit += d.weightedAmount;
                     if(weightChance <= limit){

@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-public class SparkData{
+public class SpriteData {
     public int weightedAmount =100;
     public float scale=1.0f;
     public boolean enabled=true;
@@ -27,7 +27,9 @@ public class SparkData{
 
     public BufferedImage image;
 
-    public SparkData(boolean enabled, float scale, int weightedAmount, String defaultPath, String customPath) {
+    private boolean isAnimated = false;
+
+    public SpriteData(boolean enabled, float scale, int weightedAmount, String defaultPath, String customPath) {
         this.weightedAmount = weightedAmount;
         this.enabled = enabled;
         this.scale = scale;
