@@ -88,15 +88,15 @@ public class ParticleContainer extends JComponent implements ComponentListener {
     }
 
     public void addParticle(int x, int y, PowerMode3 settings) {
-        //TODO configurable
-//        PowerMode3 settings = PowerMode3.getInstance();
+
 
         int dx, dy;
         dx = (int) (Math.random() * 4) * (Math.random() > 0.5 ? -1 : 1);
         dy = (int) (Math.random() * -3 - 1);
 
+        int size = 5;
 //        int size = (int) (Math.random() * 3 + 1);
-        int size = (int) (Math.random() * settings.getParticleSize() + 1);
+//        int size = (int) (Math.random() * settings.getParticleSize() + 1);
         int life = 45;
         int lifeSetting = settings.getLifetime();
 
@@ -157,16 +157,31 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         }
 
 
-        if(settings.getBasicParticleEnabled()) {
-            final Particle e = new Particle(x, y, dx, dy, size, lifeSetting, settings.particleColor);
-            particles.add(e);
+        if (settings.getSpriteTypeEnabled(PowerMode3.SpriteType.BASIC_PARTICLE)) {
+            int maxSize = BasicParticleConfig.MAX_PARTICLE_SIZE(settings);
+            Color basicColor = BasicParticleConfig.BASIC_PARTICLE_COLOR(settings);
+            int numParticles = BasicParticleConfig.NUM_PARTICLES(settings);
 
-            dx = (int) (Math.random() * 4) * (Math.random() > 0.5 ? -1 : 1);
-            dy = (int) (Math.random() * 3 + 1);
-            y = y + 20;
+            for(int i = 0; i < numParticles; i++){
 
-            final Particle e2 = new Particle(x, y, dx, dy, size, lifeSetting, settings.particleColor);
-            particles.add(e2);
+                size = (int) (Math.random() * maxSize + 1);
+
+                if(BasicParticleConfig.EMIT_TOP(settings)){
+                    dx = (int) (Math.random() * 4) * (Math.random() > 0.5 ? -1 : 1);
+                    dy = (int) (Math.random() * -3 - 1);
+
+                    final Particle e = new Particle(x, y, dx, dy, size, lifeSetting, basicColor);
+                    particles.add(e);
+                }
+                if(BasicParticleConfig.EMIT_BOTTOM(settings)) {
+                    dx = (int) (Math.random() * 4) * (Math.random() > 0.5 ? -1 : 1);
+                    dy = (int) (Math.random() * 3 + 1);
+//                    y = y + 20;
+                    final Particle e2 = new Particle(x, y + 20, dx, dy, size, lifeSetting, basicColor);
+                    particles.add(e2);
+                }
+            }
+
         }
 
     }
@@ -177,9 +192,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         dx = (int) (Math.random() * 4) * (Math.random() > 0.5 ? -1 : 1);
         dy = (int) (Math.random() * -3 - 1);
 
-//        int size = (int) (Math.random() * 3 + 1);
-        int size = (int) (Math.random() * settings.getParticleSize() + 1);
-        //int life = 45;
+        int size = 5;
         int life = settings.getLifetime();
 
 
@@ -287,9 +300,9 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         PowerMode3 settings = PowerMode3.getInstance();
 
         //TODO call once, then have each spriteType use its own specified # of particles
-        for (int i = 0; i < settings.getNumOfParticles(); i++) {
+//        for (int i = 0; i < settings.getNumOfParticles(); i++) {
             addParticle(point.x, point.y, settings);
-        }
+//        }
 
         addParticleUsingAnchors(point.x, point.y, anchors, settings);
 

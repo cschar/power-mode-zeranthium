@@ -17,9 +17,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private JPanel mainPanel;
     private JTextField lifetimeTextField;
     private JCheckBox isEnabledCheckBox;
-    private JSlider sliderMaxSize;
-    private JButton chooseColorButton;
-    private JLabel particleColorLabel;
+
     private JCheckBox enableLightningCheckBox;
     private JCheckBox enableLizardCheckBox;
     private JCheckBox enableMOMACheckBox;
@@ -27,11 +25,12 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private JCheckBox enableBasicParticleCheckBox;
     private JCheckBox lightningAltCheckBox;
     private JTextField maxPsiSearchDistanceTextField;
-    private JTextField numOfParticlesTextField;
+
     private JTextField shakeDistanceTextField;
     private JCheckBox enableVineCheckBox;
 
 
+    private BasicParticleConfig basicParticleConfig;
     private LightningConfig lightningConfig;
     private LightningAltConfig lightningAltConfig;
     private LizardConfig lizardConfig;
@@ -45,18 +44,16 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         isEnabledCheckBox.setSelected(powerMode3.isEnabled());
 
         shakeDistanceTextField.setText(Integer.toString(powerMode3.getShakeDistance()));
-        numOfParticlesTextField.setText(Integer.toString(powerMode3.getNumOfParticles()));
         lifetimeTextField.setText(Integer.toString(powerMode3.getLifetime()));
         maxPsiSearchDistanceTextField.setText(Integer.toString(powerMode3.getMaxPsiSearchDistance()));
-        sliderMaxSize.setValue(powerMode3.getParticleSize());
-
-        particleColorLabel.setOpaque(true); //to show background  https://stackoverflow.com/a/2380328/403403
-        particleColorLabel.setBackground(powerMode3.particleColor);
-        chooseColorButton.addActionListener(e -> clickChooseColorButton(powerMode3));
 
 
-        enableBasicParticleCheckBox.setSelected(powerMode3.getBasicParticleEnabled());
 
+//        enableBasicParticleCheckBox.setSelected(powerMode3.getBasicParticleEnabled());
+
+        if(powerMode3.getSpriteTypeEnabled(PowerMode3.SpriteType.BASIC_PARTICLE)){
+            enableBasicParticleCheckBox.setSelected(true);
+        }
 
         if(powerMode3.getSpriteTypeEnabled(PowerMode3.SpriteType.LIGHTNING)){
             enableLightningCheckBox.setSelected(true);
@@ -76,6 +73,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
 
         //already initialized from createUIComponents below
+        this.basicParticleConfig.loadValues();
         this.lizardConfig.loadValues();
         this.lightningConfig.loadValues();
         this.lightningAltConfig.loadValues();
@@ -83,17 +81,6 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         this.momaConfig.loadValues();
     }
 
-
-
-    private void clickChooseColorButton(PowerMode3 powerMode3){
-        Color newColor = JColorChooser.showDialog(this.mainPanel, "Choose particle color",
-                JBColor.darkGray);
-
-        powerMode3.setParticleRGB(newColor.getRGB());
-        particleColorLabel.setBackground(powerMode3.particleColor);
-
-
-    }
 
 
     @Override
@@ -111,17 +98,16 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     public void apply(@NotNull PowerMode3 settings) throws ConfigurationException {
         settings.setEnabled(isEnabledCheckBox.isSelected());
         settings.setShakeDistance(getJTextFieldWithinBounds(shakeDistanceTextField, 0, 30, "Distance to shake editor in pixels when typing"));
-        settings.setNumOfParticles(getJTextFieldWithinBounds(numOfParticlesTextField, 0, 10, "Number of Particles per keystroke"));
+
         settings.setLifetime(getJTextFieldWithinBounds(lifetimeTextField, 5, 500, "Lifetime"));
         settings.setMaxPsiSearchDistance(getJTextFieldWithinBounds(maxPsiSearchDistanceTextField,
                 10, 1000, "Max Psi/Anchor Search Distance"));
 
 
 
-        settings.setParticleSize(sliderMaxSize.getValue());
-
         //basic particle
-        settings.setBasicParticleEnabled(enableBasicParticleCheckBox.isSelected());
+//        settings.setBasicParticleEnabled(enableBasicParticleCheckBox.isSelected());
+        settings.setSpriteTypeEnabled(enableBasicParticleCheckBox.isSelected(), PowerMode3.SpriteType.BASIC_PARTICLE);
 
         //lightning
         settings.setSpriteTypeEnabled(enableLightningCheckBox.isSelected(), PowerMode3.SpriteType.LIGHTNING);
@@ -140,6 +126,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
         //save values
         int maxPsiSearch = Integer.parseInt(maxPsiSearchDistanceTextField.getText());
+        this.basicParticleConfig.saveValues();
         this.lizardConfig.saveValues(maxPsiSearch);
         this.lightningAltConfig.saveValues();
         this.lightningConfig.saveValues();
@@ -190,14 +177,17 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     //https://www.jetbrains.com/help/idea/creating-form-initialization-code.html
     private void createUIComponents() {
         PowerMode3 settings = PowerMode3.getInstance();
-        // TODO: place custom component creation code here
-        System.out.println("custom create");
+
+
         theCustomCreatePanel = new JPanel();
         theCustomCreatePanel.setOpaque(false);
         theCustomCreatePanel.setBorder(new EmptyBorder(10, 10, 200, 10));
         //https://docs.oracle.com/javase/tutorial/uiswing/layout/visual.html
         theCustomCreatePanel.setLayout(new BoxLayout(theCustomCreatePanel, BoxLayout.PAGE_AXIS));
 
+        this.theCustomCreatePanel.add(this.createSpacer());
+        this.basicParticleConfig = new BasicParticleConfig(settings);
+        this.theCustomCreatePanel.add(this.basicParticleConfig);
 
         this.theCustomCreatePanel.add(this.createSpacer());
 

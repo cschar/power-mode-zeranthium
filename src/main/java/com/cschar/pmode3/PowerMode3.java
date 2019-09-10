@@ -72,24 +72,23 @@ public class PowerMode3 implements BaseComponent,
 
     @com.intellij.util.xmlb.annotations.Transient
     Color particleColor;
-
+    private int particleRGB;
 
     private int scrollBarPosition = 0;
 //    public String scrollBarPosition2 = "0";
 
     private boolean enabled = true;
     private int shakeDistance = 5;
-    private int numOfParticles = 7;
     private int lifetime = 200;
-    private int particleSize = 3;
     private int maxPsiSearchDistance = 400;  //amount of total characters searched around caret for anchors
 
-    private int particleRGB;
+
 
 
 
 
     public enum SpriteType{
+        BASIC_PARTICLE,
         LIGHTNING,
         LIGHTNING_ALT,
         LIZARD,
@@ -108,7 +107,8 @@ public class PowerMode3 implements BaseComponent,
     //consider JSON https://stackabuse.com/reading-and-writing-json-in-java/ ??
     @com.intellij.util.xmlb.annotations.MapAnnotation  //this tells it to copy its inner values, wont serialize without it
     private Map<String,String> configMap = new HashMap<String,String>(){{
-        put("basicParticleEnabled", "true");
+
+        put("sprite"+ SpriteType.BASIC_PARTICLE + "Enabled", "true");
         put("sprite"+ SpriteType.LIGHTNING + "Enabled", "false");
         put("sprite"+ SpriteType.LIGHTNING_ALT + "Enabled", "false");
         put("sprite"+ SpriteType.LIZARD + "Enabled", "false");
@@ -128,14 +128,6 @@ public class PowerMode3 implements BaseComponent,
     }
     boolean getSpriteTypeEnabled(SpriteType type){
         return Boolean.parseBoolean(configMap.get("sprite"+type+"Enabled"));
-    }
-
-    //LOMBOK would help here... wouldnt have to do these pesky getter/setters
-    void setBasicParticleEnabled(Boolean enabled){
-        configMap.put("basicParticleEnabled", enabled.toString());
-    }
-    boolean getBasicParticleEnabled(){
-        return Boolean.parseBoolean(configMap.get("basicParticleEnabled"));
     }
 
     public void setSpriteTypeProperty(SpriteType type, String property, String value){
@@ -284,8 +276,7 @@ public class PowerMode3 implements BaseComponent,
 
     public int getLifetime() { return lifetime; }
     public void setLifetime(int l) { lifetime=l;}
-    public int getParticleSize() { return particleSize;}
-    public void setParticleSize(int p) {particleSize=p;}
+
 
     public int getParticleRGB() {     return particleRGB; }
     public void setParticleRGB(int particleRGB) {
@@ -296,8 +287,7 @@ public class PowerMode3 implements BaseComponent,
     public int getMaxPsiSearchDistance() {  return maxPsiSearchDistance; }
     public void setMaxPsiSearchDistance(int maxPsiSearchDistance) {this.maxPsiSearchDistance = maxPsiSearchDistance;}
 
-    public int getNumOfParticles() {  return numOfParticles;   }
-    public void setNumOfParticles(int numOfParticles) { this.numOfParticles = numOfParticles;  }
+
     public int getShakeDistance() {  return shakeDistance;  }
     public void setShakeDistance(int shakeDistance) {   this.shakeDistance = shakeDistance;  }
 

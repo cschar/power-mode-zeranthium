@@ -8,14 +8,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Config extends JPanel {
+public class Config {
 
-
-    PowerMode3 settings;
-
-    public Config(PowerMode3 settings){
-        this.settings = settings;
-    }
 
 
     public static JPanel getColorPickerPanel(String labelTextKey, PowerMode3.SpriteType spriteType, PowerMode3 settings, Color defaultColor){
@@ -30,13 +24,11 @@ public class Config extends JPanel {
         if(settings.getSpriteTypeProperty(spriteType, labelTextKey) == null){
 
             colorPreviewLabel.setBackground(defaultColor);
-//            colorLabel.setBackground(Color.GRAY);
             settings.setSpriteTypeProperty(spriteType, labelTextKey,
                     String.valueOf(defaultColor.getRGB()));
         }else{
             String colorRGB = settings.getSpriteTypeProperty(spriteType, labelTextKey);
             Color newColor = new Color(Integer.parseInt(colorRGB));
-//            colorLabel.setBackground(newColor);
             colorPreviewLabel.setBackground(newColor);
         };
 

@@ -111,9 +111,14 @@ public class VineConfig extends JPanel {
         });
 
 
+        JPanel growFromRightPanel = new JPanel();
         this.growFromRight = new JCheckBox("Grow From Right?");
-        this.growFromRight.setAlignmentX(Component.LEFT_ALIGNMENT);
-        firstCol.add(this.growFromRight);
+        growFromRightPanel.add(growFromRight);
+        growFromRightPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        growFromRightPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        growFromRightPanel.setMaximumSize(new Dimension(500, 50));
+        firstCol.add(growFromRightPanel);
+
 
 
 
