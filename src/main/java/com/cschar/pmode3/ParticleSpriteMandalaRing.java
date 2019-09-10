@@ -27,19 +27,14 @@ import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 
-public class ParticleSpriteLightningAlt extends Particle{
+public class ParticleSpriteMandalaRing extends Particle{
 
-    private static ArrayList<BufferedImage> sprites;
 
     static {
-        sprites = new ArrayList<BufferedImage>();
-        for(int i=1; i <= 150; i++){
-            sprites.add(ParticleUtils.loadSprite(String.format("/blender/lightningAlt/main/lightning10%03d.png", i)));
-        }
-        System.out.println("LightningSprites initialized");
+
     }
 
-    public static SparkData[] sparkData;
+    public static SparkData[] mandalaRingData;
     private BufferedImage sprite;
 
 
@@ -63,17 +58,17 @@ public class ParticleSpriteLightningAlt extends Particle{
 
     private BufferedImage tmpSprite;
 
-    public ParticleSpriteLightningAlt(int x, int y, int dx, int dy,
-                                      int size, int life, Color c, int chanceOfSpawn, float maxAlpha, boolean sparksEnabled) {
+    public ParticleSpriteMandalaRing(int x, int y, int dx, int dy,
+                                     int size, int life, Color c, int chanceOfSpawn, float maxAlpha, boolean sparksEnabled) {
         super(x,y,dx,dy,size,life,c);
-        sprite = sprites.get(0);
+
 
 
         //arhghrgh my eyes!!!
         this.makeSparks = sparksEnabled;
 
         int enabled = 0;
-        for(SparkData d : sparkData){
+        for(SparkData d : mandalaRingData){
             if(d.enabled){
                 enabled++;
             }
@@ -82,31 +77,7 @@ public class ParticleSpriteLightningAlt extends Particle{
         if(enabled == 0){
             this.makeSparks = false;
         }else { //get winning sprite to render based on weights
-            int sumWeight = 0;
-            for(SparkData d: sparkData){
-                    if(d.enabled){
-                        sumWeight += d.weightedAmount;
-                    }
-            }
-
-            int weightChance = ThreadLocalRandom.current().nextInt(0, sumWeight);
-
-            int winnerIndex = 0;
-            int limit = 0;
-            for(SparkData d: sparkData){
-                if(d.enabled){
-                    limit += d.weightedAmount;
-                    if(weightChance <= limit){
-                        break;
-                    }
-                }
-                winnerIndex += 1;
-            }
-            if(winnerIndex == sparkData.length){
-                winnerIndex--;
-            }
-            tmpSprite = sparkData[winnerIndex].image;
-            this.spriteScale = sparkData[winnerIndex].scale;
+            tmpSprite = mandalaRingData[0].image;
         }
 
         this.maxAlpha = maxAlpha;
@@ -205,12 +176,12 @@ public class ParticleSpriteLightningAlt extends Particle{
                 //every X updates, increment frame, this controls how fast it animates
                 if( this.life % 2 == 0){
                     frame += 1;
-                    if (frame >= ParticleSpriteLightningAlt.sprites.size()){
+                    if (frame >= ParticleSpriteMandalaRing.sprites.size()){
                         frame = 0;
                         life = 0;
                     }
                 }
-                g2d.drawImage(ParticleSpriteLightningAlt.sprites.get(frame), at, null);
+                g2d.drawImage(ParticleSpriteMandalaRing.sprites.get(frame), at, null);
             }
 
             g2d.dispose();

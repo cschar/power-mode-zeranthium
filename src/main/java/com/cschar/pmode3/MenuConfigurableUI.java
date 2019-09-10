@@ -28,6 +28,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
     private JTextField shakeDistanceTextField;
     private JCheckBox enableVineCheckBox;
+    private JCheckBox enableMandalaCheckbox;
 
 
     private BasicParticleConfig basicParticleConfig;

@@ -2,7 +2,8 @@
 
 TODO: everything
 - hotkey to activate (bonus: configurable?)
-- lightning sparks
+- Void / Mandala fade in when typing (max 3-4 layers as typing increases)
+- Mandala Chains based off Vine
 - Fiddle heads
 ```
   xxxxxxx
@@ -22,6 +23,7 @@ TODO: everything
 Done;
 - vines
 - lizards
+- lightning sparks
 
 future TODO:
 - code explorer (e.g. wave collapse for dungeon background)
