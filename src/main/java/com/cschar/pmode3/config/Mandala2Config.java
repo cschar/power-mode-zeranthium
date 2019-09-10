@@ -33,7 +33,7 @@ public class Mandala2Config extends JPanel{
         this.settings = settings;
 
         this.setMaximumSize(new Dimension(1000,300));
-        this.setLayout(new GridLayout(2,0)); //as many rows as necessary
+        this.setLayout(new GridLayout(1,0)); //as many rows as necessary
         firstRow = new JPanel();
         firstRow.setMaximumSize(new Dimension(1000,300));
         firstRow.setLayout(new GridLayout(0,2)); //as many rows as necessary
@@ -49,7 +49,7 @@ public class Mandala2Config extends JPanel{
         firstRow.add(firstRowCol2);
 
 //        firstRow.setLayout(new BoxLayout(firstRow, BoxLayout.PAGE_AXIS));
-        this.add(firstRow);
+
 
         secondRow = new JPanel();
         secondRow.setMaximumSize(new Dimension(1000,500));
@@ -62,14 +62,16 @@ public class Mandala2Config extends JPanel{
         headerPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
         headerPanel.setMaximumSize(new Dimension(300,100));
 
-        firstRowCol2.add(headerPanel);
+//        firstRowCol2.add(headerPanel);
 
 //        secondRow.add(headerPanel);
         this.add(secondRow);
+//        this.add(firstRow);
 
 
 
         mandalaRingConfigPanel = createConfigTable();
+        secondRow.add(headerPanel);
         secondRow.add(mandalaRingConfigPanel);
 
 
@@ -86,7 +88,7 @@ public class Mandala2Config extends JPanel{
         table.setModel(new MandalaRingTableModel());
 
 //        table.setShowGrid(false);
-        table.setBounds(30, 40, 400, 300);
+//        table.setBounds(30, 40, 400, 300);
         table.setCellSelectionEnabled(false);
         table.setColumnSelectionAllowed(false);
         table.setRowSelectionAllowed(false);
@@ -94,7 +96,7 @@ public class Mandala2Config extends JPanel{
 //        table.setPreferredScrollableViewportSize(new Dimension(400,
 //                table.getRowHeight() * LightningAltConfig.sparkData.length));
         table.setPreferredScrollableViewportSize(new Dimension(400,
-                table.getRowHeight() * 2));
+                table.getRowHeight() * 4));
         table.getTableHeader().setReorderingAllowed(false);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 //        table.setBackground(Color.yellow);
@@ -105,17 +107,19 @@ public class Mandala2Config extends JPanel{
 
         sp.setOpaque(true);
 //        sp.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_NEXT_COLUMN);
+//        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         TableColumnModel colModel=table.getColumnModel();
 
-        colModel.getColumn(0).setPreferredWidth(200);
+        colModel.getColumn(0).setPreferredWidth(120);
         colModel.getColumn(1).setPreferredWidth(80);
         colModel.getColumn(2).setPreferredWidth(60);
         colModel.getColumn(3).setPreferredWidth(80);
         colModel.getColumn(4).setPreferredWidth(100);
         colModel.getColumn(5).setPreferredWidth(50);
 
-
+        //TODO: column for "constant cycle"
+        //TODO: column for "max particles"  (max rings per row)
 
         //make table transparent
         table.setOpaque(false);
@@ -133,7 +137,7 @@ public class Mandala2Config extends JPanel{
         table.getColumn("reset").setCellRenderer(buttonRenderer);
         table.addMouseListener(new JTableButtonMouseListener(table));
 
-        TableCellRenderer pathRenderer = new CustomPathCellHighlighterRenderer();
+        TableCellRenderer pathRenderer = new MandalaCustomPathCellHighlighterRenderer();
         table.getColumn("path").setCellRenderer(pathRenderer);
 
 
@@ -150,18 +154,12 @@ public class Mandala2Config extends JPanel{
 
 
     public void loadValues(){
-
-
+        
         //sparkData is loaded on settings instantiation
     }
 
     public void saveValues() throws ConfigurationException {
-
-//
-//
-//        ParticleSpriteLightningAlt.sparkData = sparkData;
-//        settings.setSerializedSparkData(sparkData);
-
+        settings.setSerializedSpriteDataAnimated(Mandala2Config.mandalaData);
     }
 
 
@@ -170,6 +168,39 @@ public class Mandala2Config extends JPanel{
     public static void setSpriteDataAnimated(ArrayList<SpriteDataAnimated> data){
         mandalaData = data;
         ParticleSpriteMandalaRing.mandalaRingData = data;
+    }
+}
+
+class MandalaCustomPathCellHighlighterRenderer extends JLabel implements TableCellRenderer {
+
+    public MandalaCustomPathCellHighlighterRenderer() {
+        setOpaque(true); // Or color won't be displayed!
+    }
+
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        String val = (String)value;
+        Color c;
+
+
+
+
+        if (MandalaRingTableModel.data.get(row).customPathValid) {
+//            c = Color.WHITE;
+            c = Color.lightGray;
+            setText(row + " -- " + val);
+        }else if(MandalaRingTableModel.data.get(row).customPath != ""){
+            c = Color.RED;
+            setText(row + " -- " +  "!!Error loading path!!: " + val);
+        }else{
+            c = Color.WHITE;
+//            c = Color.CYAN;
+            setText(row + " -- ");
+        }
+
+        setBackground(c);
+
+        return this;
     }
 }
 
@@ -277,9 +308,11 @@ class MandalaRingTableModel extends AbstractTableModel {
                     VirtualFile[] vfs = fcDialog.choose(null);
 
                     if(vfs.length != 0){
-//                        data[row].customPath = vfs[0].getPath();
-//                        data[row].setImage(vfs[0].getPath(), false);
                         System.out.println(vfs[0]);
+                        data.get(row).customPath = vfs[0].getPath();
+                        data.get(row).setImageAnimated(vfs[0].getPath(), false);
+
+
                         this.fireTableDataChanged();
                     }
 
@@ -291,9 +324,9 @@ class MandalaRingTableModel extends AbstractTableModel {
                 final JButton resetButton = new JButton("reset");
                 resetButton.addActionListener(arg0 -> {
                     System.out.println("RESET");
-//                    data[row].setImage(data[row].defaultPath, true);
-//                    data[row].customPath = "";
-//                    data[row].customPathValid = false;
+                    data.get(row).setImageAnimated(data.get(row).defaultPath, true);
+                    data.get(row).customPath = "";
+                    data.get(row).customPathValid = false;
 
                     this.fireTableDataChanged();
                 });
@@ -326,10 +359,10 @@ class MandalaRingTableModel extends AbstractTableModel {
                 v0 = Math.min(v0, 2.0f);
                 data.get(row).scale = v0;
                 return;
-            case 3: //round robin number, 1-->100
+            case 3:
                 int v = (Integer) value;
                 v = Math.max(1, v);
-                v = Math.min(v,100);
+                v = Math.min(v,10);
                 data.get(row).speedRate = v;
                 return;
             case 4:   //button clicked

@@ -3,6 +3,10 @@ plugins {
     id 'org.jetbrains.intellij' version '0.4.10'
 }
 
+runIde {
+    jvmArgs '-Xmx1G'
+}
+
 group 'com.cschar'
 version '1.0'
 

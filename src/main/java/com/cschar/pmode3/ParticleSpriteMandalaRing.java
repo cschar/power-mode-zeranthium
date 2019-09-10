@@ -44,11 +44,6 @@ public class ParticleSpriteMandalaRing extends Particle{
     private int frame = 0;
 
 
-    private int origX,origY;
-
-    private boolean makeLightningBeam = false;
-
-    private boolean makeSparks;
     private float maxAlpha;
 
     private int randomNum;
@@ -58,23 +53,37 @@ public class ParticleSpriteMandalaRing extends Particle{
     private float SPARK_ALPHA = 0.99f;
     private float spriteScale = 1.0f;
 
+    private static int MAX_RINGS = 20;
+    private static int CUR_RINGS = 0;
+
+    private int frameSpeed = 2;
+
     private ArrayList<BufferedImage> ringSprites;
 
     public ParticleSpriteMandalaRing(int x, int y, int dx, int dy,
-                                     int size, int life, Color c, int ringIndex) {
-        super(x,y,dx,dy,size,life,c);
+                                     int size, int life, int ringIndex) {
+        super(x,y,dx,dy,size,life,Color.GREEN);
 
-
-
-
-        //arhghrgh my eyes!!!
-        this.makeSparks = true;
+        this.maxAlpha = 1.0f;
+        this.maxLife = life;
+        this.sparkLife = life;
+        cursorX = x;
+        cursorY = y;
+        randomNum = ThreadLocalRandom.current().nextInt(1, 100 +1);
+        CUR_RINGS += 1;
+        if(CUR_RINGS > MAX_RINGS){
+            this.life = 0;
+        }
+        this.frameSpeed = ParticleSpriteMandalaRing.mandalaRingData.get(ringIndex).speedRate;
+        this.spriteScale = ParticleSpriteMandalaRing.mandalaRingData.get(ringIndex).scale;
 
         int enabled = 0;
         for(int i = 0; i < mandalaRingData.size(); i++){
+            //TODO: Kill outside before constructing object with static ring data
             SpriteDataAnimated d = mandalaRingData.get(i);
+
             if(!d.enabled && ringIndex == i){
-                life = 0;
+                this.life = 0;
             }
             if(d.enabled){
                 enabled++;
@@ -83,20 +92,6 @@ public class ParticleSpriteMandalaRing extends Particle{
 
         ringSprites = mandalaRingData.get(ringIndex).images;
         sprite = ringSprites.get(0);
-        System.out.println("ring sprites" + ringSprites.size());
-
-
-        this.maxAlpha = 1.0f;
-        this.maxLife = life;
-        this.sparkLife = life;
-
-        origX = x;
-        origY = y;
-        cursorX = x;
-        cursorY = y;
-
-        randomNum = ThreadLocalRandom.current().nextInt(1, 100 +1);
-
 
     }
 
@@ -104,6 +99,8 @@ public class ParticleSpriteMandalaRing extends Particle{
         x += dx;
         y += dy;
         life--;
+        if(life <= 0) CUR_RINGS -= 1;
+
         return life <= 0;
     }
 
@@ -166,16 +163,19 @@ public class ParticleSpriteMandalaRing extends Particle{
 
 
             AffineTransform at = new AffineTransform();
-//            at.translate((int)origX ,(int)origY );
-            at.translate((int)cursorX ,(int)cursorY );
-            at.translate(-sprite.getWidth()/2,
-                             -sprite.getHeight()/2);
 
+//            at.translate((int)cursorX ,(int)cursorY );
+
+            at.scale(this.spriteScale, this.spriteScale);
+            at.translate((int) cursorX * (1/this.spriteScale), (int) cursorY * (1/this.spriteScale));
+
+            at.translate(-sprite.getWidth()/2,
+                    -sprite.getHeight()/2);
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.maxAlpha));
 
 
             //every X updates, increment frame, this controls how fast it animates
-            if( this.life % 2 == 0){
+            if( this.life % this.frameSpeed == 0){
                 frame += 1;
                 if (frame >= ringSprites.size()){
                     frame = 0;
@@ -183,6 +183,10 @@ public class ParticleSpriteMandalaRing extends Particle{
                 }
             }
             g2d.drawImage(ringSprites.get(frame), at, null);
+
+            g2d.setColor(Color.ORANGE);
+            g2d.drawString(String.format("RINGS %d", CUR_RINGS), cursorX - 20, cursorY - 30);
+
 
 
             g2d.dispose();
