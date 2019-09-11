@@ -11,12 +11,10 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
 
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumnModel;
+import javax.swing.table.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.EventObject;
 
 public class Mandala2Config extends JPanel{
 
@@ -108,15 +106,22 @@ public class Mandala2Config extends JPanel{
         sp.setOpaque(true);
 //        sp.setAlignmentX(Component.RIGHT_ALIGNMENT);
 //        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+//        table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
         TableColumnModel colModel=table.getColumnModel();
 
-        colModel.getColumn(0).setPreferredWidth(120);
-        colModel.getColumn(1).setPreferredWidth(80);
-        colModel.getColumn(2).setPreferredWidth(60);
-        colModel.getColumn(3).setPreferredWidth(80);
-        colModel.getColumn(4).setPreferredWidth(100);
-        colModel.getColumn(5).setPreferredWidth(50);
+        colModel.getColumn(0).setPreferredWidth(120); //preview
+        colModel.getColumn(1).setPreferredWidth(70);  //enabled
+        colModel.getColumn(1).setWidth(50);  //enabled
+
+        colModel.getColumn(2).setPreferredWidth(50);  //scale
+        colModel.getColumn(3).setPreferredWidth(80);  //speed rate
+        colModel.getColumn(4).setPreferredWidth(100);  //set path
+        colModel.getColumn(5).setPreferredWidth(50);  // path
+        colModel.getColumn(6).setPreferredWidth(70);  //reset
+        colModel.getColumn(6).setMaxWidth(70);  //reset
+        colModel.getColumn(7).setPreferredWidth(400);  //other options
+        colModel.getColumn(7).setMinWidth(300);
+
 
         //TODO: column for "constant cycle"
         //TODO: column for "max particles"  (max rings per row)
@@ -140,6 +145,15 @@ public class Mandala2Config extends JPanel{
         TableCellRenderer pathRenderer = new MandalaCustomPathCellHighlighterRenderer();
         table.getColumn("path").setCellRenderer(pathRenderer);
 
+//        TableCellRenderer pathRendererOther = new MandalaOtherCustomPathCellHighlighterRenderer();
+//        table.getColumn("other").setCellRenderer(pathRendererOther);
+
+//        TableCellRenderer pathRendererOther = new OtherPanelCustomPathCellHighlighterRenderer();
+//        table.getColumn("other").setCellRenderer(pathRendererOther);
+
+        OtherPanelCellEditorRenderer OtherPanelCellEditorRenderer = new OtherPanelCellEditorRenderer();
+        table.getColumn("other").setCellRenderer(OtherPanelCellEditorRenderer);
+        table.getColumn("other").setCellEditor(OtherPanelCellEditorRenderer);
 
 
         sp.setOpaque(false);
@@ -154,7 +168,7 @@ public class Mandala2Config extends JPanel{
 
 
     public void loadValues(){
-        
+
         //sparkData is loaded on settings instantiation
     }
 
@@ -182,9 +196,6 @@ class MandalaCustomPathCellHighlighterRenderer extends JLabel implements TableCe
         String val = (String)value;
         Color c;
 
-
-
-
         if (MandalaRingTableModel.data.get(row).customPathValid) {
 //            c = Color.WHITE;
             c = Color.lightGray;
@@ -204,15 +215,114 @@ class MandalaCustomPathCellHighlighterRenderer extends JLabel implements TableCe
     }
 }
 
-//class MandalaJTableButtonRenderer implements TableCellRenderer {
-//    @Override public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-//        JButton button = (JButton)value;
-//        button.setBackground(Color.lightGray);
-//        button.setBorder(JBUI.Borders.empty(20,2));
+
+
+
+///////DEMO CODE
+
+class OtherPanelCellEditorRenderer extends AbstractCellEditor implements TableCellRenderer, TableCellEditor {
+
+    private static final long serialVersionUID = 1L;
+    private OtherColCellPanel renderer = new OtherColCellPanel();
+    private OtherColCellPanel editor = new OtherColCellPanel();
+
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        renderer.setOtherCol((OtherCol) value);
+        return renderer;
+    }
+
+    @Override
+    public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+
+
+
+        editor.setOtherCol((OtherCol) value);
+        return editor;
+    }
+
+    @Override
+    public Object getCellEditorValue() {
+        return editor.getOtherCol();
+    }
+
+    @Override
+    public boolean isCellEditable(EventObject anEvent) {
+        return true;
+    }
+
+    @Override
+    public boolean shouldSelectCell(EventObject anEvent) {
+        return false;
+    }
+}
+
 //
-//        return button;
-//    }
-//}
+
+
+class OtherCol {
+
+    public int numParticles;
+    public boolean isCyclic;
+
+    public OtherCol(int numParticles, boolean isCyclic) {
+        this.isCyclic = isCyclic;
+        this.numParticles = numParticles;
+    }
+}
+
+class OtherColCellPanel extends JPanel {
+
+    private static final long serialVersionUID = 1L;
+
+    private JCheckBox isCyclicCheckbox;
+    private JTextField numParticles;
+
+    OtherColCellPanel() {
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+
+
+        numParticles = new JTextField();
+        numParticles.addActionListener( (event) -> {
+            //limit input
+            try {
+                int v0 = Integer.parseInt(numParticles.getText());
+                v0 = Math.max(1, v0);
+                v0 = Math.min(v0, 10);
+                numParticles.setText(String.valueOf(v0));
+            }catch (NumberFormatException e){
+                numParticles.setText("1");
+            }
+        });
+        JLabel maxParticlesLabel = new JLabel("Max Particles (1-10)");
+        JPanel maxParticlesPanel = new JPanel();
+        maxParticlesPanel.add(maxParticlesLabel);
+        maxParticlesPanel.add(numParticles);
+        maxParticlesPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        maxParticlesPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);
+        maxParticlesPanel.setMaximumSize(new Dimension(300, 50));
+        maxParticlesPanel.setBackground(Color.LIGHT_GRAY);
+        maxParticlesPanel.setOpaque(true);
+
+        isCyclicCheckbox = new JCheckBox("is cyclic");
+        isCyclicCheckbox.setAlignmentX( Component.RIGHT_ALIGNMENT);
+
+        this.add(isCyclicCheckbox);
+        this.add(maxParticlesPanel);
+
+    }
+
+
+    public void setOtherCol(OtherCol otherCol) {
+        this.isCyclicCheckbox.setSelected(otherCol.isCyclic);
+        this.numParticles.setText(String.valueOf(otherCol.numParticles));
+    }
+
+    public OtherCol getOtherCol() {
+        return new OtherCol(Integer.parseInt(this.numParticles.getText()), this.isCyclicCheckbox.isSelected());
+    }
+}
 
 
 class MandalaRingTableModel extends AbstractTableModel {
@@ -228,7 +338,8 @@ class MandalaRingTableModel extends AbstractTableModel {
             "speed rate",
             "set path",
             "path",
-            "reset"
+            "reset",
+            "other"
 
     };
 
@@ -243,7 +354,10 @@ class MandalaRingTableModel extends AbstractTableModel {
             Integer.class,
             JButton.class,
             String.class,
-            JButton.class
+            JButton.class,
+            OtherCol.class,
+//            OtherPanel.class
+//            MandalaOtherCellData.class
     };
 
     @Override
@@ -324,15 +438,20 @@ class MandalaRingTableModel extends AbstractTableModel {
                 final JButton resetButton = new JButton("reset");
                 resetButton.addActionListener(arg0 -> {
                     System.out.println("RESET");
-                    data.get(row).setImageAnimated(data.get(row).defaultPath, true);
-                    data.get(row).customPath = "";
-                    data.get(row).customPathValid = false;
+                    SpriteDataAnimated d = data.get(row);
+                    d.setImageAnimated(d.defaultPath, true);
+                    d.customPath = "";
+                    d.customPathValid = false;
+                    d.scale = 1.0f;
+                    d.speedRate = 2;
+
 
                     this.fireTableDataChanged();
                 });
                 return resetButton;
-
-
+            case 7:
+                SpriteDataAnimated d = data.get(row);
+                return new OtherCol(d.maxNumParticles, d.isCyclic);
         }
 
         throw new IllegalArgumentException();
@@ -370,6 +489,12 @@ class MandalaRingTableModel extends AbstractTableModel {
             case 5:   // custom path
                 return;
             case 6:    //reset button clicked
+                return;
+            case 7:    // other settings
+
+                OtherCol c = (OtherCol) value;
+                data.get(row).isCyclic = c.isCyclic;
+                data.get(row).maxNumParticles = c.numParticles;
                 return;
 
 

@@ -19,9 +19,11 @@ public class SpriteDataAnimated {
     public float scale =1.0f;
     public int speedRate = 2;
     public boolean enabled=true;
-
     public String defaultPath;
     public String customPath;
+
+    public boolean isCyclic=false;
+    public int maxNumParticles=20;
 
     public boolean customPathValid = false;
 
@@ -34,12 +36,16 @@ public class SpriteDataAnimated {
 
     private boolean isAnimated = false;
 
-    public SpriteDataAnimated(boolean enabled, float scale, int speedRate, String defaultPath, String customPath) {
+    public SpriteDataAnimated(boolean enabled, float scale, int speedRate, String defaultPath, String customPath,
+                              boolean isCyclic, int maxNumParticles) {
+
         this.scale = scale;
         this.enabled = enabled;
         this.speedRate = speedRate;
         this.customPath = customPath;
         this.defaultPath = defaultPath;
+        this.isCyclic = isCyclic;
+        this.maxNumParticles = maxNumParticles;
 
         images = new ArrayList<BufferedImage>();
         previewIcons = new ArrayList<ImageIcon>();
@@ -55,13 +61,7 @@ public class SpriteDataAnimated {
 
     public void setImageAnimated(String path, boolean isResource){
         ImageIcon imageIcon;
-
-        if(images.size() != 0){
-            images = new ArrayList<BufferedImage>();
-        }
-        if(previewIcons.size() != 0){
-            previewIcons = new ArrayList<ImageIcon>();
-        }
+        Logger logger  = Logger.getLogger(ParticleSpriteLightning.class.getName());
 
 
 
@@ -87,6 +87,9 @@ public class SpriteDataAnimated {
         };
 
         if(isResource){
+            images = new ArrayList<BufferedImage>();
+            previewIcons = new ArrayList<ImageIcon>();
+
 
             // File representing the folder that you select using a FileChooser
             final File dir = new File(String.valueOf(this.getClass().getResource(path)));
@@ -113,6 +116,9 @@ public class SpriteDataAnimated {
                     }
             }
         }else{
+            ArrayList<BufferedImage> newImages = new ArrayList<BufferedImage>();
+            ArrayList<ImageIcon> newPreviewIcons = new ArrayList<ImageIcon>();
+
             final File dir = new File(path);
 
             if (dir.isDirectory()) { // make sure it's a directory
@@ -128,10 +134,10 @@ public class SpriteDataAnimated {
                         System.out.println(f.getPath());
 
                         img = ImageIO.read(f);
-                        images.add(img);
+                        newImages.add(img);
                     }
                 } catch (final IOException e) {
-                    Logger logger  = Logger.getLogger(ParticleSpriteLightning.class.getName());
+
                     logger.severe("error loading image directory: " + path);
                     setImageAnimated(this.defaultPath, true);
                     customPathValid = false;
@@ -144,10 +150,19 @@ public class SpriteDataAnimated {
                     imageIcon = new ImageIcon(f.getPath());
                     Image image = imageIcon.getImage(); // transform it
                     Image newimg = image.getScaledInstance(120, 120, Image.SCALE_SMOOTH); // scale it the smooth way
-                    previewIcon = new ImageIcon(newimg);
-                    previewIcons.add(previewIcon);
+                    newPreviewIcons.add(new ImageIcon(newimg));
                 }
-                customPathValid = true;
+
+                if(newPreviewIcons.size() == 0 || newImages.size() == 0){
+                    logger.severe("No images found in directory: " + path);
+                    customPathValid = false;
+                }else{
+                    previewIcon = newPreviewIcons.get(0);
+                    images = newImages;
+                    previewIcons = newPreviewIcons;
+                    customPathValid = true;
+                }
+
 
             }
 

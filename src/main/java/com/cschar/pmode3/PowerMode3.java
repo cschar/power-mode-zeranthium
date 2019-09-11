@@ -80,7 +80,7 @@ public class PowerMode3 implements BaseComponent,
 //    public String scrollBarPosition2 = "0";
 
     private boolean enabled = true;
-    private int shakeDistance = 5;
+    private int shakeDistance = 0;
     private int lifetime = 200;
     private int maxPsiSearchDistance = 400;  //amount of total characters searched around caret for anchors
 
@@ -102,6 +102,7 @@ public class PowerMode3 implements BaseComponent,
     //enabled,weight,defaultPath,customPath
     @com.intellij.util.xmlb.annotations.XCollection
     private ArrayList<String[]> sparkDataStringArrays = new ArrayList<String[]>(){{
+        //enabled,scale,weight,defaultPath,customPath
         add(new String[]{"true","1.0f","6","/blender/lightningAlt/spark4/0150.png",""});
         add(new String[]{"true","1.0f","30","/blender/lightningAlt/spark5/0150.png",""});
         add(new String[]{"true","1.0f","80","/blender/lightningAlt/spark6/0150.png",""});
@@ -109,10 +110,11 @@ public class PowerMode3 implements BaseComponent,
 
     @com.intellij.util.xmlb.annotations.XCollection
     private ArrayList<String[]> mandalaDataStringArrays = new ArrayList<String[]>(){{
-        add(new String[]{"true","1.0f","3","/blender/mandala1/",""});
-        add(new String[]{"true","1.0f","2","/blender/mandala2/",""});
-        add(new String[]{"true","1.0f","2","/blender/mandala3/",""});
-        add(new String[]{"true","1.0f","2","/blender/mandala5/",""});
+        //enabled, scale, speed, defaultPath, customPath, isCyclic, maxParticles
+        add(new String[]{"true","1.0f","3","/blender/mandala1/","","false","5"});
+        add(new String[]{"true","1.0f","2","/blender/mandala2/","","false","5"});
+        add(new String[]{"true","1.0f","2","/blender/mandala3/","","false","5"});
+        add(new String[]{"true","1.0f","2","/blender/mandala5/","","false","5"});
     }};
 
     //consider JSON https://stackabuse.com/reading-and-writing-json-in-java/ ??
@@ -255,7 +257,7 @@ public class PowerMode3 implements BaseComponent,
             sd.add(new SpriteData(Boolean.parseBoolean(s[0]), Float.parseFloat(s[1]), Integer.parseInt(s[2]),
                      s[3], s[4]));
         }
-        return sd.toArray(new SpriteData[sd.size()]);
+        return sd.toArray(new SpriteData[0]);
     }
 
     public void setSerializedSparkData(SpriteData[] sparkData){
@@ -274,7 +276,9 @@ public class PowerMode3 implements BaseComponent,
             sd.add(new SpriteDataAnimated(Boolean.parseBoolean(s[0]),
                                           Float.parseFloat(s[1]),
                                           Integer.parseInt(s[2]),
-                    s[3], s[4]));
+                                          s[3], s[4],
+                                          Boolean.parseBoolean(s[5]),
+                                          Integer.parseInt(s[6])));
         }
         return sd;
     }
@@ -283,7 +287,8 @@ public class PowerMode3 implements BaseComponent,
         ArrayList<String[]> serialized = new ArrayList<>();
         for( SpriteDataAnimated d: spriteData){
             serialized.add(new String[]{String.valueOf(d.enabled), String.valueOf(d.scale), String.valueOf(d.speedRate),
-                    String.valueOf(d.defaultPath), String.valueOf(d.customPath)});
+                                        String.valueOf(d.defaultPath), String.valueOf(d.customPath),
+                                        String.valueOf(d.isCyclic), String.valueOf(d.maxNumParticles)});
         }
         this.mandalaDataStringArrays = serialized;
     }

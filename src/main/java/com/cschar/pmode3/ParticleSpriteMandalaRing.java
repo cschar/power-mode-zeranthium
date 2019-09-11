@@ -48,60 +48,64 @@ public class ParticleSpriteMandalaRing extends Particle{
 
     private int randomNum;
 
-    private int maxLife;
-    private int sparkLife;
-    private float SPARK_ALPHA = 0.99f;
     private float spriteScale = 1.0f;
 
-    private static int MAX_RINGS = 20;
-    private static int CUR_RINGS = 0;
+
+    public static int[] CUR_RINGS = new int[4];
+
+    public static boolean settingEnabled = true;
 
     private int frameSpeed = 2;
-
+    private int ringIndex;
+    private String spritePath;
     private ArrayList<BufferedImage> ringSprites;
 
     public ParticleSpriteMandalaRing(int x, int y, int dx, int dy,
                                      int size, int life, int ringIndex) {
         super(x,y,dx,dy,size,life,Color.GREEN);
 
+        this.ringIndex = ringIndex;
         this.maxAlpha = 1.0f;
-        this.maxLife = life;
-        this.sparkLife = life;
         cursorX = x;
         cursorY = y;
         randomNum = ThreadLocalRandom.current().nextInt(1, 100 +1);
-        CUR_RINGS += 1;
-        if(CUR_RINGS > MAX_RINGS){
-            this.life = 0;
-        }
-        this.frameSpeed = ParticleSpriteMandalaRing.mandalaRingData.get(ringIndex).speedRate;
-        this.spriteScale = ParticleSpriteMandalaRing.mandalaRingData.get(ringIndex).scale;
 
-        int enabled = 0;
-        for(int i = 0; i < mandalaRingData.size(); i++){
-            //TODO: Kill outside before constructing object with static ring data
-            SpriteDataAnimated d = mandalaRingData.get(i);
+        CUR_RINGS[ringIndex] += 1;
 
-            if(!d.enabled && ringIndex == i){
-                this.life = 0;
-            }
-            if(d.enabled){
-                enabled++;
-            }
-        }
+        this.frameSpeed = mandalaRingData.get(ringIndex).speedRate;
+        this.spriteScale = mandalaRingData.get(ringIndex).scale;
+        this.spritePath = mandalaRingData.get(ringIndex).customPath;
 
         ringSprites = mandalaRingData.get(ringIndex).images;
         sprite = ringSprites.get(0);
 
+
     }
 
     public boolean update() {
+        if(!settingEnabled){ //added to kill any lingering particles
+            CUR_RINGS[ringIndex] -= 1;
+            return true;
+        }
         x += dx;
         y += dy;
         life--;
-        if(life <= 0) CUR_RINGS -= 1;
+        boolean check = (life <= 0);
 
-        return life <= 0;
+        if(check) {
+            if (mandalaRingData.get(ringIndex).isCyclic) {
+                if(!mandalaRingData.get(ringIndex).customPath.equals(this.spritePath)){
+                    //we've changed the sprites being cycled, so kill this particle
+                    CUR_RINGS[ringIndex] -= 1;
+                    return true;
+                }
+                life = 99;
+                return false;
+            } else {
+                CUR_RINGS[ringIndex] -= 1;
+            }
+        }
+        return check;
     }
 
 
@@ -185,7 +189,7 @@ public class ParticleSpriteMandalaRing extends Particle{
             g2d.drawImage(ringSprites.get(frame), at, null);
 
             g2d.setColor(Color.ORANGE);
-            g2d.drawString(String.format("RINGS %d", CUR_RINGS), cursorX - 20, cursorY - 30);
+            g2d.drawString(String.format("%d-RINGS %d",ringIndex, CUR_RINGS[ringIndex]), cursorX - 20, cursorY - 30*(ringIndex+1));
 
 
 

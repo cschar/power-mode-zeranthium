@@ -115,19 +115,19 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 //        settings.setBasicParticleEnabled(enableBasicParticleCheckBox.isSelected());
         settings.setSpriteTypeEnabled(enableBasicParticleCheckBox.isSelected(), PowerMode3.SpriteType.BASIC_PARTICLE);
 
-        //lightning
+
         settings.setSpriteTypeEnabled(enableLightningCheckBox.isSelected(), PowerMode3.SpriteType.LIGHTNING);
         settings.setSpriteTypeEnabled(lightningAltCheckBox.isSelected(), PowerMode3.SpriteType.LIGHTNING_ALT);
-        //lizard
+
         settings.setSpriteTypeEnabled(enableLizardCheckBox.isSelected(), PowerMode3.SpriteType.LIZARD);
-        //MOMA
+
         settings.setSpriteTypeEnabled(enableMOMACheckBox.isSelected(), PowerMode3.SpriteType.MOMA);
 
-        //Vine
+
         settings.setSpriteTypeEnabled(enableVineCheckBox.isSelected(), PowerMode3.SpriteType.VINE);
 
         settings.setSpriteTypeEnabled(enableMandalaCheckbox.isSelected(), PowerMode3.SpriteType.MANDALA);
-
+        ParticleSpriteMandalaRing.settingEnabled = enableMandalaCheckbox.isSelected(); //to kill any lingering ones
 
 
 
