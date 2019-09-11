@@ -92,14 +92,37 @@ public class ParticleSpriteMandalaRing extends Particle{
         life--;
         boolean check = (life <= 0);
 
-        if(check) {
+        if(check) { //ready to reset?
             if (mandalaRingData.get(ringIndex).isCyclic) {
+
+                //If entire plugin is turned off
+                if(!PowerMode3.getInstance().isEnabled()){
+                    CUR_RINGS[ringIndex] -= 1;
+                    return true;
+                }
+
+                if(!mandalaRingData.get(ringIndex).enabled){
+                    CUR_RINGS[ringIndex] -= 1;
+                    return true;
+                }
+
                 if(!mandalaRingData.get(ringIndex).customPath.equals(this.spritePath)){
                     //we've changed the sprites being cycled, so kill this particle
                     CUR_RINGS[ringIndex] -= 1;
                     return true;
                 }
-                life = 99;
+
+
+                //num particles changed?
+                if( CUR_RINGS[ringIndex] > mandalaRingData.get(ringIndex).maxNumParticles){
+                    CUR_RINGS[ringIndex] -= 1;
+                    return true;
+                }
+
+                //cyclic: reset next cycle , if changed in config
+                this.frameSpeed = mandalaRingData.get(ringIndex).speedRate;
+                this.spriteScale = mandalaRingData.get(ringIndex).scale;
+                this.life = 99;
                 return false;
             } else {
                 CUR_RINGS[ringIndex] -= 1;
@@ -117,59 +140,13 @@ public class ParticleSpriteMandalaRing extends Particle{
     @Override
     public void render(Graphics g) {
 
+
         if (life > 0) {
             Graphics2D g2d = (Graphics2D) g.create();
             g2d.setColor(c);
 
 
-//            if(makeSparks){
-//                if(life > 50) {
-//
-//                    if(SPARK_ALPHA > 0.9){
-//                        SPARK_ALPHA -= 0.01f;
-////                        SPARK_ALPHA -= 0.02f;
-//                    }else{
-////                        SPARK_ALPHA -= 0.02f;
-//                        SPARK_ALPHA -= 0.04f;
-//                    }
-//
-//                    if(SPARK_ALPHA < 0){
-//                        SPARK_ALPHA = 0.0f;
-//                    }
-//                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, SPARK_ALPHA));
-//
-//                    // define spread CC (+'ve) then reverse -'ve so its centered over caret
-//                    AffineTransform at;  // -'ve ---> CC
-//                    double arcSpace = (randomNum / 100.0)*(Math.PI*0.5) - (Math.PI/2)*0.6;
-//
-//
-//
-//                    at = new AffineTransform();
-////                  at.scale(0.5, 0.5);
-////                  at.translate((int) origX * 2, (int) origY * 2);
-//                    at.scale(this.spriteScale, this.spriteScale);
-//                    at.translate((int) origX * (1/this.spriteScale), (int) origY * (1/this.spriteScale));
-//
-//                    // -'ve radians ---> rotate counter clockwise ...
-//                    at.rotate((arcSpace));
-//                    at.translate((-tmpSprite.getWidth() / 2.0),
-//                            (-tmpSprite.getHeight())); //move image 100% up so lightning lands at bottom
-//
-//                    g2d.drawImage(tmpSprite, at, null);
-//
-//
-//
-
-//
-//                }
-//            }
-
-
-
             AffineTransform at = new AffineTransform();
-
-//            at.translate((int)cursorX ,(int)cursorY );
-
             at.scale(this.spriteScale, this.spriteScale);
             at.translate((int) cursorX * (1/this.spriteScale), (int) cursorY * (1/this.spriteScale));
 
@@ -188,8 +165,8 @@ public class ParticleSpriteMandalaRing extends Particle{
             }
             g2d.drawImage(ringSprites.get(frame), at, null);
 
-            g2d.setColor(Color.ORANGE);
-            g2d.drawString(String.format("%d-RINGS %d",ringIndex, CUR_RINGS[ringIndex]), cursorX - 20, cursorY - 30*(ringIndex+1));
+//            g2d.setColor(Color.ORANGE);
+//            g2d.drawString(String.format("%d-RINGS %d",ringIndex, CUR_RINGS[ringIndex]), cursorX - 20, cursorY - 30*(ringIndex+1));
 
 
 

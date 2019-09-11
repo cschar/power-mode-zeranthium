@@ -123,10 +123,10 @@ public class LizardConfig extends JPanel {
         this.maxPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LIZARD,"maxPsiSearchDistance", 300)));
         this.minPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LIZARD,"minPsiSearchDistance", 100)));
 
-        this.chancePerKeyPressTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LIZARD,"chancePerKeyPress")));
-        this.chanceOfSpawnTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LIZARD,"chanceOfSpawn")));
+        this.chancePerKeyPressTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LIZARD,"chancePerKeyPress", 100)));
+        this.chanceOfSpawnTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LIZARD,"chanceOfSpawn", 100)));
 
-        this.maxAnchorsToUse.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LIZARD,"maxAnchorsToUse", 1)));
+        this.maxAnchorsToUse.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LIZARD,"maxAnchorsToUse", 10)));
 
     }
 

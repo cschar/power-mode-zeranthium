@@ -64,6 +64,11 @@ public class ParticleContainer extends JComponent implements ComponentListener {
     }
 
     public void updateParticles() {
+//        if(!PowerMode3.getInstance().isEnabled()){
+//            particles.clear();
+//            return;
+//        }
+
         if (!particles.isEmpty()) {
 //            ArrayList<Particle> tempParticles = new ArrayList<>(particles);
 //            final Iterator<Particle> particleIterator = tempParticles.iterator();

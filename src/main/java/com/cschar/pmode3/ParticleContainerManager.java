@@ -77,7 +77,7 @@ class ParticleContainerManager extends EditorFactoryAdapter {
 
     public void update(final Editor editor, PsiFile psiFile) {
 
-        if (PowerMode3.getInstance().isEnabled())
+        if (PowerMode3.getInstance().isEnabled()) {
             SwingUtilities.invokeLater(new Runnable() {
 
                 @Override
@@ -85,6 +85,7 @@ class ParticleContainerManager extends EditorFactoryAdapter {
                     updateInUI(editor, psiFile);
                 }
             });
+        }
     }
 
     private void updateInUI(Editor editor, PsiFile psiFile) {

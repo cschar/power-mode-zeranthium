@@ -112,9 +112,9 @@ public class PowerMode3 implements BaseComponent,
     private ArrayList<String[]> mandalaDataStringArrays = new ArrayList<String[]>(){{
         //enabled, scale, speed, defaultPath, customPath, isCyclic, maxParticles
         add(new String[]{"true","1.0f","3","/blender/mandala1/","","false","5"});
-        add(new String[]{"true","1.0f","2","/blender/mandala2/","","false","5"});
-        add(new String[]{"true","1.0f","2","/blender/mandala3/","","false","5"});
-        add(new String[]{"true","1.0f","2","/blender/mandala5/","","false","5"});
+        add(new String[]{"true","1.0f","2","/blender/mandala2/","","true","2"});
+        add(new String[]{"true","1.0f","2","/blender/mandala3/","","true","3"});
+        add(new String[]{"true","1.2f","4","/blender/mandala9/","","false","5"});
     }};
 
     //consider JSON https://stackabuse.com/reading-and-writing-json-in-java/ ??
