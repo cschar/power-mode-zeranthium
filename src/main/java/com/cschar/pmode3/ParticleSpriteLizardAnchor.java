@@ -17,19 +17,17 @@
 
 package com.cschar.pmode3;
 
+import com.cschar.pmode3.config.SpriteData;
+import com.cschar.pmode3.config.SpriteDataAnimated;
 import org.imgscalr.Scalr;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.awt.image.WritableRaster;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.logging.Logger;
 
 public class ParticleSpriteLizardAnchor extends Particle{
 
@@ -37,23 +35,9 @@ public class ParticleSpriteLizardAnchor extends Particle{
 
 
 
+    public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
 
-    static ArrayList<BufferedImage> sprites;
-
-    static {
-
-        sprites = new ArrayList<BufferedImage>();
-        for(int i=1; i <= 10; i++){
-            BufferedImage tmp = ParticleUtils.loadSprite(String.format("/blender/lizard/0%03d.png", i));
-            BufferedImage resized_image =  Scalr.resize(tmp, Scalr.Method.BALANCED,
-                    tmp.getWidth()/3, tmp.getHeight()/3);
-            sprites.add(resized_image);
-
-        }
-        System.out.println("LizardSprites initialized");
-
-
-    }
+    static {}
 
 
     int anchorX;
@@ -73,29 +57,40 @@ public class ParticleSpriteLizardAnchor extends Particle{
 
     private int anchorIndex;
     private BufferedImage sprite;
-
+    private ArrayList<BufferedImage> lizardSprites;
+    private float scale=1.0f;
+    private float alpha=1.0f;
 
     public ParticleSpriteLizardAnchor(int x, int y, int dx, int dy, int anchorIndex, int size, int life, Color c,
                                       Anchor[] anchors, ConcurrentLinkedQueue<Particle> parentList) {
         super(x,y,dx,dy,size,life,c);
-        sprite = sprites.get(0);
+
 
         this.anchors = anchors;
         this.parentList = parentList;
-
         this.anchorIndex = anchorIndex;
 
         this.maxLife = life;
         this.anchorX = anchors[anchorIndex].p.x;
         this.anchorY = anchors[anchorIndex].p.y;
-//        this.anchorX = anchorX;
-//        this.anchorY = anchorY;
+
         this.initialX = x;
         this.initialY = y;
 
         this.dir2anchorX = ((anchorX - initialX)/70);
         this.dir2anchorY = (anchorY - initialY)/70;
 
+
+        int winnerIndex = SpriteData.getWeightedAmountWinningIndex(spriteDataAnimated);
+        if(winnerIndex == -1) {
+            this.life = 0; // no sprites are enabled
+        }else {
+
+            this.scale = spriteDataAnimated.get(winnerIndex).scale;
+            this.alpha = spriteDataAnimated.get(winnerIndex).alpha;
+            lizardSprites = spriteDataAnimated.get(winnerIndex).images;
+            sprite = lizardSprites.get(winnerIndex);
+        }
 
     }
 
@@ -206,16 +201,25 @@ public class ParticleSpriteLizardAnchor extends Particle{
 
             AffineTransform at = new AffineTransform();
 
-            at.translate(x , y );
+            at.scale(scale, scale);
+            at.translate((int) x * (1/scale), (int) y * (1/scale));
+
+//            at.translate(-sprite.getWidth()/2,
+//                    -sprite.getHeight()/2 - 15); //around bracket height
             at.translate(-sprite.getWidth()/2,
-                    -sprite.getHeight()/2 - 15); // around bracket height
+                    -sprite.getHeight()/2 - sprite.getHeight()/7); //around bracket height
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.alpha));
+
+//            at.translate(x , y );
+//            at.translate(-sprite.getWidth()/2,
+//                    -sprite.getHeight()/2 - 15); // around bracket height
 
 
             //every X updates, increment frame, this controls how fast it animates
             if( this.life % 3 == 0){
                 frame += frameDir;
-                if (frame >= 10) {
-                    frame = 9;
+                if (frame >= lizardSprites.size()) {
+                    frame = lizardSprites.size() - 1;
                 }else if(frame < 0){
                     frame = 0;
                 }
@@ -226,23 +230,12 @@ public class ParticleSpriteLizardAnchor extends Particle{
                 at.translate(-1*sprite.getWidth(), 0);  //* -1 now actually sends it RIght on screen
             }
 
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
-            g2d.drawImage(sprites.get(frame), at, null);
+
+            g2d.drawImage(lizardSprites.get(frame), at, null);
 
             g2d.dispose();
         }
     }
 
-    @Override
-    public String toString() {
-        return "Particle{" +
-                "x=" + x +
-                ", y=" + y +
-                ", dx=" + dx +
-                ", dy=" + dy +
-                ", size=" + size +
-                ", life=" + life +
-                ", c=" + c +
-                '}';
-    }
+
 }

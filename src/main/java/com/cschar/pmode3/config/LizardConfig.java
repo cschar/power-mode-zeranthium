@@ -1,5 +1,6 @@
 package com.cschar.pmode3.config;
 
+import com.cschar.pmode3.ParticleSpriteLizardAnchor;
 import com.cschar.pmode3.PowerMode3;
 import com.cschar.pmode3.config.common.JTableButtonMouseListener;
 import com.cschar.pmode3.config.common.JTableButtonRenderer;
@@ -192,7 +193,8 @@ public class LizardConfig extends JPanel {
         table.getColumn("reset").setCellRenderer(buttonRenderer);
         table.addMouseListener(new JTableButtonMouseListener(table));
 
-        TableCellRenderer pathRenderer = new MandalaCustomPathCellHighlighterRenderer();
+        //TODO: refactor to pass in dataset to work with
+        TableCellRenderer pathRenderer = new LizardCustomPathCellHighlighterRenderer();
         table.getColumn("path").setCellRenderer(pathRenderer);
 
 
@@ -245,6 +247,8 @@ public class LizardConfig extends JPanel {
                 "max anchors to use when spawning lizards");
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.LIZARD, "maxAnchorsToUse",
                 String.valueOf(maxAnchorsToUse));
+
+        settings.setSerializedSpriteDataAnimated(LizardConfig.spriteDataAnimated, PowerMode3.SpriteType.LIZARD);
     }
 
 
@@ -272,7 +276,7 @@ public class LizardConfig extends JPanel {
 
     public static void setSpriteDataAnimated(ArrayList<SpriteDataAnimated> data){
         spriteDataAnimated = data;
-//        ParticleSpriteMandalaRing.mandalaRingData = data;
+        ParticleSpriteLizardAnchor.spriteDataAnimated = data;
     }
 }
 
@@ -480,6 +484,8 @@ class LizardTableModel extends AbstractTableModel {
             case 7:    // other settings
 
                 float alpha = (Float) value;
+                alpha = Math.max(0.0f, alpha);
+                alpha = Math.min(alpha,1.0f);
                 data.get(row).alpha = alpha;
                 return;
 

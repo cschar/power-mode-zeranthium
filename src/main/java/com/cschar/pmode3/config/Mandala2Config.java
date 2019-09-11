@@ -1,6 +1,6 @@
 package com.cschar.pmode3.config;
 
-import com.cschar.pmode3.ParticleSpriteMandalaRing;
+import com.cschar.pmode3.ParticleSpriteMandala;
 import com.cschar.pmode3.PowerMode3;
 import com.cschar.pmode3.config.common.JTableButtonMouseListener;
 import com.cschar.pmode3.config.common.JTableButtonRenderer;
@@ -131,7 +131,7 @@ public class Mandala2Config extends JPanel{
     }
 
     public void saveValues() throws ConfigurationException {
-        settings.setSerializedSpriteDataAnimated(Mandala2Config.mandalaData);
+        settings.setSerializedSpriteDataAnimated(Mandala2Config.mandalaData, PowerMode3.SpriteType.MANDALA);
     }
 
 
@@ -139,7 +139,7 @@ public class Mandala2Config extends JPanel{
 
     public static void setSpriteDataAnimated(ArrayList<SpriteDataAnimated> data){
         mandalaData = data;
-        ParticleSpriteMandalaRing.mandalaRingData = data;
+        ParticleSpriteMandala.mandalaRingData = data;
     }
 }
 

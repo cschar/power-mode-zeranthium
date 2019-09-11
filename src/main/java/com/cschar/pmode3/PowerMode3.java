@@ -99,8 +99,9 @@ public class PowerMode3 implements BaseComponent,
     @com.intellij.util.xmlb.annotations.XCollection
     private ArrayList<String[]> lizardDataStringArrays = new ArrayList<String[]>(){{
         //enabled, scale, speed, defaultPath, customPath, isCyclic, maxParticles, alpha, weightedAmount
-        add(new String[]{"true","1.0f","2","/blender/lizard","", "false","1","1.0f","10"});
-        add(new String[]{"true","1.0f","2","/blender/lizard","", "false","1","1.0f","10"});
+        add(new String[]{"true","0.4f","2","/blender/lizard","", "false","1","1.0f","2"});
+        add(new String[]{"true","0.6f","2","/blender/lizard2","", "false","1","1.0f","2"});
+        add(new String[]{"true","0.2f","2","/blender/lizard","", "false","1","1.0f","10"});
     }};
 
     @com.intellij.util.xmlb.annotations.XCollection
@@ -290,7 +291,7 @@ public class PowerMode3 implements BaseComponent,
         return sd;
     }
 
-    public void setSerializedSpriteDataAnimated(ArrayList<SpriteDataAnimated> spriteData){
+    public void setSerializedSpriteDataAnimated(ArrayList<SpriteDataAnimated> spriteData, PowerMode3.SpriteType type){
         ArrayList<String[]> serialized = new ArrayList<>();
         for( SpriteDataAnimated d: spriteData){
             serialized.add(new String[]{String.valueOf(d.enabled), String.valueOf(d.scale), String.valueOf(d.speedRate),
@@ -298,7 +299,11 @@ public class PowerMode3 implements BaseComponent,
                                         String.valueOf(d.isCyclic), String.valueOf(d.maxNumParticles),
                                         String.valueOf(d.alpha), String.valueOf(d.weightedAmount)});
         }
-        this.mandalaDataStringArrays = serialized;
+        if(type == SpriteType.MANDALA) {
+            this.mandalaDataStringArrays = serialized;
+        }else if(type == SpriteType.LIZARD){
+            this.lizardDataStringArrays = serialized;
+        }
     }
 
     @Override

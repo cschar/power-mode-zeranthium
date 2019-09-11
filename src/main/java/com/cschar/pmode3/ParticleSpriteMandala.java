@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 
-public class ParticleSpriteMandalaRing extends Particle{
+public class ParticleSpriteMandala extends Particle{
 
 
     static {
@@ -60,8 +60,8 @@ public class ParticleSpriteMandalaRing extends Particle{
     private String spritePath;
     private ArrayList<BufferedImage> ringSprites;
 
-    public ParticleSpriteMandalaRing(int x, int y, int dx, int dy,
-                                     int size, int life, int ringIndex) {
+    public ParticleSpriteMandala(int x, int y, int dx, int dy,
+                                 int size, int life, int ringIndex) {
         super(x,y,dx,dy,size,life,Color.GREEN);
 
         this.ringIndex = ringIndex;

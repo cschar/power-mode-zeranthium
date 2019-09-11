@@ -24,6 +24,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 
@@ -39,6 +40,7 @@ public class ParticleSpriteLightningAlt extends Particle{
         System.out.println("LightningSprites initialized");
     }
 
+    //TODO make arraylist
     public static SpriteData[] sparkData;
     private BufferedImage sprite;
 
@@ -72,39 +74,12 @@ public class ParticleSpriteLightningAlt extends Particle{
         //arhghrgh my eyes!!!
         this.makeSparks = sparksEnabled;
 
-        int enabled = 0;
-        for(SpriteData d : sparkData){
-            if(d.enabled){
-                enabled++;
-            }
-        }
 
-        if(enabled == 0){
+        int winnerIndex = SpriteData.getWeightedAmountWinningIndex(Arrays.asList(sparkData));
+
+        if(winnerIndex == -1){
             this.makeSparks = false;
-        }else { //get winning sprite to render based on weights
-            int sumWeight = 0;
-            for(SpriteData d: sparkData){
-                    if(d.enabled){
-                        sumWeight += d.weightedAmount;
-                    }
-            }
-
-            int weightChance = ThreadLocalRandom.current().nextInt(0, sumWeight);
-
-            int winnerIndex = 0;
-            int limit = 0;
-            for(SpriteData d: sparkData){
-                if(d.enabled){
-                    limit += d.weightedAmount;
-                    if(weightChance <= limit){
-                        break;
-                    }
-                }
-                winnerIndex += 1;
-            }
-            if(winnerIndex == sparkData.length){
-                winnerIndex--;
-            }
+        }else {
             tmpSprite = sparkData[winnerIndex].image;
             this.spriteScale = sparkData[winnerIndex].scale;
         }

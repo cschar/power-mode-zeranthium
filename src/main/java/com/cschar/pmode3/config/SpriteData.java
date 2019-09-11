@@ -9,6 +9,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Logger;
 
 public class SpriteData {
@@ -75,5 +77,34 @@ public class SpriteData {
             }
         }
         return false;
+    }
+
+
+    public static int getWeightedAmountWinningIndex(Collection<? extends SpriteData> spriteData){
+        int sumWeight = 0;
+        for(SpriteData d: spriteData){
+            if(d.enabled){
+                sumWeight += d.weightedAmount;
+            }
+        }
+        if(sumWeight == 0){ return -1; }
+
+        int weightChance = ThreadLocalRandom.current().nextInt(0, sumWeight);
+        //roll random chance between 0-->w1+w2+...wn
+//       |--- w1-- | -------- weight 2 ------ | --X---- weight 3 --|
+        int winnerIndex = -1;
+        int limit = 0;
+        for(SpriteData d: spriteData){
+            winnerIndex += 1;
+            if(d.enabled){
+                limit += d.weightedAmount;
+                if(weightChance <= limit){ //we've found the winner
+                    break;
+                }
+            }
+
+        }
+        return winnerIndex;
+
     }
 }

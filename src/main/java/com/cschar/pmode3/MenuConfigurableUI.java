@@ -3,7 +3,6 @@ package com.cschar.pmode3;
 import com.cschar.pmode3.config.*;
 import com.intellij.openapi.options.ConfigurableUi;
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
 import org.jetbrains.annotations.NotNull;
 
@@ -127,7 +126,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         settings.setSpriteTypeEnabled(enableVineCheckBox.isSelected(), PowerMode3.SpriteType.VINE);
 
         settings.setSpriteTypeEnabled(enableMandalaCheckbox.isSelected(), PowerMode3.SpriteType.MANDALA);
-        ParticleSpriteMandalaRing.settingEnabled = enableMandalaCheckbox.isSelected(); //to kill any lingering ones
+        ParticleSpriteMandala.settingEnabled = enableMandalaCheckbox.isSelected(); //to kill any lingering ones
 
 
 

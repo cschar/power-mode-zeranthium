@@ -108,19 +108,19 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
         if(settings.getSpriteTypeEnabled(PowerMode3.SpriteType.MANDALA)){
             //update static value for all other rings still spawned.
-            ParticleSpriteMandalaRing.cursorX = x;
-            ParticleSpriteMandalaRing.cursorY = y;
-            for(int i = 0; i <ParticleSpriteMandalaRing.mandalaRingData.size(); i++){
+            ParticleSpriteMandala.cursorX = x;
+            ParticleSpriteMandala.cursorY = y;
+            for(int i = 0; i < ParticleSpriteMandala.mandalaRingData.size(); i++){
 
-                SpriteDataAnimated d = ParticleSpriteMandalaRing.mandalaRingData.get(i);
-                if (ParticleSpriteMandalaRing.CUR_RINGS[i] >= d.maxNumParticles){
+                SpriteDataAnimated d = ParticleSpriteMandala.mandalaRingData.get(i);
+                if (ParticleSpriteMandala.CUR_RINGS[i] >= d.maxNumParticles){
                     continue;
                 }
 
                 if(!d.enabled) continue;
 
 
-                final ParticleSpriteMandalaRing e = new ParticleSpriteMandalaRing(x,y,dx,dy,size,lifeSetting, i);
+                final ParticleSpriteMandala e = new ParticleSpriteMandala(x,y,dx,dy,size,lifeSetting, i);
                 particles.add(e);
             }
         }
