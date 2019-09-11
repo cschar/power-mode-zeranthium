@@ -2,7 +2,7 @@
 
 TODO: everything
 - hotkey to activate (bonus: configurable?)
-- Void / Mandala fade in when typing (max 3-4 layers as typing increases)
+
 - Mandala Chains based off Vine
 - Fiddle heads
 ```
@@ -17,13 +17,18 @@ TODO: everything
  x
  ```
 - glyph chain (3-4 glyph thing) (gold)
+   -  each keypress moves animation 1 frame
+      - horse running
+      - 
 - TOKEN callout with decoration above
+- 36daysofType callout 
 
 
 Done;
 - vines
 - lizards
 - lightning sparks
+- Void / Mandala  (max 3-4 layers as typing increases)
 
 future TODO:
 - code explorer (e.g. wave collapse for dungeon background)

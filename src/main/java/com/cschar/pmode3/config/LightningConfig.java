@@ -93,14 +93,9 @@ public class LightningConfig extends JPanel {
 
 
     public void loadValues(){
-        String chanceOfLightning = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "chanceOfLightning");
-        if(chanceOfLightning != null){
-            this.chanceOfLightningTextField.setText(chanceOfLightning);
-        }else{
-            this.chanceOfLightningTextField.setText("0");
-        }
-
-
+        this.chanceOfLightningTextField.setText(String.valueOf(
+                Config.getIntProperty(settings, PowerMode3.SpriteType.LIGHTNING,"chanceOfLightning",
+                        100)));
 
         String isInnerBeamEnabled = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "innerBeamEnabled");
         if(isInnerBeamEnabled != null){

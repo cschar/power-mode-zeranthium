@@ -100,7 +100,7 @@ public class PowerMode3 implements BaseComponent,
     private ArrayList<String[]> lizardDataStringArrays = new ArrayList<String[]>(){{
         //enabled, scale, speed, defaultPath, customPath, isCyclic, maxParticles, alpha, weightedAmount
         add(new String[]{"true","0.4f","2","/blender/lizard","", "false","1","1.0f","2"});
-        add(new String[]{"true","0.6f","2","/blender/lizard2","", "false","1","1.0f","2"});
+        add(new String[]{"true","0.6f","2","/blender/lizard2","", "false","1","0.6f","2"});
         add(new String[]{"true","0.2f","2","/blender/lizard","", "false","1","1.0f","10"});
     }};
 

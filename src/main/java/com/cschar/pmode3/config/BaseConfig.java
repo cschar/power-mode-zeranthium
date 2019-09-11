@@ -77,7 +77,7 @@ public abstract class BaseConfig extends JPanel {
 
     public void loadValues(){
         this.maxAlphaTextField.setText(String.valueOf(Config.getFloatProperty(settings, spriteType,"maxAlpha", 1.0f)));
-        this.chancePerKeyPressTextField.setText(String.valueOf(Config.getIntProperty(settings, spriteType,"chancePerKeyPress")));
+        this.chancePerKeyPressTextField.setText(String.valueOf(Config.getIntProperty(settings, spriteType,"chancePerKeyPress", 100)));
 
     }
 

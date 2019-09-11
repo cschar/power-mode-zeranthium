@@ -195,12 +195,10 @@ public class ParticleSpriteLizardAnchor extends Particle{
 
         if (life > 0) {
             Graphics2D g2d = (Graphics2D) g.create();
-            //g2d.setColor(c);
-            //g2d.fillRect(origX - (size / 2), origY - (size / 2), size, size);
+
 
 
             AffineTransform at = new AffineTransform();
-
             at.scale(scale, scale);
             at.translate((int) x * (1/scale), (int) y * (1/scale));
 
@@ -209,10 +207,6 @@ public class ParticleSpriteLizardAnchor extends Particle{
             at.translate(-sprite.getWidth()/2,
                     -sprite.getHeight()/2 - sprite.getHeight()/7); //around bracket height
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.alpha));
-
-//            at.translate(x , y );
-//            at.translate(-sprite.getWidth()/2,
-//                    -sprite.getHeight()/2 - 15); // around bracket height
 
 
             //every X updates, increment frame, this controls how fast it animates
