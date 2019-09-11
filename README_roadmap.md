@@ -2,7 +2,13 @@
 
 TODO: everything
 - hotkey to activate (bonus: configurable?)
-
+-  download assets button in settings (RED !)
+   -  opens dialog pointing to isntructions to clone
+   -  dialog then asks user to locate download location on drive
+   -  once location is set, change to big green checkmark
+   - Config panels can load a 'pack' of images if this location is set
+      - e.g. load a 'plant growing' theme 
+      
 - Mandala Chains based off Vine
 - Fiddle heads
 ```

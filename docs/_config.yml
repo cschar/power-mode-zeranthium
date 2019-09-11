@@ -1,0 +1,31 @@
+#theme: jekyll-theme-merlot
+
+# https://github.com/jekyll/minima/tree/master/_layouts
+theme: minima
+
+#fancier
+# https://github.com/mmistakes/minimal-mistakes
+
+title: Powermode - Zeranthium
+description: IntelliJ Plugin to keep it weird
+
+pages:
+  - about.md
+
+
+header_pages:
+  - about.md
+  - entho.html
+
+disqus:
+    shortname: disqus_FCVoWPUQuI
+
+#
+#google_analytics: UA-NNNNNNNN-N
+
+show_excerpts: true           
+
+# https://pages.github.com/versions/
+gems:
+  - jekyll-octicons
+
