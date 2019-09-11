@@ -2,12 +2,13 @@ package com.cschar.pmode3.config;
 
 import com.cschar.pmode3.ParticleSpriteLightningAlt;
 import com.cschar.pmode3.PowerMode3;
+import com.cschar.pmode3.config.common.JTableButtonMouseListener;
+import com.cschar.pmode3.config.common.JTableButtonRenderer;
 import com.intellij.openapi.fileChooser.*;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
-import com.intellij.util.ui.JBUI;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -15,8 +16,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class LightningAltConfig extends BaseConfig {
 
@@ -165,39 +164,6 @@ public class LightningAltConfig extends BaseConfig {
     }
 }
 
-class JTableButtonRenderer implements TableCellRenderer {
-    @Override public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        JButton button = (JButton)value;
-        button.setBackground(Color.lightGray);
-        button.setBorder(JBUI.Borders.empty(20,2));
-
-        return button;
-    }
-}
-
-
-
-class JTableButtonMouseListener extends MouseAdapter {
-    private final JTable table;
-
-    public JTableButtonMouseListener(JTable table) {
-        this.table = table;
-    }
-
-    public void mouseClicked(MouseEvent e) {
-        int column = table.getColumnModel().getColumnIndexAtX(e.getX()); // get the coloum of the button
-        int row    = e.getY()/table.getRowHeight(); //get the row of the button
-
-        /*Checking the row or column is valid or not*/
-        if (row < table.getRowCount() && row >= 0 && column < table.getColumnCount() && column >= 0) {
-            Object value = table.getValueAt(row, column);
-            if (value instanceof JButton) {
-                /*perform a click event*/
-                ((JButton)value).doClick();
-            }
-        }
-    }
-}
 
 class CustomPathCellHighlighterRenderer extends JLabel implements TableCellRenderer {
 
@@ -209,9 +175,6 @@ class CustomPathCellHighlighterRenderer extends JLabel implements TableCellRende
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         String val = (String)value;
         Color c;
-
-
-
 
         if (SparksTableModel.data[row].customPathValid) {
 //            c = Color.WHITE;

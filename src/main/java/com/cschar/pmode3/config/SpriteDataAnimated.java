@@ -15,40 +15,30 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
-public class SpriteDataAnimated {
-    public float scale =1.0f;
-    public int speedRate = 2;
-    public boolean enabled=true;
-    public String defaultPath;
-    public String customPath;
+public class SpriteDataAnimated  extends SpriteData{
 
+    public int speedRate = 2;
     public boolean isCyclic=false;
     public int maxNumParticles=20;
 
-    public boolean customPathValid = false;
+    public int previewSize=60;
 
+    public ArrayList<BufferedImage> images = new ArrayList<>();
+    public ArrayList<ImageIcon> previewIcons = new ArrayList<>();
 
-    public ImageIcon previewIcon;
+    public float alpha =1.0f;
 
+    public SpriteDataAnimated(int previewSize, boolean enabled, float scale, int speedRate, String defaultPath, String customPath,
+                              boolean isCyclic, int maxNumParticles, float alpha, int weightedAmount) {
+        super(enabled, scale, weightedAmount, "", "");
 
-    public ArrayList<BufferedImage> images;
-    public ArrayList<ImageIcon> previewIcons;
-
-    private boolean isAnimated = false;
-
-    public SpriteDataAnimated(boolean enabled, float scale, int speedRate, String defaultPath, String customPath,
-                              boolean isCyclic, int maxNumParticles) {
-
-        this.scale = scale;
-        this.enabled = enabled;
-        this.speedRate = speedRate;
-        this.customPath = customPath;
+        this.previewSize = previewSize;
         this.defaultPath = defaultPath;
+        this.customPath = customPath;
+        this.speedRate = speedRate;
         this.isCyclic = isCyclic;
         this.maxNumParticles = maxNumParticles;
-
-        images = new ArrayList<BufferedImage>();
-        previewIcons = new ArrayList<ImageIcon>();
+        this.alpha = alpha;
 
         if(customPath == ""){
             setImageAnimated(defaultPath, true);
@@ -58,6 +48,7 @@ public class SpriteDataAnimated {
         }
 
     }
+
 
     public void setImageAnimated(String path, boolean isResource){
         ImageIcon imageIcon;
@@ -107,7 +98,7 @@ public class SpriteDataAnimated {
                     imageIcon = new ImageIcon(imageURL);
 
                     Image image = imageIcon.getImage(); // transform it
-                    Image newimg = image.getScaledInstance(120, 120, Image.SCALE_SMOOTH); // scale it the smooth way
+                    Image newimg = image.getScaledInstance(previewSize, previewSize, Image.SCALE_SMOOTH); // scale it the smooth way
                     previewIcon = new ImageIcon(newimg);
                     this.previewIcons.add(previewIcon);
                     BufferedImage loadedImage = ParticleUtils.loadSprite(tmpPath);
@@ -149,7 +140,7 @@ public class SpriteDataAnimated {
 
                     imageIcon = new ImageIcon(f.getPath());
                     Image image = imageIcon.getImage(); // transform it
-                    Image newimg = image.getScaledInstance(120, 120, Image.SCALE_SMOOTH); // scale it the smooth way
+                    Image newimg = image.getScaledInstance(previewSize, previewSize, Image.SCALE_SMOOTH); // scale it the smooth way
                     newPreviewIcons.add(new ImageIcon(newimg));
                 }
 

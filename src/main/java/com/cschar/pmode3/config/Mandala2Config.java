@@ -2,6 +2,8 @@ package com.cschar.pmode3.config;
 
 import com.cschar.pmode3.ParticleSpriteMandalaRing;
 import com.cschar.pmode3.PowerMode3;
+import com.cschar.pmode3.config.common.JTableButtonMouseListener;
+import com.cschar.pmode3.config.common.JTableButtonRenderer;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDialog;
 import com.intellij.openapi.fileChooser.FileChooserFactory;
@@ -20,9 +22,6 @@ public class Mandala2Config extends JPanel{
 
 
     JPanel firstRow;
-    JPanel secondRow;
-
-    JCheckBox sparksEnabled;
     JComponent mandalaRingConfigPanel;
 
     PowerMode3 settings;
@@ -32,26 +31,10 @@ public class Mandala2Config extends JPanel{
 
         this.setMaximumSize(new Dimension(1000,300));
         this.setLayout(new GridLayout(1,0)); //as many rows as necessary
+
         firstRow = new JPanel();
-        firstRow.setMaximumSize(new Dimension(1000,300));
-        firstRow.setLayout(new GridLayout(0,2)); //as many rows as necessary
-        JPanel firstRowCol1 = new JPanel();
-        firstRowCol1.setBackground(Color.yellow);
-        firstRowCol1.setOpaque(true);
-        firstRowCol1.setLayout(new BoxLayout(firstRowCol1, BoxLayout.Y_AXIS));
-        JPanel firstRowCol2 = new JPanel();
-        firstRowCol2.setLayout(new BoxLayout(firstRowCol2, BoxLayout.Y_AXIS));
-        firstRowCol2.setBackground(Color.ORANGE);
-        firstRowCol2.setOpaque(true);
-        firstRow.add(firstRowCol1);
-        firstRow.add(firstRowCol2);
-
-//        firstRow.setLayout(new BoxLayout(firstRow, BoxLayout.PAGE_AXIS));
-
-
-        secondRow = new JPanel();
-        secondRow.setMaximumSize(new Dimension(1000,500));
-        secondRow.setLayout(new BoxLayout(secondRow, BoxLayout.Y_AXIS));
+        firstRow.setMaximumSize(new Dimension(1000,500));
+        firstRow.setLayout(new BoxLayout(firstRow, BoxLayout.Y_AXIS));
         JPanel headerPanel = new JPanel();
         JLabel headerLabel = new JLabel("Mandala Options");
         headerLabel.setFont(new Font ("Arial", Font.BOLD, 20));
@@ -60,20 +43,14 @@ public class Mandala2Config extends JPanel{
         headerPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
         headerPanel.setMaximumSize(new Dimension(300,100));
 
-//        firstRowCol2.add(headerPanel);
-
-//        secondRow.add(headerPanel);
-        this.add(secondRow);
-//        this.add(firstRow);
-
-
+        this.add(firstRow);
 
         mandalaRingConfigPanel = createConfigTable();
-        secondRow.add(headerPanel);
-        secondRow.add(mandalaRingConfigPanel);
+        firstRow.add(headerPanel);
+        firstRow.add(mandalaRingConfigPanel);
 
 
-        secondRow.setOpaque(true);
+        firstRow.setOpaque(true);
 
     }
 
@@ -85,14 +62,10 @@ public class Mandala2Config extends JPanel{
         table.setRowHeight(120);
         table.setModel(new MandalaRingTableModel());
 
-//        table.setShowGrid(false);
-//        table.setBounds(30, 40, 400, 300);
         table.setCellSelectionEnabled(false);
         table.setColumnSelectionAllowed(false);
         table.setRowSelectionAllowed(false);
-//        table.setBorder(JBUI.Borders.empty(10));
-//        table.setPreferredScrollableViewportSize(new Dimension(400,
-//                table.getRowHeight() * LightningAltConfig.sparkData.length));
+
         table.setPreferredScrollableViewportSize(new Dimension(400,
                 table.getRowHeight() * 4));
         table.getTableHeader().setReorderingAllowed(false);
@@ -123,18 +96,13 @@ public class Mandala2Config extends JPanel{
         colModel.getColumn(7).setMinWidth(300);
 
 
-        //TODO: column for "constant cycle"
-        //TODO: column for "max particles"  (max rings per row)
-
         //make table transparent
         table.setOpaque(false);
         table.setShowGrid(false);
         table.getTableHeader().setOpaque(false);
 
         ((DefaultTableCellRenderer)table.getDefaultRenderer(Object.class)).setOpaque(false);
-//        ((DefaultTableCellRenderer)table.getDefaultRenderer(Integer.class)).setOpaque(false);
         ((DefaultTableCellRenderer)table.getDefaultRenderer(String.class)).setOpaque(false);
-//        ((DefaultTableCellRenderer)table.getDefaultRenderer(ImageIcon.class)).setOpaque(false);
 
 
         TableCellRenderer buttonRenderer = new JTableButtonRenderer();
@@ -145,12 +113,6 @@ public class Mandala2Config extends JPanel{
         TableCellRenderer pathRenderer = new MandalaCustomPathCellHighlighterRenderer();
         table.getColumn("path").setCellRenderer(pathRenderer);
 
-//        TableCellRenderer pathRendererOther = new MandalaOtherCustomPathCellHighlighterRenderer();
-//        table.getColumn("other").setCellRenderer(pathRendererOther);
-
-//        TableCellRenderer pathRendererOther = new OtherPanelCustomPathCellHighlighterRenderer();
-//        table.getColumn("other").setCellRenderer(pathRendererOther);
-
         OtherPanelCellEditorRenderer OtherPanelCellEditorRenderer = new OtherPanelCellEditorRenderer();
         table.getColumn("other").setCellRenderer(OtherPanelCellEditorRenderer);
         table.getColumn("other").setCellEditor(OtherPanelCellEditorRenderer);
@@ -159,11 +121,7 @@ public class Mandala2Config extends JPanel{
         sp.setOpaque(false);
         sp.getViewport().setOpaque(false);
         sp.setBorder(BorderFactory.createEmptyBorder());
-
-
         return sp;
-//        return table;
-
     }
 
 

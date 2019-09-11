@@ -18,10 +18,7 @@ package com.cschar.pmode3;
  */
 
 
-import com.cschar.pmode3.config.LightningAltConfig;
-import com.cschar.pmode3.config.Mandala2Config;
-import com.cschar.pmode3.config.SpriteData;
-import com.cschar.pmode3.config.SpriteDataAnimated;
+import com.cschar.pmode3.config.*;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
@@ -99,7 +96,13 @@ public class PowerMode3 implements BaseComponent,
         MANDALA
     }
 
-    //enabled,weight,defaultPath,customPath
+    @com.intellij.util.xmlb.annotations.XCollection
+    private ArrayList<String[]> lizardDataStringArrays = new ArrayList<String[]>(){{
+        //enabled, scale, speed, defaultPath, customPath, isCyclic, maxParticles, alpha, weightedAmount
+        add(new String[]{"true","1.0f","2","/blender/lizard","", "false","1","1.0f","10"});
+        add(new String[]{"true","1.0f","2","/blender/lizard","", "false","1","1.0f","10"});
+    }};
+
     @com.intellij.util.xmlb.annotations.XCollection
     private ArrayList<String[]> sparkDataStringArrays = new ArrayList<String[]>(){{
         //enabled,scale,weight,defaultPath,customPath
@@ -110,11 +113,11 @@ public class PowerMode3 implements BaseComponent,
 
     @com.intellij.util.xmlb.annotations.XCollection
     private ArrayList<String[]> mandalaDataStringArrays = new ArrayList<String[]>(){{
-        //enabled, scale, speed, defaultPath, customPath, isCyclic, maxParticles
-        add(new String[]{"true","1.0f","3","/blender/mandala1/","","false","5"});
-        add(new String[]{"true","1.0f","2","/blender/mandala2/","","true","2"});
-        add(new String[]{"true","1.0f","2","/blender/mandala3/","","true","3"});
-        add(new String[]{"true","1.2f","4","/blender/mandala9/","","false","5"});
+        //enabled, scale, speed, defaultPath, customPath, isCyclic, maxParticles, alpha, weightedAmount
+        add(new String[]{"true","1.0f","3","/blender/mandala1/","","false","5", "1.0f", "1"});
+        add(new String[]{"true","1.0f","2","/blender/mandala2/","","true","2", "1.0f", "1"});
+        add(new String[]{"true","1.0f","2","/blender/mandala3/","","true","3", "1.0f", "1"});
+        add(new String[]{"true","1.2f","4","/blender/mandala9/","","false","5", "1.0f", "1"});
     }};
 
     //consider JSON https://stackabuse.com/reading-and-writing-json-in-java/ ??
@@ -246,14 +249,15 @@ public class PowerMode3 implements BaseComponent,
         XmlSerializerUtil.copyBean(state, this);
 
 
-        LightningAltConfig.setSparkData(this.deserializeSpriteData());
-        Mandala2Config.setSpriteDataAnimated(this.deserializeSpriteDataAnimated());
+        LightningAltConfig.setSparkData(this.deserializeSpriteData(sparkDataStringArrays));
+        Mandala2Config.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(mandalaDataStringArrays, 120));
+        LizardConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(lizardDataStringArrays, 60));
     }
 
 
-    public SpriteData[] deserializeSpriteData(){
+    public SpriteData[] deserializeSpriteData(ArrayList<String[]> target){
         ArrayList<SpriteData> sd = new ArrayList<SpriteData>();
-        for(String[] s: sparkDataStringArrays){
+        for(String[] s: target){
             sd.add(new SpriteData(Boolean.parseBoolean(s[0]), Float.parseFloat(s[1]), Integer.parseInt(s[2]),
                      s[3], s[4]));
         }
@@ -269,16 +273,19 @@ public class PowerMode3 implements BaseComponent,
         this.sparkDataStringArrays = serialized;
     }
 
-    public ArrayList<SpriteDataAnimated> deserializeSpriteDataAnimated(){
+    public ArrayList<SpriteDataAnimated> deserializeSpriteDataAnimated(ArrayList<String[]> target, int previewSize){
         System.out.println("deserializing sprite data animated");
         ArrayList<SpriteDataAnimated> sd = new ArrayList<SpriteDataAnimated>();
-        for(String[] s: mandalaDataStringArrays){
-            sd.add(new SpriteDataAnimated(Boolean.parseBoolean(s[0]),
+        for(String[] s: target){
+            //TODO : jsut serialize the previewSize lol
+            sd.add(new SpriteDataAnimated(previewSize, Boolean.parseBoolean(s[0]),
                                           Float.parseFloat(s[1]),
                                           Integer.parseInt(s[2]),
                                           s[3], s[4],
                                           Boolean.parseBoolean(s[5]),
-                                          Integer.parseInt(s[6])));
+                                          Integer.parseInt(s[6]),
+                                          Float.parseFloat(s[7]),
+                                          Integer.parseInt(s[8])));
         }
         return sd;
     }
@@ -288,7 +295,8 @@ public class PowerMode3 implements BaseComponent,
         for( SpriteDataAnimated d: spriteData){
             serialized.add(new String[]{String.valueOf(d.enabled), String.valueOf(d.scale), String.valueOf(d.speedRate),
                                         String.valueOf(d.defaultPath), String.valueOf(d.customPath),
-                                        String.valueOf(d.isCyclic), String.valueOf(d.maxNumParticles)});
+                                        String.valueOf(d.isCyclic), String.valueOf(d.maxNumParticles),
+                                        String.valueOf(d.alpha), String.valueOf(d.weightedAmount)});
         }
         this.mandalaDataStringArrays = serialized;
     }
@@ -299,8 +307,9 @@ public class PowerMode3 implements BaseComponent,
         this.setParticleRGB(JBColor.darkGray.getRGB());
 
 
-        LightningAltConfig.setSparkData(this.deserializeSpriteData());
-        Mandala2Config.setSpriteDataAnimated(this.deserializeSpriteDataAnimated());
+        LightningAltConfig.setSparkData(this.deserializeSpriteData(sparkDataStringArrays));
+        Mandala2Config.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(mandalaDataStringArrays, 120));
+        LizardConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(lizardDataStringArrays, 60));
     }
 
     public boolean isEnabled() {

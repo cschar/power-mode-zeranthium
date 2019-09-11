@@ -12,22 +12,19 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 public class SpriteData {
-    public int weightedAmount =100;
-    public float scale=1.0f;
+
     public boolean enabled=true;
+    public float scale=1.0f;
+    public int weightedAmount=100;
 
     public String defaultPath;
     public String customPath;
-
     public boolean customPathValid = false;
 
 
     public ImageIcon previewIcon;
-
-
     public BufferedImage image;
 
-    private boolean isAnimated = false;
 
     public SpriteData(boolean enabled, float scale, int weightedAmount, String defaultPath, String customPath) {
         this.weightedAmount = weightedAmount;
@@ -37,9 +34,9 @@ public class SpriteData {
         this.defaultPath = defaultPath;
 
 
-        if(customPath == ""){
+        if(customPath.equals("")){
             setImage(defaultPath, true);
-        }else{
+        }else if(!defaultPath.equals("")){
             setImage(customPath, false);
         }
 

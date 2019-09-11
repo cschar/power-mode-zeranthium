@@ -1,10 +1,23 @@
 package com.cschar.pmode3.config;
 
 import com.cschar.pmode3.PowerMode3;
+import com.cschar.pmode3.config.common.JTableButtonMouseListener;
+import com.cschar.pmode3.config.common.JTableButtonRenderer;
+import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import com.intellij.openapi.fileChooser.FileChooserDialog;
+import com.intellij.openapi.fileChooser.FileChooserFactory;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.ui.ScrollPaneFactory;
+import com.intellij.ui.table.JBTable;
 
 import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class LizardConfig extends JPanel {
 
@@ -17,6 +30,9 @@ public class LizardConfig extends JPanel {
     private JTextField maxAnchorsToUse;
     private JTextField chancePerKeyPressTextField;
 
+    private JComponent lizardSpriteConfigPanel;
+
+    public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
 
     public LizardConfig(PowerMode3 settings){
         this.settings = settings;
@@ -109,6 +125,8 @@ public class LizardConfig extends JPanel {
         secondCol.add(maxAnchorsPanel);
 
 
+        lizardSpriteConfigPanel = createConfigTable();
+        firstCol.add(lizardSpriteConfigPanel);
 
         this.loadValues();
 
@@ -116,6 +134,72 @@ public class LizardConfig extends JPanel {
 
     public JPanel getConfigPanel(){
         return this.mainPanel;
+    }
+
+    public JComponent createConfigTable(){
+
+        JBTable table = new JBTable();
+
+
+        table.setRowHeight(60);
+        table.setModel(new LizardTableModel());
+
+        table.setCellSelectionEnabled(false);
+        table.setColumnSelectionAllowed(false);
+        table.setRowSelectionAllowed(false);
+
+        table.setPreferredScrollableViewportSize(new Dimension(400,
+                table.getRowHeight() * 4));
+        table.getTableHeader().setReorderingAllowed(false);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+//        table.setBackground(Color.yellow);
+//        table.setOpaque(true);
+        // adding it to JScrollPane
+        JScrollPane sp = ScrollPaneFactory.createScrollPane(table);
+//        sp.setMaximumSize(new Dimension(470,350));
+
+        sp.setOpaque(true);
+//        sp.setAlignmentX(Component.RIGHT_ALIGNMENT);
+//        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+//        table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+        TableColumnModel colModel=table.getColumnModel();
+
+        colModel.getColumn(0).setPreferredWidth(60); //preview
+        colModel.getColumn(1).setPreferredWidth(70);  //enabled
+        colModel.getColumn(1).setWidth(50);  //enabled
+
+        colModel.getColumn(2).setPreferredWidth(50);  //scale
+        colModel.getColumn(3).setPreferredWidth(80);  //speed rate
+        colModel.getColumn(4).setPreferredWidth(100);  //set path
+        colModel.getColumn(5).setPreferredWidth(50);  // path
+        colModel.getColumn(6).setPreferredWidth(70);  //reset
+        colModel.getColumn(6).setWidth(60);  //reset
+        colModel.getColumn(7).setPreferredWidth(60);  //alpha
+        colModel.getColumn(7).setWidth(60);
+
+
+        //make table transparent
+        table.setOpaque(false);
+        table.setShowGrid(false);
+        table.getTableHeader().setOpaque(false);
+
+        ((DefaultTableCellRenderer)table.getDefaultRenderer(Object.class)).setOpaque(false);
+        ((DefaultTableCellRenderer)table.getDefaultRenderer(String.class)).setOpaque(false);
+
+
+        TableCellRenderer buttonRenderer = new JTableButtonRenderer();
+        table.getColumn("set path").setCellRenderer(buttonRenderer);
+        table.getColumn("reset").setCellRenderer(buttonRenderer);
+        table.addMouseListener(new JTableButtonMouseListener(table));
+
+        TableCellRenderer pathRenderer = new MandalaCustomPathCellHighlighterRenderer();
+        table.getColumn("path").setCellRenderer(pathRenderer);
+
+
+        sp.setOpaque(false);
+        sp.getViewport().setOpaque(false);
+        sp.setBorder(BorderFactory.createEmptyBorder());
+        return sp;
     }
 
 
@@ -183,4 +267,226 @@ public class LizardConfig extends JPanel {
     public static int CHANCE_PER_KEY_PRESS(PowerMode3 settings){
         return Config.getIntProperty(settings, PowerMode3.SpriteType.LIZARD, "chancePerKeyPress");
     }
+
+
+
+    public static void setSpriteDataAnimated(ArrayList<SpriteDataAnimated> data){
+        spriteDataAnimated = data;
+//        ParticleSpriteMandalaRing.mandalaRingData = data;
+    }
+}
+
+
+
+
+class LizardCustomPathCellHighlighterRenderer extends JLabel implements TableCellRenderer {
+
+    public LizardCustomPathCellHighlighterRenderer() {
+        setOpaque(true); // Or color won't be displayed!
+    }
+
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        String val = (String)value;
+        Color c;
+
+        if (LizardTableModel.data.get(row).customPathValid) {
+//            c = Color.WHITE;
+            c = Color.lightGray;
+            setText(row + " -- " + val);
+        }else if(LizardTableModel.data.get(row).customPath != ""){
+            c = Color.RED;
+            setText(row + " -- " +  "!!Error loading path!!: " + val);
+        }else{
+            c = Color.WHITE;
+//            c = Color.CYAN;
+            setText(row + " -- ");
+        }
+
+        setBackground(c);
+
+        return this;
+    }
+}
+
+class LizardTableModel extends AbstractTableModel {
+
+    static ArrayList<SpriteDataAnimated> data = LizardConfig.spriteDataAnimated;
+
+
+
+    public static final String[] columnNames = new String[]{
+            "preview",
+            "enabled?",
+            "scale",
+            "weight",
+//            "weighted amount (1-100)",
+
+            "set path",
+            "path",
+            "reset",
+            "alpha"
+
+    };
+
+
+
+
+
+    private final Class[] columnClasses = new Class[]{
+            ImageIcon.class,
+            Boolean.class,
+            Float.class,
+            Integer.class,
+            JButton.class,
+            String.class,
+            JButton.class,
+            Float.class
+    };
+
+    @Override
+    public int getRowCount() {
+        return data.size();
+    }
+
+
+    @Override
+    public int getColumnCount() {
+        return columnNames.length;
+    }
+
+    @Override
+    public String getColumnName(int column) {
+        return columnNames[column];
+    }
+
+    @Override
+    public Class<?> getColumnClass(int columnIndex) {
+        return columnClasses[columnIndex];
+    }
+
+
+    @Override
+    public boolean isCellEditable(int row, int column) {
+        switch (column) {
+            case 0:
+            case 5:
+                return false;
+            default:
+                return true;
+        }
+    }
+
+
+    @Override
+    public Object getValueAt(int row, int column) {
+
+//https://stackoverflow.com/questions/13833688/adding-jbutton-to-jtable
+//        ImageIcon.class, Boolean.class, Integer.class, Boolean.class, String.class
+//
+        SpriteDataAnimated d = data.get(row);
+        
+        switch (column) {
+            case 0:
+//                return null;
+//                return previewIcon;
+                return d.previewIcon;
+            case 1:
+                return d.enabled;
+            case 2:
+                return d.scale;
+            case 3:
+                return d.weightedAmount;
+            case 4:
+                final JButton button = new JButton("Set path");
+                button.addActionListener(arg0 -> {
+
+
+                    FileChooserDescriptor fd = new FileChooserDescriptor(false,true,false,false,false,false);
+                    FileChooserDialog fcDialog = FileChooserFactory.getInstance().createFileChooser(fd, null, null);
+
+
+                    VirtualFile[] vfs = fcDialog.choose(null);
+
+                    if(vfs.length != 0){
+                        System.out.println(vfs[0]);
+                        d.customPath = vfs[0].getPath();
+                        d.setImageAnimated(vfs[0].getPath(), false);
+
+
+                        this.fireTableDataChanged();
+                    }
+
+                });
+                return button;
+            case 5:
+                return data.get(row).customPath;
+            case 6:
+                final JButton resetButton = new JButton("reset");
+                resetButton.addActionListener(arg0 -> {
+                    System.out.println("RESET");
+                    d.setImageAnimated(d.defaultPath, true);
+                    d.customPath = "";
+                    d.customPathValid = false;
+                    d.scale = 1.0f;
+                    d.weightedAmount = 20;
+
+
+                    this.fireTableDataChanged();
+                });
+                return resetButton;
+            case 7:
+                return d.alpha;
+//                SpriteDataAnimated d = data.get(row);
+//                return new OtherCol(d.maxNumParticles, d.isCyclic);
+        }
+
+        throw new IllegalArgumentException();
+    }
+
+
+
+    @Override
+    public void setValueAt(Object value, int row, int column) {
+
+//        ImageIcon.class, Boolean.class, Integer.class, Boolean.class, String.class
+
+        SpriteDataAnimated d = data.get(row);
+
+        switch (column) {
+            case 0:  //image preview col
+                return;
+            case 1:  //enabled
+                d.enabled = (Boolean) value;
+                return;
+            case 2:
+                float f = (Float) value;
+                f = Math.max(0.0f, f);
+                f = Math.min(f,2.0f);
+                d.scale = f;
+                return;
+            case 3: //round robin number, 1-->100
+                int v = (Integer) value;
+                v = Math.max(1, v);
+                v = Math.min(v,100);
+                d.weightedAmount = v;
+                return;
+            case 4:   //button clicked
+                return;
+            case 5:   // custom path
+                return;
+            case 6:    //reset button clicked
+                return;
+            case 7:    // other settings
+
+                float alpha = (Float) value;
+                data.get(row).alpha = alpha;
+                return;
+
+
+        }
+
+        throw new IllegalArgumentException();
+    }
+
 }
