@@ -1,8 +1,12 @@
 package com.cschar.pmode3.config;
 
+import com.cschar.pmode3.ParticleSpriteLinkerAnchor;
 import com.cschar.pmode3.ParticleSpriteLizardAnchor;
 import com.cschar.pmode3.PowerMode3;
-import com.cschar.pmode3.config.common.*;
+import com.cschar.pmode3.config.common.CustomPathCellHighlighterRenderer;
+import com.cschar.pmode3.config.common.JTableButtonMouseListener;
+import com.cschar.pmode3.config.common.JTableButtonRenderer;
+import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDialog;
 import com.intellij.openapi.fileChooser.FileChooserFactory;
@@ -19,7 +23,7 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class LizardConfig extends JPanel {
+public class LinkerConfig extends JPanel {
 
     JPanel mainPanel;
     PowerMode3 settings;
@@ -30,19 +34,15 @@ public class LizardConfig extends JPanel {
     private JTextField maxAnchorsToUse;
     private JTextField chancePerKeyPressTextField;
 
-    private JComponent lizardSpriteConfigPanel;
+    private JComponent linkerSpriteConfigPanel;
 
     public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
 
-    public LizardConfig(PowerMode3 settings){
+    public LinkerConfig(PowerMode3 settings){
         this.settings = settings;
-//        this.add(new JLabel("Lizard options"));
-
-        //LIZARD
-        //Build without GUI designer
 
         mainPanel = new JPanel();
-        mainPanel.setMaximumSize(new Dimension(1000,300));
+        mainPanel.setMaximumSize(new Dimension(1200,500));
         mainPanel.setLayout(new GridLayout(0,2));
         JPanel firstCol = new JPanel();
         firstCol.setLayout(new BoxLayout(firstCol, BoxLayout.PAGE_AXIS));
@@ -51,7 +51,7 @@ public class LizardConfig extends JPanel {
         JPanel secondCol = new JPanel();
         secondCol.setLayout(new BoxLayout(secondCol, BoxLayout.Y_AXIS));
         JPanel headerPanel = new JPanel();
-        JLabel headerLabel = new JLabel("Lizard Options");
+        JLabel headerLabel = new JLabel("LinkerI Options");
         headerLabel.setFont(new Font ("Arial", Font.BOLD, 20));
         headerPanel.add(headerLabel);
         headerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -102,7 +102,7 @@ public class LizardConfig extends JPanel {
         secondCol.add(chancePerKeyPressPanel);
 
         this.chanceOfSpawnTextField = new JTextField();
-        JLabel chanceOfSpawnLabel = new JLabel("Chance of Lizard per anchor (0-100)");
+        JLabel chanceOfSpawnLabel = new JLabel("Chance of Link per anchor (0-100)");
         JPanel chancePanel = new JPanel();
         chancePanel.add(chanceOfSpawnLabel);
         chancePanel.add(chanceOfSpawnTextField);
@@ -124,9 +124,10 @@ public class LizardConfig extends JPanel {
 //        maxAnchorsPanel.setBackground(Color.yellow);
         secondCol.add(maxAnchorsPanel);
 
+        System.out.println("Initialized 1 ");
 
-        lizardSpriteConfigPanel = createConfigTable();
-        firstCol.add(lizardSpriteConfigPanel);
+        linkerSpriteConfigPanel = createConfigTable();
+        firstCol.add(linkerSpriteConfigPanel);
 
         this.loadValues();
 
@@ -142,16 +143,17 @@ public class LizardConfig extends JPanel {
 
 
         table.setRowHeight(60);
-        LizardTableModel tableModel = new LizardTableModel();
+        LinkerTableModel tableModel = new LinkerTableModel();
         table.setModel(tableModel);
 
         table.setCellSelectionEnabled(false);
         table.setColumnSelectionAllowed(false);
         table.setRowSelectionAllowed(false);
+        table.getTableHeader().setReorderingAllowed(false);
 
         table.setPreferredScrollableViewportSize(new Dimension(400,
-                table.getRowHeight() * 4));
-        table.getTableHeader().setReorderingAllowed(false);
+                table.getRowHeight() * 3));
+
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 //        table.setBackground(Color.yellow);
 //        table.setOpaque(true);
@@ -193,26 +195,26 @@ public class LizardConfig extends JPanel {
         table.getColumn("reset").setCellRenderer(buttonRenderer);
         table.addMouseListener(new JTableButtonMouseListener(table));
 
-
-        TableCellRenderer pathRenderer = new CustomPathCellHighlighterRenderer(LizardConfig.spriteDataAnimated);
+        TableCellRenderer pathRenderer = new CustomPathCellHighlighterRenderer(LinkerConfig.spriteDataAnimated);
         table.getColumn("path").setCellRenderer(pathRenderer);
 
 
         sp.setOpaque(false);
         sp.getViewport().setOpaque(false);
         sp.setBorder(BorderFactory.createEmptyBorder());
+        System.out.println("Initialized");
         return sp;
     }
 
 
     public void loadValues(){
-        this.maxPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LIZARD,"maxPsiSearchDistance", 300)));
-        this.minPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LIZARD,"minPsiSearchDistance", 100)));
+        this.maxPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"maxPsiSearchDistance", 300)));
+        this.minPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"minPsiSearchDistance", 100)));
 
-        this.chancePerKeyPressTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LIZARD,"chancePerKeyPress", 100)));
-        this.chanceOfSpawnTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LIZARD,"chanceOfSpawn", 100)));
+        this.chancePerKeyPressTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"chancePerKeyPress", 100)));
+        this.chanceOfSpawnTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"chanceOfSpawn", 100)));
 
-        this.maxAnchorsToUse.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LIZARD,"maxAnchorsToUse", 10)));
+        this.maxAnchorsToUse.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"maxAnchorsToUse", 10)));
 
     }
 
@@ -221,69 +223,69 @@ public class LizardConfig extends JPanel {
         int minLizardPsiDistance = Config.getJTextFieldWithinBoundsInt(this.minPsiAnchorDistanceTextField,
                 0, maxPsiSearchLimit,
                 "Min Distance to Psi Anchors will use when spawning lizards (cannot be greater than max defined at top)");
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LIZARD, "minPsiSearchDistance",
+        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "minPsiSearchDistance",
                 String.valueOf(minLizardPsiDistance));
 
         int maxLizardPsiDistance = Config.getJTextFieldWithinBoundsInt(this.maxPsiAnchorDistanceTextField,
                 0, maxPsiSearchLimit,
                 "Max Distance to Psi Anchors will use when spawning lizards (cannot be greater than max defined at top)");
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LIZARD, "maxPsiSearchDistance",
+        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "maxPsiSearchDistance",
                 String.valueOf(maxLizardPsiDistance));
 
         int chancePerKeyPress = Config.getJTextFieldWithinBoundsInt(this.chancePerKeyPressTextField,
                 0, 100,
                 "chance lizards spawn per keypress");
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LIZARD, "chancePerKeyPress",
+        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "chancePerKeyPress",
                 String.valueOf(chancePerKeyPress));
 
         int chanceOfSpawn = Config.getJTextFieldWithinBoundsInt(this.chanceOfSpawnTextField,
                 0, 100,
                 "chance lizard spawns for anchor");
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LIZARD, "chanceOfSpawn",
+        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "chanceOfSpawn",
                 String.valueOf(chanceOfSpawn));
 
         int maxAnchorsToUse = Config.getJTextFieldWithinBoundsInt(this.maxAnchorsToUse,
                 1, 100,
                 "max anchors to use when spawning lizards");
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LIZARD, "maxAnchorsToUse",
+        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "maxAnchorsToUse",
                 String.valueOf(maxAnchorsToUse));
 
-        settings.setSerializedSpriteDataAnimated(LizardConfig.spriteDataAnimated, PowerMode3.SpriteType.LIZARD);
+        settings.setSerializedSpriteDataAnimated(LinkerConfig.spriteDataAnimated, PowerMode3.SpriteType.LINKER);
     }
 
 
 
     public static int MAX_PSI_SEARCH(PowerMode3 settings) {
-        return Config.getIntProperty(settings, PowerMode3.SpriteType.LIZARD,"maxPsiSearchDistance");
+        return Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"maxPsiSearchDistance");
     }
     public static int MIN_PSI_SEARCH(PowerMode3 settings) {
-        return Config.getIntProperty(settings, PowerMode3.SpriteType.LIZARD,"minPsiSearchDistance");
+        return Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"minPsiSearchDistance");
     }
 
     public static int CHANCE_OF_SPAWN(PowerMode3 settings){
-        return Config.getIntProperty(settings, PowerMode3.SpriteType.LIZARD, "chanceOfSpawn");
+        return Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER, "chanceOfSpawn");
     }
 
     public static int MAX_ANCHORS_TO_USE(PowerMode3 settings){
-        return Config.getIntProperty(settings, PowerMode3.SpriteType.LIZARD, "maxAnchorsToUse");
+        return Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER, "maxAnchorsToUse");
     }
 
     public static int CHANCE_PER_KEY_PRESS(PowerMode3 settings){
-        return Config.getIntProperty(settings, PowerMode3.SpriteType.LIZARD, "chancePerKeyPress");
+        return Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER, "chancePerKeyPress");
     }
 
 
 
     public static void setSpriteDataAnimated(ArrayList<SpriteDataAnimated> data){
         spriteDataAnimated = data;
-        ParticleSpriteLizardAnchor.spriteDataAnimated = data;
+        ParticleSpriteLinkerAnchor.spriteDataAnimated = data;
     }
 }
 
 
-class LizardTableModel extends AbstractTableModel {
+class LinkerTableModel extends AbstractTableModel {
 
-    static ArrayList<SpriteDataAnimated> data = LizardConfig.spriteDataAnimated;
+    static ArrayList<SpriteDataAnimated> data = LinkerConfig.spriteDataAnimated;
 
 
 
@@ -291,7 +293,7 @@ class LizardTableModel extends AbstractTableModel {
             "preview",
             "enabled?",
             "scale",
-            "weight",
+            "speed",
 //            "weighted amount (1-100)",
 
             "set path",
@@ -352,23 +354,18 @@ class LizardTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int row, int column) {
-
-//https://stackoverflow.com/questions/13833688/adding-jbutton-to-jtable
-//        ImageIcon.class, Boolean.class, Integer.class, Boolean.class, String.class
-//
+        
         SpriteDataAnimated d = data.get(row);
         
         switch (column) {
             case 0:
-//                return null;
-//                return previewIcon;
                 return d.previewIcon;
             case 1:
                 return d.enabled;
             case 2:
                 return d.scale;
             case 3:
-                return d.weightedAmount;
+                return d.speedRate;
             case 4:
                 final JButton button = new JButton("Set path");
                 button.addActionListener(arg0 -> {
@@ -440,8 +437,8 @@ class LizardTableModel extends AbstractTableModel {
             case 3: //round robin number, 1-->100
                 int v = (Integer) value;
                 v = Math.max(1, v);
-                v = Math.min(v,100);
-                d.weightedAmount = v;
+                v = Math.min(v,10);
+                d.speedRate = v;
                 return;
             case 4:   //button clicked
                 return;

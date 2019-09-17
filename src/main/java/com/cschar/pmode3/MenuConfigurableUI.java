@@ -38,6 +38,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private VineConfig vineConfig;
     private MOMAConfig momaConfig;
     private Mandala2Config mandala2Config;
+    private LinkerConfig linkerConfig;
 
     PowerMode3 settings;
     //Constructor is called _AFTER_ createUIComponents when using IntelliJ GUI designer
@@ -88,6 +89,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         this.vineConfig.loadValues();
         this.momaConfig.loadValues();
         this.mandala2Config.loadValues();
+        this.linkerConfig.loadValues();
     }
 
 
@@ -139,6 +141,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         this.vineConfig.saveValues(maxPsiSearch);
         this.momaConfig.saveValues();
         this.mandala2Config.saveValues();
+        this.linkerConfig.saveValues(maxPsiSearch);
 
 
     }
@@ -201,9 +204,14 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         this.theCustomCreatePanel.add(mandala2Config);
 
         this.theCustomCreatePanel.add(this.createSpacer());
+        this.linkerConfig = new LinkerConfig(settings);
+        this.theCustomCreatePanel.add(linkerConfig.getConfigPanel());
+
+
+        this.theCustomCreatePanel.add(this.createSpacer());
         this.lightningConfig = new LightningConfig(settings);
         this.theCustomCreatePanel.add(lightningConfig.getConfigPanel());
-
+//
         this.theCustomCreatePanel.add(this.createSpacer());
         this.lightningAltConfig = new LightningAltConfig(settings);
         this.theCustomCreatePanel.add(lightningAltConfig);

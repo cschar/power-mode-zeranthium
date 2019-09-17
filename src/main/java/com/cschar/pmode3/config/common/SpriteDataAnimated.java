@@ -42,9 +42,11 @@ public class SpriteDataAnimated  extends SpriteData {
 
         if(customPath == ""){
             setImageAnimated(defaultPath, true);
+            this.image = this.images.get(0);
         }
         else{
             setImageAnimated(customPath, false);
+            this.image = this.images.get(0);
         }
 
     }
@@ -89,11 +91,12 @@ public class SpriteDataAnimated  extends SpriteData {
 
             for(int i = 0; i<40; i++){
                 String tmpPath = path + String.format("/00%02d.png", i);
-                System.out.println(tmpPath);
+//                System.out.println(tmpPath);
 
                     URL imageURL = this.getClass().getResource(tmpPath);
                     if(imageURL == null){
-                        break;
+                        continue;
+//                        break;
                     }
                     imageIcon = new ImageIcon(imageURL);
 

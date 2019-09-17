@@ -89,9 +89,9 @@ public class ParticleSpriteMandala extends Particle{
         x += dx;
         y += dy;
         life--;
-        boolean check = (life <= 0);
+        boolean lifeOver = (life <= 0);
 
-        if(check) { //ready to reset?
+        if(lifeOver) { //ready to reset?
             if (mandalaRingData.get(ringIndex).isCyclic) {
 
                 //If entire plugin is turned off
@@ -127,7 +127,7 @@ public class ParticleSpriteMandala extends Particle{
                 CUR_RINGS[ringIndex] -= 1;
             }
         }
-        return check;
+        return lifeOver;
     }
 
 

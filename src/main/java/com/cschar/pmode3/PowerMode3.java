@@ -100,6 +100,14 @@ public class PowerMode3 implements BaseComponent,
     }
 
     @com.intellij.util.xmlb.annotations.XCollection
+    private ArrayList<String[]> linkerDataStringArrays = new ArrayList<String[]>(){{
+        //enabled, scale, speed, defaultPath, customPath, isCyclic, maxParticles, alpha, weightedAmount
+        add(new String[]{"true","0.4f","2","/blender/linkerI/chain1","", "false","1","1.0f","2"});
+        add(new String[]{"true","0.6f","2","/blender/linkerI/chain2","", "false","1","0.6f","2"});
+        add(new String[]{"true","0.2f","2","/blender/lizard","", "false","1","1.0f","10"});
+    }};
+
+    @com.intellij.util.xmlb.annotations.XCollection
     private ArrayList<String[]> lizardDataStringArrays = new ArrayList<String[]>(){{
         //enabled, scale, speed, defaultPath, customPath, isCyclic, maxParticles, alpha, weightedAmount
         add(new String[]{"true","0.4f","2","/blender/lizard","", "false","1","1.0f","2"});
@@ -253,10 +261,14 @@ public class PowerMode3 implements BaseComponent,
 
         XmlSerializerUtil.copyBean(state, this);
 
+        loadSpriteData();
+    }
 
+    private void loadSpriteData(){
         LightningAltConfig.setSparkData(this.deserializeSpriteData(sparkDataStringArrays));
         Mandala2Config.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(mandalaDataStringArrays, 120));
         LizardConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(lizardDataStringArrays, 60));
+        LinkerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(linkerDataStringArrays, 60));
     }
 
 
@@ -296,18 +308,22 @@ public class PowerMode3 implements BaseComponent,
     }
 
     public void setSerializedSpriteDataAnimated(ArrayList<SpriteDataAnimated> spriteData, PowerMode3.SpriteType type){
-        ArrayList<String[]> serialized = new ArrayList<>();
-        for( SpriteDataAnimated d: spriteData){
-            serialized.add(new String[]{String.valueOf(d.enabled), String.valueOf(d.scale), String.valueOf(d.speedRate),
-                                        String.valueOf(d.defaultPath), String.valueOf(d.customPath),
-                                        String.valueOf(d.isCyclic), String.valueOf(d.maxNumParticles),
-                                        String.valueOf(d.alpha), String.valueOf(d.weightedAmount)});
-        }
-        if(type == SpriteType.MANDALA) {
-            this.mandalaDataStringArrays = serialized;
-        }else if(type == SpriteType.LIZARD){
-            this.lizardDataStringArrays = serialized;
-        }
+//        try {
+            ArrayList<String[]> serialized = new ArrayList<>();
+            for (SpriteDataAnimated d : spriteData) {
+                serialized.add(new String[]{String.valueOf(d.enabled), String.valueOf(d.scale), String.valueOf(d.speedRate),
+                        String.valueOf(d.defaultPath), String.valueOf(d.customPath),
+                        String.valueOf(d.isCyclic), String.valueOf(d.maxNumParticles),
+                        String.valueOf(d.alpha), String.valueOf(d.weightedAmount)});
+            }
+            if (type == SpriteType.MANDALA) {
+                this.mandalaDataStringArrays = serialized;
+            } else if (type == SpriteType.LIZARD) {
+                this.lizardDataStringArrays = serialized;
+            } else if (type == SpriteType.LINKER) {
+                this.linkerDataStringArrays = serialized;
+            }
+//        }
     }
 
     @Override
@@ -316,9 +332,7 @@ public class PowerMode3 implements BaseComponent,
         this.setParticleRGB(JBColor.darkGray.getRGB());
 
 
-        LightningAltConfig.setSparkData(this.deserializeSpriteData(sparkDataStringArrays));
-        Mandala2Config.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(mandalaDataStringArrays, 120));
-        LizardConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(lizardDataStringArrays, 60));
+        loadSpriteData();
     }
 
     public boolean isEnabled() {
