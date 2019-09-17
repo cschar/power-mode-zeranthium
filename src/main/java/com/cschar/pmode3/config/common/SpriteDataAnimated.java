@@ -19,7 +19,7 @@ public class SpriteDataAnimated  extends SpriteData {
 
     public int speedRate = 2;
     public boolean isCyclic=false;
-    public int maxNumParticles=20;
+    public int val2 =20;
 
     public int previewSize=60;
 
@@ -29,15 +29,15 @@ public class SpriteDataAnimated  extends SpriteData {
     public float alpha =1.0f;
 
     public SpriteDataAnimated(int previewSize, boolean enabled, float scale, int speedRate, String defaultPath, String customPath,
-                              boolean isCyclic, int maxNumParticles, float alpha, int weightedAmount) {
-        super(enabled, scale, weightedAmount, "", "");
+                              boolean isCyclic, int val2, float alpha, int val1) {
+        super(enabled, scale, val1, "", "");
 
         this.previewSize = previewSize;
         this.defaultPath = defaultPath;
         this.customPath = customPath;
         this.speedRate = speedRate;
         this.isCyclic = isCyclic;
-        this.maxNumParticles = maxNumParticles;
+        this.val2 = val2;
         this.alpha = alpha;
 
         if(customPath == ""){

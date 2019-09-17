@@ -1,7 +1,6 @@
 package com.cschar.pmode3.config;
 
 import com.cschar.pmode3.ParticleSpriteLinkerAnchor;
-import com.cschar.pmode3.ParticleSpriteLizardAnchor;
 import com.cschar.pmode3.PowerMode3;
 import com.cschar.pmode3.config.common.CustomPathCellHighlighterRenderer;
 import com.cschar.pmode3.config.common.JTableButtonMouseListener;
@@ -33,6 +32,12 @@ public class LinkerConfig extends JPanel {
     private JTextField chanceOfSpawnTextField;
     private JTextField maxAnchorsToUse;
     private JTextField chancePerKeyPressTextField;
+
+
+    public JTextField maxLinksTextField;
+    public JTextField distanceFromCenterTextField;
+
+
 
     private JComponent linkerSpriteConfigPanel;
 
@@ -128,7 +133,31 @@ public class LinkerConfig extends JPanel {
 //        maxAnchorsPanel.setBackground(Color.yellow);
         secondCol.add(maxAnchorsPanel);
 
-        System.out.println("Initialized 1 ");
+
+        //First col config
+
+
+        this.maxLinksTextField = new JTextField();
+//        this.maxAnchorsToUse.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        JLabel maxLinksLabel = new JLabel("Max Links to Use (1-50)");
+        JPanel maxLinksPanel = new JPanel();
+        maxLinksPanel.add(maxLinksLabel);
+        maxLinksPanel.add(this.maxLinksTextField);
+        maxLinksPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        maxLinksPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+        maxLinksPanel.setMaximumSize(new Dimension(500, 50));
+        firstCol.add(maxLinksPanel);
+
+        this.distanceFromCenterTextField = new JTextField();
+        JLabel distanceFromCenterLabel = new JLabel("Cutoff Distance From Center px (1-500)");
+        JPanel distanceFromCenterPanel = new JPanel();
+        distanceFromCenterPanel.add(distanceFromCenterLabel);
+        distanceFromCenterPanel.add(this.distanceFromCenterTextField);
+        distanceFromCenterPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        distanceFromCenterPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+        distanceFromCenterPanel.setMaximumSize(new Dimension(500, 50));
+        firstCol.add(distanceFromCenterPanel);
+
 
         linkerSpriteConfigPanel = createConfigTable();
 //        firstCol.add(linkerSpriteConfigPanel);
@@ -224,6 +253,9 @@ public class LinkerConfig extends JPanel {
 
         this.maxAnchorsToUse.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"maxAnchorsToUse", 10)));
 
+        this.maxLinksTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"maxLinks", 10)));
+        this.distanceFromCenterTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"distanceFromCenter", 5)));
+
     }
 
     public void saveValues(int maxPsiSearchLimit) throws ConfigurationException {
@@ -258,6 +290,22 @@ public class LinkerConfig extends JPanel {
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "maxAnchorsToUse",
                 String.valueOf(maxAnchorsToUse));
 
+        int maxLinks = Config.getJTextFieldWithinBoundsInt(this.maxLinksTextField,
+                1, 100,
+                "max links on linkerI");
+        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "maxLinks",
+                String.valueOf(maxLinks));
+
+        //TODO::: LoaderSaver class, init in constructor for config, iterate over lists in loadValues/saveValues
+        //    -- load()  in loadValues()
+        //    --- save(), in saveValues()
+        //    --- get()  in static methods
+        int distanceFromCenter = Config.getJTextFieldWithinBoundsInt(this.distanceFromCenterTextField,
+                1, 500,
+                "start distance from center");
+        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "distanceFromCenter",
+                String.valueOf(distanceFromCenter));
+
         settings.setSerializedSpriteDataAnimated(LinkerConfig.spriteDataAnimated, PowerMode3.SpriteType.LINKER);
     }
 
@@ -280,6 +328,14 @@ public class LinkerConfig extends JPanel {
 
     public static int CHANCE_PER_KEY_PRESS(PowerMode3 settings){
         return Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER, "chancePerKeyPress");
+    }
+
+    public static int MAX_LINKS(PowerMode3 settings){
+        return Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER, "maxLinks");
+    }
+
+    public static int DISTANCE_FROM_CENTER(PowerMode3 settings){
+        return Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER, "distanceFromCenter");
     }
 
 
@@ -410,7 +466,7 @@ class LinkerTableModel extends AbstractTableModel {
                     d.customPath = "";
                     d.customPathValid = false;
                     d.scale = 1.0f;
-                    d.weightedAmount = 20;
+                    d.val1 = 20;
 
 
                     this.fireTableDataChanged();
@@ -421,9 +477,9 @@ class LinkerTableModel extends AbstractTableModel {
 //                SpriteDataAnimated d = data.get(row);
 //                return new OtherCol(d.maxNumParticles, d.isCyclic);
             case 8: // weight --> offset
-                return d.weightedAmount;
+                return d.val1;
             case 9: // maxParticles --> repeatEvery
-                return d.maxNumParticles;
+                return d.val2;
 
         }
 
@@ -473,13 +529,15 @@ class LinkerTableModel extends AbstractTableModel {
             case 8:
                 int v0 = (Integer) value;
                 v0 = Math.max(0, v0);
-                v0 = Math.min(v0,10);
-                d.weightedAmount = v0;
+                v0 = Math.min(v0,100);
+                d.val1 = v0;
+                return;
             case 9:
                 int v1 = (Integer) value;
                 v1 = Math.max(1, v1);
-                v1 = Math.min(v1,10);
-                d.maxNumParticles = v1;
+                v1 = Math.min(v1,100);
+                d.val2 = v1;
+                return;
 
         }
 

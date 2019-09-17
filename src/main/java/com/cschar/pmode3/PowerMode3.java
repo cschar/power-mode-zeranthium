@@ -101,7 +101,7 @@ public class PowerMode3 implements BaseComponent,
 
     @com.intellij.util.xmlb.annotations.XCollection
     private ArrayList<String[]> linkerDataStringArrays = new ArrayList<String[]>(){{
-        //enabled, scale, speed, defaultPath, customPath, isCyclic, maxParticles, alpha, weightedAmount
+        //enabled, scale, speed, defaultPath, customPath, isCyclic, val2, alpha, val1
         add(new String[]{"true","0.4f","2","/blender/linkerI/chain1","", "false","1","1.0f","2"});
         add(new String[]{"true","0.6f","2","/blender/linkerI/chain2","", "false","1","0.6f","2"});
         add(new String[]{"true","0.2f","2","/blender/linkerI/chain3","", "false","1","1.0f","10"});
@@ -109,7 +109,7 @@ public class PowerMode3 implements BaseComponent,
 
     @com.intellij.util.xmlb.annotations.XCollection
     private ArrayList<String[]> lizardDataStringArrays = new ArrayList<String[]>(){{
-        //enabled, scale, speed, defaultPath, customPath, isCyclic, maxParticles, alpha, weightedAmount
+        //enabled, scale, speed, defaultPath, customPath, isCyclic, val2, alpha, val1
         add(new String[]{"true","0.4f","2","/blender/lizard","", "false","1","1.0f","2"});
         add(new String[]{"true","0.6f","2","/blender/lizard2","", "false","1","0.6f","2"});
         add(new String[]{"true","0.2f","2","/blender/lizard","", "false","1","1.0f","10"});
@@ -125,7 +125,7 @@ public class PowerMode3 implements BaseComponent,
 
     @com.intellij.util.xmlb.annotations.XCollection
     private ArrayList<String[]> mandalaDataStringArrays = new ArrayList<String[]>(){{
-        //enabled, scale, speed, defaultPath, customPath, isCyclic, maxParticles, alpha, weightedAmount
+        //enabled, scale, speed, defaultPath, customPath, isCyclic, val2, alpha, val1
         add(new String[]{"true","1.0f","3","/blender/mandala1/","","false","5", "1.0f", "1"});
         add(new String[]{"true","1.0f","2","/blender/mandala2/","","true","4", "1.0f", "1"});
         add(new String[]{"true","1.0f","2","/blender/mandala3/","","true","5", "1.0f", "1"});
@@ -284,7 +284,7 @@ public class PowerMode3 implements BaseComponent,
     public void setSerializedSparkData(ArrayList<SpriteData> sparkData){
         ArrayList<String[]> serialized = new ArrayList<>();
         for( SpriteData d: sparkData){
-               serialized.add(new String[]{String.valueOf(d.enabled), String.valueOf(d.scale), String.valueOf(d.weightedAmount),
+               serialized.add(new String[]{String.valueOf(d.enabled), String.valueOf(d.scale), String.valueOf(d.val1),
                        String.valueOf(d.defaultPath), String.valueOf(d.customPath)});
         }
         this.sparkDataStringArrays = serialized;
@@ -313,8 +313,8 @@ public class PowerMode3 implements BaseComponent,
             for (SpriteDataAnimated d : spriteData) {
                 serialized.add(new String[]{String.valueOf(d.enabled), String.valueOf(d.scale), String.valueOf(d.speedRate),
                         String.valueOf(d.defaultPath), String.valueOf(d.customPath),
-                        String.valueOf(d.isCyclic), String.valueOf(d.maxNumParticles),
-                        String.valueOf(d.alpha), String.valueOf(d.weightedAmount)});
+                        String.valueOf(d.isCyclic), String.valueOf(d.val2),
+                        String.valueOf(d.alpha), String.valueOf(d.val1)});
             }
             if (type == SpriteType.MANDALA) {
                 this.mandalaDataStringArrays = serialized;

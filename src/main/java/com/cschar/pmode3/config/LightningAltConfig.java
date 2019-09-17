@@ -255,7 +255,7 @@ class SparksTableModel extends AbstractTableModel {
             case 2:
                 return d.scale;
             case 3:
-                return d.weightedAmount;
+                return d.val1;
             case 4:
                 final JButton button = new JButton("Set path");
                 button.addActionListener(arg0 -> {
@@ -320,7 +320,7 @@ class SparksTableModel extends AbstractTableModel {
                 int v = (Integer) value;
                 v = Math.max(1, v);
                 v = Math.min(v,100);
-                d.weightedAmount = v;
+                d.val1 = v;
                 return;
             case 4:   //button clicked
                 return;

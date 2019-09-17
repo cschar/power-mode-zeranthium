@@ -36,51 +36,37 @@ public class ParticleSpriteLinkerAnchor extends Particle{
     static {}
 
 
-    int anchorX;
-    int anchorY;
-    int initialX;
-    int initialY;
-
-    int maxLife;
-
-
-    int dir2anchorX;
-    int dir2anchorY;
-
-    private Anchor[] anchors;
-
-
     private float scale=1.0f;
-    private float alpha=1.0f;
 
     private SpriteDataAnimated spriteData;
     private ArrayList<BufferedImage> sprites;
     private float spriteScale = 1.0f;
 
-//    public static int cursorX;
-//    public static int cursorY;
+
     public int cursorX;
     public int cursorY;
+    int initialX;
+    int initialY;
 
-    public ParticleSpriteLinkerAnchor(int x, int y, int dx, int dy, int anchorIndex, int size, int life, Color c,
-                                      Anchor[] anchors) {
+    //    private Anchor a;
+    private Anchor[] anchors;
+    private int distanceFromCenter;
+    private int maxLinks;
+
+    public ParticleSpriteLinkerAnchor(int x, int y, int dx, int dy, int size, int life, Color c,
+                                      Anchor[] anchors, int distanceFromCenter, int maxLinks) {
         super(x,y,dx,dy,size,life,c);
 
 
         this.anchors = anchors;
-
-        this.maxLife = life;
-        this.anchorX = anchors[anchorIndex].p.x;
-        this.anchorY = anchors[anchorIndex].p.y;
 
         this.initialX = x;
         this.initialY = y;
 
         this.cursorX = x;
         this.cursorY = y;
-
-        this.dir2anchorX = ((anchorX - initialX)/70);
-        this.dir2anchorY = (anchorY - initialY)/70;
+        this.distanceFromCenter = distanceFromCenter;
+        this.maxLinks = maxLinks;
 
         this.sprites = spriteDataAnimated.get(0).images;
         this.spriteData = spriteDataAnimated.get(0);
@@ -127,8 +113,7 @@ public class ParticleSpriteLinkerAnchor extends Particle{
 //            g2d.drawRect(this.x, this.y, 5 ,5);
 
             g2d.setStroke(new BasicStroke(2.0f));
-            g2d.setPaint(Color.WHITE);
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f));
+
 
 
             //every X updates, increment frame, this controls how fast it animates
@@ -141,96 +126,135 @@ public class ParticleSpriteLinkerAnchor extends Particle{
                     }
                 }
             }
-            //                if (this.life % spriteData.speedRate == 0) {
-//                    frame += 1;
-//                    if (frame >= spriteData.images.size()) {
-//                        frame = 0;
-//                    }
-//                }
 
 
-            for( Anchor a : this.anchors) {
+
+//            int MAX_QUAD_POINTS = 10;
+            int MAX_QUAD_POINTS = maxLinks;
+
+            for(Anchor a: this.anchors) {
                 Path2D path = new Path2D.Double();
-
-
                 path.moveTo(this.initialX, this.initialY);
 
-                Point[] quadPoints = new Point[10];
 
-
+                Point[] quadPoints = new Point[MAX_QUAD_POINTS];
                 Point prevPoint = new Point(this.initialX, this.initialY);
 
-                int midPointX = (this.initialX + a.p.x)/2;
-                int midPointY = (this.initialY + a.p.y)/2;
+                int midPointX = (this.initialX + a.p.x) / 2;
+                int midPointY = (this.initialY + a.p.y) / 2;
                 int incr = this.life;
 //                int waveAmplitude = 100;
 //                int waveAmplitude = 20;
 //                midPointX += waveAmplitude * Math.sin(0.1 * incr );
 //                midPointY += waveAmplitude * Math.sin(0.1 * incr + 50 + a.cursorOffset);
                 Point midPoint = new Point(midPointX, midPointY);
-
-//                quadPoints[0] = p;
-                double t = 0.1;
-                for(int i = 0; i <9; i++){
-                    t += 0.1;
+                Point startPoint = new Point(midPointX, midPointY);
 
 
+                double t = 0.0;
+                for (int i = 0; i < MAX_QUAD_POINTS; i++) {
+                    t += (1.0/MAX_QUAD_POINTS);
                     Point p = this.quadTo(prevPoint, midPoint, a.p, t);
                     quadPoints[i] = p;
-                    path.lineTo(p.x,p.y);
+                    path.lineTo(p.x, p.y);
                 }
 
-//                path.lineTo(a.p.x, a.p.y);
-
-//                int incr = this.life % 2;
-
-
+                g2d.setPaint(Color.WHITE);
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
                 g2d.draw(path);
 
+                int pointToStartFrom = 0;
+                for(int i = 0; i <quadPoints.length; i++){
+                    if(quadPoints[i].distance(startPoint) < distanceFromCenter){
+                        pointToStartFrom += 1;
+                    }
+                }
 
+                //TODO: we only need to compute this on init()
+                int[][] repeats_offsets = new int[spriteDataAnimated.size()][2];
+                for(int i = 0; i < repeats_offsets.length; i++){
+                    repeats_offsets[i][0] = spriteDataAnimated.get(i).val2; //repeat
+                    repeats_offsets[i][1] = spriteDataAnimated.get(i).val1; //offset
+
+                }
 
                 int frame = 0;
-                //draw the sprite at each point on the quad curve
-                for(int i = 2; i <9; i+=2) {
-                    Point p0 = quadPoints[i-2];
+                //draw sprite pointing from p_i to p_i+n
+                int n = 1;
+//                for (int i = pointToStartFrom; i < MAX_QUAD_POINTS-n; i += 2) {
+                for (int i = MAX_QUAD_POINTS-1; i > pointToStartFrom+n; i--) {
+
                     Point p1 = quadPoints[i];
+                    Point p0 = quadPoints[i-n];
 
-                    SpriteDataAnimated pData;
-                    if(i > 7) {
-                        pData = spriteDataAnimated.get(0);
-                        frame = frames[0];
-                    }else{
-                        pData = spriteDataAnimated.get(1);
-                        frame = frames[1];
+
+
+
+                    int pos_index = (MAX_QUAD_POINTS-1) - i; // 0,1,2,3....
+
+
+                    //TODO: add  repeats_for ....
+                    //  repeat N times 
+
+                    //check if were repeating on this index
+                    for(int j =0; j < repeats_offsets.length; j++){
+                        int offset = repeats_offsets[j][1];
+                        if(pos_index < offset){ continue;}
+                        else{
+                            SpriteDataAnimated pData = null;
+                            boolean repeatsOnThisIndex = ((pos_index-offset) % repeats_offsets[j][0] == 0);
+
+                            if(repeatsOnThisIndex){
+                                pData = spriteDataAnimated.get(j);
+                                frame = frames[j];
+
+                                drawSprite(g2d, p0, p1, pData, frame);
+                            }
+                        }
+
+
                     }
-                    AffineTransform at = new AffineTransform();
-                    at.scale(pData.scale, pData.scale);
-//                    at.translate((int) cursorX * (1 / this.spriteScale), (int) cursorY * (1 / this.spriteScale));
-                    at.translate((int) p0.x * (1 / pData.scale), (int) p0.y * (1 / pData.scale));
-
-
-                    double radius =  Point.distance(p0.x,p0.y,p1.x,p1.y);
-                    int adjacent = (p0.x - p1.x);
-                    double initAnchorAngle = Math.acos(adjacent / radius);
-
-                    if(p0.y - p1.y < 0){
-                        initAnchorAngle *= -1;
-                    }
-
-                    at.rotate(initAnchorAngle);
-
-                    at.translate(-pData.image.getWidth() / 2,
-                            -pData.image.getHeight() / 2);
-                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pData.alpha));
 
 
 
-                    g2d.drawImage(pData.images.get(frame), at, null);
                 }
-            }
+            } // anchors
 
 
-            //Java quadTo doesnt give us intermediary quad points
+
+
+            g2d.dispose();
+        } //life > 0
+    }
+
+    private void drawSprite(Graphics2D g2d, Point p0, Point p1, SpriteDataAnimated pData, int frame){
+        AffineTransform at = new AffineTransform();
+        at.scale(pData.scale, pData.scale);
+//                    at.translate((int) cursorX * (1 / this.spriteScale), (int) cursorY * (1 / this.spriteScale));
+        at.translate((int) p0.x * (1 / pData.scale), (int) p0.y * (1 / pData.scale));
+
+
+        double radius = Point.distance(p0.x, p0.y, p1.x, p1.y);
+        int adjacent = (p0.x - p1.x);
+        double initAnchorAngle = Math.acos(adjacent / radius);
+
+        if (p0.y - p1.y < 0) {
+            initAnchorAngle *= -1;
+        }
+
+        at.rotate(initAnchorAngle);
+
+        at.translate(-pData.image.getWidth() / 2,
+                -pData.image.getHeight() / 2);
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pData.alpha));
+
+
+        g2d.drawImage(pData.images.get(frame), at, null);
+    }
+
+
+    private void drawJavaQuad(){
+//        Java quadTo doesnt give us intermediary quad points
 //            for( Anchor a : this.anchors) {
 //                Path2D path = new Path2D.Double();
 //
@@ -248,41 +272,6 @@ public class ParticleSpriteLinkerAnchor extends Particle{
 //
 //                g2d.draw(path);
 //            }
-
-            g2d.dispose();
-        }
     }
-
-//
-//      for(int i = 1; i<sections+1; i++){
-//        midPointX = ((this.x - a.p.x) / sections) * i;
-//        midPointY = ((this.y - a.p.y) / sections) * i + 100;
-//
-//        sectionXY[i-1][0] = this.initialX - midPointX;
-//        sectionXY[i-1][1] = this.initialY - midPointY;
-//    }
-//
-//    double lastX = this.initialX;
-//    double lastY = this.initialY;
-//    int amt = 0;
-//                for(int[] s : sectionXY){
-//        amt += 1;
-//        int incr = this.life / 2;
-////
-//        double midX = (lastX + s[0]) / 2;
-//        double midY = (lastY + s[1]) / 2;
-//
-//        midX += 100 * Math.sin(0.5 * incr + Math.PI*());
-//        midY += 100 * Math.sin(0.5 * incr + 50);
-//
-//        path.quadTo(midX, midY, s[0], s[1]);
-//
-//        lastX = s[0];
-//        lastY = s[1];
-//    }
-//
-//                path.lineTo(a.p.x, a.p.y);
-////                path.quadTo(, midPointY, a.p.x, a.p.y);
-
 
 }

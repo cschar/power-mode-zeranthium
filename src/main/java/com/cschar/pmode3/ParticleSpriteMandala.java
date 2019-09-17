@@ -113,7 +113,7 @@ public class ParticleSpriteMandala extends Particle{
 
 
                 //num particles changed?
-                if( CUR_RINGS[ringIndex] > mandalaRingData.get(ringIndex).maxNumParticles){
+                if( CUR_RINGS[ringIndex] > mandalaRingData.get(ringIndex).val2){
                     CUR_RINGS[ringIndex] -= 1;
                     return true;
                 }

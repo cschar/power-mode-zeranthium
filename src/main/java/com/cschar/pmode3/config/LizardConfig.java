@@ -368,7 +368,7 @@ class LizardTableModel extends AbstractTableModel {
             case 2:
                 return d.scale;
             case 3:
-                return d.weightedAmount;
+                return d.val1;
             case 4:
                 final JButton button = new JButton("Set path");
                 button.addActionListener(arg0 -> {
@@ -401,7 +401,7 @@ class LizardTableModel extends AbstractTableModel {
                     d.customPath = "";
                     d.customPathValid = false;
                     d.scale = 1.0f;
-                    d.weightedAmount = 20;
+                    d.val1 = 20;
 
 
                     this.fireTableDataChanged();
@@ -441,7 +441,7 @@ class LizardTableModel extends AbstractTableModel {
                 int v = (Integer) value;
                 v = Math.max(1, v);
                 v = Math.min(v,100);
-                d.weightedAmount = v;
+                d.val1 = v;
                 return;
             case 4:   //button clicked
                 return;

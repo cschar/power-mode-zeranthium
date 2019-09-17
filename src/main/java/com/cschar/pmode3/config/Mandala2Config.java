@@ -376,7 +376,7 @@ class MandalaRingTableModel extends AbstractTableModel {
                 return resetButton;
             case 7:
                 SpriteDataAnimated d = data.get(row);
-                return new OtherColMandala(d.maxNumParticles, d.isCyclic);
+                return new OtherColMandala(d.val2, d.isCyclic);
         }
 
         throw new IllegalArgumentException();
@@ -419,7 +419,7 @@ class MandalaRingTableModel extends AbstractTableModel {
 
                 OtherColMandala c = (OtherColMandala) value;
                 data.get(row).isCyclic = c.isCyclic;
-                data.get(row).maxNumParticles = c.numParticles;
+                data.get(row).val2 = c.numParticles;
                 return;
 
 

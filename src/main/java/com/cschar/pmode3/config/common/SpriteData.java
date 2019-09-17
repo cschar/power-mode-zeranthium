@@ -17,7 +17,7 @@ public class SpriteData {
 
     public boolean enabled=true;
     public float scale=1.0f;
-    public int weightedAmount=100;
+    public int val1 =100;
 
     public String defaultPath;
     public String customPath;
@@ -28,8 +28,8 @@ public class SpriteData {
     public BufferedImage image;
 
 
-    public SpriteData(boolean enabled, float scale, int weightedAmount, String defaultPath, String customPath) {
-        this.weightedAmount = weightedAmount;
+    public SpriteData(boolean enabled, float scale, int val1, String defaultPath, String customPath) {
+        this.val1 = val1;
         this.enabled = enabled;
         this.scale = scale;
         this.customPath = customPath;
@@ -84,7 +84,7 @@ public class SpriteData {
         int sumWeight = 0;
         for(SpriteData d: spriteData){
             if(d.enabled){
-                sumWeight += d.weightedAmount;
+                sumWeight += d.val1;
             }
         }
         if(sumWeight == 0){ return -1; }
@@ -97,7 +97,7 @@ public class SpriteData {
         for(SpriteData d: spriteData){
             winnerIndex += 1;
             if(d.enabled){
-                limit += d.weightedAmount;
+                limit += d.val1;
                 if(weightChance <= limit){ //we've found the winner
                     break;
                 }

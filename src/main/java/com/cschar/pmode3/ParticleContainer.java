@@ -17,6 +17,7 @@ import com.cschar.pmode3.config.*;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
+import org.jvnet.ws.wadl.Link;
 
 import javax.swing.*;
 import java.awt.*;
@@ -114,7 +115,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
             for(int i = 0; i < ParticleSpriteMandala.mandalaRingData.size(); i++){
 
                 SpriteDataAnimated d = ParticleSpriteMandala.mandalaRingData.get(i);
-                if (ParticleSpriteMandala.CUR_RINGS[i] >= d.maxNumParticles){
+                if (ParticleSpriteMandala.CUR_RINGS[i] >= d.val2){
                     continue;
                 }
 
@@ -302,13 +303,45 @@ public class ParticleContainer extends JComponent implements ComponentListener {
             }
         }
 
-        if(settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LINKER)){
-            System.out.println("spawn");
-            final ParticleSpriteLinkerAnchor e = new ParticleSpriteLinkerAnchor(x, y, dx, dy, 0,
-                    size, life, Color.GREEN, anchors);
+        int linkerI_chance = LinkerConfig.CHANCE_PER_KEY_PRESS(settings);
+        r = ThreadLocalRandom.current().nextInt(1, 100 +1);
+        if(settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LINKER) && (r <= linkerI_chance)){
+            int minPsiSearch = LinkerConfig.MIN_PSI_SEARCH(settings);
+            int maxPsiSearch = LinkerConfig.MAX_PSI_SEARCH(settings);
+
+            //TODO filter anchors passed in based on maxmin psi search
+
+
+
+            final ParticleSpriteLinkerAnchor e = new ParticleSpriteLinkerAnchor(x, y, dx, dy,
+                    size, life, Color.GREEN, anchors,
+                    LinkerConfig.DISTANCE_FROM_CENTER(settings),
+                    LinkerConfig.MAX_LINKS(settings));
             particles.add(e);
 
+
         }
+
+//        if(settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LINKER) && (r <= linkerI_chance)){
+//            int minPsiSearch = LinkerConfig.MIN_PSI_SEARCH(settings);
+//            int maxPsiSearch = LinkerConfig.MAX_PSI_SEARCH(settings);
+//            for(Anchor a: anchors) {
+//                if (Math.abs(a.anchorOffset - a.cursorOffset) > (maxPsiSearch)) {
+//                    continue;
+//                }
+//                if (Math.abs(a.anchorOffset - a.cursorOffset) < (minPsiSearch)) {
+//                    continue;
+//                }
+//
+//                System.out.println("spawn");
+//
+//
+//                final ParticleSpriteLinkerAnchor e = new ParticleSpriteLinkerAnchor(x, y, dx, dy,
+//                        size, life, Color.GREEN, a);
+//                particles.add(e);
+//            }
+//
+//        }
 
 
     }
