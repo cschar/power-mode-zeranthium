@@ -147,27 +147,22 @@ public class Mandala2Config extends JPanel{
 
 
 
-
-///////DEMO CODE
-
 class OtherPanelCellEditorRenderer extends AbstractCellEditor implements TableCellRenderer, TableCellEditor {
 
     private static final long serialVersionUID = 1L;
-    private OtherColCellPanel renderer = new OtherColCellPanel();
-    private OtherColCellPanel editor = new OtherColCellPanel();
+    private OtherColCellPanelMandala renderer = new OtherColCellPanelMandala();
+    private OtherColCellPanelMandala editor = new OtherColCellPanelMandala();
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        renderer.setOtherCol((OtherCol) value);
+        renderer.setOtherCol((OtherColMandala) value);
         return renderer;
     }
 
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
 
-
-
-        editor.setOtherCol((OtherCol) value);
+        editor.setOtherCol((OtherColMandala) value);
         return editor;
     }
 
@@ -190,25 +185,25 @@ class OtherPanelCellEditorRenderer extends AbstractCellEditor implements TableCe
 //
 
 
-class OtherCol {
+class OtherColMandala {
 
     public int numParticles;
     public boolean isCyclic;
 
-    public OtherCol(int numParticles, boolean isCyclic) {
+    public OtherColMandala(int numParticles, boolean isCyclic) {
         this.isCyclic = isCyclic;
         this.numParticles = numParticles;
     }
 }
 
-class OtherColCellPanel extends JPanel {
+class OtherColCellPanelMandala extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
     private JCheckBox isCyclicCheckbox;
     private JTextField numParticles;
 
-    OtherColCellPanel() {
+    OtherColCellPanelMandala() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 
@@ -244,13 +239,13 @@ class OtherColCellPanel extends JPanel {
     }
 
 
-    public void setOtherCol(OtherCol otherCol) {
-        this.isCyclicCheckbox.setSelected(otherCol.isCyclic);
-        this.numParticles.setText(String.valueOf(otherCol.numParticles));
+    public void setOtherCol(OtherColMandala otherColMandala) {
+        this.isCyclicCheckbox.setSelected(otherColMandala.isCyclic);
+        this.numParticles.setText(String.valueOf(otherColMandala.numParticles));
     }
 
-    public OtherCol getOtherCol() {
-        return new OtherCol(Integer.parseInt(this.numParticles.getText()), this.isCyclicCheckbox.isSelected());
+    public OtherColMandala getOtherCol() {
+        return new OtherColMandala(Integer.parseInt(this.numParticles.getText()), this.isCyclicCheckbox.isSelected());
     }
 }
 
@@ -285,7 +280,7 @@ class MandalaRingTableModel extends AbstractTableModel {
             JButton.class,
             String.class,
             JButton.class,
-            OtherCol.class,
+            OtherColMandala.class,
 //            OtherPanel.class
 //            MandalaOtherCellData.class
     };
@@ -381,7 +376,7 @@ class MandalaRingTableModel extends AbstractTableModel {
                 return resetButton;
             case 7:
                 SpriteDataAnimated d = data.get(row);
-                return new OtherCol(d.maxNumParticles, d.isCyclic);
+                return new OtherColMandala(d.maxNumParticles, d.isCyclic);
         }
 
         throw new IllegalArgumentException();
@@ -422,7 +417,7 @@ class MandalaRingTableModel extends AbstractTableModel {
                 return;
             case 7:    // other settings
 
-                OtherCol c = (OtherCol) value;
+                OtherColMandala c = (OtherColMandala) value;
                 data.get(row).isCyclic = c.isCyclic;
                 data.get(row).maxNumParticles = c.numParticles;
                 return;

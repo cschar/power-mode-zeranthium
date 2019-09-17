@@ -104,7 +104,7 @@ public class PowerMode3 implements BaseComponent,
         //enabled, scale, speed, defaultPath, customPath, isCyclic, maxParticles, alpha, weightedAmount
         add(new String[]{"true","0.4f","2","/blender/linkerI/chain1","", "false","1","1.0f","2"});
         add(new String[]{"true","0.6f","2","/blender/linkerI/chain2","", "false","1","0.6f","2"});
-        add(new String[]{"true","0.2f","2","/blender/lizard","", "false","1","1.0f","10"});
+        add(new String[]{"true","0.2f","2","/blender/linkerI/chain3","", "false","1","1.0f","10"});
     }};
 
     @com.intellij.util.xmlb.annotations.XCollection
@@ -127,9 +127,9 @@ public class PowerMode3 implements BaseComponent,
     private ArrayList<String[]> mandalaDataStringArrays = new ArrayList<String[]>(){{
         //enabled, scale, speed, defaultPath, customPath, isCyclic, maxParticles, alpha, weightedAmount
         add(new String[]{"true","1.0f","3","/blender/mandala1/","","false","5", "1.0f", "1"});
-        add(new String[]{"true","1.0f","2","/blender/mandala2/","","true","2", "1.0f", "1"});
-        add(new String[]{"true","1.0f","2","/blender/mandala3/","","true","3", "1.0f", "1"});
-        add(new String[]{"true","1.2f","4","/blender/mandala9/","","false","5", "1.0f", "1"});
+        add(new String[]{"true","1.0f","2","/blender/mandala2/","","true","4", "1.0f", "1"});
+        add(new String[]{"true","1.0f","2","/blender/mandala3/","","true","5", "1.0f", "1"});
+        add(new String[]{"true","1.2f","4","/blender/mandala9/","","false","4", "1.0f", "1"});
     }};
 
     //consider JSON https://stackabuse.com/reading-and-writing-json-in-java/ ??

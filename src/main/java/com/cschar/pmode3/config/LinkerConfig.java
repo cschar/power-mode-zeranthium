@@ -41,8 +41,12 @@ public class LinkerConfig extends JPanel {
     public LinkerConfig(PowerMode3 settings){
         this.settings = settings;
 
+//        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+//        this.setMaximumSize(new Dimension(1000,300));
+        this.setLayout(new GridLayout(2,0)); //as many rows as necessary
+
         mainPanel = new JPanel();
-        mainPanel.setMaximumSize(new Dimension(1200,500));
+        mainPanel.setMaximumSize(new Dimension(1000,500));
         mainPanel.setLayout(new GridLayout(0,2));
         JPanel firstCol = new JPanel();
         firstCol.setLayout(new BoxLayout(firstCol, BoxLayout.PAGE_AXIS));
@@ -127,14 +131,18 @@ public class LinkerConfig extends JPanel {
         System.out.println("Initialized 1 ");
 
         linkerSpriteConfigPanel = createConfigTable();
-        firstCol.add(linkerSpriteConfigPanel);
+//        firstCol.add(linkerSpriteConfigPanel);
+
+
+        this.add(mainPanel);
+        this.add(linkerSpriteConfigPanel);
 
         this.loadValues();
 
     }
 
     public JPanel getConfigPanel(){
-        return this.mainPanel;
+        return this;
     }
 
     public JComponent createConfigTable(){
@@ -299,7 +307,9 @@ class LinkerTableModel extends AbstractTableModel {
             "set path",
             "path",
             "reset",
-            "alpha"
+            "alpha",
+            "offset",
+            "repeat every"
 
     };
 
@@ -315,7 +325,9 @@ class LinkerTableModel extends AbstractTableModel {
             JButton.class,
             String.class,
             JButton.class,
-            Float.class
+            Float.class,
+            Integer.class,
+            Integer.class
     };
 
     @Override
@@ -408,6 +420,11 @@ class LinkerTableModel extends AbstractTableModel {
                 return d.alpha;
 //                SpriteDataAnimated d = data.get(row);
 //                return new OtherCol(d.maxNumParticles, d.isCyclic);
+            case 8: // weight --> offset
+                return d.weightedAmount;
+            case 9: // maxParticles --> repeatEvery
+                return d.maxNumParticles;
+
         }
 
         throw new IllegalArgumentException();
@@ -453,7 +470,16 @@ class LinkerTableModel extends AbstractTableModel {
                 alpha = Math.min(alpha,1.0f);
                 data.get(row).alpha = alpha;
                 return;
-
+            case 8:
+                int v0 = (Integer) value;
+                v0 = Math.max(0, v0);
+                v0 = Math.min(v0,10);
+                d.weightedAmount = v0;
+            case 9:
+                int v1 = (Integer) value;
+                v1 = Math.max(1, v1);
+                v1 = Math.min(v1,10);
+                d.maxNumParticles = v1;
 
         }
 

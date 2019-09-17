@@ -164,9 +164,9 @@ public class ParticleSpriteLinkerAnchor extends Particle{
                 int midPointY = (this.initialY + a.p.y)/2;
                 int incr = this.life;
 //                int waveAmplitude = 100;
-                int waveAmplitude = 20;
-                midPointX += waveAmplitude * Math.sin(0.1 * incr );
-                midPointY += waveAmplitude * Math.sin(0.1 * incr + 50 + a.cursorOffset);
+//                int waveAmplitude = 20;
+//                midPointX += waveAmplitude * Math.sin(0.1 * incr );
+//                midPointY += waveAmplitude * Math.sin(0.1 * incr + 50 + a.cursorOffset);
                 Point midPoint = new Point(midPointX, midPointY);
 
 //                quadPoints[0] = p;
