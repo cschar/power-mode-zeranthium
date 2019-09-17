@@ -28,6 +28,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private JTextField shakeDistanceTextField;
     private JCheckBox enableVineCheckBox;
     private JCheckBox enableMandalaCheckbox;
+    private JCheckBox enableLinkerCheckbox;
 
 
     private BasicParticleConfig basicParticleConfig;
@@ -74,6 +75,9 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         if(powerMode3.getSpriteTypeEnabled(PowerMode3.SpriteType.MANDALA)){
             enableMandalaCheckbox.setSelected(true);
         }
+        if(powerMode3.getSpriteTypeEnabled(PowerMode3.SpriteType.LINKER)){
+            enableLinkerCheckbox.setSelected(true);
+        }
 
 
         //already initialized from createUIComponents below
@@ -114,21 +118,16 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 //        settings.setBasicParticleEnabled(enableBasicParticleCheckBox.isSelected());
         settings.setSpriteTypeEnabled(enableBasicParticleCheckBox.isSelected(), PowerMode3.SpriteType.BASIC_PARTICLE);
 
-
         settings.setSpriteTypeEnabled(enableLightningCheckBox.isSelected(), PowerMode3.SpriteType.LIGHTNING);
         settings.setSpriteTypeEnabled(lightningAltCheckBox.isSelected(), PowerMode3.SpriteType.LIGHTNING_ALT);
-
         settings.setSpriteTypeEnabled(enableLizardCheckBox.isSelected(), PowerMode3.SpriteType.LIZARD);
-
         settings.setSpriteTypeEnabled(enableMOMACheckBox.isSelected(), PowerMode3.SpriteType.MOMA);
-
-
         settings.setSpriteTypeEnabled(enableVineCheckBox.isSelected(), PowerMode3.SpriteType.VINE);
 
         settings.setSpriteTypeEnabled(enableMandalaCheckbox.isSelected(), PowerMode3.SpriteType.MANDALA);
         ParticleSpriteMandala.settingEnabled = enableMandalaCheckbox.isSelected(); //to kill any lingering ones
 
-
+        settings.setSpriteTypeEnabled(enableLinkerCheckbox.isSelected(), PowerMode3.SpriteType.LINKER);
 
 
         //save values

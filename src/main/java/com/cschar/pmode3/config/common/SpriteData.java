@@ -1,4 +1,4 @@
-package com.cschar.pmode3.config;
+package com.cschar.pmode3.config.common;
 
 import com.cschar.pmode3.ParticleSpriteLightning;
 import com.cschar.pmode3.ParticleUtils;

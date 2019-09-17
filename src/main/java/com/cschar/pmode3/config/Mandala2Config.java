@@ -2,8 +2,10 @@ package com.cschar.pmode3.config;
 
 import com.cschar.pmode3.ParticleSpriteMandala;
 import com.cschar.pmode3.PowerMode3;
+import com.cschar.pmode3.config.common.CustomPathCellHighlighterRenderer;
 import com.cschar.pmode3.config.common.JTableButtonMouseListener;
 import com.cschar.pmode3.config.common.JTableButtonRenderer;
+import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDialog;
 import com.intellij.openapi.fileChooser.FileChooserFactory;
@@ -110,7 +112,7 @@ public class Mandala2Config extends JPanel{
         table.getColumn("reset").setCellRenderer(buttonRenderer);
         table.addMouseListener(new JTableButtonMouseListener(table));
 
-        TableCellRenderer pathRenderer = new MandalaCustomPathCellHighlighterRenderer();
+        TableCellRenderer pathRenderer = new CustomPathCellHighlighterRenderer(mandalaData);
         table.getColumn("path").setCellRenderer(pathRenderer);
 
         OtherPanelCellEditorRenderer OtherPanelCellEditorRenderer = new OtherPanelCellEditorRenderer();
@@ -140,36 +142,6 @@ public class Mandala2Config extends JPanel{
     public static void setSpriteDataAnimated(ArrayList<SpriteDataAnimated> data){
         mandalaData = data;
         ParticleSpriteMandala.mandalaRingData = data;
-    }
-}
-
-class MandalaCustomPathCellHighlighterRenderer extends JLabel implements TableCellRenderer {
-
-    public MandalaCustomPathCellHighlighterRenderer() {
-        setOpaque(true); // Or color won't be displayed!
-    }
-
-    @Override
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        String val = (String)value;
-        Color c;
-
-        if (MandalaRingTableModel.data.get(row).customPathValid) {
-//            c = Color.WHITE;
-            c = Color.lightGray;
-            setText(row + " -- " + val);
-        }else if(MandalaRingTableModel.data.get(row).customPath != ""){
-            c = Color.RED;
-            setText(row + " -- " +  "!!Error loading path!!: " + val);
-        }else{
-            c = Color.WHITE;
-//            c = Color.CYAN;
-            setText(row + " -- ");
-        }
-
-        setBackground(c);
-
-        return this;
     }
 }
 

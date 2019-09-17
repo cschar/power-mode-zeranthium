@@ -18,13 +18,12 @@
 package com.cschar.pmode3;
 
 
-import com.cschar.pmode3.config.SpriteData;
+import com.cschar.pmode3.config.common.SpriteData;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 
@@ -41,7 +40,7 @@ public class ParticleSpriteLightningAlt extends Particle{
     }
 
     //TODO make arraylist
-    public static SpriteData[] sparkData;
+    public static ArrayList<SpriteData> sparkData;
     private BufferedImage sprite;
 
 
@@ -63,7 +62,7 @@ public class ParticleSpriteLightningAlt extends Particle{
     private float SPARK_ALPHA = 0.99f;
     private float spriteScale = 1.0f;
 
-    private BufferedImage tmpSprite;
+    private BufferedImage sparkSprite;
 
     public ParticleSpriteLightningAlt(int x, int y, int dx, int dy,
                                       int size, int life, Color c, int chanceOfSpawn, float maxAlpha, boolean sparksEnabled) {
@@ -75,13 +74,13 @@ public class ParticleSpriteLightningAlt extends Particle{
         this.makeSparks = sparksEnabled;
 
 
-        int winnerIndex = SpriteData.getWeightedAmountWinningIndex(Arrays.asList(sparkData));
+        int winnerIndex = SpriteData.getWeightedAmountWinningIndex(sparkData);
 
         if(winnerIndex == -1){
             this.makeSparks = false;
         }else {
-            tmpSprite = sparkData[winnerIndex].image;
-            this.spriteScale = sparkData[winnerIndex].scale;
+            sparkSprite = sparkData.get(winnerIndex).image;
+            this.spriteScale = sparkData.get(winnerIndex).scale;
         }
 
         this.maxAlpha = maxAlpha;
@@ -151,10 +150,10 @@ public class ParticleSpriteLightningAlt extends Particle{
 
                     // -'ve radians ---> rotate counter clockwise ...
                     at.rotate((arcSpace));
-                    at.translate((-tmpSprite.getWidth() / 2.0),
-                            (-tmpSprite.getHeight())); //move image 100% up so lightning lands at bottom
+                    at.translate((-sparkSprite.getWidth() / 2.0),
+                            (-sparkSprite.getHeight())); //move image 100% up so lightning lands at bottom
 
-                    g2d.drawImage(tmpSprite, at, null);
+                    g2d.drawImage(sparkSprite, at, null);
 
 
 

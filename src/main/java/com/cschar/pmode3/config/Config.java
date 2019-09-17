@@ -13,7 +13,7 @@ public class Config {
 
 
     public static JPanel getColorPickerPanel(String labelTextKey, PowerMode3.SpriteType spriteType, PowerMode3 settings, Color defaultColor){
-        //Lizard color
+
         JPanel colorPickerPanel = new JPanel();
         JLabel colorLabel = new JLabel(labelTextKey);
         JLabel colorPreviewLabel = new JLabel("[----]");

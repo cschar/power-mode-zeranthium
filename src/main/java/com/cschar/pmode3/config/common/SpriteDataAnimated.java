@@ -1,4 +1,4 @@
-package com.cschar.pmode3.config;
+package com.cschar.pmode3.config.common;
 
 import com.cschar.pmode3.ParticleSpriteLightning;
 import com.cschar.pmode3.ParticleUtils;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
-public class SpriteDataAnimated  extends SpriteData{
+public class SpriteDataAnimated  extends SpriteData {
 
     public int speedRate = 2;
     public boolean isCyclic=false;

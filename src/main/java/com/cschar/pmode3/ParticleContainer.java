@@ -14,6 +14,7 @@
 package com.cschar.pmode3;
 
 import com.cschar.pmode3.config.*;
+import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 
@@ -299,6 +300,14 @@ public class ParticleContainer extends JComponent implements ComponentListener {
                     particles.add(e);
                 }
             }
+        }
+
+        if(settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LINKER)){
+            System.out.println("spawn");
+            final ParticleSpriteLinkerAnchor e = new ParticleSpriteLinkerAnchor(x, y, dx, dy, 0,
+                    size, life, Color.GREEN, anchors);
+            particles.add(e);
+
         }
 
 

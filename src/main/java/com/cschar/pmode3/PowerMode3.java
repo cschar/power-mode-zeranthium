@@ -19,6 +19,8 @@ package com.cschar.pmode3;
 
 
 import com.cschar.pmode3.config.*;
+import com.cschar.pmode3.config.common.SpriteData;
+import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
@@ -93,7 +95,8 @@ public class PowerMode3 implements BaseComponent,
         LIZARD,
         MOMA,
         VINE,
-        MANDALA
+        MANDALA,
+        LINKER
     }
 
     @com.intellij.util.xmlb.annotations.XCollection
@@ -135,6 +138,7 @@ public class PowerMode3 implements BaseComponent,
 
         put("sprite"+ SpriteType.VINE + "Enabled", "false");
         put("sprite"+ SpriteType.MANDALA + "Enabled", "false");
+        put("sprite"+ SpriteType.LINKER + "Enabled", "true");
     }};
 
 
@@ -256,16 +260,16 @@ public class PowerMode3 implements BaseComponent,
     }
 
 
-    public SpriteData[] deserializeSpriteData(ArrayList<String[]> target){
+    public ArrayList<SpriteData> deserializeSpriteData(ArrayList<String[]> target){
         ArrayList<SpriteData> sd = new ArrayList<SpriteData>();
         for(String[] s: target){
             sd.add(new SpriteData(Boolean.parseBoolean(s[0]), Float.parseFloat(s[1]), Integer.parseInt(s[2]),
                      s[3], s[4]));
         }
-        return sd.toArray(new SpriteData[0]);
+        return sd;
     }
 
-    public void setSerializedSparkData(SpriteData[] sparkData){
+    public void setSerializedSparkData(ArrayList<SpriteData> sparkData){
         ArrayList<String[]> serialized = new ArrayList<>();
         for( SpriteData d: sparkData){
                serialized.add(new String[]{String.valueOf(d.enabled), String.valueOf(d.scale), String.valueOf(d.weightedAmount),

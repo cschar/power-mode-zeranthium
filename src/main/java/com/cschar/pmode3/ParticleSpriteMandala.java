@@ -18,8 +18,7 @@
 package com.cschar.pmode3;
 
 
-import com.cschar.pmode3.config.SpriteData;
-import com.cschar.pmode3.config.SpriteDataAnimated;
+import com.cschar.pmode3.config.common.SpriteDataAnimated;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;

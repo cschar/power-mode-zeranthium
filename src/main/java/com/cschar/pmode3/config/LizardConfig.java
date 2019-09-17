@@ -2,8 +2,7 @@ package com.cschar.pmode3.config;
 
 import com.cschar.pmode3.ParticleSpriteLizardAnchor;
 import com.cschar.pmode3.PowerMode3;
-import com.cschar.pmode3.config.common.JTableButtonMouseListener;
-import com.cschar.pmode3.config.common.JTableButtonRenderer;
+import com.cschar.pmode3.config.common.*;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDialog;
 import com.intellij.openapi.fileChooser.FileChooserFactory;
@@ -143,7 +142,8 @@ public class LizardConfig extends JPanel {
 
 
         table.setRowHeight(60);
-        table.setModel(new LizardTableModel());
+        LizardTableModel tableModel = new LizardTableModel();
+        table.setModel(tableModel);
 
         table.setCellSelectionEnabled(false);
         table.setColumnSelectionAllowed(false);
@@ -194,7 +194,7 @@ public class LizardConfig extends JPanel {
         table.addMouseListener(new JTableButtonMouseListener(table));
 
         //TODO: refactor to pass in dataset to work with
-        TableCellRenderer pathRenderer = new LizardCustomPathCellHighlighterRenderer();
+        TableCellRenderer pathRenderer = new CustomPathCellHighlighterRenderer(LizardConfig.spriteDataAnimated);
         table.getColumn("path").setCellRenderer(pathRenderer);
 
 
@@ -280,38 +280,6 @@ public class LizardConfig extends JPanel {
     }
 }
 
-
-
-
-class LizardCustomPathCellHighlighterRenderer extends JLabel implements TableCellRenderer {
-
-    public LizardCustomPathCellHighlighterRenderer() {
-        setOpaque(true); // Or color won't be displayed!
-    }
-
-    @Override
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        String val = (String)value;
-        Color c;
-
-        if (LizardTableModel.data.get(row).customPathValid) {
-//            c = Color.WHITE;
-            c = Color.lightGray;
-            setText(row + " -- " + val);
-        }else if(LizardTableModel.data.get(row).customPath != ""){
-            c = Color.RED;
-            setText(row + " -- " +  "!!Error loading path!!: " + val);
-        }else{
-            c = Color.WHITE;
-//            c = Color.CYAN;
-            setText(row + " -- ");
-        }
-
-        setBackground(c);
-
-        return this;
-    }
-}
 
 class LizardTableModel extends AbstractTableModel {
 

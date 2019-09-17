@@ -17,15 +17,13 @@
 
 package com.cschar.pmode3;
 
-import com.cschar.pmode3.config.SpriteData;
-import com.cschar.pmode3.config.SpriteDataAnimated;
-import org.imgscalr.Scalr;
+import com.cschar.pmode3.config.common.SpriteData;
+import com.cschar.pmode3.config.common.SpriteDataAnimated;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ThreadLocalRandom;
 
