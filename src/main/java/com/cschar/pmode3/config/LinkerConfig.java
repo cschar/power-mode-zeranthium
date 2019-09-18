@@ -32,12 +32,15 @@ public class LinkerConfig extends JPanel {
     private JTextField chanceOfSpawnTextField;
     private JTextField maxAnchorsToUse;
     private JTextField chancePerKeyPressTextField;
+    private JCheckBox tracerEnabledCheckBox;
 
 
     public JTextField maxLinksTextField;
     public JTextField distanceFromCenterTextField;
     public JTextField wobbleAmountTextField;
 
+
+    private static Color originalTracerColor = Color.WHITE;
 
 
     private JComponent linkerSpriteConfigPanel;
@@ -111,28 +114,33 @@ public class LinkerConfig extends JPanel {
         chancePerKeyPressPanel.setBackground(Color.lightGray);
         secondCol.add(chancePerKeyPressPanel);
 
+        JPanel tracerColorPanel = Config.getColorPickerPanel("tracer Color", PowerMode3.SpriteType.LINKER, settings, this.originalTracerColor);
+        this.tracerEnabledCheckBox = new JCheckBox("is enabled?", true);
+        JPanel tracerConfig = Config.populateEnabledColorPickerPanel(tracerColorPanel, tracerEnabledCheckBox);
+        secondCol.add(tracerConfig);
+
+
         this.chanceOfSpawnTextField = new JTextField();
-        JLabel chanceOfSpawnLabel = new JLabel("Chance of Link per anchor (0-100)");
-        JPanel chancePanel = new JPanel();
-        chancePanel.add(chanceOfSpawnLabel);
-        chancePanel.add(chanceOfSpawnTextField);
-        chancePanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        chancePanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
-        chancePanel.setMaximumSize(new Dimension(400, 50));
-//        chancePanel.setBackground(Color.lightGray);
-        secondCol.add(chancePanel);
+//        JLabel chanceOfSpawnLabel = new JLabel("Chance of Link per anchor (0-100)");
+//        JPanel chancePanel = new JPanel();
+//        chancePanel.add(chanceOfSpawnLabel);
+//        chancePanel.add(chanceOfSpawnTextField);
+//        chancePanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+//        chancePanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+//        chancePanel.setMaximumSize(new Dimension(400, 50));
+////        chancePanel.setBackground(Color.lightGray);
+//        secondCol.add(chancePanel);
 
         this.maxAnchorsToUse = new JTextField();
-//        this.maxAnchorsToUse.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        JLabel maxAnchorsLabel = new JLabel("Max Anchors to Use (1-100)");
-        JPanel maxAnchorsPanel = new JPanel();
-        maxAnchorsPanel.add(maxAnchorsLabel);
-        maxAnchorsPanel.add(maxAnchorsToUse);
-        maxAnchorsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        maxAnchorsPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
-        maxAnchorsPanel.setMaximumSize(new Dimension(500, 50));
-//        maxAnchorsPanel.setBackground(Color.yellow);
-        secondCol.add(maxAnchorsPanel);
+//        JLabel maxAnchorsLabel = new JLabel("Max Anchors to Use (1-100)");
+//        JPanel maxAnchorsPanel = new JPanel();
+//        maxAnchorsPanel.add(maxAnchorsLabel);
+//        maxAnchorsPanel.add(maxAnchorsToUse);
+//        maxAnchorsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+//        maxAnchorsPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+//        maxAnchorsPanel.setMaximumSize(new Dimension(500, 50));
+////        maxAnchorsPanel.setBackground(Color.yellow);
+//        secondCol.add(maxAnchorsPanel);
 
 
         //First col config
@@ -244,7 +252,6 @@ public class LinkerConfig extends JPanel {
         sp.setOpaque(false);
         sp.getViewport().setOpaque(false);
         sp.setBorder(BorderFactory.createEmptyBorder());
-        System.out.println("Initialized");
         return sp;
     }
 
@@ -257,6 +264,8 @@ public class LinkerConfig extends JPanel {
         this.chanceOfSpawnTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"chanceOfSpawn", 100)));
 
         this.maxAnchorsToUse.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"maxAnchorsToUse", 10)));
+
+        this.tracerEnabledCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.LINKER,"tracerEnabled", false));
 
         this.maxLinksTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"maxLinks", 20)));
         this.distanceFromCenterTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"distanceFromCenter", 5)));
@@ -303,6 +312,9 @@ public class LinkerConfig extends JPanel {
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "maxLinks",
                 String.valueOf(maxLinks));
 
+
+        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "tracerEnabled", String.valueOf(tracerEnabledCheckBox.isSelected()));
+
         //TODO::: LoaderSaver class, init in constructor for config, iterate over lists in loadValues/saveValues
         //    -- load()  in loadValues()
         //    --- save(), in saveValues()
@@ -341,6 +353,14 @@ public class LinkerConfig extends JPanel {
 
     public static int CHANCE_PER_KEY_PRESS(PowerMode3 settings){
         return Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER, "chancePerKeyPress");
+    }
+
+    public static boolean TRACER_ENABLED(PowerMode3 settings){
+        return Config.getBoolProperty(settings, PowerMode3.SpriteType.LINKER, "tracerEnabled");
+    }
+
+    public static Color TRACER_COLOR(PowerMode3 settings){
+        return Config.getColorProperty(settings,PowerMode3.SpriteType.LINKER, "tracer Color", originalTracerColor);
     }
 
     public static int MAX_LINKS(PowerMode3 settings){

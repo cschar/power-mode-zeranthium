@@ -49,28 +49,30 @@ public class ParticleSpriteLinkerAnchor extends Particle{
     int initialY;
 
     //    private Anchor a;
-    private Anchor[] anchors;
+    private ArrayList<Anchor> anchors;
     private int distanceFromCenter;
     private int maxLinks;
     private int wobbleAmount=0;
+    private boolean tracerEnabled;
+
     int[][] repeats_offsets;
     boolean[][] validOnPosIndex;
 
     public ParticleSpriteLinkerAnchor(int x, int y, int dx, int dy, int size, int life, Color c,
-                                      Anchor[] anchors, int distanceFromCenter, int maxLinks, int wobbleAmount) {
+                                      ArrayList<Anchor> anchors, int distanceFromCenter, int maxLinks, int wobbleAmount,
+                                      boolean tracerEnabled) {
         super(x,y,dx,dy,size,life,c);
-
-
-        this.anchors = anchors;
-
         this.initialX = x;
         this.initialY = y;
+        this.anchors = anchors;
+
 
         this.cursorX = x;
         this.cursorY = y;
         this.distanceFromCenter = distanceFromCenter;
         this.maxLinks = maxLinks;
         this.wobbleAmount = wobbleAmount;
+        this.tracerEnabled = tracerEnabled;
 
         this.sprites = spriteDataAnimated.get(0).images;
         this.spriteData = spriteDataAnimated.get(0);
@@ -194,9 +196,11 @@ public class ParticleSpriteLinkerAnchor extends Particle{
                     path.lineTo(p.x, p.y);
                 }
 
-                g2d.setPaint(Color.WHITE);
-                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
-                g2d.draw(path);
+                if(tracerEnabled) {
+                    g2d.setPaint(this.c);
+                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.c.getAlpha()/255f));
+                    g2d.draw(path);
+                }
 
                 int pointToStartFrom = 0;
                 for(int i = 0; i <quadPoints.length; i++){

@@ -306,18 +306,28 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         int linkerI_chance = LinkerConfig.CHANCE_PER_KEY_PRESS(settings);
         r = ThreadLocalRandom.current().nextInt(1, 100 +1);
         if(settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LINKER) && (r <= linkerI_chance)){
+            ArrayList<Anchor> validAnchors = new ArrayList<>();
             int minPsiSearch = LinkerConfig.MIN_PSI_SEARCH(settings);
             int maxPsiSearch = LinkerConfig.MAX_PSI_SEARCH(settings);
 
             //TODO filter anchors passed in based on maxmin psi search
-
+            for(Anchor a: anchors) {
+                if( Math.abs(a.anchorOffset - a.cursorOffset) > (maxPsiSearch) ){
+                    continue;
+                }
+                if( Math.abs(a.anchorOffset - a.cursorOffset) < (minPsiSearch) ){
+                    continue;
+                }
+                validAnchors.add(a);
+            }
 
 
             final ParticleSpriteLinkerAnchor e = new ParticleSpriteLinkerAnchor(x, y, dx, dy,
-                    size, life, Color.GREEN, anchors,
+                    size, life, LinkerConfig.TRACER_COLOR(settings), validAnchors,
                     LinkerConfig.DISTANCE_FROM_CENTER(settings),
                     LinkerConfig.MAX_LINKS(settings),
-                    LinkerConfig.WOBBLE_AMOUNT(settings));
+                    LinkerConfig.WOBBLE_AMOUNT(settings),
+                    LinkerConfig.TRACER_ENABLED(settings));
             particles.add(e);
 
 

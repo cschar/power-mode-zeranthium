@@ -26,9 +26,11 @@ public class Config {
             colorPreviewLabel.setBackground(defaultColor);
             settings.setSpriteTypeProperty(spriteType, labelTextKey,
                     String.valueOf(defaultColor.getRGB()));
+
+
         }else{
             String colorRGB = settings.getSpriteTypeProperty(spriteType, labelTextKey);
-            Color newColor = new Color(Integer.parseInt(colorRGB));
+            Color newColor = new Color(Integer.parseInt(colorRGB), true);
             colorPreviewLabel.setBackground(newColor);
         };
 
@@ -38,7 +40,7 @@ public class Config {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String colorRGB = settings.getSpriteTypeProperty(spriteType, labelTextKey);
-                Color prevColor = new Color(Integer.parseInt(colorRGB));
+                Color prevColor = new Color(Integer.parseInt(colorRGB), true);
 
                 Color newColor = JColorChooser.showDialog(colorPickerPanel, "Choose Color",
                         prevColor);
@@ -127,20 +129,14 @@ public class Config {
     }
 
     public static Color getColorProperty(PowerMode3 settings, PowerMode3.SpriteType type, String propertyName){
-
-        String colorRGB = settings.getSpriteTypeProperty(type, propertyName);
-        if(colorRGB != null){
-            return new Color(Integer.parseInt(colorRGB));
-        }else{
-            return Color.GRAY;
-        }
+        return getColorProperty(settings, type, propertyName, Color.GRAY);
     }
 
     public static Color getColorProperty(PowerMode3 settings, PowerMode3.SpriteType type, String propertyName, Color defaultValue){
 
         String colorRGB = settings.getSpriteTypeProperty(type, propertyName);
         if(colorRGB != null){
-            return new Color(Integer.parseInt(colorRGB));
+            return new Color(Integer.parseInt(colorRGB), true);
         }else{
             return defaultValue;
         }
@@ -175,6 +171,17 @@ public class Config {
         parentPanel.setMaximumSize(new Dimension(500, 50));
 
         return parentPanel;
+    }
+
+    public static JPanel populateEnabledColorPickerPanel(JPanel colorPanel, JCheckBox checkBox){
+
+        JPanel containerPanel = new JPanel();
+        containerPanel.add(checkBox);
+        containerPanel.add(colorPanel);
+        containerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        containerPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+        containerPanel.setMaximumSize(new Dimension(500, 50));
+        return containerPanel;
     }
 
 

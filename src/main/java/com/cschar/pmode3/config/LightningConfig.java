@@ -16,8 +16,8 @@ public class LightningConfig extends JPanel {
     private JCheckBox outerBeamEnabledCheckBox;
 
     private JTextField chanceOfLightningTextField;
-    private Color originalColorInner = Color.WHITE;
-    private Color originalColorOuter = Color.CYAN;
+    private static Color originalColorInner = Color.WHITE;
+    private static Color originalColorOuter = Color.CYAN;
 
     public LightningConfig(PowerMode3 settings){
         this.settings = settings;
@@ -53,8 +53,8 @@ public class LightningConfig extends JPanel {
 
 
 
-        JPanel innerBeamColorPanel = Config.getColorPickerPanel("inner Beam Color", PowerMode3.SpriteType.LIGHTNING, settings, this.originalColorInner);
-        JPanel outerBeamColorPanel = Config.getColorPickerPanel("outer Beam Color", PowerMode3.SpriteType.LIGHTNING, settings, this.originalColorOuter);
+        JPanel innerBeamColorPanel = Config.getColorPickerPanel("inner Beam Color", PowerMode3.SpriteType.LIGHTNING, settings, originalColorInner);
+        JPanel outerBeamColorPanel = Config.getColorPickerPanel("outer Beam Color", PowerMode3.SpriteType.LIGHTNING, settings, originalColorOuter);
 
         JPanel innerBeamJPanel = new JPanel();
         this.innerBeamEnabledCheckBox = new JCheckBox("is enabled?", true);
@@ -97,15 +97,9 @@ public class LightningConfig extends JPanel {
                 Config.getIntProperty(settings, PowerMode3.SpriteType.LIGHTNING,"chanceOfLightning",
                         100)));
 
-        String isInnerBeamEnabled = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "innerBeamEnabled");
-        if(isInnerBeamEnabled != null){
-            this.innerBeamEnabledCheckBox.setSelected(Boolean.valueOf(isInnerBeamEnabled));
-        }
+        this.innerBeamEnabledCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.LIGHTNING,"innerBeamEnabled", true));
+        this.outerBeamEnabledCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.LIGHTNING,"outerBeamEnabled", true));
 
-        String isOuterBeamEnabled = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "outerBeamEnabled");
-        if(isOuterBeamEnabled != null){
-            this.outerBeamEnabledCheckBox.setSelected(Boolean.valueOf(isOuterBeamEnabled));
-        }
 
     }
 
@@ -157,14 +151,11 @@ public class LightningConfig extends JPanel {
     }
 
     public static Color OUTER_BEAM_COLOR(PowerMode3 settings){
-        String colorRGBOuter = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "outer Beam Color");
-        return new Color(Integer.parseInt(colorRGBOuter));
+        return Config.getColorProperty(settings,PowerMode3.SpriteType.LIGHTNING, "outer Beam Color", originalColorOuter);
     }
 
     public static Color INNER_BEAM_COLOR(PowerMode3 settings){
-        String colorRGBInner = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING, "inner Beam Color");
-        return new Color(Integer.parseInt(colorRGBInner));
-
+        return Config.getColorProperty(settings,PowerMode3.SpriteType.LIGHTNING, "inner Beam Color", originalColorInner);
     }
 
 
