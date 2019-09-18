@@ -143,11 +143,6 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
         }
 
-//        if (settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LIZARD)){
-//            final ParticleSpriteLizard e = new ParticleSpriteLizard(x, y, dx, dy, size, lifeSetting, Color.GREEN);
-//            particles.add(e);
-//
-//        }
 
         if (settings.getSpriteTypeEnabled(PowerMode3.SpriteType.MOMA)){
 
@@ -300,32 +295,60 @@ public class ParticleContainer extends JComponent implements ComponentListener {
             }
         }
 
-        int linkerI_chance = LinkerConfig.CHANCE_PER_KEY_PRESS(settings);
-        r = ThreadLocalRandom.current().nextInt(1, 100 +1);
-        if(settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LINKER) && (r <= linkerI_chance)){
+
+
+//        int linkerI_chance = LinkerConfig.CHANCE_PER_KEY_PRESS(settings);
+//        r = ThreadLocalRandom.current().nextInt(1, 100 +1);
+//        if(settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LINKER) && (r <= linkerI_chance)){
+        if(settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LINKER)){
+
+
+            ParticleSpriteLinkerAnchor.cursorX = x;
+            ParticleSpriteLinkerAnchor.cursorY = y;
+
             ArrayList<Anchor> validAnchors = new ArrayList<>();
             int minPsiSearch = LinkerConfig.MIN_PSI_SEARCH(settings);
             int maxPsiSearch = LinkerConfig.MAX_PSI_SEARCH(settings);
 
-            for(Anchor a: anchors) {
-                if( Math.abs(a.anchorOffset - a.cursorOffset) > (maxPsiSearch) ){
+            for (Anchor a : anchors) {
+                if (Math.abs(a.anchorOffset - a.cursorOffset) > (maxPsiSearch)) {
                     continue;
                 }
-                if( Math.abs(a.anchorOffset - a.cursorOffset) < (minPsiSearch) ){
+                if (Math.abs(a.anchorOffset - a.cursorOffset) < (minPsiSearch)) {
                     continue;
                 }
                 validAnchors.add(a);
             }
 
+            boolean createParticle = false;
+            if(LinkerConfig.IS_CYCLIC_ENABLED(settings)){
+                //TODO make a config init() on each particle that loads when plugin launches
+                //so its loaded on startup without cranking open config
+                ParticleSpriteLinkerAnchor.MAX_CYCLE_PARTICLES = LinkerConfig.MAX_CYCLE_PARTICLES(settings);
+                ParticleSpriteLinkerAnchor.cyclicToggleEnabled = true;
 
-            final ParticleSpriteLinkerAnchor e = new ParticleSpriteLinkerAnchor(x, y, dx, dy,
-                    size, life, LinkerConfig.TRACER_COLOR(settings), validAnchors,
-                    LinkerConfig.DISTANCE_FROM_CENTER(settings),
-                    LinkerConfig.MAX_LINKS(settings),
-                    LinkerConfig.WOBBLE_AMOUNT(settings),
-                    LinkerConfig.TRACER_ENABLED(settings),
-                    LinkerConfig.CURVE1_AMOUNT(settings));
-            particles.add(e);
+
+                if(ParticleSpriteLinkerAnchor.CUR_CYCLE_PARTICLES < ParticleSpriteLinkerAnchor.MAX_CYCLE_PARTICLES) {
+                    ParticleSpriteLinkerAnchor.CUR_CYCLE_PARTICLES += 1;
+                    createParticle = true;
+                }
+            }else {
+                createParticle = true;
+            }
+
+            if(createParticle){
+                final ParticleSpriteLinkerAnchor e = new ParticleSpriteLinkerAnchor(x, y, dx, dy,
+                        size, life, LinkerConfig.TRACER_COLOR(settings), validAnchors,
+                        LinkerConfig.DISTANCE_FROM_CENTER(settings),
+                        LinkerConfig.MAX_LINKS(settings),
+                        LinkerConfig.WOBBLE_AMOUNT(settings),
+                        LinkerConfig.TRACER_ENABLED(settings),
+                        LinkerConfig.CURVE1_AMOUNT(settings),
+                        LinkerConfig.IS_CYCLIC_ENABLED(settings));
+                particles.add(e);
+            }
+
+
 
 
         }

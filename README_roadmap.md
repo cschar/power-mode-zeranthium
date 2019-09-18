@@ -13,7 +13,7 @@ TODO: everything
    - Config panels can load a 'pack' of images if this location is set
       - e.g. load a 'plant growing' theme 
       
-- Mandala Chains based off Vine
+
 - Fiddle heads
 ```
   xxxxxxx
@@ -39,12 +39,14 @@ Done;
 - lizards
 - lightning sparks
 - Void / Mandala  (max 3-4 layers as typing increases)
+- Mandala Chains based off Vine
+
 
 future TODO:
 - code explorer (e.g. wave collapse for dungeon background)
 ---- when you type it lights up background, e.g. icnreasing alpha from 0->0.1
 
 - code explorer v2 
----- typing lights up dungeion PLUS sends out ai units to battle spiders etc..
+---- typing lights up dungeion PLUS sends out ai units to battle spiders etc.. LOL
  
 - plant growth using wave collapse function?

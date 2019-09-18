@@ -22,7 +22,6 @@ import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class ParticleSpriteLinkerAnchor extends Particle{
@@ -32,21 +31,19 @@ public class ParticleSpriteLinkerAnchor extends Particle{
 
 
     public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
+    public static boolean settingEnabled = true;
+
+    public static boolean cyclicToggleEnabled = false;
 
     static {}
 
 
-    private float scale=1.0f;
+    public static int cursorX;
+    public static int cursorY;
 
-    private SpriteDataAnimated spriteData;
-    private ArrayList<BufferedImage> sprites;
-    private float spriteScale = 1.0f;
+    private int prevX;
+    private int prevY;
 
-
-    public int cursorX;
-    public int cursorY;
-    int initialX;
-    int initialY;
 
     //    private Anchor a;
     private ArrayList<Anchor> anchors;
@@ -55,31 +52,41 @@ public class ParticleSpriteLinkerAnchor extends Particle{
     private int wobbleAmount=0;
     private boolean tracerEnabled;
     private int curve1Amount;
+    private boolean isSingleCyclicEnabled;
+    private int maxLife;
 
     int[][] repeats_offsets;
     boolean[][] validOnPosIndex;
     private int[] pointsToStartFrom;
 
+    //TODO:: QUESTIONABLE way to do cyclic particle
+    public static int MAX_CYCLE_PARTICLES = 3;
+    public static int CUR_CYCLE_PARTICLES = 0;
+
+
     public ParticleSpriteLinkerAnchor(int x, int y, int dx, int dy, int size, int life, Color c,
                                       ArrayList<Anchor> anchors, int distanceFromCenter, int maxLinks, int wobbleAmount,
-                                      boolean tracerEnabled, int curve1Amount) {
+                                      boolean tracerEnabled, int curve1Amount, boolean isCyclic) {
         super(x,y,dx,dy,size,life,c);
-        this.initialX = x;
-        this.initialY = y;
-        this.anchors = anchors;
 
+        this.anchors = anchors;
 
         this.cursorX = x;
         this.cursorY = y;
+        this.prevX = x;
+        this.prevY= y;
         this.distanceFromCenter = distanceFromCenter;
         this.maxLinks = maxLinks;
         this.wobbleAmount = wobbleAmount;
         this.tracerEnabled = tracerEnabled;
         this.curve1Amount = curve1Amount;
+        this.isSingleCyclicEnabled = isCyclic;
 
-        this.sprites = spriteDataAnimated.get(0).images;
-        this.spriteData = spriteDataAnimated.get(0);
-        spriteScale = spriteData.scale;
+        if(this.isSingleCyclicEnabled){
+            this.life = 1000000;
+        }
+        this.maxLife = this.life;
+
 
         this.frames = new int[spriteDataAnimated.size()];
 
@@ -116,8 +123,8 @@ public class ParticleSpriteLinkerAnchor extends Particle{
     }
 
 
-    //If we calculate once at the start instead of each time in loop, it prevents stuttering from
-    // length changes due to sin/cos adds
+    // If we calculate once at the start instead of each time in loop, it prevents stuttering from
+    // length changes due to sin/cos wiggle adds
     private int[] calcPointsToStartFrom(){
         int[] points = new int[this.anchors.size()];
 
@@ -126,16 +133,16 @@ public class ParticleSpriteLinkerAnchor extends Particle{
             Anchor a = anchors.get(j);
             Point[] quadPoints = new Point[MAX_QUAD_POINTS];
 
-            int midPointX = (this.initialX + a.p.x) / 2;
-            int midPointY = (this.initialY + a.p.y) / 2;
+            int midPointX = (this.x + a.p.x) / 2;
+            int midPointY = (this.y + a.p.y) / 2;
             midPointX += curve1Amount;
-            if(a.p.y > this.initialY) {
+            if(a.p.y > this.y) {
                 midPointY += curve1Amount;
             }else{
                 midPointY -= curve1Amount;
             }
             Point midPoint = new Point(midPointX, midPointY);
-            Point startPoint = new Point(this.initialX, this.initialY);
+            Point startPoint = new Point(this.x, this.y);
 
 
             double t = 0.0;
@@ -158,8 +165,44 @@ public class ParticleSpriteLinkerAnchor extends Particle{
 
     public boolean update() {
 
+        if(this.isSingleCyclicEnabled){
+            if(MAX_CYCLE_PARTICLES < CUR_CYCLE_PARTICLES){ // if changed in settings
+                CUR_CYCLE_PARTICLES -= 1;
+                return true;
+            }
+            if(!cyclicToggleEnabled){ //checkbox toggle in config
+                CUR_CYCLE_PARTICLES -= 1;
+                return true;
+            }
+            //added to kill any lingering particles
+            if(!settingEnabled){ //checkbox of entire LINKER type
+                CUR_CYCLE_PARTICLES -= 1;
+                return true;
+            }
+
+            this.x = cursorX;
+            this.y = cursorY;
+        }
         life--;
-        return life <= 0;
+
+
+
+        boolean lifeOver = (life <= 0);
+////
+        if(lifeOver) { //ready to reset?
+            if (this.isSingleCyclicEnabled) {
+
+                //If entire plugin is turned off
+                if (!PowerMode3.getInstance().isEnabled()) {
+                    CUR_CYCLE_PARTICLES -= 1;
+                    return true;
+                }
+                this.life = this.maxLife;
+                return false;
+            }
+        }
+
+        return lifeOver;
     }
 
 
@@ -193,6 +236,13 @@ public class ParticleSpriteLinkerAnchor extends Particle{
 
             g2d.setStroke(new BasicStroke(2.0f));
 
+            if(this.isSingleCyclicEnabled){
+                if(this.prevX != this.x || this.prevY != this.y) {
+                    this.pointsToStartFrom = calcPointsToStartFrom();
+                    this.prevX = this.x;
+                    this.prevY = this.y;
+                }
+            }
 
 
             //every X updates, increment frame, this controls how fast it animates
@@ -220,13 +270,13 @@ public class ParticleSpriteLinkerAnchor extends Particle{
                 Point[] quadPoints = new Point[MAX_QUAD_POINTS];
 
 
-                int midPointX = (this.initialX + a.p.x) / 2;
-                int midPointY = (this.initialY + a.p.y) / 2;
+                int midPointX = (this.x + a.p.x) / 2;
+                int midPointY = (this.y + a.p.y) / 2;
                 int incr = this.life;
 
 
                 midPointX += curve1Amount;
-                if(a.p.y > this.initialY) {
+                if(a.p.y > this.y) {
                     midPointY += curve1Amount;
                 }else{
                     midPointY -= curve1Amount;
@@ -237,7 +287,7 @@ public class ParticleSpriteLinkerAnchor extends Particle{
                 midPointY += waveAmplitude * Math.sin(0.1 * incr + 50 + a.cursorOffset);
 
                 Point midPoint = new Point(midPointX, midPointY);
-                Point startPoint = new Point(this.initialX, this.initialY);
+                Point startPoint = new Point(this.x, this.y);
 
 
                 double t = 0.0;
@@ -299,7 +349,6 @@ public class ParticleSpriteLinkerAnchor extends Particle{
 
         AffineTransform at = new AffineTransform();
         at.scale(pData.scale, pData.scale);
-//                    at.translate((int) cursorX * (1 / this.spriteScale), (int) cursorY * (1 / this.spriteScale));
         at.translate((int) p0.x * (1 / pData.scale), (int) p0.y * (1 / pData.scale));
 
 

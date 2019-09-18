@@ -132,7 +132,9 @@ public class Mandala2Config extends JPanel{
         //sparkData is loaded on settings instantiation
     }
 
-    public void saveValues() throws ConfigurationException {
+    public void saveValues(boolean isSettingEnabled) throws ConfigurationException {
+        ParticleSpriteMandala.settingEnabled = isSettingEnabled; //to kill any lingering ones
+
         settings.setSerializedSpriteDataAnimated(Mandala2Config.mandalaData, PowerMode3.SpriteType.MANDALA);
     }
 

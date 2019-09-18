@@ -127,7 +127,6 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         settings.setSpriteTypeEnabled(enableVineCheckBox.isSelected(), PowerMode3.SpriteType.VINE);
 
         settings.setSpriteTypeEnabled(enableMandalaCheckbox.isSelected(), PowerMode3.SpriteType.MANDALA);
-        ParticleSpriteMandala.settingEnabled = enableMandalaCheckbox.isSelected(); //to kill any lingering ones
 
         settings.setSpriteTypeEnabled(enableLinkerCheckbox.isSelected(), PowerMode3.SpriteType.LINKER);
 
@@ -140,8 +139,8 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         this.lightningConfig.saveValues();
         this.vineConfig.saveValues(maxPsiSearch);
         this.momaConfig.saveValues();
-        this.mandala2Config.saveValues();
-        this.linkerConfig.saveValues(maxPsiSearch);
+        this.mandala2Config.saveValues(enableMandalaCheckbox.isSelected());
+        this.linkerConfig.saveValues(maxPsiSearch, enableLinkerCheckbox.isSelected());
 
 
     }

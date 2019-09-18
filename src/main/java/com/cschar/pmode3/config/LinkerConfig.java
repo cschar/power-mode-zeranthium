@@ -14,6 +14,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
 
+
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -40,6 +41,9 @@ public class LinkerConfig extends JPanel {
     public JTextField wobbleAmountTextField;
 
     public JTextField curve1AmountTextField;
+
+    public JCheckBox isCyclicEnabled;
+    public JTextField maxCycleParticlesTextField;
 
 
     private static Color originalTracerColor = Color.WHITE;
@@ -106,20 +110,32 @@ public class LinkerConfig extends JPanel {
         secondCol.add(minPsi);
 
         this.chancePerKeyPressTextField = new JTextField();
-        JLabel chancePerKeyPressLabel = new JLabel("Chance per keypress (0-100)");
-        JPanel chancePerKeyPressPanel = new JPanel();
-        chancePerKeyPressPanel.add(chancePerKeyPressLabel);
-        chancePerKeyPressPanel.add(chancePerKeyPressTextField);
-        chancePerKeyPressPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        chancePerKeyPressPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
-        chancePerKeyPressPanel.setMaximumSize(new Dimension(400, 50));
-        chancePerKeyPressPanel.setBackground(Color.lightGray);
-        secondCol.add(chancePerKeyPressPanel);
+//        JLabel chancePerKeyPressLabel = new JLabel("Chance per keypress (0-100)");
+//        JPanel chancePerKeyPressPanel = new JPanel();
+//        chancePerKeyPressPanel.add(chancePerKeyPressLabel);
+//        chancePerKeyPressPanel.add(chancePerKeyPressTextField);
+//        chancePerKeyPressPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+//        chancePerKeyPressPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+//        chancePerKeyPressPanel.setMaximumSize(new Dimension(400, 50));
+//        chancePerKeyPressPanel.setBackground(Color.lightGray);
+//        secondCol.add(chancePerKeyPressPanel);
 
         JPanel tracerColorPanel = Config.getColorPickerPanel("tracer Color", PowerMode3.SpriteType.LINKER, settings, this.originalTracerColor);
         this.tracerEnabledCheckBox = new JCheckBox("is enabled?", true);
         JPanel tracerConfig = Config.populateEnabledColorPickerPanel(tracerColorPanel, tracerEnabledCheckBox);
         secondCol.add(tracerConfig);
+
+        isCyclicEnabled = new JCheckBox("cyclic?");
+        this.maxCycleParticlesTextField = new JTextField();
+        JLabel maxCycleParticleLabel = new JLabel("Cycle Particles (1-5)");
+        JPanel cyclicPanel = new JPanel();
+        cyclicPanel.add(isCyclicEnabled);
+        cyclicPanel.add(maxCycleParticleLabel);
+        cyclicPanel.add(this.maxCycleParticlesTextField);
+        cyclicPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        cyclicPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+        cyclicPanel.setMaximumSize(new Dimension(500, 50));
+        secondCol.add(cyclicPanel);
 
 
         this.chanceOfSpawnTextField = new JTextField();
@@ -148,6 +164,7 @@ public class LinkerConfig extends JPanel {
         //First col config
 
 
+
         this.maxLinksTextField = new JTextField();
 //        this.maxAnchorsToUse.setAlignmentX(Component.RIGHT_ALIGNMENT);
         JLabel maxLinksLabel = new JLabel("Max Links to Use (1-50)");
@@ -156,7 +173,7 @@ public class LinkerConfig extends JPanel {
         maxLinksPanel.add(this.maxLinksTextField);
         maxLinksPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         maxLinksPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
-        maxLinksPanel.setMaximumSize(new Dimension(500, 50));
+        maxLinksPanel.setMaximumSize(new Dimension(500, 40));
         firstCol.add(maxLinksPanel);
 
         this.distanceFromCenterTextField = new JTextField();
@@ -166,7 +183,7 @@ public class LinkerConfig extends JPanel {
         distanceFromCenterPanel.add(this.distanceFromCenterTextField);
         distanceFromCenterPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         distanceFromCenterPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
-        distanceFromCenterPanel.setMaximumSize(new Dimension(500, 50));
+        distanceFromCenterPanel.setMaximumSize(new Dimension(500, 40));
         firstCol.add(distanceFromCenterPanel);
 
         this.wobbleAmountTextField = new JTextField();
@@ -178,8 +195,13 @@ public class LinkerConfig extends JPanel {
         firstCol.add(curve1Config);
 
 
+
+
         linkerSpriteConfigPanel = createConfigTable();
 //        firstCol.add(linkerSpriteConfigPanel);
+
+//        isCyclicEnabled = new JCheckBox("Is cyclic enabled?");
+//        firstCol.add(isCyclicEnabled);
 
 
         this.add(mainPanel);
@@ -279,9 +301,14 @@ public class LinkerConfig extends JPanel {
         this.wobbleAmountTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"wobbleAmount", 20)));
         this.curve1AmountTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"curve1Amount", 0)));
 
+        this.maxCycleParticlesTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"maxCycleParticles", 3)));
+        this.isCyclicEnabled.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.LINKER,"isCyclicEnabled", false));
+        ParticleSpriteLinkerAnchor.cyclicToggleEnabled = isCyclicEnabled.isSelected();
+
     }
 
-    public void saveValues(int maxPsiSearchLimit) throws ConfigurationException {
+    public void saveValues(int maxPsiSearchLimit, boolean isSettingEnabled) throws ConfigurationException {
+        ParticleSpriteLinkerAnchor.settingEnabled = isSettingEnabled;
 
         int minLizardPsiDistance = Config.getJTextFieldWithinBoundsInt(this.minPsiAnchorDistanceTextField,
                 0, maxPsiSearchLimit,
@@ -321,6 +348,16 @@ public class LinkerConfig extends JPanel {
 
 
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "tracerEnabled", String.valueOf(tracerEnabledCheckBox.isSelected()));
+
+        //Cyclic global garbage lol
+        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "isCyclicEnabled", String.valueOf(isCyclicEnabled.isSelected()));
+        ParticleSpriteLinkerAnchor.cyclicToggleEnabled = isCyclicEnabled.isSelected();
+        int maxCycleParticles = Config.getJTextFieldWithinBoundsInt(this.maxCycleParticlesTextField,
+                1, 5,
+                "max cycle particles per anchor linker");
+        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "maxCycleParticles",
+                String.valueOf(maxCycleParticles));
+        ParticleSpriteLinkerAnchor.MAX_CYCLE_PARTICLES = LinkerConfig.MAX_CYCLE_PARTICLES(settings);
 
         //TODO::: LoaderSaver class, init in constructor for config, iterate over lists in loadValues/saveValues
         //    -- load()  in loadValues()
@@ -390,6 +427,14 @@ public class LinkerConfig extends JPanel {
 
     public static int CURVE1_AMOUNT(PowerMode3 settings){
         return Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER, "curve1Amount");
+    }
+
+    public static boolean IS_CYCLIC_ENABLED(PowerMode3 settings){
+        return Config.getBoolProperty(settings, PowerMode3.SpriteType.LINKER, "isCyclicEnabled");
+    }
+
+    public static int MAX_CYCLE_PARTICLES(PowerMode3 settings){
+        return Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER, "maxCycleParticles");
     }
 
 
