@@ -39,6 +39,8 @@ public class LinkerConfig extends JPanel {
     public JTextField distanceFromCenterTextField;
     public JTextField wobbleAmountTextField;
 
+    public JTextField curve1AmountTextField;
+
 
     private static Color originalTracerColor = Color.WHITE;
 
@@ -171,6 +173,10 @@ public class LinkerConfig extends JPanel {
         JPanel wobbleConfig = Config.populateTextFieldPanel(this.wobbleAmountTextField, "Wobble amount (0-200)");
         firstCol.add(wobbleConfig);
 
+        this.curve1AmountTextField = new JTextField();
+        JPanel curve1Config = Config.populateTextFieldPanel(this.curve1AmountTextField, "curve amount (-400 - 400)");
+        firstCol.add(curve1Config);
+
 
         linkerSpriteConfigPanel = createConfigTable();
 //        firstCol.add(linkerSpriteConfigPanel);
@@ -271,6 +277,7 @@ public class LinkerConfig extends JPanel {
         this.distanceFromCenterTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"distanceFromCenter", 5)));
 
         this.wobbleAmountTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"wobbleAmount", 20)));
+        this.curve1AmountTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"curve1Amount", 0)));
 
     }
 
@@ -326,10 +333,16 @@ public class LinkerConfig extends JPanel {
                 String.valueOf(distanceFromCenter));
 
         int wobbleAmount = Config.getJTextFieldWithinBoundsInt(this.wobbleAmountTextField,
-                1, 200,
+                0, 200,
                 "wobble ");
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "wobbleAmount",
                 String.valueOf(wobbleAmount));
+
+        int curve1Amount = Config.getJTextFieldWithinBoundsInt(this.curve1AmountTextField,
+                -400, 400,
+                "curve1 ");
+        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "curve1Amount",
+                String.valueOf(curve1Amount));
 
         settings.setSerializedSpriteDataAnimated(LinkerConfig.spriteDataAnimated, PowerMode3.SpriteType.LINKER);
     }
@@ -373,6 +386,10 @@ public class LinkerConfig extends JPanel {
 
     public static int WOBBLE_AMOUNT(PowerMode3 settings){
         return Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER, "wobbleAmount");
+    }
+
+    public static int CURVE1_AMOUNT(PowerMode3 settings){
+        return Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER, "curve1Amount");
     }
 
 

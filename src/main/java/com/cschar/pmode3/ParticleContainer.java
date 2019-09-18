@@ -327,7 +327,8 @@ public class ParticleContainer extends JComponent implements ComponentListener {
                     LinkerConfig.DISTANCE_FROM_CENTER(settings),
                     LinkerConfig.MAX_LINKS(settings),
                     LinkerConfig.WOBBLE_AMOUNT(settings),
-                    LinkerConfig.TRACER_ENABLED(settings));
+                    LinkerConfig.TRACER_ENABLED(settings),
+                    LinkerConfig.CURVE1_AMOUNT(settings));
             particles.add(e);
 
 

@@ -54,13 +54,14 @@ public class ParticleSpriteLinkerAnchor extends Particle{
     private int maxLinks;
     private int wobbleAmount=0;
     private boolean tracerEnabled;
+    private int curve1Amount;
 
     int[][] repeats_offsets;
     boolean[][] validOnPosIndex;
 
     public ParticleSpriteLinkerAnchor(int x, int y, int dx, int dy, int size, int life, Color c,
                                       ArrayList<Anchor> anchors, int distanceFromCenter, int maxLinks, int wobbleAmount,
-                                      boolean tracerEnabled) {
+                                      boolean tracerEnabled, int curve1Amount) {
         super(x,y,dx,dy,size,life,c);
         this.initialX = x;
         this.initialY = y;
@@ -73,6 +74,7 @@ public class ParticleSpriteLinkerAnchor extends Particle{
         this.maxLinks = maxLinks;
         this.wobbleAmount = wobbleAmount;
         this.tracerEnabled = tracerEnabled;
+        this.curve1Amount = curve1Amount;
 
         this.sprites = spriteDataAnimated.get(0).images;
         this.spriteData = spriteDataAnimated.get(0);
@@ -168,8 +170,6 @@ public class ParticleSpriteLinkerAnchor extends Particle{
             int MAX_QUAD_POINTS = maxLinks;
 
             for(Anchor a: this.anchors) {
-                Path2D path = new Path2D.Double();
-                path.moveTo(this.initialX, this.initialY);
 
 
                 Point[] quadPoints = new Point[MAX_QUAD_POINTS];
@@ -178,14 +178,21 @@ public class ParticleSpriteLinkerAnchor extends Particle{
                 int midPointX = (this.initialX + a.p.x) / 2;
                 int midPointY = (this.initialY + a.p.y) / 2;
                 int incr = this.life;
-//                int waveAmplitude = 100;
-//                int waveAmplitude = 20;
+
+
+                midPointX += curve1Amount;
+                if(a.p.y > this.initialY) {
+                    midPointY += curve1Amount;
+                }else{
+                    midPointY -= curve1Amount;
+                }
+
                 int waveAmplitude = this.wobbleAmount;
                 midPointX += waveAmplitude * Math.sin(0.1 * incr );
                 midPointY += waveAmplitude * Math.sin(0.1 * incr + 50 + a.cursorOffset);
 
                 Point midPoint = new Point(midPointX, midPointY);
-                Point startPoint = new Point(midPointX, midPointY);
+                Point startPoint = new Point(this.initialX, this.initialY);
 
 
                 double t = 0.0;
@@ -193,20 +200,32 @@ public class ParticleSpriteLinkerAnchor extends Particle{
                     t += (1.0/MAX_QUAD_POINTS);
                     Point p = this.quadTo(prevPoint, midPoint, a.p, t);
                     quadPoints[i] = p;
-                    path.lineTo(p.x, p.y);
                 }
+
+                Path2D path = new Path2D.Double();
+
+
+                int pointToStartFrom = 0;
+                boolean pathInitialized = false;
+                for(int i = 0; i <quadPoints.length; i++){
+                    if(quadPoints[i].distance(startPoint) < distanceFromCenter){
+                        pointToStartFrom += 1;
+
+                    }else if(tracerEnabled){
+                        if(!pathInitialized){
+                            pathInitialized = true;
+                            path.moveTo(quadPoints[i].x, quadPoints[i].y);
+                        }else{
+                            path.lineTo(quadPoints[i].x, quadPoints[i].y);
+                        }
+                    }
+                }
+
 
                 if(tracerEnabled) {
                     g2d.setPaint(this.c);
                     g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.c.getAlpha()/255f));
                     g2d.draw(path);
-                }
-
-                int pointToStartFrom = 0;
-                for(int i = 0; i <quadPoints.length; i++){
-                    if(quadPoints[i].distance(startPoint) < distanceFromCenter){
-                        pointToStartFrom += 1;
-                    }
                 }
 
 
@@ -226,9 +245,6 @@ public class ParticleSpriteLinkerAnchor extends Particle{
                             drawSprite(g2d, p0, p1, spriteDataAnimated.get(spriteDataIndex), frame);
                         }
                     }
-
-
-
                 }
             } // anchors
 
