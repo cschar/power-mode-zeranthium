@@ -43,11 +43,19 @@
         <applicationConfigurable groupId="appearance"
                                  groupWeight="20"
                                  id="power.mode3"
-                                 displayName="Power mode 3 - Zeranthium"
+                                 displayName="Power Mode 3 - Zeranthium"
                                  instance="com.cschar.pmode3.PowerMode3Configurable" />
     </extensions>
 
     <actions>
+
+        <action id="togglePowerModeZeranthium"
+                class="com.cschar.pmode3.HotKeyEnabledAction"
+                text="Toggle Powermode Zeranthium"
+                description="Toggle powermode Zeranthium">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl z"/>
+        </action>
 
     </actions>
 </idea-plugin>

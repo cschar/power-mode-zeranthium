@@ -85,6 +85,11 @@ public class ParticleSpriteMandala extends Particle{
     }
 
     public boolean update() {
+        if (!PowerMode3.getInstance().isEnabled()) { // performance hit?
+            CUR_RINGS[ringIndex] -= 1;
+            return true;
+        }
+
         if(!settingEnabled){ //added to kill any lingering particles
             CUR_RINGS[ringIndex] -= 1;
             return true;
@@ -98,10 +103,10 @@ public class ParticleSpriteMandala extends Particle{
             if (mandalaRingData.get(ringIndex).isCyclic) {
 
                 //If entire plugin is turned off
-                if(!PowerMode3.getInstance().isEnabled()){
-                    CUR_RINGS[ringIndex] -= 1;
-                    return true;
-                }
+//                if(!PowerMode3.getInstance().isEnabled()){
+//                    CUR_RINGS[ringIndex] -= 1;
+//                    return true;
+//                }
 
                 if(!mandalaRingData.get(ringIndex).enabled){
                     CUR_RINGS[ringIndex] -= 1;
@@ -124,7 +129,7 @@ public class ParticleSpriteMandala extends Particle{
                 //cyclic: reset next cycle , if changed in config
                 this.frameSpeed = mandalaRingData.get(ringIndex).speedRate;
                 this.spriteScale = mandalaRingData.get(ringIndex).scale;
-                this.life = 99;
+                this.life = 99; //TODO messes up animation ?, add a frameLife
                 return false;
             } else {
                 CUR_RINGS[ringIndex] -= 1;

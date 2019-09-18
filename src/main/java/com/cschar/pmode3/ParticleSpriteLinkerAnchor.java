@@ -54,6 +54,7 @@ public class ParticleSpriteLinkerAnchor extends Particle{
     private int curve1Amount;
     private boolean isSingleCyclicEnabled;
     private int maxLife;
+    private int frameLife;
 
     int[][] repeats_offsets;
     boolean[][] validOnPosIndex;
@@ -82,9 +83,9 @@ public class ParticleSpriteLinkerAnchor extends Particle{
         this.curve1Amount = curve1Amount;
         this.isSingleCyclicEnabled = isCyclic;
 
-        if(this.isSingleCyclicEnabled){
-            this.life = 1000000;
-        }
+
+        this.frameLife = 1000000;
+
         this.maxLife = this.life;
 
 
@@ -165,6 +166,14 @@ public class ParticleSpriteLinkerAnchor extends Particle{
 
     public boolean update() {
 
+
+        if (!PowerMode3.getInstance().isEnabled()) {
+            if(this.isSingleCyclicEnabled) {
+                CUR_CYCLE_PARTICLES -= 1;
+            }
+            return true;
+        }
+
         if(this.isSingleCyclicEnabled){
             if(MAX_CYCLE_PARTICLES < CUR_CYCLE_PARTICLES){ // if changed in settings
                 CUR_CYCLE_PARTICLES -= 1;
@@ -184,7 +193,7 @@ public class ParticleSpriteLinkerAnchor extends Particle{
             this.y = cursorY;
         }
         life--;
-
+        frameLife--;
 
 
         boolean lifeOver = (life <= 0);
@@ -193,11 +202,14 @@ public class ParticleSpriteLinkerAnchor extends Particle{
             if (this.isSingleCyclicEnabled) {
 
                 //If entire plugin is turned off
-                if (!PowerMode3.getInstance().isEnabled()) {
-                    CUR_CYCLE_PARTICLES -= 1;
-                    return true;
+//                if (!PowerMode3.getInstance().isEnabled()) {
+//                    CUR_CYCLE_PARTICLES -= 1;
+//                    return true;
+//                }
+                this.life = 99; //wont last long if cycle switch off
+                if(frameLife < 1000){
+                    frameLife = 1000000;
                 }
-                this.life = this.maxLife;
                 return false;
             }
         }
@@ -248,7 +260,7 @@ public class ParticleSpriteLinkerAnchor extends Particle{
             //every X updates, increment frame, this controls how fast it animates
             //TODO: this is duplicate work in each particle, extract ?
             for(int i = 0; i < frames.length; i++) {
-                if (this.life % spriteDataAnimated.get(i).speedRate == 0) {
+                if (this.frameLife % spriteDataAnimated.get(i).speedRate == 0) {
                     frames[i] += 1;
                     if (frames[i] >= spriteDataAnimated.get(i).images.size()) {
                         frames[i] = 0;
@@ -272,7 +284,7 @@ public class ParticleSpriteLinkerAnchor extends Particle{
 
                 int midPointX = (this.x + a.p.x) / 2;
                 int midPointY = (this.y + a.p.y) / 2;
-                int incr = this.life;
+                int incr = this.frameLife;
 
 
                 midPointX += curve1Amount;

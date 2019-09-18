@@ -42,11 +42,9 @@ public class SpriteDataAnimated  extends SpriteData {
 
         if(customPath == ""){
             setImageAnimated(defaultPath, true);
-            this.image = this.images.get(0);
         }
         else{
             setImageAnimated(customPath, false);
-            this.image = this.images.get(0);
         }
 
     }
@@ -109,6 +107,7 @@ public class SpriteDataAnimated  extends SpriteData {
                         this.images.add(loadedImage);
                     }
             }
+            this.image = this.images.get(0);
         }else{
             ArrayList<BufferedImage> newImages = new ArrayList<BufferedImage>();
             ArrayList<ImageIcon> newPreviewIcons = new ArrayList<ImageIcon>();
@@ -130,6 +129,7 @@ public class SpriteDataAnimated  extends SpriteData {
                         img = ImageIO.read(f);
                         newImages.add(img);
                     }
+
                 } catch (final IOException e) {
 
                     logger.severe("error loading image directory: " + path);
@@ -149,12 +149,13 @@ public class SpriteDataAnimated  extends SpriteData {
 
                 if(newPreviewIcons.size() == 0 || newImages.size() == 0){
                     logger.severe("No images found in directory: " + path);
-                    customPathValid = false;
+                    this.customPathValid = false;
                 }else{
-                    previewIcon = newPreviewIcons.get(0);
-                    images = newImages;
-                    previewIcons = newPreviewIcons;
-                    customPathValid = true;
+                    this.previewIcon = newPreviewIcons.get(0);
+                    this.image = newImages.get(0);
+                    this.images = newImages;
+                    this.previewIcons = newPreviewIcons;
+                    this.customPathValid = true;
                 }
 
 

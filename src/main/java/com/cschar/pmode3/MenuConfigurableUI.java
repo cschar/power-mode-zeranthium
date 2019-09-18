@@ -1,21 +1,28 @@
 package com.cschar.pmode3;
 
 import com.cschar.pmode3.config.*;
+import com.intellij.openapi.actionSystem.Shortcut;
+import com.intellij.openapi.keymap.Keymap;
+import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.options.ConfigurableUi;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.ui.components.JBScrollPane;
+import com.intellij.ui.components.JBTabbedPane;
 import org.jetbrains.annotations.NotNull;
 
+import javax.net.ssl.KeyManager;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.net.URL;
 
 public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private JPanel mainPanel;
     private JTextField lifetimeTextField;
     private JCheckBox isEnabledCheckBox;
+    private JLabel toggleHotkeyLabel;
 
     private JCheckBox enableLightningCheckBox;
     private JCheckBox enableLizardCheckBox;
@@ -29,6 +36,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private JCheckBox enableVineCheckBox;
     private JCheckBox enableMandalaCheckbox;
     private JCheckBox enableLinkerCheckbox;
+
 
 
     private BasicParticleConfig basicParticleConfig;
@@ -45,6 +53,25 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     public MenuConfigurableUI(PowerMode3 powerMode3) {
         settings = powerMode3;
         isEnabledCheckBox.setSelected(powerMode3.isEnabled());
+
+        KeymapManager km = KeymapManager.getInstance();
+        //defined in the META-INF/plugin.xml <action id=""> param
+        Shortcut[] zShortcuts = km.getActiveKeymap().getShortcuts("togglePowerModeZeranthium");
+        StringBuffer sb = new StringBuffer();
+        for(Shortcut sc: zShortcuts){
+            sb.append("(<b>" + sc + "</b>)");
+        }
+        String labelText = String.format("<html>%s - %s</html>", toggleHotkeyLabel.getText(), sb.toString());
+//        toggleHotkeyLabel.setText(toggleHotkeyLabel.getText() + sb.toString());
+        toggleHotkeyLabel.setText(labelText);
+
+
+
+
+
+
+
+//        HotKeyEnabledAction.ACTIONS_KEY.
 
         shakeDistanceTextField.setText(Integer.toString(powerMode3.getShakeDistance()));
         lifetimeTextField.setText(Integer.toString(powerMode3.getLifetime()));
@@ -188,11 +215,30 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         PowerMode3 settings = PowerMode3.getInstance();
 
 
+
+
         theCustomCreatePanel = new JPanel();
         theCustomCreatePanel.setOpaque(false);
         theCustomCreatePanel.setBorder(new EmptyBorder(10, 10, 200, 10));
         //https://docs.oracle.com/javase/tutorial/uiswing/layout/visual.html
         theCustomCreatePanel.setLayout(new BoxLayout(theCustomCreatePanel, BoxLayout.PAGE_AXIS));
+
+
+
+//        ImageIcon soundIcon = new ImageIcon(this.getClass().getResource("icons/sound.png"));
+//
+//        JTabbedPane tabbedPane = new JBTabbedPane();
+//
+//        JComponent panel2 = new JPanel();
+//        tabbedPane.addTab("Tab 1", soundIcon, ,
+//                "Does nothing");
+//
+//        JComponent panel2 = makeTextPanel("Panel #2");
+//        tabbedPane.addTab("Tab 2", icon, panel2,
+//                "Does twice as much nothing");
+
+
+
 
         this.theCustomCreatePanel.add(this.createSpacer());
         this.basicParticleConfig = new BasicParticleConfig(settings);
