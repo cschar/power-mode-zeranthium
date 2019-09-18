@@ -58,6 +58,7 @@ public class ParticleSpriteLinkerAnchor extends Particle{
 
     int[][] repeats_offsets;
     boolean[][] validOnPosIndex;
+    private int[] pointsToStartFrom;
 
     public ParticleSpriteLinkerAnchor(int x, int y, int dx, int dy, int size, int life, Color c,
                                       ArrayList<Anchor> anchors, int distanceFromCenter, int maxLinks, int wobbleAmount,
@@ -82,6 +83,8 @@ public class ParticleSpriteLinkerAnchor extends Particle{
 
         this.frames = new int[spriteDataAnimated.size()];
 
+
+        this.pointsToStartFrom = calcPointsToStartFrom();
 
         repeats_offsets = new int[spriteDataAnimated.size()][2];
         for(int i = 0; i < repeats_offsets.length; i++){
@@ -110,6 +113,45 @@ public class ParticleSpriteLinkerAnchor extends Particle{
             }
         }
 
+    }
+
+
+    //If we calculate once at the start instead of each time in loop, it prevents stuttering from
+    // length changes due to sin/cos adds
+    private int[] calcPointsToStartFrom(){
+        int[] points = new int[this.anchors.size()];
+
+        int MAX_QUAD_POINTS = maxLinks;
+        for(int j = 0; j < anchors.size(); j++) {
+            Anchor a = anchors.get(j);
+            Point[] quadPoints = new Point[MAX_QUAD_POINTS];
+
+            int midPointX = (this.initialX + a.p.x) / 2;
+            int midPointY = (this.initialY + a.p.y) / 2;
+            midPointX += curve1Amount;
+            if(a.p.y > this.initialY) {
+                midPointY += curve1Amount;
+            }else{
+                midPointY -= curve1Amount;
+            }
+            Point midPoint = new Point(midPointX, midPointY);
+            Point startPoint = new Point(this.initialX, this.initialY);
+
+
+            double t = 0.0;
+            for (int i = 0; i < MAX_QUAD_POINTS; i++) {
+                t += (1.0/MAX_QUAD_POINTS);
+                Point p = this.quadTo(startPoint, midPoint, a.p, t);
+                quadPoints[i] = p;
+            }
+
+            for(int i = 0; i <quadPoints.length; i++){
+                if(quadPoints[i].distance(startPoint) < distanceFromCenter){
+                        points[j] += 1;
+                }
+            }
+        } // anchors
+        return points;
     }
 
 
@@ -169,11 +211,14 @@ public class ParticleSpriteLinkerAnchor extends Particle{
 //            int MAX_QUAD_POINTS = 10;
             int MAX_QUAD_POINTS = maxLinks;
 
+            int idx = 0;
             for(Anchor a: this.anchors) {
+                int pointToStartFrom = this.pointsToStartFrom[idx];
+                idx++;
 
 
                 Point[] quadPoints = new Point[MAX_QUAD_POINTS];
-                Point prevPoint = new Point(this.initialX, this.initialY);
+
 
                 int midPointX = (this.initialX + a.p.x) / 2;
                 int midPointY = (this.initialY + a.p.y) / 2;
@@ -198,42 +243,36 @@ public class ParticleSpriteLinkerAnchor extends Particle{
                 double t = 0.0;
                 for (int i = 0; i < MAX_QUAD_POINTS; i++) {
                     t += (1.0/MAX_QUAD_POINTS);
-                    Point p = this.quadTo(prevPoint, midPoint, a.p, t);
+                    Point p = this.quadTo(startPoint, midPoint, a.p, t);
                     quadPoints[i] = p;
                 }
 
                 Path2D path = new Path2D.Double();
 
 
-                int pointToStartFrom = 0;
-                boolean pathInitialized = false;
-                for(int i = 0; i <quadPoints.length; i++){
-                    if(quadPoints[i].distance(startPoint) < distanceFromCenter){
-                        pointToStartFrom += 1;
-
-                    }else if(tracerEnabled){
-                        if(!pathInitialized){
-                            pathInitialized = true;
-                            path.moveTo(quadPoints[i].x, quadPoints[i].y);
-                        }else{
-                            path.lineTo(quadPoints[i].x, quadPoints[i].y);
-                        }
+                if(tracerEnabled){
+                     boolean pathInitialized = false;
+                     for(int i = 0; i <quadPoints.length; i++){
+                         if (i >= pointToStartFrom){
+                             if(!pathInitialized){
+                                 pathInitialized = true;
+                                 path.moveTo(quadPoints[i].x, quadPoints[i].y);
+                             }else{
+                                 path.lineTo(quadPoints[i].x, quadPoints[i].y);
+                             }
+                         }
                     }
-                }
 
-
-                if(tracerEnabled) {
                     g2d.setPaint(this.c);
                     g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.c.getAlpha()/255f));
                     g2d.draw(path);
                 }
 
 
-
                 int frame = 0;
                 //draw sprite pointing from p_i to p_i+n
-                int n = 1;
-//                for (int i = pointToStartFrom; i < MAX_QUAD_POINTS-n; i += 2) {
+                int n = 2;
+
                 for (int i = MAX_QUAD_POINTS-1; i > pointToStartFrom+n; i--) {
                     Point p1 = quadPoints[i];
                     Point p0 = quadPoints[i-n];

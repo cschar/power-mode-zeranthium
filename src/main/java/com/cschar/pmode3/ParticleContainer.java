@@ -310,7 +310,6 @@ public class ParticleContainer extends JComponent implements ComponentListener {
             int minPsiSearch = LinkerConfig.MIN_PSI_SEARCH(settings);
             int maxPsiSearch = LinkerConfig.MAX_PSI_SEARCH(settings);
 
-            //TODO filter anchors passed in based on maxmin psi search
             for(Anchor a: anchors) {
                 if( Math.abs(a.anchorOffset - a.cursorOffset) > (maxPsiSearch) ){
                     continue;

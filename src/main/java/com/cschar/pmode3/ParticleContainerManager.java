@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,6 +55,8 @@ class ParticleContainerManager extends EditorFactoryAdapter {
                         Thread.sleep(1000 / 60);
                     } catch (InterruptedException ignored) {
                         //thread interrupted, shutdown
+                    } catch (ConcurrentModificationException modified){
+                        // ignore it
                     }
                 }
             }

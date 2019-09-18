@@ -174,7 +174,7 @@ public class LinkerConfig extends JPanel {
         firstCol.add(wobbleConfig);
 
         this.curve1AmountTextField = new JTextField();
-        JPanel curve1Config = Config.populateTextFieldPanel(this.curve1AmountTextField, "curve amount (-400 - 400)");
+        JPanel curve1Config = Config.populateTextFieldPanel(this.curve1AmountTextField, "curve amount (-100 - 400)");
         firstCol.add(curve1Config);
 
 
@@ -339,7 +339,7 @@ public class LinkerConfig extends JPanel {
                 String.valueOf(wobbleAmount));
 
         int curve1Amount = Config.getJTextFieldWithinBoundsInt(this.curve1AmountTextField,
-                -400, 400,
+                -100, 400,
                 "curve1 ");
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "curve1Amount",
                 String.valueOf(curve1Amount));
