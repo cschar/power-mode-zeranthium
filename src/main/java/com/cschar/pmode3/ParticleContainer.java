@@ -17,15 +17,12 @@ import com.cschar.pmode3.config.*;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
-import org.jvnet.ws.wadl.Link;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -358,9 +355,28 @@ public class ParticleContainer extends JComponent implements ComponentListener {
     }
 
     public void renderParticles(Graphics g) {
+//        for (Particle particle : particles) {
+//            particle.render(g);
+//        }
+        Queue<Particle> lowZIndex = new LinkedList<>();
+        Queue<Particle> highZIndex = new LinkedList<>();
         for (Particle particle : particles) {
-            particle.render(g);
+            if(particle.renderZIndex == 1){
+                lowZIndex.add(particle);
+            }
+            if(particle.renderZIndex == 2){
+                highZIndex.add(particle);
+            }
         }
+
+        for(Particle p: lowZIndex){
+            p.render(g);
+        }
+
+        for(Particle p: highZIndex){
+            p.render(g);
+        }
+
     }
 
 

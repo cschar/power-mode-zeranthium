@@ -196,7 +196,7 @@ public class ParticleSpriteLinkerAnchor extends Particle{
 
 
             //every X updates, increment frame, this controls how fast it animates
-            //TODO: this is duplicate work in each particle, extrac
+            //TODO: this is duplicate work in each particle, extract ?
             for(int i = 0; i < frames.length; i++) {
                 if (this.life % spriteDataAnimated.get(i).speedRate == 0) {
                     frames[i] += 1;
@@ -271,7 +271,7 @@ public class ParticleSpriteLinkerAnchor extends Particle{
 
                 int frame = 0;
                 //draw sprite pointing from p_i to p_i+n
-                int n = 2;
+                int n = 1;
 
                 for (int i = MAX_QUAD_POINTS-1; i > pointToStartFrom+n; i--) {
                     Point p1 = quadPoints[i];

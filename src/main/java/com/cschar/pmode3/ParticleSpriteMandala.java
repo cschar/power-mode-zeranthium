@@ -62,6 +62,9 @@ public class ParticleSpriteMandala extends Particle{
     public ParticleSpriteMandala(int x, int y, int dx, int dy,
                                  int size, int life, int ringIndex) {
         super(x,y,dx,dy,size,life,Color.GREEN);
+//        if(mandalaRingData.get(ringIndex).isCyclic){
+        this.renderZIndex = 2;
+//        }
 
         this.ringIndex = ringIndex;
         this.maxAlpha = 1.0f;

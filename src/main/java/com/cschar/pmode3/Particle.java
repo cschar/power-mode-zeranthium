@@ -22,6 +22,8 @@ import java.awt.*;
 
 /**
  * @author Baptiste Mesta
+ *
+ * modified by cschar
  */
 public class Particle {
     int x;
@@ -31,6 +33,8 @@ public class Particle {
     final int size;
     int life;
     final Color c;
+    //higher will be rendered first
+    public int renderZIndex = 1;
 
     public Particle(int x, int y, int dx, int dy, int size, int life, Color c) {
         this.x = x;
