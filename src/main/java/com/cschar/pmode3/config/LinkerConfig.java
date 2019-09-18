@@ -36,6 +36,7 @@ public class LinkerConfig extends JPanel {
 
     public JTextField maxLinksTextField;
     public JTextField distanceFromCenterTextField;
+    public JTextField wobbleAmountTextField;
 
 
 
@@ -158,6 +159,10 @@ public class LinkerConfig extends JPanel {
         distanceFromCenterPanel.setMaximumSize(new Dimension(500, 50));
         firstCol.add(distanceFromCenterPanel);
 
+        this.wobbleAmountTextField = new JTextField();
+        JPanel wobbleConfig = Config.populateTextFieldPanel(this.wobbleAmountTextField, "Wobble amount (0-200)");
+        firstCol.add(wobbleConfig);
+
 
         linkerSpriteConfigPanel = createConfigTable();
 //        firstCol.add(linkerSpriteConfigPanel);
@@ -256,6 +261,8 @@ public class LinkerConfig extends JPanel {
         this.maxLinksTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"maxLinks", 20)));
         this.distanceFromCenterTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"distanceFromCenter", 5)));
 
+        this.wobbleAmountTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"wobbleAmount", 20)));
+
     }
 
     public void saveValues(int maxPsiSearchLimit) throws ConfigurationException {
@@ -306,6 +313,12 @@ public class LinkerConfig extends JPanel {
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "distanceFromCenter",
                 String.valueOf(distanceFromCenter));
 
+        int wobbleAmount = Config.getJTextFieldWithinBoundsInt(this.wobbleAmountTextField,
+                1, 200,
+                "wobble ");
+        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "wobbleAmount",
+                String.valueOf(wobbleAmount));
+
         settings.setSerializedSpriteDataAnimated(LinkerConfig.spriteDataAnimated, PowerMode3.SpriteType.LINKER);
     }
 
@@ -336,6 +349,10 @@ public class LinkerConfig extends JPanel {
 
     public static int DISTANCE_FROM_CENTER(PowerMode3 settings){
         return Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER, "distanceFromCenter");
+    }
+
+    public static int WOBBLE_AMOUNT(PowerMode3 settings){
+        return Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER, "wobbleAmount");
     }
 
 

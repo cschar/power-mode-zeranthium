@@ -165,4 +165,17 @@ public class Config {
     }
 
 
+    public static JPanel populateTextFieldPanel(JTextField textField, String labelMessage){
+        JLabel fieldLabel = new JLabel(labelMessage);
+        JPanel parentPanel = new JPanel();
+        parentPanel.add(fieldLabel);
+        parentPanel.add(textField);
+        parentPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        parentPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+        parentPanel.setMaximumSize(new Dimension(500, 50));
+
+        return parentPanel;
+    }
+
+
 }

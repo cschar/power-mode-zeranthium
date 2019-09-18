@@ -316,7 +316,8 @@ public class ParticleContainer extends JComponent implements ComponentListener {
             final ParticleSpriteLinkerAnchor e = new ParticleSpriteLinkerAnchor(x, y, dx, dy,
                     size, life, Color.GREEN, anchors,
                     LinkerConfig.DISTANCE_FROM_CENTER(settings),
-                    LinkerConfig.MAX_LINKS(settings));
+                    LinkerConfig.MAX_LINKS(settings),
+                    LinkerConfig.WOBBLE_AMOUNT(settings));
             particles.add(e);
 
 

@@ -52,11 +52,12 @@ public class ParticleSpriteLinkerAnchor extends Particle{
     private Anchor[] anchors;
     private int distanceFromCenter;
     private int maxLinks;
+    private int wobbleAmount=0;
     int[][] repeats_offsets;
     boolean[][] validOnPosIndex;
 
     public ParticleSpriteLinkerAnchor(int x, int y, int dx, int dy, int size, int life, Color c,
-                                      Anchor[] anchors, int distanceFromCenter, int maxLinks) {
+                                      Anchor[] anchors, int distanceFromCenter, int maxLinks, int wobbleAmount) {
         super(x,y,dx,dy,size,life,c);
 
 
@@ -69,6 +70,7 @@ public class ParticleSpriteLinkerAnchor extends Particle{
         this.cursorY = y;
         this.distanceFromCenter = distanceFromCenter;
         this.maxLinks = maxLinks;
+        this.wobbleAmount = wobbleAmount;
 
         this.sprites = spriteDataAnimated.get(0).images;
         this.spriteData = spriteDataAnimated.get(0);
@@ -83,6 +85,11 @@ public class ParticleSpriteLinkerAnchor extends Particle{
             repeats_offsets[i][1] = spriteDataAnimated.get(i).val1; //offset
 
         }
+
+
+
+        //TODO: add  repeats_for ....
+        //  repeat N times
 
         //Compute which spriteData's are valid on which index along curve
         validOnPosIndex = new boolean[spriteDataAnimated.size()][maxLinks];
@@ -99,14 +106,7 @@ public class ParticleSpriteLinkerAnchor extends Particle{
             }
         }
 
-
     }
-
-
-//    private boolean valid_on_index(int pos_index, int spriteDataIndex){
-//        return validOnPosIndex[spriteDataIndex][pos_index];
-//    }
-
 
 
 
@@ -178,8 +178,10 @@ public class ParticleSpriteLinkerAnchor extends Particle{
                 int incr = this.life;
 //                int waveAmplitude = 100;
 //                int waveAmplitude = 20;
-//                midPointX += waveAmplitude * Math.sin(0.1 * incr );
-//                midPointY += waveAmplitude * Math.sin(0.1 * incr + 50 + a.cursorOffset);
+                int waveAmplitude = this.wobbleAmount;
+                midPointX += waveAmplitude * Math.sin(0.1 * incr );
+                midPointY += waveAmplitude * Math.sin(0.1 * incr + 50 + a.cursorOffset);
+
                 Point midPoint = new Point(midPointX, midPointY);
                 Point startPoint = new Point(midPointX, midPointY);
 
@@ -210,36 +212,11 @@ public class ParticleSpriteLinkerAnchor extends Particle{
                 int n = 1;
 //                for (int i = pointToStartFrom; i < MAX_QUAD_POINTS-n; i += 2) {
                 for (int i = MAX_QUAD_POINTS-1; i > pointToStartFrom+n; i--) {
-
                     Point p1 = quadPoints[i];
                     Point p0 = quadPoints[i-n];
-
-
                     int pos_index = (MAX_QUAD_POINTS-1) - i; // 0,1,2,3....
 
-
-                    //TODO: we only need to calculate this once
-
-                    //TODO: add  repeats_for ....
-                    //  repeat N times
-
-                    //check if were repeating on this index
-//                    for(int j =0; j < repeats_offsets.length; j++){
-//                        int offset = repeats_offsets[j][1];
-//                        if(pos_index < offset){ continue;}
-//                        else{
-//                            SpriteDataAnimated pData = null;
-//                            boolean repeatsOnThisIndex = ((pos_index-offset) % repeats_offsets[j][0] == 0);
-//
-//                            if(repeatsOnThisIndex){
-//                                pData = spriteDataAnimated.get(j);
-//                                frame = frames[j];
-//
-//                                drawSprite(g2d, p0, p1, pData, frame);
-//                            }
-//                        }
-//                    }
-                   for(int spriteDataIndex =0; spriteDataIndex < repeats_offsets.length; spriteDataIndex++){
+                    for(int spriteDataIndex =0; spriteDataIndex < repeats_offsets.length; spriteDataIndex++){
                        if(validOnPosIndex[spriteDataIndex][pos_index]){
                             frame = frames[spriteDataIndex];
                             drawSprite(g2d, p0, p1, spriteDataAnimated.get(spriteDataIndex), frame);
@@ -259,6 +236,8 @@ public class ParticleSpriteLinkerAnchor extends Particle{
     }
 
     private void drawSprite(Graphics2D g2d, Point p0, Point p1, SpriteDataAnimated pData, int frame){
+        if( !pData.enabled) return;
+
         AffineTransform at = new AffineTransform();
         at.scale(pData.scale, pData.scale);
 //                    at.translate((int) cursorX * (1 / this.spriteScale), (int) cursorY * (1 / this.spriteScale));
@@ -284,7 +263,7 @@ public class ParticleSpriteLinkerAnchor extends Particle{
     }
 
 
-    private void drawJavaQuad(){
+//    private void drawJavaQuad(){
 //        Java quadTo doesnt give us intermediary quad points
 //            for( Anchor a : this.anchors) {
 //                Path2D path = new Path2D.Double();
@@ -303,6 +282,6 @@ public class ParticleSpriteLinkerAnchor extends Particle{
 //
 //                g2d.draw(path);
 //            }
-    }
+//    }
 
 }
