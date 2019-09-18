@@ -253,7 +253,7 @@ public class LinkerConfig extends JPanel {
 
         this.maxAnchorsToUse.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"maxAnchorsToUse", 10)));
 
-        this.maxLinksTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"maxLinks", 10)));
+        this.maxLinksTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"maxLinks", 20)));
         this.distanceFromCenterTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"distanceFromCenter", 5)));
 
     }
@@ -262,25 +262,25 @@ public class LinkerConfig extends JPanel {
 
         int minLizardPsiDistance = Config.getJTextFieldWithinBoundsInt(this.minPsiAnchorDistanceTextField,
                 0, maxPsiSearchLimit,
-                "Min Distance to Psi Anchors will use when spawning lizards (cannot be greater than max defined at top)");
+                "Min Distance to Psi Anchors will use when spawning linkers (cannot be greater than max defined at top)");
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "minPsiSearchDistance",
                 String.valueOf(minLizardPsiDistance));
 
         int maxLizardPsiDistance = Config.getJTextFieldWithinBoundsInt(this.maxPsiAnchorDistanceTextField,
                 0, maxPsiSearchLimit,
-                "Max Distance to Psi Anchors will use when spawning lizards (cannot be greater than max defined at top)");
+                "Max Distance to Psi Anchors will use when spawning linkers (cannot be greater than max defined at top)");
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "maxPsiSearchDistance",
                 String.valueOf(maxLizardPsiDistance));
 
         int chancePerKeyPress = Config.getJTextFieldWithinBoundsInt(this.chancePerKeyPressTextField,
                 0, 100,
-                "chance lizards spawn per keypress");
+                "chance linkers spawn per keypress");
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "chancePerKeyPress",
                 String.valueOf(chancePerKeyPress));
 
         int chanceOfSpawn = Config.getJTextFieldWithinBoundsInt(this.chanceOfSpawnTextField,
                 0, 100,
-                "chance lizard spawns for anchor");
+                "chance links spawns for anchor");
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "chanceOfSpawn",
                 String.valueOf(chanceOfSpawn));
 
@@ -291,7 +291,7 @@ public class LinkerConfig extends JPanel {
                 String.valueOf(maxAnchorsToUse));
 
         int maxLinks = Config.getJTextFieldWithinBoundsInt(this.maxLinksTextField,
-                1, 100,
+                10, 50,
                 "max links on linkerI");
         settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "maxLinks",
                 String.valueOf(maxLinks));

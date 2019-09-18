@@ -52,6 +52,8 @@ public class ParticleSpriteLinkerAnchor extends Particle{
     private Anchor[] anchors;
     private int distanceFromCenter;
     private int maxLinks;
+    int[][] repeats_offsets;
+    boolean[][] validOnPosIndex;
 
     public ParticleSpriteLinkerAnchor(int x, int y, int dx, int dy, int size, int life, Color c,
                                       Anchor[] anchors, int distanceFromCenter, int maxLinks) {
@@ -74,7 +76,38 @@ public class ParticleSpriteLinkerAnchor extends Particle{
 
         this.frames = new int[spriteDataAnimated.size()];
 
+
+        repeats_offsets = new int[spriteDataAnimated.size()][2];
+        for(int i = 0; i < repeats_offsets.length; i++){
+            repeats_offsets[i][0] = spriteDataAnimated.get(i).val2; //repeat
+            repeats_offsets[i][1] = spriteDataAnimated.get(i).val1; //offset
+
+        }
+
+        //Compute which spriteData's are valid on which index along curve
+        validOnPosIndex = new boolean[spriteDataAnimated.size()][maxLinks];
+
+        for(int j =0; j < validOnPosIndex.length; j++){
+            int offset = repeats_offsets[j][1];
+            for(int pos_index=0; pos_index < maxLinks; pos_index++) {
+                if (pos_index < offset) {
+                    validOnPosIndex[j][pos_index] = false;
+                } else {
+                    boolean repeatsOnThisIndex = ((pos_index - offset) % repeats_offsets[j][0] == 0);
+                    validOnPosIndex[j][pos_index] = repeatsOnThisIndex;
+                }
+            }
+        }
+
+
     }
+
+
+//    private boolean valid_on_index(int pos_index, int spriteDataIndex){
+//        return validOnPosIndex[spriteDataIndex][pos_index];
+//    }
+
+
 
 
     public boolean update() {
@@ -170,13 +203,7 @@ public class ParticleSpriteLinkerAnchor extends Particle{
                     }
                 }
 
-                //TODO: we only need to compute this on init()
-                int[][] repeats_offsets = new int[spriteDataAnimated.size()][2];
-                for(int i = 0; i < repeats_offsets.length; i++){
-                    repeats_offsets[i][0] = spriteDataAnimated.get(i).val2; //repeat
-                    repeats_offsets[i][1] = spriteDataAnimated.get(i).val1; //offset
 
-                }
 
                 int frame = 0;
                 //draw sprite pointing from p_i to p_i+n
@@ -188,31 +215,35 @@ public class ParticleSpriteLinkerAnchor extends Particle{
                     Point p0 = quadPoints[i-n];
 
 
-
-
                     int pos_index = (MAX_QUAD_POINTS-1) - i; // 0,1,2,3....
 
 
+                    //TODO: we only need to calculate this once
+
                     //TODO: add  repeats_for ....
-                    //  repeat N times 
+                    //  repeat N times
 
                     //check if were repeating on this index
-                    for(int j =0; j < repeats_offsets.length; j++){
-                        int offset = repeats_offsets[j][1];
-                        if(pos_index < offset){ continue;}
-                        else{
-                            SpriteDataAnimated pData = null;
-                            boolean repeatsOnThisIndex = ((pos_index-offset) % repeats_offsets[j][0] == 0);
-
-                            if(repeatsOnThisIndex){
-                                pData = spriteDataAnimated.get(j);
-                                frame = frames[j];
-
-                                drawSprite(g2d, p0, p1, pData, frame);
-                            }
+//                    for(int j =0; j < repeats_offsets.length; j++){
+//                        int offset = repeats_offsets[j][1];
+//                        if(pos_index < offset){ continue;}
+//                        else{
+//                            SpriteDataAnimated pData = null;
+//                            boolean repeatsOnThisIndex = ((pos_index-offset) % repeats_offsets[j][0] == 0);
+//
+//                            if(repeatsOnThisIndex){
+//                                pData = spriteDataAnimated.get(j);
+//                                frame = frames[j];
+//
+//                                drawSprite(g2d, p0, p1, pData, frame);
+//                            }
+//                        }
+//                    }
+                   for(int spriteDataIndex =0; spriteDataIndex < repeats_offsets.length; spriteDataIndex++){
+                       if(validOnPosIndex[spriteDataIndex][pos_index]){
+                            frame = frames[spriteDataIndex];
+                            drawSprite(g2d, p0, p1, spriteDataAnimated.get(spriteDataIndex), frame);
                         }
-
-
                     }
 
 
