@@ -8,21 +8,29 @@ import com.intellij.openapi.options.ConfigurableUi;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTabbedPane;
+import com.intellij.util.ui.JBUI;
+import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NotNull;
 
 import javax.net.ssl.KeyManager;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.net.URL;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private JPanel mainPanel;
     private JTextField lifetimeTextField;
     private JCheckBox isEnabledCheckBox;
     private JLabel toggleHotkeyLabel;
+    
+    private JPanel particleSettingsPanel;
+    private JPanel soundSettingsPanel;
 
     private JCheckBox enableLightningCheckBox;
     private JCheckBox enableLizardCheckBox;
@@ -51,6 +59,8 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     PowerMode3 settings;
     //Constructor is called _AFTER_ createUIComponents when using IntelliJ GUI designer
     public MenuConfigurableUI(PowerMode3 powerMode3) {
+//        particleSettingsPanel.setBackground(theCustomCreatePanel.getBackground());
+
         settings = powerMode3;
         isEnabledCheckBox.setSelected(powerMode3.isEnabled());
 
@@ -219,66 +229,154 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
         theCustomCreatePanel = new JPanel();
         theCustomCreatePanel.setOpaque(false);
-        theCustomCreatePanel.setBorder(new EmptyBorder(10, 10, 200, 10));
-        //https://docs.oracle.com/javase/tutorial/uiswing/layout/visual.html
         theCustomCreatePanel.setLayout(new BoxLayout(theCustomCreatePanel, BoxLayout.PAGE_AXIS));
 
 
-
-//        ImageIcon soundIcon = new ImageIcon(this.getClass().getResource("icons/sound.png"));
-//
-//        JTabbedPane tabbedPane = new JBTabbedPane();
-//
-//        JComponent panel2 = new JPanel();
-//        tabbedPane.addTab("Tab 1", soundIcon, ,
-//                "Does nothing");
-//
-//        JComponent panel2 = makeTextPanel("Panel #2");
-//        tabbedPane.addTab("Tab 2", icon, panel2,
-//                "Does twice as much nothing");
+        //TODO , put as side tabs, but tab main options nad sound options, leave particles visible at all times below
+//        JBTabbedPane tabbedPane = new JBTabbedPane(JTabbedPane.LEFT);
+        JBTabbedPane tabbedPane = new JBTabbedPane();
+        tabbedPane.setOpaque(false);
 
 
+        particleSettingsPanel = new JPanel();
+        particleSettingsPanel.setBorder(JBUI.Borders.empty(2, 2, 200, 2));
+        particleSettingsPanel.setLayout(new BoxLayout(particleSettingsPanel, BoxLayout.PAGE_AXIS));
+//        particleSettingsPanel.setOpaque(false); // makes background grey?
+
+        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/bar_small.png"));
+        tabbedPane.addTab("Particle Settings", sliderIcon, particleSettingsPanel,
+                "Does nothing");
 
 
-        this.theCustomCreatePanel.add(this.createSpacer());
+
+        JComponent panel2 = new JPanel();
+        panel2.add(new JTextField("HELLO"));
+        panel2.add(new JLabel("HAHHA"));
+
+
+        Sound[] sounds = new Sound[]{
+                new Sound("/sounds/h1.mp3"),
+                new Sound("/sounds/h2.mp3"),
+                new Sound("/sounds/h3.mp3"),
+                new Sound("/sounds/h4.mp3")
+        };
+
+        String[] soundPaths = new String[]{
+                "/sounds/h1.mp3",
+                "/sounds/h2.mp3",
+                "/sounds/h3.mp3",
+                "/sounds/h4.mp3"
+        };
+
+
+//        Sound j = new Sound("/sounds/h1.mp3");
+        JButton soundButton = new JButton("play it");
+        soundButton.addActionListener(e -> {
+
+            int r = ThreadLocalRandom.current().nextInt(0, sounds.length);
+            Sound s = new Sound(soundPaths[r]);
+            s.play();
+//            sounds[r].play();
+
+        });
+
+        panel2.add(soundButton);
+
+
+
+
+
+
+        ImageIcon soundIcon = new ImageIcon(this.getClass().getResource("/icons/sound_small.png"));
+        tabbedPane.addTab("Sound Settings", soundIcon, panel2,
+                "Does twice as much nothing");
+
+
+        theCustomCreatePanel.add(tabbedPane);
+
+
+        particleSettingsPanel.add(this.createSpacer());
         this.basicParticleConfig = new BasicParticleConfig(settings);
-        this.theCustomCreatePanel.add(this.basicParticleConfig);
+        particleSettingsPanel.add(this.basicParticleConfig);
 
-        this.theCustomCreatePanel.add(this.createSpacer());
+        particleSettingsPanel.add(this.createSpacer());
         this.mandala2Config = new Mandala2Config(settings);
-        this.theCustomCreatePanel.add(mandala2Config);
+        particleSettingsPanel.add(mandala2Config);
 
-        this.theCustomCreatePanel.add(this.createSpacer());
+        particleSettingsPanel.add(this.createSpacer());
         this.linkerConfig = new LinkerConfig(settings);
-        this.theCustomCreatePanel.add(linkerConfig.getConfigPanel());
+        particleSettingsPanel.add(linkerConfig.getConfigPanel());
 
 
-        this.theCustomCreatePanel.add(this.createSpacer());
+        particleSettingsPanel.add(this.createSpacer());
         this.lightningConfig = new LightningConfig(settings);
-        this.theCustomCreatePanel.add(lightningConfig.getConfigPanel());
-//
-        this.theCustomCreatePanel.add(this.createSpacer());
+        particleSettingsPanel.add(lightningConfig.getConfigPanel());
+
+        particleSettingsPanel.add(this.createSpacer());
         this.lightningAltConfig = new LightningAltConfig(settings);
-        this.theCustomCreatePanel.add(lightningAltConfig);
+        particleSettingsPanel.add(lightningAltConfig);
 
 
-        this.theCustomCreatePanel.add(this.createSpacer());
+        particleSettingsPanel.add(this.createSpacer());
         this.lizardConfig = new LizardConfig(settings);
-        this.theCustomCreatePanel.add(lizardConfig.getConfigPanel());
-        this.theCustomCreatePanel.add(this.createSpacer());
+        particleSettingsPanel.add(lizardConfig.getConfigPanel());
+        particleSettingsPanel.add(this.createSpacer());
 
 
         this.vineConfig = new VineConfig(settings);
-        this.theCustomCreatePanel.add(vineConfig.getConfigPanel());
-        this.theCustomCreatePanel.add(this.createSpacer());
+        particleSettingsPanel.add(vineConfig.getConfigPanel());
+        particleSettingsPanel.add(this.createSpacer());
 
         this.momaConfig = new MOMAConfig(settings);
-        this.theCustomCreatePanel.add(momaConfig.getConfigPanel());
-        this.theCustomCreatePanel.add(this.createSpacer());
+        particleSettingsPanel.add(momaConfig.getConfigPanel());
+        particleSettingsPanel.add(this.createSpacer());
 
         JPanel footerPanel = new JPanel();
         footerPanel.setMinimumSize(new Dimension(100, 300));
-        this.theCustomCreatePanel.add(footerPanel);
+        particleSettingsPanel.add(footerPanel);
+
+
+
+
+//        this.theCustomCreatePanel.add(this.createSpacer());
+//        this.basicParticleConfig = new BasicParticleConfig(settings);
+//        this.theCustomCreatePanel.add(this.basicParticleConfig);
+//
+//        this.theCustomCreatePanel.add(this.createSpacer());
+//        this.mandala2Config = new Mandala2Config(settings);
+//        this.theCustomCreatePanel.add(mandala2Config);
+//
+//        this.theCustomCreatePanel.add(this.createSpacer());
+//        this.linkerConfig = new LinkerConfig(settings);
+//        this.theCustomCreatePanel.add(linkerConfig.getConfigPanel());
+//
+//
+//        this.theCustomCreatePanel.add(this.createSpacer());
+//        this.lightningConfig = new LightningConfig(settings);
+//        this.theCustomCreatePanel.add(lightningConfig.getConfigPanel());
+////
+//        this.theCustomCreatePanel.add(this.createSpacer());
+//        this.lightningAltConfig = new LightningAltConfig(settings);
+//        this.theCustomCreatePanel.add(lightningAltConfig);
+//
+//
+//        this.theCustomCreatePanel.add(this.createSpacer());
+//        this.lizardConfig = new LizardConfig(settings);
+//        this.theCustomCreatePanel.add(lizardConfig.getConfigPanel());
+//        this.theCustomCreatePanel.add(this.createSpacer());
+//
+//
+//        this.vineConfig = new VineConfig(settings);
+//        this.theCustomCreatePanel.add(vineConfig.getConfigPanel());
+//        this.theCustomCreatePanel.add(this.createSpacer());
+//
+//        this.momaConfig = new MOMAConfig(settings);
+//        this.theCustomCreatePanel.add(momaConfig.getConfigPanel());
+//        this.theCustomCreatePanel.add(this.createSpacer());
+//
+//        JPanel footerPanel = new JPanel();
+//        footerPanel.setMinimumSize(new Dimension(100, 300));
+//        this.theCustomCreatePanel.add(footerPanel);
     }
 
 

@@ -1,3 +1,24 @@
+# LICENSING ... 
+Uugh!
+
+audio code is LGPL:
+https://stackoverflow.com/questions/6045384/playing-mp3-and-wav-in-java
+
+can i combine LGPL with this project + APACHE 2.0 code?
+Can i license it under MIT? 
+https://opensource.stackexchange.com/questions/5175/including-untouched-lgpl-library-in-a-mit-licenced-project?rq=1
+https://opensource.stackexchange.com/questions/7904/can-your-mit-library-use-an-lgpl-library?rq=1
+
+
+
+https://dzone.com/articles/the-lgpl-license ON LGPL:
+If you distribute software using the library, you must offer to supply the source code 
+of the library. `If you’re just using the official builds, you don’t have to do anything 
+special as the code is already available on GitHub.`
+
+
+
+
 
 TODO:
 Figure out how to traverse

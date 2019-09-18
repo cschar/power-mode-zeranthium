@@ -1,0 +1,38 @@
+package com.cschar.pmode3;
+
+import javazoom.jl.player.Player;
+
+import java.io.FileInputStream;
+import java.io.InputStream;
+
+public class Sound {
+
+    Player player;
+
+    public Sound(String resourcePath){
+        try {
+            InputStream stream = this.getClass().getResourceAsStream(resourcePath);
+            this.player = new Player(stream);
+        }catch( Exception e){
+            System.out.println("Error initializing MP3 sound");
+        }
+    }
+
+    public void play() {
+        new Thread(() -> {
+            try {
+                player.play();
+                player.close();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }).start();
+    }
+
+    public void stop(){
+        if(player != null){
+            player.close();
+        }
+    }
+
+}

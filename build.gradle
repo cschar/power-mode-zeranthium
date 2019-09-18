@@ -22,6 +22,10 @@ dependencies {
     // https://mvnrepository.com/artifact/org.imgscalr/imgscalr-lib
   //  implementation files('/Applications/IntelliJ IDEA CE.app/Contents/plugins/java/lib/java-api.jar')
     implementation group: 'org.imgscalr', name: 'imgscalr-lib', version: '4.2'
+
+    // https://mvnrepository.com/artifact/javazoom/jlayer
+    compile group: 'javazoom', name: 'jlayer', version: '1.0.1'
+
 }
 
 
