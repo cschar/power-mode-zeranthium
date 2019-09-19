@@ -8,9 +8,9 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class CustomPathCellHighlighterRenderer extends JLabel implements TableCellRenderer {
-    ArrayList<SpriteData> data;
-    public CustomPathCellHighlighterRenderer(ArrayList<? extends SpriteData> data) {
-        this.data = (ArrayList<SpriteData>) data;
+    ArrayList<PathData> data;
+    public CustomPathCellHighlighterRenderer(ArrayList<? extends PathData> data) {
+        this.data = (ArrayList<PathData>) data;
         setOpaque(true); // Or color won't be displayed!
     }
 

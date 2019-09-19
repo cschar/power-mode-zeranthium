@@ -31,6 +31,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     
     private JPanel particleSettingsPanel;
     private JPanel soundSettingsPanel;
+    private SoundConfig soundConfig;
 
     private JCheckBox enableLightningCheckBox;
     private JCheckBox enableLizardCheckBox;
@@ -245,51 +246,19 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
         ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/bar_small.png"));
         tabbedPane.addTab("Particle Settings", sliderIcon, particleSettingsPanel,
-                "Does nothing");
+                "Set yer particles!");
 
 
 
         JComponent panel2 = new JPanel();
-        panel2.add(new JTextField("HELLO"));
-        panel2.add(new JLabel("HAHHA"));
-
-
-        Sound[] sounds = new Sound[]{
-                new Sound("/sounds/h1.mp3"),
-                new Sound("/sounds/h2.mp3"),
-                new Sound("/sounds/h3.mp3"),
-                new Sound("/sounds/h4.mp3")
-        };
-
-        String[] soundPaths = new String[]{
-                "/sounds/h1.mp3",
-                "/sounds/h2.mp3",
-                "/sounds/h3.mp3",
-                "/sounds/h4.mp3"
-        };
-
-
-//        Sound j = new Sound("/sounds/h1.mp3");
-        JButton soundButton = new JButton("play it");
-        soundButton.addActionListener(e -> {
-
-            int r = ThreadLocalRandom.current().nextInt(0, sounds.length);
-            Sound s = new Sound(soundPaths[r]);
-            s.play();
-//            sounds[r].play();
-
-        });
-
-        panel2.add(soundButton);
-
-
-
+        soundConfig = new SoundConfig(settings);
+        panel2.add(soundConfig);
 
 
 
         ImageIcon soundIcon = new ImageIcon(this.getClass().getResource("/icons/sound_small.png"));
         tabbedPane.addTab("Sound Settings", soundIcon, panel2,
-                "Does twice as much nothing");
+                "Set yer sounds!");
 
 
         theCustomCreatePanel.add(tabbedPane);

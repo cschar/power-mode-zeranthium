@@ -30,11 +30,9 @@ public class SpriteDataAnimated  extends SpriteData {
 
     public SpriteDataAnimated(int previewSize, boolean enabled, float scale, int speedRate, String defaultPath, String customPath,
                               boolean isCyclic, int val2, float alpha, int val1) {
-        super(enabled, scale, val1, "", "");
+        super(enabled, scale, val1, defaultPath, customPath);
 
         this.previewSize = previewSize;
-        this.defaultPath = defaultPath;
-        this.customPath = customPath;
         this.speedRate = speedRate;
         this.isCyclic = isCyclic;
         this.val2 = val2;

@@ -19,7 +19,7 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class LizardConfig extends JPanel {
+public class LizardConfig{
 
     JPanel mainPanel;
     PowerMode3 settings;

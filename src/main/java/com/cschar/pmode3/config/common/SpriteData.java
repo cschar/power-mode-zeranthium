@@ -13,15 +13,11 @@ import java.util.Collection;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Logger;
 
-public class SpriteData {
+public class SpriteData extends PathData{
 
     public boolean enabled=true;
     public float scale=1.0f;
     public int val1 =100;
-
-    public String defaultPath;
-    public String customPath;
-    public boolean customPathValid = false;
 
 
     public ImageIcon previewIcon;
@@ -29,11 +25,11 @@ public class SpriteData {
 
 
     public SpriteData(boolean enabled, float scale, int val1, String defaultPath, String customPath) {
+        super(defaultPath,customPath);
         this.val1 = val1;
         this.enabled = enabled;
         this.scale = scale;
-        this.customPath = customPath;
-        this.defaultPath = defaultPath;
+
 
 
         if(customPath.equals("")){
