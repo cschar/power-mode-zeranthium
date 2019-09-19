@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Logger;
 
-public class PathData {
+public abstract class PathData {
 
     public String defaultPath;
     public String customPath;

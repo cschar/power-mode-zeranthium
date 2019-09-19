@@ -59,6 +59,10 @@ https://github.com/codeinthedark/awesome-power-mode
 
 Notes on plugin Dev:
 
+# setup actions from code
+https://www.jetbrains.org/intellij/sdk/docs/basics/action_system.html#registering-actions-from-code
+
+
 
 #Making a configurable UI for the plugin
 

@@ -50,12 +50,13 @@
     <actions>
 
         <action id="togglePowerModeZeranthium"
-                class="com.cschar.pmode3.HotKeyEnabledAction"
+                class="com.cschar.pmode3.hotkeys.HotKeyEnabledAction"
                 text="Toggle Powermode Zeranthium"
                 description="Toggle powermode Zeranthium">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
             <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl z"/>
         </action>
+
 
     </actions>
 </idea-plugin>

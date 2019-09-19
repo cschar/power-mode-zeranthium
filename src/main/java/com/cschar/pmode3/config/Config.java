@@ -12,7 +12,7 @@ public class Config {
 
 
 
-    public static JPanel getColorPickerPanel(String labelTextKey, PowerMode3.SpriteType spriteType, PowerMode3 settings, Color defaultColor){
+    public static JPanel getColorPickerPanel(String labelTextKey, PowerMode3.ConfigType configType, PowerMode3 settings, Color defaultColor){
 
         JPanel colorPickerPanel = new JPanel();
         JLabel colorLabel = new JLabel(labelTextKey);
@@ -21,15 +21,15 @@ public class Config {
         colorLabel.setOpaque(true); //to show background  https://stackoverflow.com/a/2380328/403403
         colorPickerPanel.add(colorLabel);
         colorPickerPanel.add(colorPreviewLabel);
-        if(settings.getSpriteTypeProperty(spriteType, labelTextKey) == null){
+        if(settings.getSpriteTypeProperty(configType, labelTextKey) == null){
 
             colorPreviewLabel.setBackground(defaultColor);
-            settings.setSpriteTypeProperty(spriteType, labelTextKey,
+            settings.setSpriteTypeProperty(configType, labelTextKey,
                     String.valueOf(defaultColor.getRGB()));
 
 
         }else{
-            String colorRGB = settings.getSpriteTypeProperty(spriteType, labelTextKey);
+            String colorRGB = settings.getSpriteTypeProperty(configType, labelTextKey);
             Color newColor = new Color(Integer.parseInt(colorRGB), true);
             colorPreviewLabel.setBackground(newColor);
         };
@@ -39,7 +39,7 @@ public class Config {
         colorPickerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String colorRGB = settings.getSpriteTypeProperty(spriteType, labelTextKey);
+                String colorRGB = settings.getSpriteTypeProperty(configType, labelTextKey);
                 Color prevColor = new Color(Integer.parseInt(colorRGB), true);
 
                 Color newColor = JColorChooser.showDialog(colorPickerPanel, "Choose Color",
@@ -48,7 +48,7 @@ public class Config {
                 if(newColor != null) {
 //                    colorLabel.setBackground(newColor);
                     colorPreviewLabel.setBackground(newColor);
-                    settings.setSpriteTypeProperty(spriteType, labelTextKey,
+                    settings.setSpriteTypeProperty(configType, labelTextKey,
                             String.valueOf(newColor.getRGB()));
                 }
             }
@@ -92,7 +92,7 @@ public class Config {
     }
 
 
-    public static boolean getBoolProperty(PowerMode3 settings, PowerMode3.SpriteType type, String propertyName){
+    public static boolean getBoolProperty(PowerMode3 settings, PowerMode3.ConfigType type, String propertyName){
         String property = settings.getSpriteTypeProperty(type, propertyName);
         if(property != null){
             return Boolean.parseBoolean(property);
@@ -101,7 +101,7 @@ public class Config {
         }
     }
 
-    public static boolean getBoolProperty(PowerMode3 settings, PowerMode3.SpriteType type, String propertyName, boolean defaultValue){
+    public static boolean getBoolProperty(PowerMode3 settings, PowerMode3.ConfigType type, String propertyName, boolean defaultValue){
         String property = settings.getSpriteTypeProperty(type, propertyName);
         if(property != null){
             return Boolean.parseBoolean(property);
@@ -110,7 +110,7 @@ public class Config {
         }
     }
 
-    public static int getIntProperty(PowerMode3 settings, PowerMode3.SpriteType type, String propertyName){
+    public static int getIntProperty(PowerMode3 settings, PowerMode3.ConfigType type, String propertyName){
         String property = settings.getSpriteTypeProperty(type, propertyName);
         if(property != null){
             return Integer.parseInt(property);
@@ -119,7 +119,7 @@ public class Config {
         }
     }
 
-    public static int getIntProperty(PowerMode3 settings, PowerMode3.SpriteType type, String propertyName, int defaultValue){
+    public static int getIntProperty(PowerMode3 settings, PowerMode3.ConfigType type, String propertyName, int defaultValue){
         String property = settings.getSpriteTypeProperty(type, propertyName);
         if(property != null){
             return Integer.parseInt(property);
@@ -128,11 +128,11 @@ public class Config {
         }
     }
 
-    public static Color getColorProperty(PowerMode3 settings, PowerMode3.SpriteType type, String propertyName){
+    public static Color getColorProperty(PowerMode3 settings, PowerMode3.ConfigType type, String propertyName){
         return getColorProperty(settings, type, propertyName, Color.GRAY);
     }
 
-    public static Color getColorProperty(PowerMode3 settings, PowerMode3.SpriteType type, String propertyName, Color defaultValue){
+    public static Color getColorProperty(PowerMode3 settings, PowerMode3.ConfigType type, String propertyName, Color defaultValue){
 
         String colorRGB = settings.getSpriteTypeProperty(type, propertyName);
         if(colorRGB != null){
@@ -142,7 +142,7 @@ public class Config {
         }
     }
 
-    public static float getFloatProperty(PowerMode3 settings, PowerMode3.SpriteType type, String propertyName, float defaultValue){
+    public static float getFloatProperty(PowerMode3 settings, PowerMode3.ConfigType type, String propertyName, float defaultValue){
         String property = settings.getSpriteTypeProperty(type, propertyName);
         if(property != null){
             return Float.parseFloat(property);

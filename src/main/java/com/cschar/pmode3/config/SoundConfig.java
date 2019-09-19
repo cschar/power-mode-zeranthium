@@ -1,11 +1,13 @@
 package com.cschar.pmode3.config;
 
+import com.cschar.pmode3.ParticleSpriteLinkerAnchor;
 import com.cschar.pmode3.PowerMode3;
 import com.cschar.pmode3.Sound;
 import com.cschar.pmode3.config.common.*;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDialog;
 import com.intellij.openapi.fileChooser.FileChooserFactory;
+import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
@@ -24,6 +26,8 @@ import java.util.ArrayList;
 
 public class SoundConfig extends JPanel {
 
+
+    private JCheckBox soundEnabled;
     public static ArrayList<SoundData> soundData;
 
     PowerMode3 settings;
@@ -37,12 +41,21 @@ public class SoundConfig extends JPanel {
 
 //        this.setLayout(new GridLayout(2,0));
         JPanel firstRow = new JPanel();
-//        firstRow.setMinimumSize(new Dimension(1000,50));
+        firstRow.setMaximumSize(new Dimension(1000,300));
         firstRow.setBackground(Color.YELLOW);
         firstRow.setOpaque(true);
         firstRow.setLayout(new BoxLayout(firstRow, BoxLayout.PAGE_AXIS));
-        firstRow.add(new JLabel("H"));
+
+        JLabel headerLabel = new JLabel("Basic Sound Options");
+        headerLabel.setFont(new Font ("Arial", Font.BOLD, 20));
+        headerLabel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+        firstRow.add(headerLabel);
+
         this.add(firstRow);
+
+        soundEnabled = new JCheckBox("Sound Enabled?");
+        this.add(soundEnabled);
+
 
         JComponent configTable = createConfigTable();
         this.add(configTable);
@@ -65,16 +78,9 @@ public class SoundConfig extends JPanel {
                 table.getRowHeight() * 4));
         table.getTableHeader().setReorderingAllowed(false);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-//        table.setBackground(Color.yellow);
-//        table.setOpaque(true);
-        // adding it to JScrollPane
-        JScrollPane sp = ScrollPaneFactory.createScrollPane(table);
-//        sp.setMaximumSize(new Dimension(470,350));
 
+        JScrollPane sp = ScrollPaneFactory.createScrollPane(table);
         sp.setOpaque(true);
-//        sp.setAlignmentX(Component.RIGHT_ALIGNMENT);
-//        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-//        table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
         TableColumnModel colModel=table.getColumnModel();
 
         colModel.getColumn(0).setPreferredWidth(60); //preview
@@ -104,7 +110,7 @@ public class SoundConfig extends JPanel {
         table.addMouseListener(new JTableButtonMouseListener(table));
 
 
-        TableCellRenderer pathRenderer = new CustomPathCellHighlighterRenderer(SoundConfigTableModel.data);
+        TableCellRenderer pathRenderer = new CustomPathCellHighlighterRenderer(SoundConfig.soundData);
         table.getColumn("path").setCellRenderer(pathRenderer);
 
 
@@ -113,19 +119,33 @@ public class SoundConfig extends JPanel {
         sp.setBorder(BorderFactory.createEmptyBorder());
         return sp;
     }
+
+    public void loadValues(){
+
+        this.soundEnabled.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.SOUND,"soundEnabled", true));
+    }
+
+    public void saveValues() {
+
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.SOUND, "soundEnabled", String.valueOf(soundEnabled.isSelected()));
+
+        settings.setSerializedSoundData(SoundConfig.soundData, PowerMode3.ConfigType.SOUND);
+
+    }
+
+    public static boolean SOUND_ENABLED(PowerMode3 settings){
+        return Config.getBoolProperty(settings, PowerMode3.ConfigType.SOUND, "soundEnabled");
+    }
+
+    public static void setSoundData(ArrayList<SoundData> data){
+        soundData = data;
+    }
 }
 
 
 class SoundConfigTableModel extends AbstractTableModel {
 
-    static ArrayList<SoundData> data = new ArrayList<SoundData>(){
-        {
-            add(new SoundData(true,20,"/sounds/h1.mp3",""));
-            add(new SoundData(true,20,"/sounds/h2.mp3",""));
-            add(new SoundData(true,20,"/sounds/h3.mp3",""));
-            add(new SoundData(true,20,"/sounds/h4.mp3",""));
-
-        }};
+    static ArrayList<SoundData> data = SoundConfig.soundData;
 
 
 

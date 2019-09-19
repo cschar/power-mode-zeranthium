@@ -60,7 +60,7 @@ public class BasicParticleConfig extends JPanel{
         this.add(secondCol);
 
 
-        JPanel basicColorPanel = Config.getColorPickerPanel("basic particle Color", PowerMode3.SpriteType.BASIC_PARTICLE, settings, BasicParticleConfig.originalBasicColor);
+        JPanel basicColorPanel = Config.getColorPickerPanel("basic particle Color", PowerMode3.ConfigType.BASIC_PARTICLE, settings, BasicParticleConfig.originalBasicColor);
 
 
         JPanel colorJPanel = new JPanel();
@@ -121,12 +121,12 @@ public class BasicParticleConfig extends JPanel{
 
     public void loadValues(){
         this.maxParticleSizeField.setText(String.valueOf(Config.getIntProperty(settings,
-                PowerMode3.SpriteType.BASIC_PARTICLE, K.MAX_PARTICLE_SIZE.toString(), 5)));
+                PowerMode3.ConfigType.BASIC_PARTICLE, K.MAX_PARTICLE_SIZE.toString(), 5)));
         this.numParticlesField.setText(String.valueOf(Config.getIntProperty(settings,
-                PowerMode3.SpriteType.BASIC_PARTICLE, K.NUM_PARTICLES.toString(), 7)));
+                PowerMode3.ConfigType.BASIC_PARTICLE, K.NUM_PARTICLES.toString(), 7)));
 
-        this.emitTopCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.BASIC_PARTICLE, K.EMIT_TOP.name(), true));
-        this.emitBottomCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.BASIC_PARTICLE, K.EMIT_BOT.name(), true));
+        this.emitTopCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.BASIC_PARTICLE, K.EMIT_TOP.name(), true));
+        this.emitBottomCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.BASIC_PARTICLE, K.EMIT_BOT.name(), true));
     }
 
     public void saveValues() throws ConfigurationException {
@@ -134,33 +134,33 @@ public class BasicParticleConfig extends JPanel{
         int maxParticleSize = Config.getJTextFieldWithinBoundsInt(this.maxParticleSizeField,
                 1, 10,
                 "max particle size");
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.BASIC_PARTICLE, K.MAX_PARTICLE_SIZE.toString(),
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.BASIC_PARTICLE, K.MAX_PARTICLE_SIZE.toString(),
                 String.valueOf(maxParticleSize));
 
         int numParticles = Config.getJTextFieldWithinBoundsInt(this.numParticlesField,
                 1, 10,
                 "max number of particles");
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.BASIC_PARTICLE, K.NUM_PARTICLES.toString(),
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.BASIC_PARTICLE, K.NUM_PARTICLES.toString(),
                 String.valueOf(numParticles));
 
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.BASIC_PARTICLE, K.EMIT_TOP.name(), String.valueOf(emitTopCheckBox.isSelected()));
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.BASIC_PARTICLE, K.EMIT_BOT.name(), String.valueOf(emitBottomCheckBox.isSelected()));
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.BASIC_PARTICLE, K.EMIT_TOP.name(), String.valueOf(emitTopCheckBox.isSelected()));
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.BASIC_PARTICLE, K.EMIT_BOT.name(), String.valueOf(emitBottomCheckBox.isSelected()));
     }
 
     public static Color BASIC_PARTICLE_COLOR(PowerMode3 settings){
-        return Config.getColorProperty(settings, PowerMode3.SpriteType.BASIC_PARTICLE, "basic particle Color", BasicParticleConfig.originalBasicColor);
+        return Config.getColorProperty(settings, PowerMode3.ConfigType.BASIC_PARTICLE, "basic particle Color", BasicParticleConfig.originalBasicColor);
     }
 
     public static int MAX_PARTICLE_SIZE(PowerMode3 settings){
-        return Config.getIntProperty(settings, PowerMode3.SpriteType.BASIC_PARTICLE, K.MAX_PARTICLE_SIZE.toString(), 5);
+        return Config.getIntProperty(settings, PowerMode3.ConfigType.BASIC_PARTICLE, K.MAX_PARTICLE_SIZE.toString(), 5);
     }
 
     public static boolean EMIT_TOP(PowerMode3 settings){
-        return Config.getBoolProperty(settings, PowerMode3.SpriteType.BASIC_PARTICLE, K.EMIT_TOP.name());
+        return Config.getBoolProperty(settings, PowerMode3.ConfigType.BASIC_PARTICLE, K.EMIT_TOP.name());
     }
 
     public static boolean EMIT_BOTTOM(PowerMode3 settings){
-        return Config.getBoolProperty(settings, PowerMode3.SpriteType.BASIC_PARTICLE, K.EMIT_BOT.name());
+        return Config.getBoolProperty(settings, PowerMode3.ConfigType.BASIC_PARTICLE, K.EMIT_BOT.name());
     }
 
     //TODO: test idea
@@ -168,7 +168,7 @@ public class BasicParticleConfig extends JPanel{
     // set in some static method called inside powermode3 onLoad?
 
     public static int NUM_PARTICLES(PowerMode3 settings){
-        return Config.getIntProperty(settings, PowerMode3.SpriteType.BASIC_PARTICLE, K.NUM_PARTICLES.name());
+        return Config.getIntProperty(settings, PowerMode3.ConfigType.BASIC_PARTICLE, K.NUM_PARTICLES.name());
     }
 
 }

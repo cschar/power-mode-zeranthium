@@ -19,32 +19,40 @@ package com.cschar.pmode3;
 
 
 import com.cschar.pmode3.config.*;
+import com.cschar.pmode3.config.common.SoundData;
 import com.cschar.pmode3.config.common.SpriteData;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
+import com.intellij.codeInsight.editorActions.PasteHandler;
+import com.intellij.icons.AllIcons;
+import com.intellij.largeFilesEditor.editor.EditorManager;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.components.BaseComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.EditorFactory;
-import com.intellij.openapi.editor.actionSystem.EditorActionManager;
-import com.intellij.openapi.editor.actionSystem.TypedAction;
-import com.intellij.openapi.editor.actionSystem.TypedActionHandler;
+import com.intellij.openapi.editor.*;
+import com.intellij.openapi.editor.actionSystem.*;
+import com.intellij.openapi.editor.actions.EditorActionUtil;
+import com.intellij.openapi.editor.actions.PasteAction;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.JBColor;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.text.DefaultEditorKit;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.concurrent.ThreadLocalRandom;
 
 
 /**
@@ -88,7 +96,7 @@ public class PowerMode3 implements BaseComponent,
 
 
 
-    public enum SpriteType{
+    public enum ConfigType {
         BASIC_PARTICLE,
         LIGHTNING,
         LIGHTNING_ALT,
@@ -96,8 +104,19 @@ public class PowerMode3 implements BaseComponent,
         MOMA,
         VINE,
         MANDALA,
-        LINKER
+        LINKER,
+
+        SOUND
     }
+
+    @com.intellij.util.xmlb.annotations.XCollection
+    private ArrayList<String[]> soundDataStringArrays = new ArrayList<String[]>(){{
+        //enabled,val1,defaultPath,customPath
+        add(new String[]{"true","20","/sounds/h1.mp3",""});
+        add(new String[]{"true","20","/sounds/h2.mp3",""});
+        add(new String[]{"true","20","/sounds/h3.mp3",""});
+        add(new String[]{"true","20","/sounds/h4.mp3",""});
+    }};
 
     @com.intellij.util.xmlb.annotations.XCollection
     private ArrayList<String[]> linkerDataStringArrays = new ArrayList<String[]>(){{
@@ -136,33 +155,33 @@ public class PowerMode3 implements BaseComponent,
     @com.intellij.util.xmlb.annotations.MapAnnotation  //this tells it to copy its inner values, wont serialize without it
     private Map<String,String> configMap = new HashMap<String,String>(){{
 
-        put("sprite"+ SpriteType.BASIC_PARTICLE + "Enabled", "true");
-        put("sprite"+ SpriteType.LIGHTNING + "Enabled", "false");
-        put("sprite"+ SpriteType.LIGHTNING_ALT + "Enabled", "false");
-        put("sprite"+ SpriteType.LIZARD + "Enabled", "false");
+        put("sprite"+ ConfigType.BASIC_PARTICLE + "Enabled", "true");
+        put("sprite"+ ConfigType.LIGHTNING + "Enabled", "false");
+        put("sprite"+ ConfigType.LIGHTNING_ALT + "Enabled", "false");
+        put("sprite"+ ConfigType.LIZARD + "Enabled", "false");
 
 
-        put("sprite"+ SpriteType.MOMA+ "Enabled", "false");
+        put("sprite"+ ConfigType.MOMA+ "Enabled", "false");
 
-        put("sprite"+ SpriteType.VINE + "Enabled", "false");
-        put("sprite"+ SpriteType.MANDALA + "Enabled", "false");
-        put("sprite"+ SpriteType.LINKER + "Enabled", "true");
+        put("sprite"+ ConfigType.VINE + "Enabled", "false");
+        put("sprite"+ ConfigType.MANDALA + "Enabled", "false");
+        put("sprite"+ ConfigType.LINKER + "Enabled", "true");
     }};
 
 
 
-    void setSpriteTypeEnabled(Boolean enabled, SpriteType type){
+    void setSpriteTypeEnabled(Boolean enabled, ConfigType type){
         configMap.put("sprite" + type + "Enabled", enabled.toString());
     }
-    boolean getSpriteTypeEnabled(SpriteType type){
+    boolean getSpriteTypeEnabled(ConfigType type){
         return Boolean.parseBoolean(configMap.get("sprite"+type+"Enabled"));
     }
 
-    public void setSpriteTypeProperty(SpriteType type, String property, String value){
+    public void setSpriteTypeProperty(ConfigType type, String property, String value){
         configMap.put(String.format("sprite%s_%s", type, property), value);
     }
 
-    public String getSpriteTypeProperty(SpriteType type, String property){
+    public String getSpriteTypeProperty(ConfigType type, String property){
         return configMap.get(String.format("sprite%s_%s", type, property));
     }
 
@@ -182,6 +201,78 @@ public class PowerMode3 implements BaseComponent,
     @Override
     public void initializeComponent() {
 
+        //Setup SOUND handler
+        final EditorActionManager actionManager = EditorActionManager.getInstance();
+//        final TypedAction typedAction0 = actionManager.getTypedAction();
+//        typedAction0.setupHandler(new SoundTypedActionHandler(typedAction0));
+
+        final TypedAction typedAction2 = actionManager.getTypedAction();
+        TypedActionHandler rawHandler2 = typedAction2.getRawHandler();
+        typedAction2.setupRawHandler(new TypedActionHandler() {
+                                      @Override
+                                      public void execute(@NotNull Editor editor, char c, @NotNull DataContext dataContext) {
+//                                          PowerMode3 settings = PowerMode3.getInstance();
+
+                                          if(SoundConfig.SOUND_ENABLED(PowerMode3.this)) {
+                                              int winner = SoundData.getWeightedAmountWinningIndex(SoundConfig.soundData);
+//                                              int r = ThreadLocalRandom.current().nextInt(0, SoundConfig.soundData.size());
+
+                                              SoundData d = SoundConfig.soundData.get(winner);
+                                              Sound s = new Sound(d.getPath(), !d.customPathValid);
+                                              s.play();
+                                          }
+//
+
+                                          rawHandler2.execute(editor,c,dataContext);
+                                      }
+                                  });
+
+
+
+
+                //https://www.jetbrains.org/intellij/sdk/docs/reference_guide/multiple_carets.html
+//
+//        EditorActionHandler origHandler = actionManager.getActionHandler(IdeActions.ACTION_EDITOR_DELETE);
+//        EditorActionHandler h1 = new EditorActionHandler() {
+//            @Override
+//            protected void doExecute(@NotNull Editor editor, @Nullable Caret caret, DataContext dataContext) {
+//                super.doExecute(editor, caret, dataContext);
+//
+//                origHandler.execute(editor,caret,dataContext);
+//                PsiElement e = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
+//                if(e != null) {  System.out.println(e.toString());   }
+//            }
+//        };
+//        actionManager.setActionHandler(IdeActions.ACTION_EDITOR_DELETE, h1);
+
+
+
+
+
+
+
+                //java.lang.ClassCastException: class com.intellij.ide.actions.PasteAction cannot be cast to class com.intellij.openapi.editor.actionSystem.EditorAction (com.intellij.ide.actions.PasteAction and com.intellij.openapi.editor.actionSystem.EditorAction are in unnamed module of
+                //actionManager.setActionHandler(IdeActions.ACTION_PASTE, h1);
+
+//        EditorActionHandler h = new EditorActionHandler() {
+//            @Override
+//            public boolean isEnabled(Editor editor, DataContext dataContext) {
+//                return super.isEnabled(editor, dataContext);
+//            }
+//        };
+//        PasteHandler ph = new MyPasteActionHandler(h);
+//        actionManager.setActionHandler(IdeActions.ACTION_PASTE, ph);
+
+
+//        EditorFactory.getInstance().getEventMulticaster().addCaretListener();
+//        EditorFactory.getInstance().getEventMulticaster().addEditorMouseMotionListener();
+//        EditorFactory.getInstance().getEventMulticaster().addSelectionListener();
+
+
+                //https://upsource.jetbrains.com/idea-ce/file/idea-ce-fb93870b390e3a0e4b2b3c15363651714a4f963b/platform/platform-api/src/com/intellij/openapi/editor/actionSystem/EditorActionManager.java
+//        EditorActionHandler commentblockhandler = actionManager.getActionHandler(IdeActions.ACTION_COMMENT_BLOCK);
+
+
         this.particleColor = new JBColor(new Color(this.getParticleRGB()), new Color(this.getParticleRGB()));
 
         final EditorActionManager editorActionManager = EditorActionManager.getInstance();
@@ -198,6 +289,7 @@ public class PowerMode3 implements BaseComponent,
         typedAction.setupRawHandler(new TypedActionHandler() {
             @Override
             public void execute(@NotNull final Editor editor, final char c, @NotNull final DataContext dataContext) {
+
 
                 PsiFile psiFile = dataContext.getData(CommonDataKeys.PSI_FILE);
 
@@ -261,14 +353,16 @@ public class PowerMode3 implements BaseComponent,
 
         XmlSerializerUtil.copyBean(state, this);
 
-        loadSpriteData();
+        loadConfigData();
     }
 
-    private void loadSpriteData(){
+    private void loadConfigData(){
         LightningAltConfig.setSparkData(this.deserializeSpriteData(sparkDataStringArrays));
         Mandala2Config.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(mandalaDataStringArrays, 120));
         LizardConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(lizardDataStringArrays, 60));
         LinkerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(linkerDataStringArrays, 60));
+
+        SoundConfig.setSoundData(this.deserializeSoundData(soundDataStringArrays));
     }
 
 
@@ -307,7 +401,7 @@ public class PowerMode3 implements BaseComponent,
         return sd;
     }
 
-    public void setSerializedSpriteDataAnimated(ArrayList<SpriteDataAnimated> spriteData, PowerMode3.SpriteType type){
+    public void setSerializedSpriteDataAnimated(ArrayList<SpriteDataAnimated> spriteData, ConfigType type){
 //        try {
             ArrayList<String[]> serialized = new ArrayList<>();
             for (SpriteDataAnimated d : spriteData) {
@@ -316,14 +410,33 @@ public class PowerMode3 implements BaseComponent,
                         String.valueOf(d.isCyclic), String.valueOf(d.val2),
                         String.valueOf(d.alpha), String.valueOf(d.val1)});
             }
-            if (type == SpriteType.MANDALA) {
+            if (type == ConfigType.MANDALA) {
                 this.mandalaDataStringArrays = serialized;
-            } else if (type == SpriteType.LIZARD) {
+            } else if (type == ConfigType.LIZARD) {
                 this.lizardDataStringArrays = serialized;
-            } else if (type == SpriteType.LINKER) {
+            } else if (type == ConfigType.LINKER) {
                 this.linkerDataStringArrays = serialized;
             }
 //        }
+    }
+
+    public void setSerializedSoundData(ArrayList<SoundData> soundData, ConfigType type){
+        ArrayList<String[]> serialized = new ArrayList<>();
+        for (SoundData d : soundData) {
+            serialized.add(new String[]{String.valueOf(d.enabled), String.valueOf(d.val1),
+                    String.valueOf(d.defaultPath), String.valueOf(d.customPath)});
+        }
+        if (type == ConfigType.SOUND) {
+            this.soundDataStringArrays = serialized;
+        }
+    }
+
+    public ArrayList<SoundData> deserializeSoundData(ArrayList<String[]> target){
+        ArrayList<SoundData> sd = new ArrayList<>();
+        for(String[] s: target){
+            sd.add(new SoundData(Boolean.parseBoolean(s[0]), Integer.parseInt(s[1]), s[2], s[3]));
+        }
+        return sd;
     }
 
     @Override
@@ -332,7 +445,7 @@ public class PowerMode3 implements BaseComponent,
         this.setParticleRGB(JBColor.darkGray.getRGB());
 
 
-        loadSpriteData();
+        loadConfigData();
     }
 
     public boolean isEnabled() {

@@ -18,11 +18,11 @@ public abstract class BaseConfig extends JPanel {
      JPanel firstCol;
      JPanel secondCol;
 
-    PowerMode3.SpriteType spriteType;
+    PowerMode3.ConfigType configType;
     private String title = "Base Options";
-    public BaseConfig(PowerMode3 settings, PowerMode3.SpriteType type, String title){
+    public BaseConfig(PowerMode3 settings, PowerMode3.ConfigType type, String title){
         this.settings = settings;
-        this.spriteType = type;
+        this.configType = type;
         this.title = title;
 
         this.setMaximumSize(new Dimension(1000,300));
@@ -76,8 +76,8 @@ public abstract class BaseConfig extends JPanel {
 
 
     public void loadValues(){
-        this.maxAlphaTextField.setText(String.valueOf(Config.getFloatProperty(settings, spriteType,"maxAlpha", 1.0f)));
-        this.chancePerKeyPressTextField.setText(String.valueOf(Config.getIntProperty(settings, spriteType,"chancePerKeyPress", 100)));
+        this.maxAlphaTextField.setText(String.valueOf(Config.getFloatProperty(settings, configType,"maxAlpha", 1.0f)));
+        this.chancePerKeyPressTextField.setText(String.valueOf(Config.getIntProperty(settings, configType,"chancePerKeyPress", 100)));
 
     }
 
@@ -87,13 +87,13 @@ public abstract class BaseConfig extends JPanel {
         int chancePerKeyPress = Config.getJTextFieldWithinBoundsInt(this.chancePerKeyPressTextField,
                 0, 100,
                 "chance particle spawns per keypress");
-        settings.setSpriteTypeProperty(spriteType, "chancePerKeyPress",
+        settings.setSpriteTypeProperty(configType, "chancePerKeyPress",
                 String.valueOf(chancePerKeyPress));
 
         float maxAlpha = Config.getJTextFieldWithinBoundsFloat(this.maxAlphaTextField,
                 0.1f, 1.0f,
                 "starting alpha value for particle");
-        settings.setSpriteTypeProperty(spriteType, "maxAlpha",
+        settings.setSpriteTypeProperty(configType, "maxAlpha",
                 String.valueOf(maxAlpha));
     }
 

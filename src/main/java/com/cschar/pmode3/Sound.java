@@ -16,12 +16,12 @@ public class Sound {
 
 
 
-    public Sound(String resourcePath, boolean isResource){
+    public Sound(String filePath, boolean isResource){
         if(isResource){
-            initResource(resourcePath);
+            initResource(filePath);
         }else {
             try {
-                FileInputStream stream = new FileInputStream(resourcePath);
+                FileInputStream stream = new FileInputStream(filePath);
                 this.player = new Player(stream);
             } catch (Exception e) {
                 System.out.println("Error initializing MP3 sound");

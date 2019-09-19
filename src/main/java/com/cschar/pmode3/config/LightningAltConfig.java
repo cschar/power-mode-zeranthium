@@ -27,7 +27,7 @@ public class LightningAltConfig extends BaseConfig {
     JComponent sparkConfigPanel;
 
     public LightningAltConfig(PowerMode3 settings){
-        super(settings, PowerMode3.SpriteType.LIGHTNING_ALT, "Lightning Alt Options");
+        super(settings, PowerMode3.ConfigType.LIGHTNING_ALT, "Lightning Alt Options");
 
 
         JPanel sparksEnabledPanel = new JPanel();
@@ -124,8 +124,8 @@ public class LightningAltConfig extends BaseConfig {
 
     public void loadValues(){
         super.loadValues();
-        this.maxAlphaTextField.setText(String.valueOf(Config.getFloatProperty(settings, spriteType,"maxAlpha", 0.5f)));
-        this.sparksEnabled.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.LIGHTNING_ALT,"sparksEnabled", true));
+        this.maxAlphaTextField.setText(String.valueOf(Config.getFloatProperty(settings, configType,"maxAlpha", 0.5f)));
+        this.sparksEnabled.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.LIGHTNING_ALT,"sparksEnabled", true));
 
         //sparkData is loaded on settings instantiation
     }
@@ -133,11 +133,11 @@ public class LightningAltConfig extends BaseConfig {
     public void saveValues() throws ConfigurationException {
         super.saveValues();
 
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING_ALT, "sparksEnabled", String.valueOf(sparksEnabled.isSelected()));
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.LIGHTNING_ALT, "sparksEnabled", String.valueOf(sparksEnabled.isSelected()));
 
         float maxAlpha = Config.getJTextFieldWithinBoundsFloat(this.maxAlphaTextField,
                 0.0f, 1.0f, "Max alpha");
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LIGHTNING_ALT, "maxAlpha",
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.LIGHTNING_ALT, "maxAlpha",
                 String.valueOf(maxAlpha));
 
 
@@ -148,15 +148,15 @@ public class LightningAltConfig extends BaseConfig {
 
 
     public static int CHANCE_PER_KEY_PRESS(PowerMode3 settings){
-        return Config.getIntProperty(settings, PowerMode3.SpriteType.LIGHTNING_ALT, "chancePerKeyPress");
+        return Config.getIntProperty(settings, PowerMode3.ConfigType.LIGHTNING_ALT, "chancePerKeyPress");
     }
 
     public static float MAX_ALPHA(PowerMode3 settings){
-        return Config.getFloatProperty(settings, PowerMode3.SpriteType.LIGHTNING_ALT, "maxAlpha", 0.5f);
+        return Config.getFloatProperty(settings, PowerMode3.ConfigType.LIGHTNING_ALT, "maxAlpha", 0.5f);
     }
 
     public static boolean SPARKS_ENABLED(PowerMode3 settings){
-        return Config.getBoolProperty(settings, PowerMode3.SpriteType.LIGHTNING_ALT, "sparksEnabled");
+        return Config.getBoolProperty(settings, PowerMode3.ConfigType.LIGHTNING_ALT, "sparksEnabled");
     }
 
     static ArrayList<SpriteData> sparkData;

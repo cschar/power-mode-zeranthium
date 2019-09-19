@@ -1,6 +1,5 @@
 package com.cschar.pmode3.config;
 
-import com.cschar.pmode3.ParticleSpriteLightning;
 import com.cschar.pmode3.PowerMode3;
 import com.intellij.openapi.options.ConfigurationException;
 
@@ -61,7 +60,7 @@ public class MandalaConfig extends JPanel {
 
 
     public static int CHANCE_OF_LIGHTNING(PowerMode3 settings){
-        return Config.getIntProperty(settings, PowerMode3.SpriteType.LIGHTNING, "chanceOfLightning");
+        return Config.getIntProperty(settings, PowerMode3.ConfigType.LIGHTNING, "chanceOfLightning");
     }
 
 

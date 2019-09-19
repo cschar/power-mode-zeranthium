@@ -1,6 +1,7 @@
-package com.cschar.pmode3;
+package com.cschar.pmode3.hotkeys;
 
 
+import com.cschar.pmode3.PowerMode3;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;

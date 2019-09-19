@@ -206,13 +206,13 @@ public class LizardConfig{
 
 
     public void loadValues(){
-        this.maxPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LIZARD,"maxPsiSearchDistance", 300)));
-        this.minPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LIZARD,"minPsiSearchDistance", 100)));
+        this.maxPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LIZARD,"maxPsiSearchDistance", 300)));
+        this.minPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LIZARD,"minPsiSearchDistance", 100)));
 
-        this.chancePerKeyPressTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LIZARD,"chancePerKeyPress", 100)));
-        this.chanceOfSpawnTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LIZARD,"chanceOfSpawn", 100)));
+        this.chancePerKeyPressTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LIZARD,"chancePerKeyPress", 100)));
+        this.chanceOfSpawnTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LIZARD,"chanceOfSpawn", 100)));
 
-        this.maxAnchorsToUse.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LIZARD,"maxAnchorsToUse", 10)));
+        this.maxAnchorsToUse.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LIZARD,"maxAnchorsToUse", 10)));
 
     }
 
@@ -221,55 +221,55 @@ public class LizardConfig{
         int minLizardPsiDistance = Config.getJTextFieldWithinBoundsInt(this.minPsiAnchorDistanceTextField,
                 0, maxPsiSearchLimit,
                 "Min Distance to Psi Anchors will use when spawning lizards (cannot be greater than max defined at top)");
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LIZARD, "minPsiSearchDistance",
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.LIZARD, "minPsiSearchDistance",
                 String.valueOf(minLizardPsiDistance));
 
         int maxLizardPsiDistance = Config.getJTextFieldWithinBoundsInt(this.maxPsiAnchorDistanceTextField,
                 0, maxPsiSearchLimit,
                 "Max Distance to Psi Anchors will use when spawning lizards (cannot be greater than max defined at top)");
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LIZARD, "maxPsiSearchDistance",
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.LIZARD, "maxPsiSearchDistance",
                 String.valueOf(maxLizardPsiDistance));
 
         int chancePerKeyPress = Config.getJTextFieldWithinBoundsInt(this.chancePerKeyPressTextField,
                 0, 100,
                 "chance lizards spawn per keypress");
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LIZARD, "chancePerKeyPress",
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.LIZARD, "chancePerKeyPress",
                 String.valueOf(chancePerKeyPress));
 
         int chanceOfSpawn = Config.getJTextFieldWithinBoundsInt(this.chanceOfSpawnTextField,
                 0, 100,
                 "chance lizard spawns for anchor");
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LIZARD, "chanceOfSpawn",
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.LIZARD, "chanceOfSpawn",
                 String.valueOf(chanceOfSpawn));
 
         int maxAnchorsToUse = Config.getJTextFieldWithinBoundsInt(this.maxAnchorsToUse,
                 1, 100,
                 "max anchors to use when spawning lizards");
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LIZARD, "maxAnchorsToUse",
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.LIZARD, "maxAnchorsToUse",
                 String.valueOf(maxAnchorsToUse));
 
-        settings.setSerializedSpriteDataAnimated(LizardConfig.spriteDataAnimated, PowerMode3.SpriteType.LIZARD);
+        settings.setSerializedSpriteDataAnimated(LizardConfig.spriteDataAnimated, PowerMode3.ConfigType.LIZARD);
     }
 
 
 
     public static int MAX_PSI_SEARCH(PowerMode3 settings) {
-        return Config.getIntProperty(settings, PowerMode3.SpriteType.LIZARD,"maxPsiSearchDistance");
+        return Config.getIntProperty(settings, PowerMode3.ConfigType.LIZARD,"maxPsiSearchDistance");
     }
     public static int MIN_PSI_SEARCH(PowerMode3 settings) {
-        return Config.getIntProperty(settings, PowerMode3.SpriteType.LIZARD,"minPsiSearchDistance");
+        return Config.getIntProperty(settings, PowerMode3.ConfigType.LIZARD,"minPsiSearchDistance");
     }
 
     public static int CHANCE_OF_SPAWN(PowerMode3 settings){
-        return Config.getIntProperty(settings, PowerMode3.SpriteType.LIZARD, "chanceOfSpawn");
+        return Config.getIntProperty(settings, PowerMode3.ConfigType.LIZARD, "chanceOfSpawn");
     }
 
     public static int MAX_ANCHORS_TO_USE(PowerMode3 settings){
-        return Config.getIntProperty(settings, PowerMode3.SpriteType.LIZARD, "maxAnchorsToUse");
+        return Config.getIntProperty(settings, PowerMode3.ConfigType.LIZARD, "maxAnchorsToUse");
     }
 
     public static int CHANCE_PER_KEY_PRESS(PowerMode3 settings){
-        return Config.getIntProperty(settings, PowerMode3.SpriteType.LIZARD, "chancePerKeyPress");
+        return Config.getIntProperty(settings, PowerMode3.ConfigType.LIZARD, "chancePerKeyPress");
     }
 
 

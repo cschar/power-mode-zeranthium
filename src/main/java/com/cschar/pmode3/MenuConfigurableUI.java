@@ -2,26 +2,19 @@ package com.cschar.pmode3;
 
 import com.cschar.pmode3.config.*;
 import com.intellij.openapi.actionSystem.Shortcut;
-import com.intellij.openapi.keymap.Keymap;
+import com.intellij.openapi.actionSystem.ShortcutSet;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.options.ConfigurableUi;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.util.ui.JBUI;
-import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NotNull;
 
-import javax.net.ssl.KeyManager;
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
-import java.net.URL;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private JPanel mainPanel;
@@ -65,24 +58,12 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         settings = powerMode3;
         isEnabledCheckBox.setSelected(powerMode3.isEnabled());
 
-        KeymapManager km = KeymapManager.getInstance();
-        //defined in the META-INF/plugin.xml <action id=""> param
-        Shortcut[] zShortcuts = km.getActiveKeymap().getShortcuts("togglePowerModeZeranthium");
-        StringBuffer sb = new StringBuffer();
-        for(Shortcut sc: zShortcuts){
-            sb.append("(<b>" + sc + "</b>)");
-        }
-        String labelText = String.format("<html>%s - %s</html>", toggleHotkeyLabel.getText(), sb.toString());
+        String labelText = getHotkeyLabelText();
 //        toggleHotkeyLabel.setText(toggleHotkeyLabel.getText() + sb.toString());
         toggleHotkeyLabel.setText(labelText);
 
 
 
-
-
-
-
-//        HotKeyEnabledAction.ACTIONS_KEY.
 
         shakeDistanceTextField.setText(Integer.toString(powerMode3.getShakeDistance()));
         lifetimeTextField.setText(Integer.toString(powerMode3.getLifetime()));
@@ -92,29 +73,29 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
 //        enableBasicParticleCheckBox.setSelected(powerMode3.getBasicParticleEnabled());
 
-        if(powerMode3.getSpriteTypeEnabled(PowerMode3.SpriteType.BASIC_PARTICLE)){
+        if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.BASIC_PARTICLE)){
             enableBasicParticleCheckBox.setSelected(true);
         }
 
-        if(powerMode3.getSpriteTypeEnabled(PowerMode3.SpriteType.LIGHTNING)){
+        if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.LIGHTNING)){
             enableLightningCheckBox.setSelected(true);
         }
-        if(powerMode3.getSpriteTypeEnabled(PowerMode3.SpriteType.LIGHTNING_ALT)){
+        if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.LIGHTNING_ALT)){
             lightningAltCheckBox.setSelected(true);
         }
-        if(powerMode3.getSpriteTypeEnabled(PowerMode3.SpriteType.LIZARD)){
+        if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.LIZARD)){
             enableLizardCheckBox.setSelected(true);
         }
-        if(powerMode3.getSpriteTypeEnabled(PowerMode3.SpriteType.MOMA)){
+        if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.MOMA)){
             enableMOMACheckBox.setSelected(true);
         }
-        if(powerMode3.getSpriteTypeEnabled(PowerMode3.SpriteType.VINE)){
+        if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.VINE)){
             enableVineCheckBox.setSelected(true);
         }
-        if(powerMode3.getSpriteTypeEnabled(PowerMode3.SpriteType.MANDALA)){
+        if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.MANDALA)){
             enableMandalaCheckbox.setSelected(true);
         }
-        if(powerMode3.getSpriteTypeEnabled(PowerMode3.SpriteType.LINKER)){
+        if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.LINKER)){
             enableLinkerCheckbox.setSelected(true);
         }
 
@@ -128,6 +109,10 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         this.momaConfig.loadValues();
         this.mandala2Config.loadValues();
         this.linkerConfig.loadValues();
+
+
+        //sound panel
+        this.soundConfig.loadValues();
     }
 
 
@@ -156,17 +141,17 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
         //basic particle
 //        settings.setBasicParticleEnabled(enableBasicParticleCheckBox.isSelected());
-        settings.setSpriteTypeEnabled(enableBasicParticleCheckBox.isSelected(), PowerMode3.SpriteType.BASIC_PARTICLE);
+        settings.setSpriteTypeEnabled(enableBasicParticleCheckBox.isSelected(), PowerMode3.ConfigType.BASIC_PARTICLE);
 
-        settings.setSpriteTypeEnabled(enableLightningCheckBox.isSelected(), PowerMode3.SpriteType.LIGHTNING);
-        settings.setSpriteTypeEnabled(lightningAltCheckBox.isSelected(), PowerMode3.SpriteType.LIGHTNING_ALT);
-        settings.setSpriteTypeEnabled(enableLizardCheckBox.isSelected(), PowerMode3.SpriteType.LIZARD);
-        settings.setSpriteTypeEnabled(enableMOMACheckBox.isSelected(), PowerMode3.SpriteType.MOMA);
-        settings.setSpriteTypeEnabled(enableVineCheckBox.isSelected(), PowerMode3.SpriteType.VINE);
+        settings.setSpriteTypeEnabled(enableLightningCheckBox.isSelected(), PowerMode3.ConfigType.LIGHTNING);
+        settings.setSpriteTypeEnabled(lightningAltCheckBox.isSelected(), PowerMode3.ConfigType.LIGHTNING_ALT);
+        settings.setSpriteTypeEnabled(enableLizardCheckBox.isSelected(), PowerMode3.ConfigType.LIZARD);
+        settings.setSpriteTypeEnabled(enableMOMACheckBox.isSelected(), PowerMode3.ConfigType.MOMA);
+        settings.setSpriteTypeEnabled(enableVineCheckBox.isSelected(), PowerMode3.ConfigType.VINE);
 
-        settings.setSpriteTypeEnabled(enableMandalaCheckbox.isSelected(), PowerMode3.SpriteType.MANDALA);
+        settings.setSpriteTypeEnabled(enableMandalaCheckbox.isSelected(), PowerMode3.ConfigType.MANDALA);
 
-        settings.setSpriteTypeEnabled(enableLinkerCheckbox.isSelected(), PowerMode3.SpriteType.LINKER);
+        settings.setSpriteTypeEnabled(enableLinkerCheckbox.isSelected(), PowerMode3.ConfigType.LINKER);
 
 
         //save values
@@ -179,6 +164,9 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         this.momaConfig.saveValues();
         this.mandala2Config.saveValues(enableMandalaCheckbox.isSelected());
         this.linkerConfig.saveValues(maxPsiSearch, enableLinkerCheckbox.isSelected());
+
+        //sound panel
+        this.soundConfig.saveValues();
 
 
     }
@@ -371,6 +359,28 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
             throw new ConfigurationException(errorMsg);
         }
         return newValue;
+    }
+
+    private String getHotkeyLabelText(){
+        KeymapManager km = KeymapManager.getInstance();
+        //defined in the META-INF/plugin.xml <action id=""> param
+        Shortcut[] zShortcuts = km.getActiveKeymap().getShortcuts("togglePowerModeZeranthium");
+        StringBuffer sb = new StringBuffer();
+        for(int i = 0; i < zShortcuts.length; i++){
+            Shortcut sc = zShortcuts[i];
+            if( i % 2 == 0) {
+                sb.append(" <br> " + sc);
+            }else{
+                sb.append( sc );
+            }
+//            if( i % 2 == 0) {
+//                sb.append(" <br> (<b>" + sc + "</b>)");
+//            }else{
+//                sb.append("(<b>" + sc + "</b>)");
+//            }
+        }
+        String labelText = String.format("<html>%s - %s</html>", toggleHotkeyLabel.getText(), sb.toString());
+        return labelText;
     }
 
 }

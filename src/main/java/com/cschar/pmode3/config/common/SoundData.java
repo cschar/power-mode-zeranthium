@@ -1,18 +1,11 @@
 package com.cschar.pmode3.config.common;
 
-import com.cschar.pmode3.ParticleSpriteLightning;
-import com.cschar.pmode3.ParticleUtils;
+import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.logging.Logger;
 
 public class SoundData extends PathData{
 
@@ -23,23 +16,34 @@ public class SoundData extends PathData{
         super(defaultPath, customPath);
         this.val1 = val1;
         this.enabled = enabled;
+
+        if(!customPath.equals("")){ //check if value on filesystem is bad on initialization
+            VirtualFile tmp = LocalFileSystem.getInstance().findFileByPath(customPath);
+            if(tmp == null){
+                this.customPathValid = false;
+            }else if(Objects.equals(tmp.getExtension(), "mp3")) {
+                this.customPathValid = true;
+            }
+        }
+
     }
 
-    public boolean setValidMP3Path(VirtualFile f){
-
-        if(!f.getExtension().equals("mp3")) {
-            this.customPath = f.getPath();
+    public void setValidMP3Path(VirtualFile f){
+        if(f == null){
             this.customPathValid = false;
-            return false;
-        }else{
+            return;
+        }
+        if(Objects.equals(f.getExtension(), "mp3")) {
             this.customPath = f.getPath();
             this.customPathValid = true;
-            return true;
+        }else{
+            this.customPath = f.getPath();
+            this.customPathValid = false;
         }
     }
 
     public String getPath(){
-        if(!this.customPath.equals("") && !this.customPathValid){
+        if(this.customPath.equals("") && !this.customPathValid){
             return this.defaultPath;
         }else{
             return this.customPath;

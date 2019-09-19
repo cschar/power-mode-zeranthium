@@ -105,7 +105,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         int lifeSetting = settings.getLifetime();
 
 
-        if(settings.getSpriteTypeEnabled(PowerMode3.SpriteType.MANDALA)){
+        if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.MANDALA)){
             //update static value for all other rings still spawned.
             ParticleSpriteMandala.cursorX = x;
             ParticleSpriteMandala.cursorY = y;
@@ -124,7 +124,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
             }
         }
 
-        if (settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LIGHTNING_ALT)){
+        if (settings.getSpriteTypeEnabled(PowerMode3.ConfigType.LIGHTNING_ALT)){
             final ParticleSpriteLightningAlt e = new ParticleSpriteLightningAlt(x, y, dx, dy, size, lifeSetting,
                     Color.ORANGE,
                     LightningAltConfig.CHANCE_PER_KEY_PRESS(settings),
@@ -134,7 +134,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
         }
 
-        if (settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LIGHTNING)){
+        if (settings.getSpriteTypeEnabled(PowerMode3.ConfigType.LIGHTNING)){
             final ParticleSpriteLightning e = new ParticleSpriteLightning(x, y, dx, dy, size, lifeSetting, Color.ORANGE,
                     LightningConfig.CHANCE_OF_LIGHTNING(settings),
                     LightningConfig.INNER_BEAM_ENABLED(settings),
@@ -144,7 +144,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         }
 
 
-        if (settings.getSpriteTypeEnabled(PowerMode3.SpriteType.MOMA)){
+        if (settings.getSpriteTypeEnabled(PowerMode3.ConfigType.MOMA)){
 
 
             Color[] colors = new Color[]{
@@ -176,7 +176,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         }
 
 
-        if (settings.getSpriteTypeEnabled(PowerMode3.SpriteType.BASIC_PARTICLE)) {
+        if (settings.getSpriteTypeEnabled(PowerMode3.ConfigType.BASIC_PARTICLE)) {
             int maxSize = BasicParticleConfig.MAX_PARTICLE_SIZE(settings);
             Color basicColor = BasicParticleConfig.BASIC_PARTICLE_COLOR(settings);
             int numParticles = BasicParticleConfig.NUM_PARTICLES(settings);
@@ -217,7 +217,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
         int lizard_chance = LizardConfig.CHANCE_PER_KEY_PRESS(settings);
         int r = ThreadLocalRandom.current().nextInt(1, 100 +1);
-        if (settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LIZARD) && (r <= lizard_chance)){
+        if (settings.getSpriteTypeEnabled(PowerMode3.ConfigType.LIZARD) && (r <= lizard_chance)){
 
 
 //            String colorRGB = settings.getSpriteTypeProperty(PowerMode3.SpriteType.LIZARD, "lizardColor");
@@ -259,7 +259,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
         int vine_chance = VineConfig.CHANCE_PER_KEY_PRESS(settings);
         r = ThreadLocalRandom.current().nextInt(1, 100 +1);
-        if(settings.getSpriteTypeEnabled(PowerMode3.SpriteType.VINE) && (r <= vine_chance)){
+        if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.VINE) && (r <= vine_chance)){
             int minPsiSearch = VineConfig.MIN_PSI_SEARCH(settings);
             int maxPsiSearch = VineConfig.MAX_PSI_SEARCH(settings);
             for(Anchor a: anchors){
@@ -300,7 +300,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 //        int linkerI_chance = LinkerConfig.CHANCE_PER_KEY_PRESS(settings);
 //        r = ThreadLocalRandom.current().nextInt(1, 100 +1);
 //        if(settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LINKER) && (r <= linkerI_chance)){
-        if(settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LINKER)){
+        if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.LINKER)){
 
 
             ParticleSpriteLinkerAnchor.cursorX = x;

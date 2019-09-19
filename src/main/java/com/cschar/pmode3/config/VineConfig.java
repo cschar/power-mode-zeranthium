@@ -40,8 +40,8 @@ public class VineConfig extends JPanel {
         mainPanel.add(secondCol);
 
 
-        JPanel vineTopColorPanel = Config.getColorPickerPanel("Vine Top Color", PowerMode3.SpriteType.VINE, settings, Color.GREEN);
-        JPanel vineBottomColorPanel = Config.getColorPickerPanel("Vine Bottom Color", PowerMode3.SpriteType.VINE, settings, Color.CYAN);
+        JPanel vineTopColorPanel = Config.getColorPickerPanel("Vine Top Color", PowerMode3.ConfigType.VINE, settings, Color.GREEN);
+        JPanel vineBottomColorPanel = Config.getColorPickerPanel("Vine Bottom Color", PowerMode3.ConfigType.VINE, settings, Color.CYAN);
         secondCol.add(vineTopColorPanel);
         secondCol.add(vineBottomColorPanel);
 
@@ -134,13 +134,13 @@ public class VineConfig extends JPanel {
     public void loadValues(){
 
 
-        this.minPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.VINE,"minPsiSearchDistance", 100)));
-        this.maxPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.VINE,"maxPsiSearchDistance", 300)));
-        this.chancePerKeyPressTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.VINE,"chancePerKeyPress", 100)));
+        this.minPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.VINE,"minPsiSearchDistance", 100)));
+        this.maxPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.VINE,"maxPsiSearchDistance", 300)));
+        this.chancePerKeyPressTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.VINE,"chancePerKeyPress", 100)));
 
-        this.spriteEnabled.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.VINE,"spriteEnabled"));
-        this.sprite2Enabled.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.VINE,"sprite2Enabled"));
-        this.growFromRight.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.VINE,"growFromRight"));
+        this.spriteEnabled.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.VINE,"spriteEnabled"));
+        this.sprite2Enabled.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.VINE,"sprite2Enabled"));
+        this.growFromRight.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.VINE,"growFromRight"));
 
 
     }
@@ -150,59 +150,59 @@ public class VineConfig extends JPanel {
         int minVinePsiDistance = Config.getJTextFieldWithinBoundsInt(this.minPsiAnchorDistanceTextField,
                 0, maxPsiSearchLimit,
                 "Min Distance to Psi Anchors will use when spawning vines (cannot be greater than max defined at top)");
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.VINE, "minPsiSearchDistance", String.valueOf(minVinePsiDistance));
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.VINE, "minPsiSearchDistance", String.valueOf(minVinePsiDistance));
 
 
         int maxVinePsiDistance = Config.getJTextFieldWithinBoundsInt(this.maxPsiAnchorDistanceTextField,
                 0, maxPsiSearchLimit,
                 "Max Distance to Psi Anchors will use when spawning vines (cannot be greater than max defined at top)");
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.VINE, "maxPsiSearchDistance", String.valueOf(maxVinePsiDistance));
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.VINE, "maxPsiSearchDistance", String.valueOf(maxVinePsiDistance));
 
         int chancePerKeyPress = Config.getJTextFieldWithinBoundsInt(this.chancePerKeyPressTextField,
                 0, 100,
                 "chance per keypress");
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.VINE, "chancePerKeyPress",
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.VINE, "chancePerKeyPress",
                 String.valueOf(chancePerKeyPress));
 
 
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.VINE, "spriteEnabled", String.valueOf(spriteEnabled.isSelected()));
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.VINE, "sprite2Enabled", String.valueOf(sprite2Enabled.isSelected()));
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.VINE, "growFromRight", String.valueOf(growFromRight.isSelected()));
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.VINE, "spriteEnabled", String.valueOf(spriteEnabled.isSelected()));
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.VINE, "sprite2Enabled", String.valueOf(sprite2Enabled.isSelected()));
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.VINE, "growFromRight", String.valueOf(growFromRight.isSelected()));
     }
 
 
 
     public static boolean USE_SPRITE(PowerMode3 settings){
-        return Config.getBoolProperty(settings, PowerMode3.SpriteType.VINE,"spriteEnabled");
+        return Config.getBoolProperty(settings, PowerMode3.ConfigType.VINE,"spriteEnabled");
     }
 
     public static boolean USE_SPRITE2(PowerMode3 settings){
-        return Config.getBoolProperty(settings, PowerMode3.SpriteType.VINE,"sprite2Enabled");
+        return Config.getBoolProperty(settings, PowerMode3.ConfigType.VINE,"sprite2Enabled");
     }
 
 
     public static int MAX_PSI_SEARCH(PowerMode3 settings) {
-        return Config.getIntProperty(settings, PowerMode3.SpriteType.VINE,"maxPsiSearchDistance");
+        return Config.getIntProperty(settings, PowerMode3.ConfigType.VINE,"maxPsiSearchDistance");
     }
 
     public static int MIN_PSI_SEARCH(PowerMode3 settings) {
-        return Config.getIntProperty(settings, PowerMode3.SpriteType.VINE,"minPsiSearchDistance");
+        return Config.getIntProperty(settings, PowerMode3.ConfigType.VINE,"minPsiSearchDistance");
     }
 
     public static boolean GROW_FROM_RIGHT(PowerMode3 settings){
-        return Config.getBoolProperty(settings, PowerMode3.SpriteType.VINE,"growFromRight");
+        return Config.getBoolProperty(settings, PowerMode3.ConfigType.VINE,"growFromRight");
     }
 
     public static Color VINE_TOP_COLOR(PowerMode3 settings){
-        return Config.getColorProperty(settings, PowerMode3.SpriteType.VINE,"Vine Top Color");
+        return Config.getColorProperty(settings, PowerMode3.ConfigType.VINE,"Vine Top Color");
     }
 
     public static Color VINE_BOTTOM_COLOR(PowerMode3 settings){
-        return Config.getColorProperty(settings, PowerMode3.SpriteType.VINE,"Vine Bottom Color");
+        return Config.getColorProperty(settings, PowerMode3.ConfigType.VINE,"Vine Bottom Color");
     }
 
     public static int CHANCE_PER_KEY_PRESS(PowerMode3 settings){
-        return Config.getIntProperty(settings, PowerMode3.SpriteType.VINE, "chancePerKeyPress");
+        return Config.getIntProperty(settings, PowerMode3.ConfigType.VINE, "chancePerKeyPress");
     }
 
 

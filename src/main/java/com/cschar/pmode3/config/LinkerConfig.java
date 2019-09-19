@@ -120,7 +120,7 @@ public class LinkerConfig extends JPanel {
 //        chancePerKeyPressPanel.setBackground(Color.lightGray);
 //        secondCol.add(chancePerKeyPressPanel);
 
-        JPanel tracerColorPanel = Config.getColorPickerPanel("tracer Color", PowerMode3.SpriteType.LINKER, settings, this.originalTracerColor);
+        JPanel tracerColorPanel = Config.getColorPickerPanel("tracer Color", PowerMode3.ConfigType.LINKER, settings, this.originalTracerColor);
         this.tracerEnabledCheckBox = new JCheckBox("is enabled?", true);
         JPanel tracerConfig = Config.populateEnabledColorPickerPanel(tracerColorPanel, tracerEnabledCheckBox);
         secondCol.add(tracerConfig);
@@ -285,24 +285,24 @@ public class LinkerConfig extends JPanel {
 
 
     public void loadValues(){
-        this.maxPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"maxPsiSearchDistance", 300)));
-        this.minPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"minPsiSearchDistance", 100)));
+        this.maxPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER,"maxPsiSearchDistance", 300)));
+        this.minPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER,"minPsiSearchDistance", 100)));
 
-        this.chancePerKeyPressTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"chancePerKeyPress", 100)));
-        this.chanceOfSpawnTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"chanceOfSpawn", 100)));
+        this.chancePerKeyPressTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER,"chancePerKeyPress", 100)));
+        this.chanceOfSpawnTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER,"chanceOfSpawn", 100)));
 
-        this.maxAnchorsToUse.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"maxAnchorsToUse", 10)));
+        this.maxAnchorsToUse.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER,"maxAnchorsToUse", 10)));
 
-        this.tracerEnabledCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.LINKER,"tracerEnabled", false));
+        this.tracerEnabledCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.LINKER,"tracerEnabled", false));
 
-        this.maxLinksTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"maxLinks", 20)));
-        this.distanceFromCenterTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"distanceFromCenter", 5)));
+        this.maxLinksTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER,"maxLinks", 20)));
+        this.distanceFromCenterTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER,"distanceFromCenter", 100)));
 
-        this.wobbleAmountTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"wobbleAmount", 20)));
-        this.curve1AmountTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"curve1Amount", 0)));
+        this.wobbleAmountTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER,"wobbleAmount", 20)));
+        this.curve1AmountTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER,"curve1Amount", 0)));
 
-        this.maxCycleParticlesTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"maxCycleParticles", 3)));
-        this.isCyclicEnabled.setSelected(Config.getBoolProperty(settings, PowerMode3.SpriteType.LINKER,"isCyclicEnabled", false));
+        this.maxCycleParticlesTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER,"maxCycleParticles", 3)));
+        this.isCyclicEnabled.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.LINKER,"isCyclicEnabled", false));
         ParticleSpriteLinkerAnchor.cyclicToggleEnabled = isCyclicEnabled.isSelected();
 
     }
@@ -313,49 +313,49 @@ public class LinkerConfig extends JPanel {
         int minLizardPsiDistance = Config.getJTextFieldWithinBoundsInt(this.minPsiAnchorDistanceTextField,
                 0, maxPsiSearchLimit,
                 "Min Distance to Psi Anchors will use when spawning linkers (cannot be greater than max defined at top)");
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "minPsiSearchDistance",
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.LINKER, "minPsiSearchDistance",
                 String.valueOf(minLizardPsiDistance));
 
         int maxLizardPsiDistance = Config.getJTextFieldWithinBoundsInt(this.maxPsiAnchorDistanceTextField,
                 0, maxPsiSearchLimit,
                 "Max Distance to Psi Anchors will use when spawning linkers (cannot be greater than max defined at top)");
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "maxPsiSearchDistance",
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.LINKER, "maxPsiSearchDistance",
                 String.valueOf(maxLizardPsiDistance));
 
         int chancePerKeyPress = Config.getJTextFieldWithinBoundsInt(this.chancePerKeyPressTextField,
                 0, 100,
                 "chance linkers spawn per keypress");
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "chancePerKeyPress",
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.LINKER, "chancePerKeyPress",
                 String.valueOf(chancePerKeyPress));
 
         int chanceOfSpawn = Config.getJTextFieldWithinBoundsInt(this.chanceOfSpawnTextField,
                 0, 100,
                 "chance links spawns for anchor");
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "chanceOfSpawn",
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.LINKER, "chanceOfSpawn",
                 String.valueOf(chanceOfSpawn));
 
         int maxAnchorsToUse = Config.getJTextFieldWithinBoundsInt(this.maxAnchorsToUse,
                 1, 100,
                 "max anchors to use when spawning lizards");
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "maxAnchorsToUse",
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.LINKER, "maxAnchorsToUse",
                 String.valueOf(maxAnchorsToUse));
 
         int maxLinks = Config.getJTextFieldWithinBoundsInt(this.maxLinksTextField,
                 10, 50,
                 "max links on linkerI");
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "maxLinks",
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.LINKER, "maxLinks",
                 String.valueOf(maxLinks));
 
 
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "tracerEnabled", String.valueOf(tracerEnabledCheckBox.isSelected()));
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.LINKER, "tracerEnabled", String.valueOf(tracerEnabledCheckBox.isSelected()));
 
         //Cyclic global garbage lol
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "isCyclicEnabled", String.valueOf(isCyclicEnabled.isSelected()));
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.LINKER, "isCyclicEnabled", String.valueOf(isCyclicEnabled.isSelected()));
         ParticleSpriteLinkerAnchor.cyclicToggleEnabled = isCyclicEnabled.isSelected();
         int maxCycleParticles = Config.getJTextFieldWithinBoundsInt(this.maxCycleParticlesTextField,
                 1, 5,
                 "max cycle particles per anchor linker");
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "maxCycleParticles",
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.LINKER, "maxCycleParticles",
                 String.valueOf(maxCycleParticles));
         ParticleSpriteLinkerAnchor.MAX_CYCLE_PARTICLES = LinkerConfig.MAX_CYCLE_PARTICLES(settings);
 
@@ -366,75 +366,75 @@ public class LinkerConfig extends JPanel {
         int distanceFromCenter = Config.getJTextFieldWithinBoundsInt(this.distanceFromCenterTextField,
                 1, 500,
                 "start distance from center");
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "distanceFromCenter",
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.LINKER, "distanceFromCenter",
                 String.valueOf(distanceFromCenter));
 
         int wobbleAmount = Config.getJTextFieldWithinBoundsInt(this.wobbleAmountTextField,
                 0, 200,
                 "wobble ");
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "wobbleAmount",
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.LINKER, "wobbleAmount",
                 String.valueOf(wobbleAmount));
 
         int curve1Amount = Config.getJTextFieldWithinBoundsInt(this.curve1AmountTextField,
                 -100, 400,
                 "curve1 ");
-        settings.setSpriteTypeProperty(PowerMode3.SpriteType.LINKER, "curve1Amount",
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.LINKER, "curve1Amount",
                 String.valueOf(curve1Amount));
 
-        settings.setSerializedSpriteDataAnimated(LinkerConfig.spriteDataAnimated, PowerMode3.SpriteType.LINKER);
+        settings.setSerializedSpriteDataAnimated(LinkerConfig.spriteDataAnimated, PowerMode3.ConfigType.LINKER);
     }
 
 
 
     public static int MAX_PSI_SEARCH(PowerMode3 settings) {
-        return Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"maxPsiSearchDistance");
+        return Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER,"maxPsiSearchDistance");
     }
     public static int MIN_PSI_SEARCH(PowerMode3 settings) {
-        return Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER,"minPsiSearchDistance");
+        return Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER,"minPsiSearchDistance");
     }
 
     public static int CHANCE_OF_SPAWN(PowerMode3 settings){
-        return Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER, "chanceOfSpawn");
+        return Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER, "chanceOfSpawn");
     }
 
     public static int MAX_ANCHORS_TO_USE(PowerMode3 settings){
-        return Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER, "maxAnchorsToUse");
+        return Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER, "maxAnchorsToUse");
     }
 
     public static int CHANCE_PER_KEY_PRESS(PowerMode3 settings){
-        return Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER, "chancePerKeyPress");
+        return Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER, "chancePerKeyPress");
     }
 
     public static boolean TRACER_ENABLED(PowerMode3 settings){
-        return Config.getBoolProperty(settings, PowerMode3.SpriteType.LINKER, "tracerEnabled");
+        return Config.getBoolProperty(settings, PowerMode3.ConfigType.LINKER, "tracerEnabled");
     }
 
     public static Color TRACER_COLOR(PowerMode3 settings){
-        return Config.getColorProperty(settings,PowerMode3.SpriteType.LINKER, "tracer Color", originalTracerColor);
+        return Config.getColorProperty(settings, PowerMode3.ConfigType.LINKER, "tracer Color", originalTracerColor);
     }
 
     public static int MAX_LINKS(PowerMode3 settings){
-        return Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER, "maxLinks");
+        return Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER, "maxLinks");
     }
 
     public static int DISTANCE_FROM_CENTER(PowerMode3 settings){
-        return Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER, "distanceFromCenter");
+        return Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER, "distanceFromCenter");
     }
 
     public static int WOBBLE_AMOUNT(PowerMode3 settings){
-        return Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER, "wobbleAmount");
+        return Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER, "wobbleAmount");
     }
 
     public static int CURVE1_AMOUNT(PowerMode3 settings){
-        return Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER, "curve1Amount");
+        return Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER, "curve1Amount");
     }
 
     public static boolean IS_CYCLIC_ENABLED(PowerMode3 settings){
-        return Config.getBoolProperty(settings, PowerMode3.SpriteType.LINKER, "isCyclicEnabled");
+        return Config.getBoolProperty(settings, PowerMode3.ConfigType.LINKER, "isCyclicEnabled");
     }
 
     public static int MAX_CYCLE_PARTICLES(PowerMode3 settings){
-        return Config.getIntProperty(settings, PowerMode3.SpriteType.LINKER, "maxCycleParticles");
+        return Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER, "maxCycleParticles");
     }
 
 
