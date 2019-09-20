@@ -49,13 +49,47 @@
 
     <actions>
 
-        <action id="togglePowerModeZeranthium"
+        <action id="com.cschar.pmode3.PowerModeZeranthiumToggleEnabled"
                 class="com.cschar.pmode3.hotkeys.HotKeyEnabledAction"
-                text="Toggle Powermode Zeranthium"
+                text="Powermode Zeranthium Toggle"
                 description="Toggle powermode Zeranthium">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
             <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl z"/>
         </action>
+
+        <group id="com.cschar.pmode3.GroupedActions" text="PowerMode Zerathium Actions" popup="true">
+            <add-to-group group-id="ToolsMenu" anchor="after" relative-to-action="com.cschar.pmode3.PowerModeZeranthiumToggleEnabled"/>
+
+            <action id="com.cschar.pmode3.PowerModeZeranthiumTriggerSongA"
+                    class="com.cschar.pmode3.hotkeys.HotKeyMusicTriggerAAction"
+                    text="Trigger Music A for Powermode Zeranthium"
+                    description="Trigger music A for powermode Zeranthium">
+                <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl k"/>
+            </action>
+
+            <action id="com.cschar.pmode3.PowerModeZeranthiumTriggerSongB"
+                    class="com.cschar.pmode3.hotkeys.HotKeyMusicTriggerBAction"
+                    text="Trigger Music B for Powermode Zeranthium"
+                    description="Trigger music B for powermode Zeranthium">
+                <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl l"/>
+            </action>
+        </group>
+
+<!--        <action id="PowerModeZeranthiumTriggerSongA"-->
+<!--                class="com.cschar.pmode3.hotkeys.HotKeyMusicTriggerAAction"-->
+<!--                text="Trigger Music A for Powermode Zeranthium"-->
+<!--                description="Trigger music A for powermode Zeranthium">-->
+<!--            <add-to-group group-id="ToolsMenu" anchor="last"/>-->
+<!--            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl k"/>-->
+<!--        </action>-->
+
+<!--        <action id="PowerModeZeranthiumTriggerSongB"-->
+<!--                class="com.cschar.pmode3.hotkeys.HotKeyMusicTriggerBAction"-->
+<!--                text="Trigger Music B for Powermode Zeranthium"-->
+<!--                description="Trigger music B for powermode Zeranthium">-->
+<!--            <add-to-group group-id="ToolsMenu" anchor="last"/>-->
+<!--            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl l"/>-->
+<!--        </action>-->
 
 
     </actions>

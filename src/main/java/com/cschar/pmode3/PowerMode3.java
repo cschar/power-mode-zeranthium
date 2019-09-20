@@ -83,7 +83,11 @@ public class PowerMode3 implements BaseComponent,
     Color particleColor;
     private int particleRGB;
 
+
+
+    private int lastTabIndex = 0;
     private int scrollBarPosition = 0;
+
 //    public String scrollBarPosition2 = "0";
 
     private boolean enabled = true;
@@ -106,8 +110,16 @@ public class PowerMode3 implements BaseComponent,
         MANDALA,
         LINKER,
 
-        SOUND
+        SOUND,
+        MUSIC_TRIGGER
     }
+
+    @com.intellij.util.xmlb.annotations.XCollection
+    private ArrayList<String[]> musicTriggerSoundDataStringArrays = new ArrayList<String[]>(){{
+        //enabled,val1,defaultPath,customPath
+        add(new String[]{"true","0","/sounds/music_triggers/trigger1.mp3",""});
+        add(new String[]{"true","1","/sounds/music_triggers/trigger2.mp3",""});
+    }};
 
     @com.intellij.util.xmlb.annotations.XCollection
     private ArrayList<String[]> soundDataStringArrays = new ArrayList<String[]>(){{
@@ -212,16 +224,18 @@ public class PowerMode3 implements BaseComponent,
                                       @Override
                                       public void execute(@NotNull Editor editor, char c, @NotNull DataContext dataContext) {
 //                                          PowerMode3 settings = PowerMode3.getInstance();
+                                          if(PowerMode3.this.isEnabled()) {
 
-                                          if(SoundConfig.SOUND_ENABLED(PowerMode3.this)) {
-                                              int winner = SoundData.getWeightedAmountWinningIndex(SoundConfig.soundData);
+                                              if (SoundConfig.SOUND_ENABLED(PowerMode3.this)) {
+                                                  int winner = SoundData.getWeightedAmountWinningIndex(SoundConfig.soundData);
 //                                              int r = ThreadLocalRandom.current().nextInt(0, SoundConfig.soundData.size());
 
-                                              SoundData d = SoundConfig.soundData.get(winner);
-                                              Sound s = new Sound(d.getPath(), !d.customPathValid);
-                                              s.play();
+                                                  SoundData d = SoundConfig.soundData.get(winner);
+                                                  Sound s = new Sound(d.getPath(), !d.customPathValid);
+                                                  s.play();
+                                              }
+
                                           }
-//
 
                                           rawHandler2.execute(editor,c,dataContext);
                                       }
@@ -363,6 +377,7 @@ public class PowerMode3 implements BaseComponent,
         LinkerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(linkerDataStringArrays, 60));
 
         SoundConfig.setSoundData(this.deserializeSoundData(soundDataStringArrays));
+        MusicTriggerConfig.setSoundData(this.deserializeSoundData(musicTriggerSoundDataStringArrays));
     }
 
 
@@ -428,6 +443,8 @@ public class PowerMode3 implements BaseComponent,
         }
         if (type == ConfigType.SOUND) {
             this.soundDataStringArrays = serialized;
+        }else if(type == ConfigType.MUSIC_TRIGGER){
+            this.musicTriggerSoundDataStringArrays = serialized;
         }
     }
 
@@ -473,7 +490,11 @@ public class PowerMode3 implements BaseComponent,
     public int getShakeDistance() {  return shakeDistance;  }
     public void setShakeDistance(int shakeDistance) {   this.shakeDistance = shakeDistance;  }
 
+
+    // Save/load config panel view when exit/enter
     public int getScrollBarPosition() {   return scrollBarPosition;  }
     public void setScrollBarPosition(int scrollBarPosition) {  this.scrollBarPosition = scrollBarPosition; }
+    public int getLastTabIndex() {    return lastTabIndex;  }
+    public void setLastTabIndex(int lastTabIndex) {    this.lastTabIndex = lastTabIndex;   }
 }
 

@@ -2,9 +2,9 @@ package com.cschar.pmode3.config;
 
 import com.cschar.pmode3.ParticleSpriteLinkerAnchor;
 import com.cschar.pmode3.PowerMode3;
-import com.cschar.pmode3.config.common.CustomPathCellHighlighterRenderer;
-import com.cschar.pmode3.config.common.JTableButtonMouseListener;
-import com.cschar.pmode3.config.common.JTableButtonRenderer;
+import com.cschar.pmode3.config.common.ui.CustomPathCellHighlighterRenderer;
+import com.cschar.pmode3.config.common.ui.JTableButtonMouseListener;
+import com.cschar.pmode3.config.common.ui.JTableButtonRenderer;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDialog;

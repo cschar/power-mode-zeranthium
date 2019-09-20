@@ -7,9 +7,11 @@ import com.cschar.pmode3.config.common.ui.CustomPathCellHighlighterRenderer;
 import com.cschar.pmode3.config.common.ui.JTableButtonMouseListener;
 import com.cschar.pmode3.config.common.ui.JTableButtonRenderer;
 import com.cschar.pmode3.config.common.ui.JTableSoundButtonRenderer;
+import com.intellij.openapi.actionSystem.Shortcut;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDialog;
 import com.intellij.openapi.fileChooser.FileChooserFactory;
+import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
@@ -23,46 +25,43 @@ import java.awt.*;
 import java.util.ArrayList;
 
 
+public class MusicTriggerConfig extends JPanel {
 
 
-
-public class SoundConfig extends JPanel {
-
-
-    private JCheckBox soundEnabled;
     public static ArrayList<SoundData> soundData;
 
     PowerMode3 settings;
 
-    public SoundConfig(PowerMode3 settings){
+    public MusicTriggerConfig(PowerMode3 settings){
         this.settings = settings;
 
 
-        this.setMaximumSize(new Dimension(1000,300));
-        this.setLayout(new GridLayout(1,2));
+        this.setMaximumSize(new Dimension(1000,200));
+        this.setLayout(new GridLayout(1,0));
 //        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
 //        this.setLayout(new GridLayout(2,0));
         JPanel firstRow = new JPanel();
-        firstRow.setMaximumSize(new Dimension(1000,300));
-        firstRow.setBackground(Color.YELLOW);
+        firstRow.setMaximumSize(new Dimension(1000,200));
+//        firstRow.setBackground(Color.YELLOW);
         firstRow.setOpaque(true);
         firstRow.setLayout(new BoxLayout(firstRow, BoxLayout.PAGE_AXIS));
 
-        JLabel headerLabel = new JLabel("Basic Sound Options");
+        JLabel headerLabel = new JLabel("Music Trigger Options");
         headerLabel.setFont(new Font ("Arial", Font.BOLD, 20));
         headerLabel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
         firstRow.add(headerLabel);
-        soundEnabled = new JCheckBox("Sound Enabled?");
-        soundEnabled.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
-        firstRow.add(soundEnabled);
 
+
+        JComponent configTable = createConfigTable();
+        firstRow.add(configTable);
+
+//        this.add(configTable);
         this.add(firstRow);
 
 
 
-        JComponent configTable = createConfigTable();
-        this.add(configTable);
+
     }
 
     public JComponent createConfigTable(){
@@ -71,15 +70,15 @@ public class SoundConfig extends JPanel {
 
 
         table.setRowHeight(60);
-        SoundConfigTableModel tableModel = new SoundConfigTableModel();
-        table.setModel(tableModel);
+
+        table.setModel(new MusicTriggerConfigTableModel());
 
         table.setCellSelectionEnabled(false);
         table.setColumnSelectionAllowed(false);
         table.setRowSelectionAllowed(false);
 
         table.setPreferredScrollableViewportSize(new Dimension(400,
-                table.getRowHeight() * 4));
+                table.getRowHeight() * soundData.size()));
         table.getTableHeader().setReorderingAllowed(false);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
@@ -88,13 +87,12 @@ public class SoundConfig extends JPanel {
         TableColumnModel colModel=table.getColumnModel();
 
         colModel.getColumn(0).setPreferredWidth(60); //preview
-        colModel.getColumn(1).setPreferredWidth(70);  //enabled
-        colModel.getColumn(1).setWidth(50);  //enabled
+        colModel.getColumn(1).setWidth(150);  //hotkey text
 
-        colModel.getColumn(2).setPreferredWidth(80);  //weight amount
-        colModel.getColumn(3).setPreferredWidth(100);  //set path
-        colModel.getColumn(4).setPreferredWidth(50);  // path
-        colModel.getColumn(5).setWidth(60);  //reset
+        colModel.getColumn(2).setPreferredWidth(80); //set path
+        colModel.getColumn(3).setPreferredWidth(100);  //path string
+        colModel.getColumn(4).setWidth(60);  // reset
+
 
 
 
@@ -108,16 +106,15 @@ public class SoundConfig extends JPanel {
 
 
         TableCellRenderer buttonRenderer = new JTableButtonRenderer();
-        TableCellRenderer playerPreviewButtonRenderer = new JTableSoundButtonRenderer(SoundConfigTableModel.soundsPlaying);
-
+        TableCellRenderer playerPreviewButtonRenderer = new JTableSoundButtonRenderer(MusicTriggerConfigTableModel.soundsPlaying);
         table.getColumn("preview").setCellRenderer(playerPreviewButtonRenderer);
 
-        table.getColumn(SoundConfigTableModel.columnNames[3]).setCellRenderer(buttonRenderer); // set path
+        table.getColumn(MusicTriggerConfigTableModel.columnNames[2]).setCellRenderer(buttonRenderer);
         table.getColumn("reset").setCellRenderer(buttonRenderer);
         table.addMouseListener(new JTableButtonMouseListener(table));
 
 
-        TableCellRenderer pathRenderer = new CustomPathCellHighlighterRenderer(SoundConfig.soundData);
+        TableCellRenderer pathRenderer = new CustomPathCellHighlighterRenderer(soundData);
         table.getColumn("path").setCellRenderer(pathRenderer);
 
 
@@ -129,19 +126,15 @@ public class SoundConfig extends JPanel {
 
     public void loadValues(){
 
-        this.soundEnabled.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.SOUND,"soundEnabled", true));
+//        this.soundEnabled.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.SOUND,"soundEnabled", true));
     }
 
     public void saveValues() {
 
-        settings.setSpriteTypeProperty(PowerMode3.ConfigType.SOUND, "soundEnabled", String.valueOf(soundEnabled.isSelected()));
+//        settings.setSpriteTypeProperty(PowerMode3.ConfigType.SOUND, "soundEnabled", String.valueOf(soundEnabled.isSelected()));
 
-        settings.setSerializedSoundData(SoundConfig.soundData, PowerMode3.ConfigType.SOUND);
+        settings.setSerializedSoundData(MusicTriggerConfig.soundData, PowerMode3.ConfigType.MUSIC_TRIGGER);
 
-    }
-
-    public static boolean SOUND_ENABLED(PowerMode3 settings){
-        return Config.getBoolProperty(settings, PowerMode3.ConfigType.SOUND, "soundEnabled");
     }
 
     public static void setSoundData(ArrayList<SoundData> data){
@@ -150,16 +143,20 @@ public class SoundConfig extends JPanel {
 }
 
 
-class SoundConfigTableModel extends AbstractTableModel {
+class MusicTriggerConfigTableModel extends AbstractTableModel {
 
-    static ArrayList<SoundData> data = SoundConfig.soundData;
+    static ArrayList<SoundData> data = MusicTriggerConfig.soundData;
     public static Sound[] soundsPlaying = new Sound[data.size()];
+
+    KeymapManager keymapManager;
+    public MusicTriggerConfigTableModel(){
+        keymapManager = KeymapManager.getInstance();
+    }
 
 
     public static final String[] columnNames = new String[]{
             "preview",
-            "enabled?",
-            "weight",
+            "hotkey",
 //            "weighted amount (1-100)",
 
             "set path (MP3)",
@@ -172,12 +169,13 @@ class SoundConfigTableModel extends AbstractTableModel {
 
 
 
+
+
     //TODO: https://sites.google.com/site/piotrwendykier/software/jtransforms
     // add a previewImage with FFT ?
     private final Class[] columnClasses = new Class[]{
             JButton.class,
-            Boolean.class,
-            Integer.class,
+            String.class,
             JButton.class,
             String.class,
             JButton.class,
@@ -209,7 +207,8 @@ class SoundConfigTableModel extends AbstractTableModel {
     public boolean isCellEditable(int row, int column) {
         switch (column) {
             case 0:
-            case 4:
+            case 1:
+            case 3:
                 return false;
             default:
                 return true;
@@ -227,46 +226,43 @@ class SoundConfigTableModel extends AbstractTableModel {
 
         switch (column) {
             case 0:
+                //TODO play up to 5x , have a stop button beside to cut all off
                 return JTableSoundButtonRenderer.getPreviewPlaySoundButton(this, soundsPlaying, d, row,column);
-//                final JButton previewButton = new JButton("Preview");
-//                previewButton.addActionListener(arg0 -> {
-//                    Sound s;
-//                    if(d.customPathValid){
-//                        s = new Sound(d.customPath, false);
-//                    }else{
-//                        s = new Sound(d.defaultPath, true);
-//                    }
-//                    s.play();
-////                    Sound s1 = new Sound(d.getPath(), !d.customPathValid); s1.play();
-//                });
-//                return previewButton;
             case 1:
-                return d.enabled;
+                Shortcut[] zShortcuts;
+                if(row == 0) {
+                    //defined in the META-INF/plugin.xml <action id=""> param
+                    zShortcuts = keymapManager.getActiveKeymap()
+                            .getShortcuts("com.cschar.pmode3.PowerModeZeranthiumTriggerSongA");
+//                }else if(row == 1){
+                }else{
+                    zShortcuts = keymapManager.getActiveKeymap()
+                            .getShortcuts("com.cschar.pmode3.PowerModeZeranthiumTriggerSongB");
+                }
+                StringBuffer sb = new StringBuffer();
+                for (Shortcut sc : zShortcuts) {
+                    sb.append(sc + "<br>");
+                }
+                return "<html> <b> Hotkey: </b> " + sb.toString() + "</html>";
+
             case 2:
-                return d.val1;
-            case 3:
                 final JButton button = new JButton("Set path");
                 button.addActionListener(arg0 -> {
 
-
                     FileChooserDescriptor fd = new FileChooserDescriptor(true,false,false,false,false,false);
                     FileChooserDialog fcDialog = FileChooserFactory.getInstance().createFileChooser(fd, null, null);
-
-
                     VirtualFile[] vfs = fcDialog.choose(null);
 
                     if(vfs.length != 0){
-                        System.out.println(vfs[0]);
-
                         d.setValidMP3Path(vfs[0]);
                         this.fireTableDataChanged();
                     }
 
                 });
                 return button;
-            case 4:
+            case 3:
                 return data.get(row).customPath;
-            case 5:
+            case 4:
                 final JButton resetButton = new JButton("reset");
                 resetButton.addActionListener(arg0 -> {
                     System.out.println("RESET");
@@ -298,24 +294,19 @@ class SoundConfigTableModel extends AbstractTableModel {
             case 0:  //sound preview button clicked
                 return;
             case 1:  //enabled
-                d.enabled = (Boolean) value;
+//                d.enabled = (Boolean) value;  // is set in hotkey map settings
                 return;
-            case 2: //val1 number (type chance)
-                int v = (Integer) value;
-                v = Math.max(1, v);
-                v = Math.min(v,100);
-                d.val1 = v;
+            case 2:   //button clicked
                 return;
-            case 3:   //button clicked
+            case 3:   // custom path
                 return;
-            case 4:   // custom path
-                return;
-            case 5:    //reset button clicked
+            case 4:    //reset button clicked
                 return;
 
         }
 
         throw new IllegalArgumentException();
     }
+
 
 }

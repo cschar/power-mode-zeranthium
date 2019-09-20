@@ -1,4 +1,4 @@
-package com.cschar.pmode3.config.common;
+package com.cschar.pmode3.config.common.ui;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;

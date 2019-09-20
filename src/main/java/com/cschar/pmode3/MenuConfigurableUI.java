@@ -1,11 +1,12 @@
 package com.cschar.pmode3;
 
 import com.cschar.pmode3.config.*;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.Shortcut;
-import com.intellij.openapi.actionSystem.ShortcutSet;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.options.ConfigurableUi;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.util.ui.JBUI;
@@ -24,7 +25,10 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     
     private JPanel particleSettingsPanel;
     private JPanel soundSettingsPanel;
+    private JTabbedPane settingsTabbedPane;
+
     private SoundConfig soundConfig;
+    private MusicTriggerConfig musicTriggerConfig;
 
     private JCheckBox enableLightningCheckBox;
     private JCheckBox enableLizardCheckBox;
@@ -113,6 +117,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
         //sound panel
         this.soundConfig.loadValues();
+        this.musicTriggerConfig.loadValues();
     }
 
 
@@ -124,12 +129,15 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
     @Override
     public boolean isModified(@NotNull PowerMode3 settings) {
+
         //ideally check if checkbox is equal to settings boolean
         return true;
     }
 
+
     @Override
     public void apply(@NotNull PowerMode3 settings) throws ConfigurationException {
+
         settings.setEnabled(isEnabledCheckBox.isSelected());
         settings.setShakeDistance(getJTextFieldWithinBounds(shakeDistanceTextField, 0, 30, "Distance to shake editor in pixels when typing"));
 
@@ -148,9 +156,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         settings.setSpriteTypeEnabled(enableLizardCheckBox.isSelected(), PowerMode3.ConfigType.LIZARD);
         settings.setSpriteTypeEnabled(enableMOMACheckBox.isSelected(), PowerMode3.ConfigType.MOMA);
         settings.setSpriteTypeEnabled(enableVineCheckBox.isSelected(), PowerMode3.ConfigType.VINE);
-
         settings.setSpriteTypeEnabled(enableMandalaCheckbox.isSelected(), PowerMode3.ConfigType.MANDALA);
-
         settings.setSpriteTypeEnabled(enableLinkerCheckbox.isSelected(), PowerMode3.ConfigType.LINKER);
 
 
@@ -167,7 +173,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
         //sound panel
         this.soundConfig.saveValues();
-
+        this.musicTriggerConfig.saveValues();
 
     }
 
@@ -188,6 +194,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
                     @Override
                     public void run() {
                         settings.setScrollBarPosition(e.getValue());
+                        settings.setLastTabIndex(settingsTabbedPane.getSelectedIndex());
 //                        PowerMode3.getInstance().setScrollBarPosition(e.getValue());
                     }
                 });
@@ -199,14 +206,12 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
             @Override
             public void run() {
                 scrollPane.getVerticalScrollBar().setValue(settings.getScrollBarPosition());
+                settingsTabbedPane.setSelectedIndex(settings.getLastTabIndex());
             }
         });
 
-//        return contentPane;
+
         return scrollPane;
-//        return this.mainPanel;
-
-
     }
 
     //https://www.jetbrains.com/help/idea/creating-form-initialization-code.html
@@ -223,34 +228,42 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
         //TODO , put as side tabs, but tab main options nad sound options, leave particles visible at all times below
 //        JBTabbedPane tabbedPane = new JBTabbedPane(JTabbedPane.LEFT);
-        JBTabbedPane tabbedPane = new JBTabbedPane();
-        tabbedPane.setOpaque(false);
+        settingsTabbedPane = new JBTabbedPane();
+        settingsTabbedPane.setOpaque(false);
 
 
         particleSettingsPanel = new JPanel();
         particleSettingsPanel.setBorder(JBUI.Borders.empty(2, 2, 200, 2));
         particleSettingsPanel.setLayout(new BoxLayout(particleSettingsPanel, BoxLayout.PAGE_AXIS));
-//        particleSettingsPanel.setOpaque(false); // makes background grey?
-
         ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/bar_small.png"));
-        tabbedPane.addTab("Particle Settings", sliderIcon, particleSettingsPanel,
-                "Set yer particles!");
+        settingsTabbedPane.addTab("Particle Settings", sliderIcon, particleSettingsPanel);
 
 
 
-        JComponent panel2 = new JPanel();
-        soundConfig = new SoundConfig(settings);
-        panel2.add(soundConfig);
-
-
-
+        soundSettingsPanel = new JPanel();
+        soundSettingsPanel.setLayout(new BoxLayout(soundSettingsPanel, BoxLayout.PAGE_AXIS));
         ImageIcon soundIcon = new ImageIcon(this.getClass().getResource("/icons/sound_small.png"));
-        tabbedPane.addTab("Sound Settings", soundIcon, panel2,
-                "Set yer sounds!");
+        settingsTabbedPane.addTab("Sound Settings", soundIcon, soundSettingsPanel);
 
 
-        theCustomCreatePanel.add(tabbedPane);
+        theCustomCreatePanel.add(settingsTabbedPane);
 
+
+        //Sound Settings tab
+        soundSettingsPanel.add(this.createSpacer());
+        soundConfig = new SoundConfig(settings);
+        soundSettingsPanel.add(soundConfig);
+
+        soundSettingsPanel.add(this.createSpacer());
+        musicTriggerConfig = new MusicTriggerConfig(settings);
+        soundSettingsPanel.add(musicTriggerConfig);
+
+        JPanel footerPanel = new JPanel();
+        footerPanel.setMinimumSize(new Dimension(100, 300));
+        particleSettingsPanel.add(footerPanel);
+
+
+        //Particle Settings tab
 
         particleSettingsPanel.add(this.createSpacer());
         this.basicParticleConfig = new BasicParticleConfig(settings);
@@ -288,52 +301,12 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         particleSettingsPanel.add(momaConfig.getConfigPanel());
         particleSettingsPanel.add(this.createSpacer());
 
-        JPanel footerPanel = new JPanel();
+        footerPanel = new JPanel();
         footerPanel.setMinimumSize(new Dimension(100, 300));
         particleSettingsPanel.add(footerPanel);
 
 
 
-
-//        this.theCustomCreatePanel.add(this.createSpacer());
-//        this.basicParticleConfig = new BasicParticleConfig(settings);
-//        this.theCustomCreatePanel.add(this.basicParticleConfig);
-//
-//        this.theCustomCreatePanel.add(this.createSpacer());
-//        this.mandala2Config = new Mandala2Config(settings);
-//        this.theCustomCreatePanel.add(mandala2Config);
-//
-//        this.theCustomCreatePanel.add(this.createSpacer());
-//        this.linkerConfig = new LinkerConfig(settings);
-//        this.theCustomCreatePanel.add(linkerConfig.getConfigPanel());
-//
-//
-//        this.theCustomCreatePanel.add(this.createSpacer());
-//        this.lightningConfig = new LightningConfig(settings);
-//        this.theCustomCreatePanel.add(lightningConfig.getConfigPanel());
-////
-//        this.theCustomCreatePanel.add(this.createSpacer());
-//        this.lightningAltConfig = new LightningAltConfig(settings);
-//        this.theCustomCreatePanel.add(lightningAltConfig);
-//
-//
-//        this.theCustomCreatePanel.add(this.createSpacer());
-//        this.lizardConfig = new LizardConfig(settings);
-//        this.theCustomCreatePanel.add(lizardConfig.getConfigPanel());
-//        this.theCustomCreatePanel.add(this.createSpacer());
-//
-//
-//        this.vineConfig = new VineConfig(settings);
-//        this.theCustomCreatePanel.add(vineConfig.getConfigPanel());
-//        this.theCustomCreatePanel.add(this.createSpacer());
-//
-//        this.momaConfig = new MOMAConfig(settings);
-//        this.theCustomCreatePanel.add(momaConfig.getConfigPanel());
-//        this.theCustomCreatePanel.add(this.createSpacer());
-//
-//        JPanel footerPanel = new JPanel();
-//        footerPanel.setMinimumSize(new Dimension(100, 300));
-//        this.theCustomCreatePanel.add(footerPanel);
     }
 
 
@@ -364,7 +337,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private String getHotkeyLabelText(){
         KeymapManager km = KeymapManager.getInstance();
         //defined in the META-INF/plugin.xml <action id=""> param
-        Shortcut[] zShortcuts = km.getActiveKeymap().getShortcuts("togglePowerModeZeranthium");
+        Shortcut[] zShortcuts = km.getActiveKeymap().getShortcuts("com.cschar.pmode3.PowerModeZeranthiumToggleEnabled");
         StringBuffer sb = new StringBuffer();
         for(int i = 0; i < zShortcuts.length; i++){
             Shortcut sc = zShortcuts[i];

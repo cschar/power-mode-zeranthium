@@ -1,10 +1,9 @@
 
 
 TODO: everything
-- Sound panel (Tabbed Panel)
-  - https://docs.oracle.com/javase/tutorial/uiswing/components/tabbedpane.html
-  - https://stackoverflow.com/questions/6045384/playing-mp3-and-wav-in-java
-  
+
+
+- 
 
 -  download assets button in settings (RED !)
    -  opens dialog pointing to isntructions to clone
@@ -41,6 +40,8 @@ Done;
 - Void / Mandala  (max 3-4 layers as typing increases)
 - Mandala Chains based off Vine
 - hotkey to activate (bonus: configurable?)
+- Sound panel (Tabbed Panel)
+- Play 2x Song w/ 2 Hotkeys to trigger each one
 
 
 future TODO:

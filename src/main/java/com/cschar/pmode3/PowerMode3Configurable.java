@@ -1,6 +1,8 @@
 package com.cschar.pmode3;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.options.ConfigurableBase;
+import com.intellij.openapi.util.Disposer;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -14,9 +16,9 @@ public class PowerMode3Configurable extends ConfigurableBase<MenuConfigurableUI,
 
 
     public PowerMode3Configurable(@NotNull PowerMode3 settings) {
-        super("power.mode3",
-            "Power mode 3333<<<",
-            "power.mode3");
+        super("com.cschar.pmode3",
+            "PowerMode Zeranthium",
+            "Zeranthium");
         this.settings = settings;
     }
     public PowerMode3Configurable() {
@@ -37,6 +39,16 @@ public class PowerMode3Configurable extends ConfigurableBase<MenuConfigurableUI,
     protected MenuConfigurableUI createUi()
     {
         return new MenuConfigurableUI(settings);
+    }
+
+
+
+    @Override
+    public void disposeUIResources() {
+        super.disposeUIResources();
+
+        //stop any playing sounds that were triggered in the settings
+        Sound.closeAllPlayers();
     }
 }
 
