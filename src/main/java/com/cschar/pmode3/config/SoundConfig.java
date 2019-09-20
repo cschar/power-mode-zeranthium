@@ -45,7 +45,7 @@ public class SoundConfig extends JPanel {
 //        this.setLayout(new GridLayout(2,0));
         JPanel firstRow = new JPanel();
         firstRow.setMaximumSize(new Dimension(1000,300));
-        firstRow.setBackground(Color.YELLOW);
+//        firstRow.setBackground(Color.YELLOW);
         firstRow.setOpaque(true);
         firstRow.setLayout(new BoxLayout(firstRow, BoxLayout.PAGE_AXIS));
 

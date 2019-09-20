@@ -204,6 +204,7 @@ public class ParticleSpriteLizardAnchor extends Particle{
 //                    -sprite.getHeight()/2 - 15); //around bracket height
             at.translate(-sprite.getWidth()/2,
                     -sprite.getHeight()/2 - sprite.getHeight()/7); //around bracket height
+            //TODO: use editor.getLineHeight
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.alpha));
 
 

@@ -105,6 +105,28 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         int lifeSetting = settings.getLifetime();
 
 
+//        int h = this.editor.getContentComponent().getHeight();
+//        int w = this.editor.getContentComponent().getWidth();
+//
+
+        int h = this.editor.getComponent().getHeight();
+        int w = this.editor.getComponent().getWidth();
+        System.out.println(h + " " + w);
+
+        ParticleSpriteVoid.cursorX = x;
+        ParticleSpriteVoid.cursorY = y;
+
+
+
+
+        if( ParticleSpriteVoid.COUNT <= 0 ) {
+            final ParticleSpriteVoid eVoid = new ParticleSpriteVoid(x, y, dx, dy, size, lifeSetting,
+                    Color.ORANGE, 1.0f, h, w);
+            particles.add(eVoid);
+        }
+        ParticleSpriteVoid.recalculateExpandScales(w,h);
+
+
         if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.MANDALA)){
             //update static value for all other rings still spawned.
             ParticleSpriteMandala.cursorX = x;

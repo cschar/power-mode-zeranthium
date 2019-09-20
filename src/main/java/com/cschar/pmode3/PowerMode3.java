@@ -218,28 +218,28 @@ public class PowerMode3 implements BaseComponent,
 //        final TypedAction typedAction0 = actionManager.getTypedAction();
 //        typedAction0.setupHandler(new SoundTypedActionHandler(typedAction0));
 
-        final TypedAction typedAction2 = actionManager.getTypedAction();
-        TypedActionHandler rawHandler2 = typedAction2.getRawHandler();
-        typedAction2.setupRawHandler(new TypedActionHandler() {
-                                      @Override
-                                      public void execute(@NotNull Editor editor, char c, @NotNull DataContext dataContext) {
-//                                          PowerMode3 settings = PowerMode3.getInstance();
-                                          if(PowerMode3.this.isEnabled()) {
-
-                                              if (SoundConfig.SOUND_ENABLED(PowerMode3.this)) {
-                                                  int winner = SoundData.getWeightedAmountWinningIndex(SoundConfig.soundData);
-//                                              int r = ThreadLocalRandom.current().nextInt(0, SoundConfig.soundData.size());
-
-                                                  SoundData d = SoundConfig.soundData.get(winner);
-                                                  Sound s = new Sound(d.getPath(), !d.customPathValid);
-                                                  s.play();
-                                              }
-
-                                          }
-
-                                          rawHandler2.execute(editor,c,dataContext);
-                                      }
-                                  });
+//        final TypedAction typedAction2 = actionManager.getTypedAction();
+//        TypedActionHandler rawHandler2 = typedAction2.getRawHandler();
+//        typedAction2.setupRawHandler(new TypedActionHandler() {
+//                                      @Override
+//                                      public void execute(@NotNull Editor editor, char c, @NotNull DataContext dataContext) {
+////                                          PowerMode3 settings = PowerMode3.getInstance();
+//                                          if(PowerMode3.this.isEnabled()) {
+//
+//                                              if (SoundConfig.SOUND_ENABLED(PowerMode3.this)) {
+//                                                  int winner = SoundData.getWeightedAmountWinningIndex(SoundConfig.soundData);
+////                                              int r = ThreadLocalRandom.current().nextInt(0, SoundConfig.soundData.size());
+//
+//                                                  SoundData d = SoundConfig.soundData.get(winner);
+//                                                  Sound s = new Sound(d.getPath(), !d.customPathValid);
+//                                                  s.play();
+//                                              }
+//
+//                                          }
+//
+//                                          rawHandler2.execute(editor,c,dataContext);
+//                                      }
+//                                  });
 
 
 
