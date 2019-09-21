@@ -30,14 +30,24 @@ public class SpriteData extends PathData{
         this.enabled = enabled;
         this.scale = scale;
 
+        setupImage();
 
+    }
 
+    private void setupImage(){
         if(customPath.equals("")){
             setImage(defaultPath, true);
         }else if(!defaultPath.equals("")){
             setImage(customPath, false);
         }
+    }
 
+    public SpriteData(boolean enabled, float scale, int val1, String defaultPath, String customPath, boolean doSetupImage) {
+        super(defaultPath,customPath);
+        this.val1 = val1;
+        this.enabled = enabled;
+        this.scale = scale;
+        if(doSetupImage) setupImage();
     }
 
     public boolean setImage(String path, boolean isResource){
@@ -65,6 +75,7 @@ public class SpriteData extends PathData{
             } catch (IOException e) {
                 Logger logger  = Logger.getLogger(ParticleSpriteLightning.class.getName());
                 logger.severe("error loading image file: " + path);
+                logger.severe(e.toString());
 
                 setImage(this.defaultPath, true);
 

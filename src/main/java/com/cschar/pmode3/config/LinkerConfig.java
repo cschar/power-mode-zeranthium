@@ -545,7 +545,7 @@ class LinkerTableModel extends AbstractTableModel {
                     VirtualFile[] vfs = fcDialog.choose(null);
 
                     if(vfs.length != 0){
-                        System.out.println(vfs[0]);
+
                         d.customPath = vfs[0].getPath();
                         d.setImageAnimated(vfs[0].getPath(), false);
 
@@ -560,7 +560,7 @@ class LinkerTableModel extends AbstractTableModel {
             case 6:
                 final JButton resetButton = new JButton("reset");
                 resetButton.addActionListener(arg0 -> {
-                    System.out.println("RESET");
+
                     d.setImageAnimated(d.defaultPath, true);
                     d.customPath = "";
                     d.customPathValid = false;

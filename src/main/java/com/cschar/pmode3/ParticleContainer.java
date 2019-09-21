@@ -111,7 +111,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
             int h = this.editor.getComponent().getHeight();
             int w = this.editor.getComponent().getWidth();
-            System.out.println(h + " " + w);
+
             ParticleSpriteDroste.cursorX = x;
             ParticleSpriteDroste.cursorY = y;
 

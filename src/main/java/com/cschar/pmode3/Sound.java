@@ -7,9 +7,11 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Sound {
-
+    private static final Logger LOGGER = Logger.getLogger( Sound.class.getName() );
     public static Queue<Player> playerBank = new ConcurrentLinkedQueue<Player>();
 
     Player player;
@@ -33,8 +35,9 @@ public class Sound {
             try {
                 stream = new FileInputStream(filePath);
                 initPlayer(stream);
-            }catch(FileNotFoundException e){
-                System.out.println("File not found for MP3 sound.. falling back to resource");
+            }catch(FileNotFoundException ex){
+                LOGGER.severe("File not found for MP3 sound.. falling back to resource");
+                LOGGER.log(Level.SEVERE, ex.toString(), ex );
                 stream = this.getClass().getResourceAsStream(filePath);
                 initPlayer(stream);
             }
@@ -46,8 +49,9 @@ public class Sound {
         try {
             this.player = new Player(stream);
             playerBank.add(this.player);
-        }catch( Exception e){
-            System.out.println("Error initializing MP3 sound player");
+        }catch( Exception ex){
+            LOGGER.severe("Error initializing MP3 sound player");
+            LOGGER.log(Level.SEVERE, ex.toString(), ex );
         }
     }
 
@@ -57,8 +61,8 @@ public class Sound {
                 player.play();
                 player.close();
                 playerBank.remove(player);
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception ex) {
+                LOGGER.log(Level.SEVERE, ex.toString(), ex );
             }
         }).start();
     }
@@ -70,8 +74,8 @@ public class Sound {
                 player.close();
                 playerBank.remove(player);
                 callback.call();
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception ex) {
+                LOGGER.log(Level.SEVERE, ex.toString(), ex );
             }
         }).start();
 

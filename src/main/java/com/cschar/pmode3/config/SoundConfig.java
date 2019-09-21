@@ -256,8 +256,6 @@ class SoundConfigTableModel extends AbstractTableModel {
                     VirtualFile[] vfs = fcDialog.choose(null);
 
                     if(vfs.length != 0){
-                        System.out.println(vfs[0]);
-
                         d.setValidMP3Path(vfs[0]);
                         this.fireTableDataChanged();
                     }
@@ -269,7 +267,7 @@ class SoundConfigTableModel extends AbstractTableModel {
             case 5:
                 final JButton resetButton = new JButton("reset");
                 resetButton.addActionListener(arg0 -> {
-                    System.out.println("RESET");
+
 //                    d.setImageAnimated(d.defaultPath, true);
                     d.customPath = "";
                     d.customPathValid = false;

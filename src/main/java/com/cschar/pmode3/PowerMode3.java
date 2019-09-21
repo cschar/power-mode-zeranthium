@@ -42,6 +42,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 
 /**
@@ -63,7 +64,9 @@ import java.util.Map;
 )
 public class PowerMode3 implements BaseComponent,
         PersistentStateComponent<PowerMode3> {
+
     //https://www.jetbrains.org/intellij/sdk/docs/basics/persisting_state_of_components.html#implementing-the-persistentstatecomponent-interface
+    private static final Logger LOGGER = Logger.getLogger( PowerMode3.class.getName() );
 
     @com.intellij.util.xmlb.annotations.Transient
     private ParticleContainerManager particleContainerManager;
@@ -71,6 +74,8 @@ public class PowerMode3 implements BaseComponent,
     @com.intellij.util.xmlb.annotations.Transient
     Color particleColor;
     private int particleRGB;
+
+
 
 
 
@@ -363,7 +368,7 @@ public class PowerMode3 implements BaseComponent,
 
     @Override
     public void loadState(@NotNull PowerMode3 state) {
-        System.out.println("prevous state found -- setting up...");
+        LOGGER.info("prevous state found -- setting up...");
 
         XmlSerializerUtil.copyBean(state, this);
 
@@ -401,7 +406,7 @@ public class PowerMode3 implements BaseComponent,
     }
 
     public ArrayList<SpriteDataAnimated> deserializeSpriteDataAnimated(ArrayList<String[]> target, int previewSize){
-        System.out.println("deserializing sprite data animated");
+        LOGGER.info("deserializing sprite data animated");
         ArrayList<SpriteDataAnimated> sd = new ArrayList<SpriteDataAnimated>();
         for(String[] s: target){
             //TODO : jsut serialize the previewSize lol
@@ -461,7 +466,7 @@ public class PowerMode3 implements BaseComponent,
 
     @Override
     public void noStateLoaded() {
-        System.out.println("NO State loaded previously");
+        LOGGER.info("NO State loaded previously");
         this.setParticleRGB(JBColor.darkGray.getRGB());
 
 

@@ -46,9 +46,9 @@ public class ParticleSpriteDroste extends Particle{
 //        Notification n = new Notification()?
 //        Notifications.Bus.notify();
         sprites = new ArrayList<BufferedImage>();
-        for(int i=1; i <= 60; i++){
-            sprites.add(ParticleUtils.loadSprite(String.format("/blender/droste1/0%03d.png", i)));
-        }
+//        for(int i=1; i <= 60; i++){
+//            sprites.add(ParticleUtils.loadSprite(String.format("/blender/droste1/0%03d.png", i)));
+//        }
 //        for(int i=1; i <= 1; i++){
 //            sprites.add(ParticleUtils.loadSprite(String.format("/blender/droste2/0%03d.png", i)));
 //        }

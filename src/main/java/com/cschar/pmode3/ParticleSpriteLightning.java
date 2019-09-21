@@ -33,17 +33,8 @@ import java.util.logging.Logger;
 
 
 public class ParticleSpriteLightning extends Particle{
-    private static BufferedImage loadSprite(String name){
-        try {
-            return ImageIO.read(ParticleSpriteLightning.class.getResource(name));
-        } catch (IOException e) {
-            Logger logger  = Logger.getLogger(ParticleSpriteLightning.class.getName());
-            logger.severe("error loading image file: " + name);
-//            System.out.println("error loading image");
-            e.printStackTrace();
-        }
-        return null;
-    }
+    private static final Logger LOGGER = Logger.getLogger( ParticleSpriteLightning.class.getName() );
+
 
     //https://stackoverflow.com/a/16054956/403403
     private static BufferedImage colorImage(BufferedImage image, Color newColor) {
@@ -73,7 +64,7 @@ public class ParticleSpriteLightning extends Particle{
 
 
         for (int i = 1; i <= 20; i++) {
-            BufferedImage tmp = loadSprite(String.format("/blender/lightning2/inner/Image0%03d.png", i));
+            BufferedImage tmp = ParticleUtils.loadSprite(String.format("/blender/lightning2/inner/Image0%03d.png", i));
             BufferedImage resized_image = Scalr.resize(tmp, Scalr.Method.BALANCED,
                     tmp.getWidth() / 2, tmp.getHeight() / 2);
             BufferedImage colored = colorImage(resized_image, colorInner);
@@ -82,7 +73,7 @@ public class ParticleSpriteLightning extends Particle{
         }
 
         for (int i = 1; i <= 20; i++) {
-            BufferedImage tmp = loadSprite(String.format("/blender/lightning2/outer2/Image0%03d.png", i));
+            BufferedImage tmp = ParticleUtils.loadSprite(String.format("/blender/lightning2/outer2/Image0%03d.png", i));
             BufferedImage resized_image = Scalr.resize(tmp, Scalr.Method.BALANCED,
                     tmp.getWidth() / 2, tmp.getHeight() / 2);
             BufferedImage colored = colorImage(resized_image, colorOuter);
@@ -95,7 +86,7 @@ public class ParticleSpriteLightning extends Particle{
 //        //drawing both inner and outer beam sprites over one another
         for( int i= 0; i< 20; i++){
             BufferedImage inner = spritesInner.get(i);
-            BufferedImage outer = loadSprite(String.format("/blender/lightning2/outer2/Image0%03d.png", i+1));
+            BufferedImage outer = ParticleUtils.loadSprite(String.format("/blender/lightning2/outer2/Image0%03d.png", i+1));
             BufferedImage resized_image = Scalr.resize(outer, Scalr.Method.BALANCED,
                     outer.getWidth() / 2, outer.getHeight() / 2);
             BufferedImage colored = colorImage(resized_image, colorOuter);
@@ -109,38 +100,8 @@ public class ParticleSpriteLightning extends Particle{
 
             g.dispose();
 
-            //WHy is this image larger/??
-//            BufferedImage inner = spritesInner.get(i);
-//            BufferedImage outer = spritesOuter.get(i);
-//            BufferedImage both = UIUtil.createImage(inner.getWidth(),
-//                    inner.getHeight(), inner.getType());
-//            Graphics bothG = both.createGraphics();
-//
-//            bothG.drawImage(outer, 0, 0, null);
-//
-//            for(int j=0; j<5; j++) {
-//                bothG.drawImage(inner, 0, 0, null);
-//            }
-//            bothG.dispose();
-//            spritesBoth.add(both);
-
-
-//
 
         }
-
-
-//        sprites = new ArrayList<BufferedImage>();
-//
-//        for(int i=1; i <= 20; i++){
-//            BufferedImage tmp = loadSprite(String.format("/blender/lightning2/0%03d.png", i));
-//            BufferedImage resized_image =  Scalr.resize(tmp, Scalr.Method.BALANCED,
-//                    tmp.getWidth()/2, tmp.getHeight()/2);
-//
-//
-//            sprites.add(resized_image);
-//        }
-
     }
 
 
@@ -160,15 +121,8 @@ public class ParticleSpriteLightning extends Particle{
 
         reloadSpritesWithColors(LightningConfig.INNER_BEAM_COLOR(settings), LightningConfig.OUTER_BEAM_COLOR(settings));
 
-//        sprites = new ArrayList<BufferedImage>();
-//        for(int i=1; i <= 20; i++){
-//            BufferedImage tmp = loadSprite(String.format("/blender/lightning2/0%03d.png", i));
-//            BufferedImage resized_image =  Scalr.resize(tmp, Scalr.Method.BALANCED,
-//                    tmp.getWidth()/2, tmp.getHeight()/2);
-//            sprites.add(resized_image);
-//
-//        }
-        System.out.println("LightningSpritesTwo initialized");
+
+        LOGGER.info("LightningSpritesTwo initialized");
 
 
     }
@@ -186,7 +140,7 @@ public class ParticleSpriteLightning extends Particle{
     public ParticleSpriteLightning(int x, int y, int dx, int dy, int size, int life, Color c,
                                    int lightningChance, boolean innerBeam, boolean outerBeam) {
         super(x,y,dx,dy,size,life,c);
-//        sprite = sprites.get(0);
+
         sprite = spritesInner.get(0);
 
         this.innerBeam = innerBeam;
@@ -195,7 +149,7 @@ public class ParticleSpriteLightning extends Particle{
         origY = y;
 
         int randomNum = ThreadLocalRandom.current().nextInt(1, 100 +1);
-////        System.out.println(randomNum);
+
         if(randomNum < lightningChance){
             makeLightningBeam = true;
             this.life = 1000;
@@ -236,13 +190,6 @@ public class ParticleSpriteLightning extends Particle{
             Graphics2D g2d = (Graphics2D) g.create();
 
 
-            g2d.setStroke(new Stroke() {
-                @Override
-                public Shape createStrokedShape(Shape p) {
-                    return p;
-                }
-            });
-
             if (makeLightningBeam) {
                 AffineTransform at = new AffineTransform();
 
@@ -256,9 +203,6 @@ public class ParticleSpriteLightning extends Particle{
 //                at.translate(0.0f, -sprite.getHeight()*0.1f);
 
 
-
-
-                g2d.setComposite(makeComposite(0.5f));
                 g2d.setComposite(makeComposite(0.7f));
 //                g2d.drawImage(ParticleSpriteLightningAlt.sprites.get(frame), at, null);
                 if(innerBeam && !outerBeam) {
@@ -273,19 +217,5 @@ public class ParticleSpriteLightning extends Particle{
 
             g2d.dispose();
         }
-    }
-
-
-    @Override
-    public String toString() {
-        return "Particle{" +
-                "x=" + x +
-                ", y=" + y +
-                ", dx=" + dx +
-                ", dy=" + dy +
-                ", size=" + size +
-                ", life=" + life +
-                ", c=" + c +
-                '}';
     }
 }

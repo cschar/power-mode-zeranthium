@@ -265,8 +265,7 @@ class MusicTriggerConfigTableModel extends AbstractTableModel {
             case 4:
                 final JButton resetButton = new JButton("reset");
                 resetButton.addActionListener(arg0 -> {
-                    System.out.println("RESET");
-//                    d.setImageAnimated(d.defaultPath, true);
+
                     d.customPath = "";
                     d.customPathValid = false;
                     d.val1 = 20;

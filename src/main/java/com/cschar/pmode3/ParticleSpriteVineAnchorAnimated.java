@@ -26,8 +26,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.logging.Logger;
 
 public class ParticleSpriteVineAnchorAnimated extends Particle{
+    private static final Logger LOGGER = Logger.getLogger( ParticleSpriteVineAnchorAnimated.class.getName() );
 
     static ArrayList<BufferedImage> sprites;
     static ArrayList<BufferedImage> flyerSprites;
@@ -43,7 +45,7 @@ public class ParticleSpriteVineAnchorAnimated extends Particle{
                     tmp.getWidth() / 2, tmp.getHeight() / 2);
             flyerSprites.add(resized_image);
         }
-        System.out.println("vineSpriteAnimated initialized");
+        LOGGER.info("vineSpriteAnimated initialized");
     }
     private static int EYE_SPRITE_SCALE = 2;
 

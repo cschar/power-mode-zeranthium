@@ -281,7 +281,6 @@ class SparksTableModel extends AbstractTableModel {
             case 6:
                 final JButton resetButton = new JButton("reset");
                 resetButton.addActionListener(arg0 -> {
-                    System.out.println("RESET");
                     d.setImage(d.defaultPath, true);
                     d.customPath = "";
                     d.customPathValid = false;

@@ -2,6 +2,7 @@ package com.cschar.pmode3.config.common;
 
 import com.cschar.pmode3.ParticleSpriteLightning;
 import com.cschar.pmode3.ParticleUtils;
+import com.cschar.pmode3.PowerMode3;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -16,6 +17,7 @@ import java.util.Arrays;
 import java.util.logging.Logger;
 
 public class SpriteDataAnimated  extends SpriteData {
+    private static final Logger LOGGER = Logger.getLogger( SpriteDataAnimated.class.getName() );
 
     public int speedRate = 2;
     public boolean isCyclic=false;
@@ -30,7 +32,7 @@ public class SpriteDataAnimated  extends SpriteData {
 
     public SpriteDataAnimated(int previewSize, boolean enabled, float scale, int speedRate, String defaultPath, String customPath,
                               boolean isCyclic, int val2, float alpha, int val1) {
-        super(enabled, scale, val1, defaultPath, customPath);
+        super(enabled, scale, val1, defaultPath, customPath,false);
 
         this.previewSize = previewSize;
         this.speedRate = speedRate;
@@ -52,16 +54,14 @@ public class SpriteDataAnimated  extends SpriteData {
 
     public void setImageAnimated(String path, boolean isResource){
         ImageIcon imageIcon;
-        Logger logger  = Logger.getLogger(ParticleSpriteLightning.class.getName());
 
 
 
         //https://stackoverflow.com/questions/11300847/load-and-display-all-the-images-from-a-folder
 
-
         // array of supported extensions (use a List if you prefer)
         final String[] EXTENSIONS = new String[]{
-                "gif", "png" // and other formats you need
+                "png" // and other formats you need
         };
         // filter to identify images based on their extensions
         final FilenameFilter IMAGE_FILTER = new FilenameFilter() {
@@ -84,12 +84,10 @@ public class SpriteDataAnimated  extends SpriteData {
 
             // File representing the folder that you select using a FileChooser
             final File dir = new File(String.valueOf(this.getClass().getResource(path)));
-            System.out.println("Loading resources");
-            System.out.println(dir.getPath());
+            LOGGER.info("Loading default resources: " + dir.getPath());
 
-            for(int i = 0; i<40; i++){
-                String tmpPath = path + String.format("/00%02d.png", i);
-//                System.out.println(tmpPath);
+            for(int i = 0; i<100; i++){
+                String tmpPath = path + String.format("/0%03d.png", i);
 
                     URL imageURL = this.getClass().getResource(tmpPath);
                     if(imageURL == null){
@@ -118,7 +116,7 @@ public class SpriteDataAnimated  extends SpriteData {
             final File dir = new File(path);
 
             if (dir.isDirectory()) { // make sure it's a directory
-                System.out.println("Loading directory");
+                LOGGER.info("Loading customPath directory");
 
                 File[] files = dir.listFiles(IMAGE_FILTER);
                 Arrays.sort(files);
@@ -126,16 +124,12 @@ public class SpriteDataAnimated  extends SpriteData {
                 try {
                     for (final File f : files) {
                         BufferedImage img = null;
-
-                        System.out.println(f.getPath());
-
                         img = ImageIO.read(f);
                         newImages.add(img);
                     }
 
                 } catch (final IOException e) {
-
-                    logger.severe("error loading image directory: " + path);
+                    LOGGER.severe("error loading image directory: " + path);
                     setImageAnimated(this.defaultPath, true);
                     customPathValid = false;
                     return;
@@ -152,7 +146,7 @@ public class SpriteDataAnimated  extends SpriteData {
 
 //                if(newPreviewIcons.size() == 0 || newImages.size() == 0){
                 if(newImages.size() == 0){
-                    logger.severe("No images found in directory: " + path);
+                    LOGGER.severe("No images found in directory: " + path);
                     this.customPathValid = false;
                 }else{
 ;
@@ -169,10 +163,6 @@ public class SpriteDataAnimated  extends SpriteData {
 
 
             }
-
-//            if (errorLoadingDirectory){ }
         }
-
-
     }
 }

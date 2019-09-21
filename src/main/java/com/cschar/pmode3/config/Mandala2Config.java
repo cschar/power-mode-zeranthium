@@ -349,7 +349,7 @@ class MandalaRingTableModel extends AbstractTableModel {
                     VirtualFile[] vfs = fcDialog.choose(null);
 
                     if(vfs.length != 0){
-                        System.out.println(vfs[0]);
+
                         data.get(row).customPath = vfs[0].getPath();
                         data.get(row).setImageAnimated(vfs[0].getPath(), false);
 
@@ -364,7 +364,7 @@ class MandalaRingTableModel extends AbstractTableModel {
             case 6:
                 final JButton resetButton = new JButton("reset");
                 resetButton.addActionListener(arg0 -> {
-                    System.out.println("RESET");
+
                     SpriteDataAnimated d = data.get(row);
                     d.setImageAnimated(d.defaultPath, true);
                     d.customPath = "";
