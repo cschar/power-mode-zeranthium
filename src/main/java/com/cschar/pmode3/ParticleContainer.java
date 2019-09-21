@@ -123,13 +123,10 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
                 if( ParticleSpriteDroste.CUR_COUNT[i] <= 0 ) {
                     final ParticleSpriteDroste eVoid = new ParticleSpriteDroste(x, y, dx, dy, size, lifeSetting, i,
-                            Color.ORANGE, d.alpha, h, w, d.val1);
-
+                            Color.ORANGE, h, w, d.val1);
                     particles.add(eVoid);
                 }
             }
-
-
             ParticleSpriteDroste.recalculateExpandScales(w,h);
         }
 

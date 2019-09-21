@@ -64,8 +64,6 @@ public class ParticleSpriteDroste extends Particle{
 
     private float maxAlpha;
 
-    double spriteHeightsInEditor;
-    double spriteWidthsInEditor;
 
     public static int cursorX;
     public static int cursorY;
@@ -78,21 +76,27 @@ public class ParticleSpriteDroste extends Particle{
 
     private int maxLife;
     private int frameLife;
-    private float spriteScale;
+
     private int spriteDataIndex;
-    private static int expandOffset;
-    private int frameSpeed;
+    public static int expandOffset;
+//    private int frameSpeed;
 
     private SpriteDataAnimated d;
     private String spritePath;
 
+    private int editorWidth;
+    private int editorHeight;
+
+    public static boolean needsUpdate = false;
+
     public ParticleSpriteDroste(int x, int y, int dx, int dy,
-                                int size, int life, int spriteDataIndex, Color c, float maxAlpha,
+                                int size, int life, int spriteDataIndex, Color c,
                                 int editorHeight, int editorWidth, int expandOffset) {
         super(x,y,dx,dy,size,life,c);
-        this.maxAlpha = maxAlpha;
         this.maxLife = life;
         this.frameLife = 10000;
+        this.editorHeight = editorHeight;
+        this.editorWidth = editorWidth;
         cursorX = x;
         cursorY = y;
         ParticleSpriteDroste.expandOffset = expandOffset;
@@ -100,10 +104,10 @@ public class ParticleSpriteDroste extends Particle{
         sprite = spriteDataAnimated.get(spriteDataIndex).image;
         sprites = spriteDataAnimated.get(spriteDataIndex).images;
         this.spriteDataIndex = spriteDataIndex;
-        this.frameSpeed = spriteDataAnimated.get(spriteDataIndex).speedRate;
+//        this.frameSpeed = spriteDataAnimated.get(spriteDataIndex).speedRate;
         this.d = spriteDataAnimated.get(spriteDataIndex);
         this.spritePath = d.customPath;
-        this.spriteScale = d.scale;
+//        this.spriteScale = d.scale;
 
         //TODO option to 'rotate' and rotate speed
         //TODO inital scale increase in config
@@ -114,7 +118,6 @@ public class ParticleSpriteDroste extends Particle{
     }
 
 
-
     public static void recalculateExpandScales(int editorWidth, int editorHeight){
         margins[0] = cursorX - sprite.getWidth()/2;
         margins[1] = editorWidth - (cursorX + sprite.getWidth()/2);
@@ -123,14 +126,13 @@ public class ParticleSpriteDroste extends Particle{
 
 
         int maxMargin = Arrays.stream(margins).max().getAsInt();
-//        int expandSize = 50; //TODO CONFIGURABLE
         int expandSize = expandOffset;
         int expands = (maxMargin / expandSize) + 1;
 
         double currentX = sprite.getWidth();
         double currentY = sprite.getHeight();
 
-        System.out.println("Expands: " + expands + " Max found:" + maxMargin);
+//        System.out.println("Expands: " + expands + " Max found:" + maxMargin);
         expandScales = new double[expands][2];
         for(int i = 0; i < expands; i++){
             currentX += expandSize*2;
@@ -138,7 +140,7 @@ public class ParticleSpriteDroste extends Particle{
 
             double scaleX = currentX/sprite.getWidth();
             double scaleY = currentY/sprite.getHeight();
-            System.out.print(scaleX + " ");
+//            System.out.print(scaleX + " ");
             expandScales[i][0] = scaleX;
             expandScales[i][1] = scaleY;
         }
@@ -154,7 +156,7 @@ public class ParticleSpriteDroste extends Particle{
         life--;
         frameLife--;
 
-        if( this.frameLife % this.frameSpeed == 0){
+        if( this.frameLife % d.speedRate == 0){
             frame += 1;
             if (frame >= ParticleSpriteDroste.sprites.size()){
                 frame = 0;
@@ -164,31 +166,34 @@ public class ParticleSpriteDroste extends Particle{
             }
         }
 
+        //ARHGHG my eyes
+        //way to update without relying on "typing" triggering addParticle in ParticleContainer
+        if(needsUpdate){
+            if(d.val1 != expandOffset){ //val1 --> expandOffset
+                expandOffset = d.val1;
+                ParticleSpriteDroste.recalculateExpandScales(editorWidth, editorHeight);
+            }
+            needsUpdate = false;
+        }
 
         boolean lifeOver = (life <= 0);
         if(lifeOver) { //ready to reset?
-            if (spriteDataAnimated.get(spriteDataIndex).isCyclic) {
-
-
-
-                if(!spriteDataAnimated.get(spriteDataIndex).enabled){
+            if (d.isCyclic) {
+                if(!d.enabled){
                     CUR_COUNT[spriteDataIndex] -= 1;
                     return true;
                 }
 
-
-                if(!spriteDataAnimated.get(spriteDataIndex).customPath.equals(this.spritePath)){
+                if(!d.customPath.equals(this.spritePath)){
                     //we've changed the sprites being cycled, so kill this particle
                     CUR_COUNT[spriteDataIndex] -= 1;
                     return true;
                 }
 
 
-                //cyclic: reset next cycle , if changed in config
-                //TODO, just change the classes 'd' value ... wait it will update itself...
-                this.frameSpeed = spriteDataAnimated.get(spriteDataIndex).speedRate;
-                this.maxAlpha = spriteDataAnimated.get(spriteDataIndex).alpha;
-                this.spriteScale = spriteDataAnimated.get(spriteDataIndex).scale;
+
+
+                //cyclic: reset next cycle
                 this.life = 99;
                 return false;
             } else {

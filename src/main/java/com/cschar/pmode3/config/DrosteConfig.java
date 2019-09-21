@@ -319,13 +319,13 @@ class DrosteTableModel extends AbstractTableModel {
                 this.fireTableDataChanged();
                 d.enabled = isSettingToTrue;
                 return;
-            case 2:
+            case 2:  //sprite scale
                 float f = (Float) value;
                 f = Math.max(0.0f, f);
                 f = Math.min(f,2.0f);
                 d.scale = f;
                 return;
-            case 3: //round robin number, 1-->100
+            case 3: //speed rate
                 int v = (Integer) value;
                 v = Math.max(1, v);
                 v = Math.min(v,10);
@@ -344,11 +344,16 @@ class DrosteTableModel extends AbstractTableModel {
                 alpha = Math.min(alpha,1.0f);
                 data.get(row).alpha = alpha;
                 return;
-            case 8:
+            case 8:    // expandOffset
                 int v0 = (Integer) value;
                 v0 = Math.max(10, v0);
                 v0 = Math.min(v0,400);
                 d.val1 = v0;
+
+                //Hacky way to update expensive computation
+                ParticleSpriteDroste.needsUpdate = true;
+                System.out.println("UPDATED from table");
+
                 return;
             case 9:
 //                int v1 = (Integer) value;

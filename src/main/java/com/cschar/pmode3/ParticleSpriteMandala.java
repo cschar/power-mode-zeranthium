@@ -144,6 +144,7 @@ public class ParticleSpriteMandala extends Particle{
                 }
 
                 //cyclic: reset next cycle , if changed in config
+                //TODO, just use data in array, see Droste Particle
                 this.frameSpeed = mandalaRingData.get(ringIndex).speedRate;
                 this.spriteScale = mandalaRingData.get(ringIndex).scale;
                 this.life = 99;

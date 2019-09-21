@@ -107,8 +107,8 @@ public class PowerMode3 implements BaseComponent,
     private ArrayList<String[]> drosteDataStringArrays = new ArrayList<String[]>(){{
         //enabled, scale, speed, defaultPath, customPath, isCyclic, val2, alpha, val1
         //enabled, scale, speed, defaultPath, customPath, isCyclic, val2, alpha, val1--->expandOffset
-        add(new String[]{"true","0.4f","2", "/blender/droste1","", "false","20","1.0f","50"});
-        add(new String[]{"false","0.6f","2", "/blender/droste2","", "false","20","0.6f","50"});
+        add(new String[]{"true","0.4f","2", "/blender/droste1","", "false","20","0.3f","40"});
+        add(new String[]{"false","0.6f","2", "/blender/droste2","", "false","20","1.0f","80"});
     }};
 
 
