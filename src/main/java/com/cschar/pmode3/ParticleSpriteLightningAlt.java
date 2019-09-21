@@ -100,6 +100,15 @@ public class ParticleSpriteLightningAlt extends Particle{
     }
 
     public boolean update() {
+        //every X updates, increment frame, this controls how fast it animates
+        if( this.life % 2 == 0){
+            frame += 1;
+            if (frame >= ParticleSpriteLightningAlt.sprites.size()){
+                frame = 0;
+                life = 0;
+            }
+        }
+
         x += dx;
         y += dy;
         life--;
@@ -176,14 +185,7 @@ public class ParticleSpriteLightningAlt extends Particle{
                 g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.maxAlpha));
 
 
-                //every X updates, increment frame, this controls how fast it animates
-                if( this.life % 2 == 0){
-                    frame += 1;
-                    if (frame >= ParticleSpriteLightningAlt.sprites.size()){
-                        frame = 0;
-                        life = 0;
-                    }
-                }
+
                 g2d.drawImage(ParticleSpriteLightningAlt.sprites.get(frame), at, null);
             }
 

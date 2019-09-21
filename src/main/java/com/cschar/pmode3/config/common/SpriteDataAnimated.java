@@ -38,6 +38,7 @@ public class SpriteDataAnimated  extends SpriteData {
         this.val2 = val2; //maxNumCYcleParticles
         this.alpha = alpha;
 
+        //TODO do some sanity check so w'ere not loading a million files in each of 30 mb size etc..
         if(customPath == ""){
             setImageAnimated(defaultPath, true);
         }

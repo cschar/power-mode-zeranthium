@@ -42,13 +42,7 @@ public class SoundData extends PathData{
         }
     }
 
-    public String getPath(){
-        if(this.customPath.equals("") && !this.customPathValid){
-            return this.defaultPath;
-        }else{
-            return this.customPath;
-        }
-    }
+
 //
 //    public boolean setImage(String path, boolean isResource){
 //        ImageIcon imageIcon;
@@ -101,8 +95,8 @@ public class SoundData extends PathData{
         int winnerIndex = -1;
         int limit = 0;
         for(SoundData d: soundData){
-            winnerIndex += 1;
             if(d.enabled){
+                winnerIndex += 1;
                 limit += d.val1;
                 if(weightChance <= limit){ //we've found the winner
                     break;

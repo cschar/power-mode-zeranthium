@@ -105,27 +105,33 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         int lifeSetting = settings.getLifetime();
 
 
-//        int h = this.editor.getContentComponent().getHeight();
-//        int w = this.editor.getContentComponent().getWidth();
-//
-
-        int h = this.editor.getComponent().getHeight();
-        int w = this.editor.getComponent().getWidth();
-        System.out.println(h + " " + w);
-
-        ParticleSpriteVoid.cursorX = x;
-        ParticleSpriteVoid.cursorY = y;
 
 
+        if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.DROSTE)){
+
+            int h = this.editor.getComponent().getHeight();
+            int w = this.editor.getComponent().getWidth();
+            System.out.println(h + " " + w);
+            ParticleSpriteDroste.cursorX = x;
+            ParticleSpriteDroste.cursorY = y;
 
 
-        if( ParticleSpriteVoid.COUNT <= 0 ) {
-            final ParticleSpriteVoid eVoid = new ParticleSpriteVoid(x, y, dx, dy, size, lifeSetting,
-                    Color.ORANGE, 1.0f, h, w);
-            particles.add(eVoid);
+            for(int i = 0; i < ParticleSpriteDroste.spriteDataAnimated.size(); i++){
+                SpriteDataAnimated d = ParticleSpriteDroste.spriteDataAnimated.get(i);
+
+                if(!d.enabled) continue;
+
+                if( ParticleSpriteDroste.CUR_COUNT[i] <= 0 ) {
+                    final ParticleSpriteDroste eVoid = new ParticleSpriteDroste(x, y, dx, dy, size, lifeSetting, i,
+                            Color.ORANGE, d.alpha, h, w, d.val1);
+
+                    particles.add(eVoid);
+                }
+            }
+
+
+            ParticleSpriteDroste.recalculateExpandScales(w,h);
         }
-        ParticleSpriteVoid.recalculateExpandScales(w,h);
-
 
         if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.MANDALA)){
             //update static value for all other rings still spawned.

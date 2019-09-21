@@ -27,4 +27,12 @@ public abstract class PathData {
         this.customPathValid = false;
     }
 
+    public String getPath(){
+        if(this.customPath.equals("") && !this.customPathValid){
+            return this.defaultPath;
+        }else{
+            return this.customPath;
+        }
+    }
+
 }

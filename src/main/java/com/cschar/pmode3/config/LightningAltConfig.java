@@ -262,6 +262,7 @@ class SparksTableModel extends AbstractTableModel {
 
 
                     FileChooserDescriptor fd = new FileChooserDescriptor(true,false,false,false,false,false);
+                    fd.setForcedToUseIdeaFileChooser(true);
                     FileChooserDialog fcDialog = FileChooserFactory.getInstance().createFileChooser(fd, null, null);
 
 

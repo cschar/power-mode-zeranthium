@@ -166,6 +166,12 @@ public class ParticleSpriteVineAnchorAnimated extends Particle{
     private boolean hasDoneFirstUpdate = false;
     public boolean update() {
 
+        if (this.life % 2 == 0) {
+            frame += 1;
+            if (frame >= flyerSprites.size()) {
+                frame = 0;
+            }
+        }
 
         if(life % 2 == 0 && !hasFoundEnd    ) {
             double circleX = radius * (float) Math.cos(curAngle);
@@ -375,12 +381,7 @@ public class ParticleSpriteVineAnchorAnimated extends Particle{
 
 
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, HEAD_ALPHA));
-            if (this.life % 2 == 0) {
-                frame += 1;
-                if (frame >= flyerSprites.size()) {
-                    frame = 0;
-                }
-            }
+
             g2d.drawImage(flyerSprites.get(frame), at, null);
 
             drawEyeball(g2d);

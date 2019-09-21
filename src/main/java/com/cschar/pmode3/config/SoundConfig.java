@@ -3,10 +3,7 @@ package com.cschar.pmode3.config;
 import com.cschar.pmode3.PowerMode3;
 import com.cschar.pmode3.Sound;
 import com.cschar.pmode3.config.common.*;
-import com.cschar.pmode3.config.common.ui.CustomPathCellHighlighterRenderer;
-import com.cschar.pmode3.config.common.ui.JTableButtonMouseListener;
-import com.cschar.pmode3.config.common.ui.JTableButtonRenderer;
-import com.cschar.pmode3.config.common.ui.JTableSoundButtonRenderer;
+import com.cschar.pmode3.config.common.ui.*;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDialog;
 import com.intellij.openapi.fileChooser.FileChooserFactory;
@@ -250,6 +247,9 @@ class SoundConfigTableModel extends AbstractTableModel {
 
 
                     FileChooserDescriptor fd = new FileChooserDescriptor(true,false,false,false,false,false);
+                    fd = new SoundFileChooserDescriptor(fd);
+
+
                     FileChooserDialog fcDialog = FileChooserFactory.getInstance().createFileChooser(fd, null, null);
 
 

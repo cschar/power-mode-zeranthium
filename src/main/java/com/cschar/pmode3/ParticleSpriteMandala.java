@@ -55,6 +55,7 @@ public class ParticleSpriteMandala extends Particle{
     public static boolean settingEnabled = true;
 
     private int frameSpeed = 2;
+    private int frameLife;
     private int ringIndex;
     private String spritePath;
     private ArrayList<BufferedImage> ringSprites;
@@ -68,6 +69,7 @@ public class ParticleSpriteMandala extends Particle{
 
         this.ringIndex = ringIndex;
         this.maxAlpha = 1.0f;
+        this.frameLife = 10000;
         cursorX = x;
         cursorY = y;
         randomNum = ThreadLocalRandom.current().nextInt(1, 100 +1);
@@ -76,6 +78,7 @@ public class ParticleSpriteMandala extends Particle{
 
         this.frameSpeed = mandalaRingData.get(ringIndex).speedRate;
         this.spriteScale = mandalaRingData.get(ringIndex).scale;
+//        this.spritePath = mandalaRingData.get(ringIndex).customPath;
         this.spritePath = mandalaRingData.get(ringIndex).customPath;
 
         ringSprites = mandalaRingData.get(ringIndex).images;
@@ -85,12 +88,26 @@ public class ParticleSpriteMandala extends Particle{
     }
 
     public boolean update() {
+        frameLife--;
+        //every X updates, increment frame, this controls how fast it animates
+        if( this.frameLife % this.frameSpeed == 0){
+            frame += 1;
+            if (frame >= ringSprites.size()){
+                frame = 0;
+
+            }
+            if(this.frameLife < 100){
+                this.frameLife = 10000;
+            }
+        }
+
+
         if (!PowerMode3.getInstance().isEnabled()) { // performance hit?
             CUR_RINGS[ringIndex] -= 1;
             return true;
         }
 
-        if(!settingEnabled){ //added to kill any lingering particles
+        if(!settingEnabled){ //main config toggle
             CUR_RINGS[ringIndex] -= 1;
             return true;
         }
@@ -129,7 +146,7 @@ public class ParticleSpriteMandala extends Particle{
                 //cyclic: reset next cycle , if changed in config
                 this.frameSpeed = mandalaRingData.get(ringIndex).speedRate;
                 this.spriteScale = mandalaRingData.get(ringIndex).scale;
-                this.life = 99; //TODO messes up animation ?, add a frameLife
+                this.life = 99;
                 return false;
             } else {
                 CUR_RINGS[ringIndex] -= 1;
@@ -162,14 +179,7 @@ public class ParticleSpriteMandala extends Particle{
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.maxAlpha));
 
 
-            //every X updates, increment frame, this controls how fast it animates
-            if( this.life % this.frameSpeed == 0){
-                frame += 1;
-                if (frame >= ringSprites.size()){
-                    frame = 0;
 
-                }
-            }
             g2d.drawImage(ringSprites.get(frame), at, null);
 
 //            g2d.setColor(Color.ORANGE);

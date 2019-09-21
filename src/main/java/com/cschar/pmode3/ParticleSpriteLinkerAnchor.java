@@ -165,7 +165,15 @@ public class ParticleSpriteLinkerAnchor extends Particle{
 
 
     public boolean update() {
-
+        //every X updates, increment frame, this controls how fast it animates
+        for(int i = 0; i < frames.length; i++) {
+            if (this.frameLife % spriteDataAnimated.get(i).speedRate == 0) {
+                frames[i] += 1;
+                if (frames[i] >= spriteDataAnimated.get(i).images.size()) {
+                    frames[i] = 0;
+                }
+            }
+        }
 
         if (!PowerMode3.getInstance().isEnabled()) {
             if(this.isSingleCyclicEnabled) {
@@ -257,16 +265,7 @@ public class ParticleSpriteLinkerAnchor extends Particle{
             }
 
 
-            //every X updates, increment frame, this controls how fast it animates
-            //TODO: this is duplicate work in each particle, extract ?
-            for(int i = 0; i < frames.length; i++) {
-                if (this.frameLife % spriteDataAnimated.get(i).speedRate == 0) {
-                    frames[i] += 1;
-                    if (frames[i] >= spriteDataAnimated.get(i).images.size()) {
-                        frames[i] = 0;
-                    }
-                }
-            }
+
 
 
 

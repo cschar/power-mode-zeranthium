@@ -42,7 +42,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private JCheckBox enableVineCheckBox;
     private JCheckBox enableMandalaCheckbox;
     private JCheckBox enableLinkerCheckbox;
-
+    private JCheckBox enableDrosteCheckbox;
 
 
     private BasicParticleConfig basicParticleConfig;
@@ -53,6 +53,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private MOMAConfig momaConfig;
     private Mandala2Config mandala2Config;
     private LinkerConfig linkerConfig;
+    private DrosteConfig drosteConfig;
 
     PowerMode3 settings;
     //Constructor is called _AFTER_ createUIComponents when using IntelliJ GUI designer
@@ -102,6 +103,11 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.LINKER)){
             enableLinkerCheckbox.setSelected(true);
         }
+        if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.DROSTE)){
+            enableDrosteCheckbox.setSelected(true);
+        }
+
+
 
 
         //already initialized from createUIComponents below
@@ -113,11 +119,14 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         this.momaConfig.loadValues();
         this.mandala2Config.loadValues();
         this.linkerConfig.loadValues();
+        this.drosteConfig.loadValues();
 
 
         //sound panel
         this.soundConfig.loadValues();
         this.musicTriggerConfig.loadValues();
+
+
     }
 
 
@@ -158,6 +167,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         settings.setSpriteTypeEnabled(enableVineCheckBox.isSelected(), PowerMode3.ConfigType.VINE);
         settings.setSpriteTypeEnabled(enableMandalaCheckbox.isSelected(), PowerMode3.ConfigType.MANDALA);
         settings.setSpriteTypeEnabled(enableLinkerCheckbox.isSelected(), PowerMode3.ConfigType.LINKER);
+        settings.setSpriteTypeEnabled(enableDrosteCheckbox.isSelected(), PowerMode3.ConfigType.DROSTE);
 
 
         //save values
@@ -170,6 +180,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         this.momaConfig.saveValues();
         this.mandala2Config.saveValues(enableMandalaCheckbox.isSelected());
         this.linkerConfig.saveValues(maxPsiSearch, enableLinkerCheckbox.isSelected());
+        this.drosteConfig.saveValues();
 
         //sound panel
         this.soundConfig.saveValues();
@@ -195,7 +206,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
                     public void run() {
                         settings.setScrollBarPosition(e.getValue());
                         settings.setLastTabIndex(settingsTabbedPane.getSelectedIndex());
-//                        PowerMode3.getInstance().setScrollBarPosition(e.getValue());
+
                     }
                 });
             }
@@ -290,6 +301,11 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         particleSettingsPanel.add(this.createSpacer());
         this.lizardConfig = new LizardConfig(settings);
         particleSettingsPanel.add(lizardConfig.getConfigPanel());
+        particleSettingsPanel.add(this.createSpacer());
+
+
+        this.drosteConfig = new DrosteConfig(settings);
+        particleSettingsPanel.add(drosteConfig);
         particleSettingsPanel.add(this.createSpacer());
 
 

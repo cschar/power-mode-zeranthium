@@ -22,37 +22,26 @@ import com.cschar.pmode3.config.*;
 import com.cschar.pmode3.config.common.SoundData;
 import com.cschar.pmode3.config.common.SpriteData;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
-import com.intellij.codeInsight.editorActions.PasteHandler;
-import com.intellij.icons.AllIcons;
-import com.intellij.largeFilesEditor.editor.EditorManager;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.components.BaseComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.*;
-import com.intellij.openapi.editor.actions.EditorActionUtil;
-import com.intellij.openapi.editor.actions.PasteAction;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.JBColor;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.text.DefaultEditorKit;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
 
 
 /**
@@ -109,10 +98,19 @@ public class PowerMode3 implements BaseComponent,
         VINE,
         MANDALA,
         LINKER,
-
         SOUND,
-        MUSIC_TRIGGER
+        MUSIC_TRIGGER,
+        DROSTE
     }
+
+    @com.intellij.util.xmlb.annotations.XCollection
+    private ArrayList<String[]> drosteDataStringArrays = new ArrayList<String[]>(){{
+        //enabled, scale, speed, defaultPath, customPath, isCyclic, val2, alpha, val1
+        //enabled, scale, speed, defaultPath, customPath, isCyclic, val2, alpha, val1--->expandOffset
+        add(new String[]{"true","0.4f","2", "/blender/droste1","", "false","20","1.0f","50"});
+        add(new String[]{"false","0.6f","2", "/blender/droste2","", "false","20","0.6f","50"});
+    }};
+
 
     @com.intellij.util.xmlb.annotations.XCollection
     private ArrayList<String[]> musicTriggerSoundDataStringArrays = new ArrayList<String[]>(){{
@@ -218,28 +216,30 @@ public class PowerMode3 implements BaseComponent,
 //        final TypedAction typedAction0 = actionManager.getTypedAction();
 //        typedAction0.setupHandler(new SoundTypedActionHandler(typedAction0));
 
-//        final TypedAction typedAction2 = actionManager.getTypedAction();
-//        TypedActionHandler rawHandler2 = typedAction2.getRawHandler();
-//        typedAction2.setupRawHandler(new TypedActionHandler() {
-//                                      @Override
-//                                      public void execute(@NotNull Editor editor, char c, @NotNull DataContext dataContext) {
-////                                          PowerMode3 settings = PowerMode3.getInstance();
-//                                          if(PowerMode3.this.isEnabled()) {
-//
-//                                              if (SoundConfig.SOUND_ENABLED(PowerMode3.this)) {
-//                                                  int winner = SoundData.getWeightedAmountWinningIndex(SoundConfig.soundData);
-////                                              int r = ThreadLocalRandom.current().nextInt(0, SoundConfig.soundData.size());
-//
-//                                                  SoundData d = SoundConfig.soundData.get(winner);
-//                                                  Sound s = new Sound(d.getPath(), !d.customPathValid);
-//                                                  s.play();
-//                                              }
-//
-//                                          }
-//
-//                                          rawHandler2.execute(editor,c,dataContext);
-//                                      }
-//                                  });
+        final TypedAction typedAction2 = actionManager.getTypedAction();
+        TypedActionHandler rawHandler2 = typedAction2.getRawHandler();
+        typedAction2.setupRawHandler(new TypedActionHandler() {
+                                      @Override
+                                      public void execute(@NotNull Editor editor, char c, @NotNull DataContext dataContext) {
+//                                          PowerMode3 settings = PowerMode3.getInstance();
+                                          if(PowerMode3.this.isEnabled()) {
+
+                                              if (SoundConfig.SOUND_ENABLED(PowerMode3.this)) {
+                                                  int winner = SoundData.getWeightedAmountWinningIndex(SoundConfig.soundData);
+//                                              int r = ThreadLocalRandom.current().nextInt(0, SoundConfig.soundData.size());
+                                                  if( winner != -1){
+                                                      //TODO refactor to just return object or null
+                                                      SoundData d = SoundConfig.soundData.get(winner);
+                                                      Sound s = new Sound(d.getPath(), !d.customPathValid);
+                                                      s.play();
+                                                  }
+                                              }
+
+                                          }
+
+                                          rawHandler2.execute(editor,c,dataContext);
+                                      }
+                                  });
 
 
 
@@ -375,6 +375,7 @@ public class PowerMode3 implements BaseComponent,
         Mandala2Config.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(mandalaDataStringArrays, 120));
         LizardConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(lizardDataStringArrays, 60));
         LinkerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(linkerDataStringArrays, 60));
+        DrosteConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(drosteDataStringArrays, 120));
 
         SoundConfig.setSoundData(this.deserializeSoundData(soundDataStringArrays));
         MusicTriggerConfig.setSoundData(this.deserializeSoundData(musicTriggerSoundDataStringArrays));
@@ -431,6 +432,8 @@ public class PowerMode3 implements BaseComponent,
                 this.lizardDataStringArrays = serialized;
             } else if (type == ConfigType.LINKER) {
                 this.linkerDataStringArrays = serialized;
+            }else if( type == ConfigType.DROSTE){
+                this.drosteDataStringArrays = serialized;
             }
 //        }
     }

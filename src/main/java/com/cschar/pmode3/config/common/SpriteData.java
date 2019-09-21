@@ -91,8 +91,8 @@ public class SpriteData extends PathData{
         int winnerIndex = -1;
         int limit = 0;
         for(SpriteData d: spriteData){
-            winnerIndex += 1;
             if(d.enabled){
+                winnerIndex += 1;
                 limit += d.val1;
                 if(weightChance <= limit){ //we've found the winner
                     break;

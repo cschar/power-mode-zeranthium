@@ -99,6 +99,15 @@ public class ParticleSpriteLizardAnchor extends Particle{
 
     private boolean updateLizardAnim() {
 
+        //every X updates, increment frame, this controls how fast it animates
+        if( this.life % 3 == 0){
+            frame += frameDir;
+            if (frame >= lizardSprites.size()) {
+                frame = lizardSprites.size() - 1;
+            }else if(frame < 0){
+                frame = 0;
+            }
+        }
 
         int distX = (anchorX - x);
         int distY = (anchorY - y);
@@ -208,15 +217,6 @@ public class ParticleSpriteLizardAnchor extends Particle{
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.alpha));
 
 
-            //every X updates, increment frame, this controls how fast it animates
-            if( this.life % 3 == 0){
-                frame += frameDir;
-                if (frame >= lizardSprites.size()) {
-                    frame = lizardSprites.size() - 1;
-                }else if(frame < 0){
-                    frame = 0;
-                }
-            }
 
             if(this.anchorX < this.initialX){ //flip image
                 at.scale(-1.0f, 1.0f);

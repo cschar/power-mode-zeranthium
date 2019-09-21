@@ -2,8 +2,9 @@
 
 TODO: everything
 
+- Void/DrosteEffect
 
-- MOVE FRAME stuff into UPDATE 
+- Loading popup for sprites  
 
 -  download assets button in settings (RED !)
    -  opens dialog pointing to isntructions to clone
