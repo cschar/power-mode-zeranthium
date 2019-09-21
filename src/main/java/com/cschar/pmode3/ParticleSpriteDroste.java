@@ -22,6 +22,7 @@ import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.intellij.notification.Notification;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.ui.Messages;
+import org.imgscalr.Scalr;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -79,6 +80,8 @@ public class ParticleSpriteDroste extends Particle{
 
     private int spriteDataIndex;
     public static int expandOffset;
+    public static float curScale;
+
 //    private int frameSpeed;
 
     private SpriteDataAnimated d;
@@ -101,13 +104,21 @@ public class ParticleSpriteDroste extends Particle{
         cursorY = y;
         ParticleSpriteDroste.expandOffset = expandOffset;
 
-        sprite = spriteDataAnimated.get(spriteDataIndex).image;
+
+
+
         sprites = spriteDataAnimated.get(spriteDataIndex).images;
         this.spriteDataIndex = spriteDataIndex;
 //        this.frameSpeed = spriteDataAnimated.get(spriteDataIndex).speedRate;
         this.d = spriteDataAnimated.get(spriteDataIndex);
         this.spritePath = d.customPath;
+        ParticleSpriteDroste.curScale = d.scale;
 //        this.spriteScale = d.scale;
+
+        sprite = spriteDataAnimated.get(spriteDataIndex).image;
+//        BufferedImage resized_image =  Scalr.resize(sprite, Scalr.Method.BALANCED,
+//                (int)(sprite.getWidth()*d.scale), (int)(sprite.getHeight()*d.scale));
+//        sprite = resized_image;
 
         //TODO option to 'rotate' and rotate speed
         //TODO inital scale increase in config
@@ -118,7 +129,16 @@ public class ParticleSpriteDroste extends Particle{
     }
 
 
+
     public static void recalculateExpandScales(int editorWidth, int editorHeight){
+        BufferedImage orig = sprite;
+        //TODO: modify values below with curscale
+        // Currently this is a lazy way to calculate with a scale modification,
+        // --> i.e. resize image and calculate rather than scaling all the code below
+        BufferedImage resized_image =  Scalr.resize(sprite, Scalr.Method.BALANCED,
+        (int)(sprite.getWidth()*curScale), (int)(sprite.getHeight()*curScale));
+        sprite = resized_image;
+
         margins[0] = cursorX - sprite.getWidth()/2;
         margins[1] = editorWidth - (cursorX + sprite.getWidth()/2);
         margins[2] = cursorY - sprite.getHeight() / 2;
@@ -128,6 +148,10 @@ public class ParticleSpriteDroste extends Particle{
         int maxMargin = Arrays.stream(margins).max().getAsInt();
         int expandSize = expandOffset;
         int expands = (maxMargin / expandSize) + 1;
+        if(maxMargin < 0){
+            //all edges of the image cover the editor
+            expands = 0;
+        }
 
         double currentX = sprite.getWidth();
         double currentY = sprite.getHeight();
@@ -144,7 +168,11 @@ public class ParticleSpriteDroste extends Particle{
             expandScales[i][0] = scaleX;
             expandScales[i][1] = scaleY;
         }
+
+        sprite = orig;
     }
+
+
 
     public boolean update() {
 //        If entire plugin is turned off
@@ -169,8 +197,9 @@ public class ParticleSpriteDroste extends Particle{
         //ARHGHG my eyes
         //way to update without relying on "typing" triggering addParticle in ParticleContainer
         if(needsUpdate){
-            if(d.val1 != expandOffset){ //val1 --> expandOffset
+            if(d.val1 != expandOffset || d.scale != curScale){ //val1 --> expandOffset
                 expandOffset = d.val1;
+                curScale = d.scale;
                 ParticleSpriteDroste.recalculateExpandScales(editorWidth, editorHeight);
             }
             needsUpdate = false;
@@ -216,35 +245,33 @@ public class ParticleSpriteDroste extends Particle{
         if (life > 0) {
             Graphics2D g2d = (Graphics2D) g.create();
             g2d.setColor(c);
-
-            //every X updates, increment frame, this controls how fast it animates
-
-
-
-
-            AffineTransform at = new AffineTransform();
-            at.translate((int)cursorX ,(int)cursorY);
-            at.translate(-sprite.getWidth()/2,
-                             -sprite.getHeight()/2); //move image 100% up so lightning lands at bottom
-
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, d.alpha));
 
 
+            //draw recursive layers
             for(int i = expandScales.length-1; i >= 0; i--){
                 double scaleX = expandScales[i][0];
                 double scaleY = expandScales[i][1];
 
                 AffineTransform atExpand = new AffineTransform();
+                atExpand.scale(curScale, curScale);
                 atExpand.scale(scaleX, scaleY);
-                atExpand.translate((int) cursorX * (1/scaleX), (int) cursorY * (1/scaleY));
+                atExpand.translate((int) cursorX * (1/scaleX) *(1/curScale), (int) cursorY * (1/scaleY) * (1/curScale));
 
-                atExpand.translate(-sprite.getWidth()/2,
-                        -sprite.getHeight()/2); //around bracket height
-//                atExpand.translate(-(sprite.getWidth()*(1/scaleX))/2,
-//                        -(sprite.getHeight()*(1/scaleY))/2); //around bracket height
+
+                atExpand.translate(-(double)sprite.getWidth()/2 ,
+                        -(double)sprite.getHeight()/2);
+
                 g2d.drawImage(sprites.get(frame), atExpand, null);
             }
 
+            //Finally draw original sprite
+            AffineTransform at = new AffineTransform();
+            at.scale(curScale, curScale);
+            at.translate((int)cursorX*(1/curScale) ,(int)cursorY *(1/curScale));
+
+            at.translate(-sprite.getWidth()/2,
+                             -sprite.getHeight()/2);
 
             g2d.drawImage(sprites.get(frame), at, null);
 

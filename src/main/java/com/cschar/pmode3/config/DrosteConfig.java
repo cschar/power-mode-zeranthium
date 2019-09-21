@@ -98,7 +98,7 @@ public class DrosteConfig extends JPanel {
 //        table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
         TableColumnModel colModel=table.getColumnModel();
 
-        colModel.getColumn(0).setPreferredWidth(60); //preview
+        colModel.getColumn(0).setWidth(120); //preview
         colModel.getColumn(1).setPreferredWidth(70);  //enabled
         colModel.getColumn(1).setWidth(50);  //enabled
 
@@ -324,6 +324,8 @@ class DrosteTableModel extends AbstractTableModel {
                 f = Math.max(0.0f, f);
                 f = Math.min(f,2.0f);
                 d.scale = f;
+                ParticleSpriteDroste.needsUpdate = true;
+
                 return;
             case 3: //speed rate
                 int v = (Integer) value;
@@ -352,7 +354,7 @@ class DrosteTableModel extends AbstractTableModel {
 
                 //Hacky way to update expensive computation
                 ParticleSpriteDroste.needsUpdate = true;
-                System.out.println("UPDATED from table");
+
 
                 return;
             case 9:

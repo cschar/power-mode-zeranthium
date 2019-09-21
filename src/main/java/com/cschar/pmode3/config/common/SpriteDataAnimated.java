@@ -39,6 +39,7 @@ public class SpriteDataAnimated  extends SpriteData {
         this.alpha = alpha;
 
         //TODO do some sanity check so w'ere not loading a million files in each of 30 mb size etc..
+        // all files are the same dimensions
         if(customPath == ""){
             setImageAnimated(defaultPath, true);
         }

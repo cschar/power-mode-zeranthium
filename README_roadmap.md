@@ -32,7 +32,7 @@ TODO: everything
       - horse running
       - 
 - TOKEN callout with decoration above
-- 36daysofType callout 
+- 36daysofType callout https://mantissa.xyz/resources
 
 
 Done;
