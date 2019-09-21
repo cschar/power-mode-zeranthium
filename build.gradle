@@ -3,8 +3,9 @@ plugins {
     id 'org.jetbrains.intellij' version '0.4.10'
 }
 
+//give sandbox IDE 2 Gigs
 runIde {
-    jvmArgs '-Xmx1G'
+    jvmArgs '-Xmx2G'
 }
 
 group 'com.cschar'

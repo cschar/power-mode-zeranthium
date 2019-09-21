@@ -155,7 +155,7 @@ public class SpriteDataAnimated  extends SpriteData {
                     this.customPathValid = false;
                 }else{
 ;
-                    this.image = newImages.get(this.images.size()-1);
+                    this.image = newImages.get(newImages.size()-1);
                     this.images = newImages;
 
                     this.customPathValid = true;

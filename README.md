@@ -13,6 +13,9 @@ for future ideas see README_roadmap.md
 
 
 
+FFmpeg Tip:
+
+ffmpeg -i video.mp4 -vf scale=720x405 output/frame%04d.png
 
 
 Open Source LIbraries Used: \

@@ -2,7 +2,7 @@
 
 TODO: everything
 
-- Void/DrosteEffect
+
 - replace prints with logging: https://stackoverflow.com/a/16448421/5198805
 
 - Loading popup for sprites  
@@ -44,6 +44,7 @@ Done;
 - hotkey to activate (bonus: configurable?)
 - Sound panel (Tabbed Panel)
 - Play 2x Song w/ 2 Hotkeys to trigger each one
+- Void/DrosteEffect
 
 
 future TODO:
