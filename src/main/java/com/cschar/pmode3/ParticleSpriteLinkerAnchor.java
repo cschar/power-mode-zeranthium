@@ -39,8 +39,8 @@ public class ParticleSpriteLinkerAnchor extends Particle{
     static {}
 
 
-    public static int cursorX;
-    public static int cursorY;
+    public static int typeX;
+    public static int typeY;
 
     public static int targetX;
     public static int targetY;
@@ -79,8 +79,8 @@ public class ParticleSpriteLinkerAnchor extends Particle{
 
         this.anchors = anchors;
 
-        this.cursorX = x;
-        this.cursorY = y;
+        this.typeX = x;
+        this.typeY = y;
         this.prevX = x;
         this.prevY= y;
         this.distanceFromCenter = distanceFromCenter;
@@ -190,6 +190,7 @@ public class ParticleSpriteLinkerAnchor extends Particle{
             return true;
         }
 
+        //TODO FIX THIS GARBAGE LOL
         if(this.isSingleCyclicEnabled){
             if(MAX_CYCLE_PARTICLES < CUR_CYCLE_PARTICLES){ // if changed in settings
                 CUR_CYCLE_PARTICLES -= 1;
@@ -205,13 +206,31 @@ public class ParticleSpriteLinkerAnchor extends Particle{
                 return true;
             }
 
-            this.x = cursorX;
-            this.y = cursorY;
+            //only update move position of cycle chains, let non-cyclic chains stay at original spawn spot
+//            this.x = typeX;
+//            this.y = typeY;
         }
-        if(Mandala2Config.MOVE_WITH_CARET(settings)) { //oh god
-            this.x = cursorX;
-            this.y = cursorY;
+        if(Mandala2Config.MOVE_WITH_CARET(settings)) { //otherwise linkers will stay where intial typeAction spawned them
+            if( life % 2 == 0){
+                //TODO fix bug here where small moveSpeed values turn dx into virutally 0
+                //make it 1,2or3px min movement speed if targetX - x != 0
+                int dx = targetX - x;
+                this.x = (int) (this.x + dx*moveSpeed);
+//            this.x = (int) (this.x + dx*0.03);
+
+                int dy = targetY - y;
+                this.y = (int) (this.y + dy*moveSpeed);
+//            this.y = (int) (this.y + dy*0.03);
+            }
         }
+        else{
+            this.x = typeX;
+            this.y = typeY;
+        }
+
+
+
+
 
         life--;
         frameLife--;
@@ -393,6 +412,10 @@ public class ParticleSpriteLinkerAnchor extends Particle{
 
         g2d.drawImage(pData.images.get(frame), at, null);
     }
+
+
+
+
 
 
 //    private void drawJavaQuad(){

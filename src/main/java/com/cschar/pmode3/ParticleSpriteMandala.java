@@ -118,6 +118,8 @@ public class ParticleSpriteMandala extends Particle{
 
 
         if( life % 2 == 0){
+            //TODO fix bug here where small moveSpeed values turn dx into virutally 0
+            //make it 1,2or3px min movement speed if targetX - x != 0
             int dx = targetX - x;
             this.x = (int) (this.x + dx*moveSpeed);
 //            this.x = (int) (this.x + dx*0.03);

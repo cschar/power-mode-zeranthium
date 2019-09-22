@@ -11,6 +11,7 @@ import com.intellij.openapi.fileChooser.FileChooserDialog;
 import com.intellij.openapi.fileChooser.FileChooserFactory;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.ui.JBColor;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
 
@@ -171,10 +172,14 @@ public class LinkerConfig extends JPanel {
         caretMovementPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         caretMovementPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
         caretMovementPanel.setMaximumSize(new Dimension(500,100));
-        this.moveWithCaret = new JCheckBox("move with Caret?");
+//        this.moveWithCaret = new JCheckBox("move with Caret?");
+        this.moveWithCaret = new JCheckBox("move with arrow-keys/mouse?");
         caretMovementPanel.add(moveWithCaret);
         this.moveSpeedTextField = new JTextField();
-        caretMovementPanel.add(Config.populateTextFieldPanel(this.moveSpeedTextField, "movespeed (0.001 - 1.0)"));
+//        this.moveSpeedTextField.setEditable(false);
+        caretMovementPanel.add(Config.populateTextFieldPanel(this.moveSpeedTextField, "movespeed (0.01 - 1.0)"));
+        caretMovementPanel.setOpaque(true);
+        caretMovementPanel.setBackground(new JBColor(new Color(250, 250, 210), new Color(210,250,250)));
         firstCol.add(caretMovementPanel);
 
 
@@ -195,7 +200,7 @@ public class LinkerConfig extends JPanel {
         JPanel distanceFromCenterPanel = new JPanel();
         distanceFromCenterPanel.add(distanceFromCenterLabel);
         distanceFromCenterPanel.add(this.distanceFromCenterTextField);
-        distanceFromCenterPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        distanceFromCenterPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         distanceFromCenterPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
         distanceFromCenterPanel.setMaximumSize(new Dimension(500, 40));
         firstCol.add(distanceFromCenterPanel);
@@ -306,12 +311,13 @@ public class LinkerConfig extends JPanel {
         this.chanceOfSpawnTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER,"chanceOfSpawn", 100)));
 
 
-        this.moveWithCaret.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.LINKER,"moveWithCaretEnabled", false));
-        this.moveSpeedTextField.setText(String.valueOf(Config.getFloatProperty(settings, PowerMode3.ConfigType.LINKER,"movespeed", 0.1f)));
+
         this.maxAnchorsToUse.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER,"maxAnchorsToUse", 10)));
 
         this.tracerEnabledCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.LINKER,"tracerEnabled", false));
 
+        this.moveWithCaret.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.LINKER,"moveWithCaretEnabled", false));
+        this.moveSpeedTextField.setText(String.valueOf(Config.getFloatProperty(settings, PowerMode3.ConfigType.LINKER,"movespeed", 1.0f)));
         this.maxLinksTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER,"maxLinks", 20)));
         this.distanceFromCenterTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER,"distanceFromCenter", 100)));
 
@@ -360,7 +366,7 @@ public class LinkerConfig extends JPanel {
         settings.setSpriteTypeProperty(PowerMode3.ConfigType.LINKER, "moveWithCaretEnabled", String.valueOf(moveWithCaret.isSelected()));
         settings.setSpriteTypeProperty(PowerMode3.ConfigType.LINKER, "movespeed",
                 String.valueOf(Config.getJTextFieldWithinBoundsFloat(this.moveSpeedTextField,
-                        0.001f, 1.0f,"movespeed")));
+                        0.01f, 1.0f,"movespeed")));
 
 
         int maxLinks = Config.getJTextFieldWithinBoundsInt(this.maxLinksTextField,

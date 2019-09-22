@@ -57,11 +57,11 @@ public class MyCaretListener implements CaretListener {
 //                int movespeed = Mandala2Config.CARET_MOVE_SPEED(settings);
 //                if()
 
-                ParticleSpriteLinkerAnchor.cursorX = point.x;
-                ParticleSpriteLinkerAnchor.cursorY = point.y;
-//                ParticleSpriteLinkerAnchor.targetX = point.x;
-//                ParticleSpriteLinkerAnchor.targetY = point.y;
-//                ParticleSpriteLinkerAnchor.moveSpeed = Mandala2Config.CARET_MOVE_SPEED(settings);
+//                ParticleSpriteLinkerAnchor.cursorX = point.x;
+//                ParticleSpriteLinkerAnchor.cursorY = point.y;
+                ParticleSpriteLinkerAnchor.targetX = point.x;
+                ParticleSpriteLinkerAnchor.targetY = point.y;
+                ParticleSpriteLinkerAnchor.moveSpeed = LinkerConfig.CARET_MOVE_SPEED(settings);
 
             }
         }

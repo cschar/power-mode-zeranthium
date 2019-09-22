@@ -11,6 +11,7 @@ import com.intellij.openapi.fileChooser.FileChooserDialog;
 import com.intellij.openapi.fileChooser.FileChooserFactory;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.ui.JBColor;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
 
@@ -56,10 +57,13 @@ public class Mandala2Config extends JPanel{
         caretMovementPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         caretMovementPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
         caretMovementPanel.setMaximumSize(new Dimension(500,100));
-        this.moveWithCaret = new JCheckBox("move with Caret?");
+//        this.moveWithCaret = new JCheckBox("move with Caret?");
+        this.moveWithCaret = new JCheckBox("move with arrowkeys/mouse?");
         caretMovementPanel.add(moveWithCaret);
         this.moveSpeedTextField = new JTextField();
         caretMovementPanel.add(Config.populateTextFieldPanel(this.moveSpeedTextField, "movespeed (0.001 - 1.0)"));
+        caretMovementPanel.setBackground(new JBColor(new Color(250, 250, 210), new Color(210,250,250)));
+
         firstRow.add(caretMovementPanel);
 
 

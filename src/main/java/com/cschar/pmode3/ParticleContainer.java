@@ -333,9 +333,8 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 //        if(settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LINKER) && (r <= linkerI_chance)){
         if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.LINKER)){
 
-
-            ParticleSpriteLinkerAnchor.cursorX = x;
-            ParticleSpriteLinkerAnchor.cursorY = y;
+            ParticleSpriteLinkerAnchor.typeX = x;
+            ParticleSpriteLinkerAnchor.typeY = y;
 
             ArrayList<Anchor> validAnchors = new ArrayList<>();
             int minPsiSearch = LinkerConfig.MIN_PSI_SEARCH(settings);

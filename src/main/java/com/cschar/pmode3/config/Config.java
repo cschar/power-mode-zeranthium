@@ -166,7 +166,7 @@ public class Config {
         JPanel parentPanel = new JPanel();
         parentPanel.add(fieldLabel);
         parentPanel.add(textField);
-        parentPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        parentPanel.setLayout(new FlowLayout(FlowLayout.RIGHT,5,5));
         parentPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
         parentPanel.setMaximumSize(new Dimension(500, 50));
 
