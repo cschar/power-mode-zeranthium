@@ -150,9 +150,9 @@ public class PowerMode3 implements BaseComponent,
     @com.intellij.util.xmlb.annotations.XCollection
     private ArrayList<String[]> linkerDataStringArrays = new ArrayList<String[]>(){{
         //enabled, scale, speed, defaultPath, customPath, isCyclic, val2, alpha, val1
-        add(new String[]{"true","0.4f","2","/blender/linkerI/chain1","", "false","1","1.0f","2"});
-        add(new String[]{"true","0.6f","2","/blender/linkerI/chain2","", "false","1","0.6f","2"});
-        add(new String[]{"true","0.2f","2","/blender/linkerI/chain4","", "false","1","1.0f","10"});
+        add(new String[]{"true","0.3f","2","/blender/linkerI/chain1","", "false","100","1.0f","1"});
+        add(new String[]{"true","0.3f","2","/blender/linkerI/chain5","", "false","6","0.6f","2"});
+        add(new String[]{"true","0.2f","2","/blender/linkerI/chain4","", "false","20","1.0f","10"});
     }};
 
     @com.intellij.util.xmlb.annotations.XCollection

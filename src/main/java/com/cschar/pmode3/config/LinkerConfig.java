@@ -36,14 +36,18 @@ public class LinkerConfig extends JPanel {
     private JCheckBox tracerEnabledCheckBox;
 
 
-    public JTextField maxLinksTextField;
-    public JTextField distanceFromCenterTextField;
-    public JTextField wobbleAmountTextField;
+    private JTextField maxLinksTextField;
+    private JTextField distanceFromCenterTextField;
+    private JTextField wobbleAmountTextField;
 
-    public JTextField curve1AmountTextField;
+    private JTextField curve1AmountTextField;
 
-    public JCheckBox isCyclicEnabled;
-    public JTextField maxCycleParticlesTextField;
+    private JCheckBox isCyclicEnabled;
+    private JTextField maxCycleParticlesTextField;
+
+    private JCheckBox moveWithCaret;
+    private JTextField moveSpeedTextField;
+
 
 
     private static Color originalTracerColor = Color.WHITE;
@@ -163,6 +167,16 @@ public class LinkerConfig extends JPanel {
 
         //First col config
 
+        JPanel caretMovementPanel = new JPanel();
+        caretMovementPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        caretMovementPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        caretMovementPanel.setMaximumSize(new Dimension(500,100));
+        this.moveWithCaret = new JCheckBox("move with Caret?");
+        caretMovementPanel.add(moveWithCaret);
+        this.moveSpeedTextField = new JTextField();
+        caretMovementPanel.add(Config.populateTextFieldPanel(this.moveSpeedTextField, "movespeed (0.001 - 1.0)"));
+        firstCol.add(caretMovementPanel);
+
 
 
         this.maxLinksTextField = new JTextField();
@@ -181,7 +195,7 @@ public class LinkerConfig extends JPanel {
         JPanel distanceFromCenterPanel = new JPanel();
         distanceFromCenterPanel.add(distanceFromCenterLabel);
         distanceFromCenterPanel.add(this.distanceFromCenterTextField);
-        distanceFromCenterPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        distanceFromCenterPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         distanceFromCenterPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
         distanceFromCenterPanel.setMaximumSize(new Dimension(500, 40));
         firstCol.add(distanceFromCenterPanel);
@@ -291,6 +305,9 @@ public class LinkerConfig extends JPanel {
         this.chancePerKeyPressTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER,"chancePerKeyPress", 100)));
         this.chanceOfSpawnTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER,"chanceOfSpawn", 100)));
 
+
+        this.moveWithCaret.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.LINKER,"moveWithCaretEnabled", false));
+        this.moveSpeedTextField.setText(String.valueOf(Config.getFloatProperty(settings, PowerMode3.ConfigType.LINKER,"movespeed", 0.1f)));
         this.maxAnchorsToUse.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER,"maxAnchorsToUse", 10)));
 
         this.tracerEnabledCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.LINKER,"tracerEnabled", false));
@@ -339,6 +356,12 @@ public class LinkerConfig extends JPanel {
                 "max anchors to use when spawning lizards");
         settings.setSpriteTypeProperty(PowerMode3.ConfigType.LINKER, "maxAnchorsToUse",
                 String.valueOf(maxAnchorsToUse));
+
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.LINKER, "moveWithCaretEnabled", String.valueOf(moveWithCaret.isSelected()));
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.LINKER, "movespeed",
+                String.valueOf(Config.getJTextFieldWithinBoundsFloat(this.moveSpeedTextField,
+                        0.001f, 1.0f,"movespeed")));
+
 
         int maxLinks = Config.getJTextFieldWithinBoundsInt(this.maxLinksTextField,
                 10, 50,
@@ -435,6 +458,15 @@ public class LinkerConfig extends JPanel {
 
     public static int MAX_CYCLE_PARTICLES(PowerMode3 settings){
         return Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER, "maxCycleParticles");
+    }
+
+    public static boolean MOVE_WITH_CARET(PowerMode3 settings){
+        return Config.getBoolProperty(settings, PowerMode3.ConfigType.LINKER, "moveWithCaretEnabled",true);
+    }
+
+    //TODO PUT THIS IN TABLE as val4 , make one row change all other rows ugh
+    public static float CARET_MOVE_SPEED(PowerMode3 settings){
+        return Config.getFloatProperty(settings, PowerMode3.ConfigType.LINKER, "movespeed", 0.1f);
     }
 
 

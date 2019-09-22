@@ -1,8 +1,10 @@
 package com.cschar.pmode3.actionHandlers;
 
 import com.cschar.pmode3.ParticleSpriteDroste;
+import com.cschar.pmode3.ParticleSpriteLinkerAnchor;
 import com.cschar.pmode3.ParticleSpriteMandala;
 import com.cschar.pmode3.PowerMode3;
+import com.cschar.pmode3.config.LinkerConfig;
 import com.cschar.pmode3.config.Mandala2Config;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollingModel;
@@ -21,7 +23,7 @@ public class MyCaretListener implements CaretListener {
     public void caretPositionChanged(@NotNull CaretEvent event) {
 
         if(enabled) {
-            System.out.println("changed");
+
             Editor editor = event.getEditor();
             VisualPosition visualPosition = event.getCaret().getVisualPosition();
             Point point = editor.visualPositionToXY(visualPosition);
@@ -45,7 +47,22 @@ public class MyCaretListener implements CaretListener {
                 ParticleSpriteMandala.targetX = point.x;
                 ParticleSpriteMandala.targetY = point.y;
                 ParticleSpriteMandala.moveSpeed = Mandala2Config.CARET_MOVE_SPEED(settings);
-                System.out.println(ParticleSpriteMandala.moveSpeed + " is pseed");
+
+            }
+
+            if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.LINKER) &&
+                    LinkerConfig.MOVE_WITH_CARET(settings)){
+
+
+//                int movespeed = Mandala2Config.CARET_MOVE_SPEED(settings);
+//                if()
+
+                ParticleSpriteLinkerAnchor.cursorX = point.x;
+                ParticleSpriteLinkerAnchor.cursorY = point.y;
+//                ParticleSpriteLinkerAnchor.targetX = point.x;
+//                ParticleSpriteLinkerAnchor.targetY = point.y;
+//                ParticleSpriteLinkerAnchor.moveSpeed = Mandala2Config.CARET_MOVE_SPEED(settings);
+
             }
         }
     }

@@ -17,6 +17,7 @@
 
 package com.cschar.pmode3;
 
+import com.cschar.pmode3.config.Mandala2Config;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
 
 import java.awt.*;
@@ -40,6 +41,10 @@ public class ParticleSpriteLinkerAnchor extends Particle{
 
     public static int cursorX;
     public static int cursorY;
+
+    public static int targetX;
+    public static int targetY;
+    public static float moveSpeed;
 
     private int prevX;
     private int prevY;
@@ -65,10 +70,12 @@ public class ParticleSpriteLinkerAnchor extends Particle{
     public static int CUR_CYCLE_PARTICLES = 0;
 
 
+    PowerMode3 settings;
     public ParticleSpriteLinkerAnchor(int x, int y, int dx, int dy, int size, int life, Color c,
                                       ArrayList<Anchor> anchors, int distanceFromCenter, int maxLinks, int wobbleAmount,
                                       boolean tracerEnabled, int curve1Amount, boolean isCyclic) {
         super(x,y,dx,dy,size,life,c);
+         settings = PowerMode3.getInstance();
 
         this.anchors = anchors;
 
@@ -165,6 +172,7 @@ public class ParticleSpriteLinkerAnchor extends Particle{
 
 
     public boolean update() {
+
         //every X updates, increment frame, this controls how fast it animates
         for(int i = 0; i < frames.length; i++) {
             if (this.frameLife % spriteDataAnimated.get(i).speedRate == 0) {
@@ -175,7 +183,7 @@ public class ParticleSpriteLinkerAnchor extends Particle{
             }
         }
 
-        if (!PowerMode3.getInstance().isEnabled()) {
+        if (!settings.isEnabled()) {
             if(this.isSingleCyclicEnabled) {
                 CUR_CYCLE_PARTICLES -= 1;
             }
@@ -200,6 +208,11 @@ public class ParticleSpriteLinkerAnchor extends Particle{
             this.x = cursorX;
             this.y = cursorY;
         }
+        if(Mandala2Config.MOVE_WITH_CARET(settings)) { //oh god
+            this.x = cursorX;
+            this.y = cursorY;
+        }
+
         life--;
         frameLife--;
 

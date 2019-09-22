@@ -2,9 +2,8 @@
 
 TODO: everything
 
-- Update on cursor move instead of type
-   - some config (mandala) have options to 'snap to new position' or move there with a 'speed' setting
-     or not be affected by caret movement without typing
+- Update on cursor move instead of just typeAction (mandala/linker)
+  
 
 - Lazy Loading popup for sprites
    - dont load on program startup
@@ -42,6 +41,7 @@ TODO: everything
    - or 'master font set 100x100px' would 'generate' font
    size set for current fontsize e.g. 14pt
    would show a 'genereating font' after setting is set
+- Test multiple editors w/ MAX_RINGS etc.
 
 Done;
 - vines
