@@ -15,9 +15,7 @@ import java.util.logging.Logger;
 
 public class SpriteData extends PathData{
 
-    public boolean enabled=true;
     public float scale=1.0f;
-    public int val1 =100;
 
 
     public ImageIcon previewIcon;
@@ -25,9 +23,7 @@ public class SpriteData extends PathData{
 
 
     public SpriteData(boolean enabled, float scale, int val1, String defaultPath, String customPath) {
-        super(defaultPath,customPath);
-        this.val1 = val1;
-        this.enabled = enabled;
+        super(enabled, defaultPath,customPath, val1);
         this.scale = scale;
 
         setupImage();
@@ -43,9 +39,7 @@ public class SpriteData extends PathData{
     }
 
     public SpriteData(boolean enabled, float scale, int val1, String defaultPath, String customPath, boolean doSetupImage) {
-        super(defaultPath,customPath);
-        this.val1 = val1;
-        this.enabled = enabled;
+        super(enabled, defaultPath,customPath, val1);
         this.scale = scale;
         if(doSetupImage) setupImage();
     }
@@ -86,32 +80,4 @@ public class SpriteData extends PathData{
         return false;
     }
 
-
-    public static int getWeightedAmountWinningIndex(Collection<? extends SpriteData> spriteData){
-        int sumWeight = 0;
-        for(SpriteData d: spriteData){
-            if(d.enabled){
-                sumWeight += d.val1;
-            }
-        }
-        if(sumWeight == 0){ return -1; }
-
-        int weightChance = ThreadLocalRandom.current().nextInt(0, sumWeight);
-        //roll random chance between 0-->w1+w2+...wn
-//       |--- w1-- | -------- weight 2 ------ | --X---- weight 3 --|
-        int winnerIndex = -1;
-        int limit = 0;
-        for(SpriteData d: spriteData){
-            if(d.enabled){
-                winnerIndex += 1;
-                limit += d.val1;
-                if(weightChance <= limit){ //we've found the winner
-                    break;
-                }
-            }
-
-        }
-        return winnerIndex;
-
-    }
 }

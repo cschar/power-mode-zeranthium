@@ -13,7 +13,10 @@
 
 package com.cschar.pmode3;
 
+import com.cschar.pmode3.actionHandlers.MyCaretListener;
 import com.intellij.openapi.editor.*;
+import com.intellij.openapi.editor.event.CaretEvent;
+import com.intellij.openapi.editor.event.CaretListener;
 import com.intellij.openapi.editor.event.EditorFactoryAdapter;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
 import com.intellij.psi.*;
@@ -33,10 +36,11 @@ import java.util.Map;
  *
  * modified by cschar
  */
-class ParticleContainerManager extends EditorFactoryAdapter {
+public class ParticleContainerManager extends EditorFactoryAdapter {
 
     private Thread thread;
-    private Map<Editor, ParticleContainer> particleContainers = new HashMap<>();
+    public static Map<Editor, ParticleContainer> particleContainers = new HashMap<>();
+//    private Map<Editor, ParticleContainer> particleContainers = new HashMap<>();
 
     private PowerMode3 settings;
 
@@ -70,6 +74,12 @@ class ParticleContainerManager extends EditorFactoryAdapter {
         final Editor editor = event.getEditor();
 
         particleContainers.put(editor, new ParticleContainer(editor));
+
+        MyCaretListener cl = new MyCaretListener();
+        MyCaretListener.enabled = true;
+
+        editor.getCaretModel().addCaretListener(cl);
+
     }
 
     @Override

@@ -43,6 +43,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private JCheckBox enableMandalaCheckbox;
     private JCheckBox enableLinkerCheckbox;
     private JCheckBox enableDrosteCheckbox;
+    private JCheckBox enableCopyPasteVoid;
 
 
     private BasicParticleConfig basicParticleConfig;
@@ -54,6 +55,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private Mandala2Config mandala2Config;
     private LinkerConfig linkerConfig;
     private DrosteConfig drosteConfig;
+    private CopyPasteVoidConfig copyPasteVoidConfig;
 
     PowerMode3 settings;
     //Constructor is called _AFTER_ createUIComponents when using IntelliJ GUI designer
@@ -106,6 +108,9 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.DROSTE)){
             enableDrosteCheckbox.setSelected(true);
         }
+        if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.COPYPASTEVOID)){
+            enableCopyPasteVoid.setSelected(true);
+        }
 
 
 
@@ -120,6 +125,8 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         this.mandala2Config.loadValues();
         this.linkerConfig.loadValues();
         this.drosteConfig.loadValues();
+        this.copyPasteVoidConfig.loadValues();
+
 
 
         //sound panel
@@ -168,6 +175,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         settings.setSpriteTypeEnabled(enableMandalaCheckbox.isSelected(), PowerMode3.ConfigType.MANDALA);
         settings.setSpriteTypeEnabled(enableLinkerCheckbox.isSelected(), PowerMode3.ConfigType.LINKER);
         settings.setSpriteTypeEnabled(enableDrosteCheckbox.isSelected(), PowerMode3.ConfigType.DROSTE);
+        settings.setSpriteTypeEnabled(enableCopyPasteVoid.isSelected(), PowerMode3.ConfigType.COPYPASTEVOID);
 
 
         //save values
@@ -181,6 +189,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         this.mandala2Config.saveValues(enableMandalaCheckbox.isSelected());
         this.linkerConfig.saveValues(maxPsiSearch, enableLinkerCheckbox.isSelected());
         this.drosteConfig.saveValues();
+        this.copyPasteVoidConfig.saveValues();
 
         //sound panel
         this.soundConfig.saveValues();
@@ -271,11 +280,11 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
         JPanel footerPanel = new JPanel();
         footerPanel.setMinimumSize(new Dimension(100, 300));
-        particleSettingsPanel.add(footerPanel);
+        soundSettingsPanel.add(footerPanel);
 
 
         //Particle Settings tab
-
+        //TODO make them all extend JPANEL
         particleSettingsPanel.add(this.createSpacer());
         this.basicParticleConfig = new BasicParticleConfig(settings);
         particleSettingsPanel.add(this.basicParticleConfig);
@@ -303,6 +312,10 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         particleSettingsPanel.add(lizardConfig.getConfigPanel());
         particleSettingsPanel.add(this.createSpacer());
 
+
+        this.copyPasteVoidConfig = new CopyPasteVoidConfig(settings);
+        particleSettingsPanel.add(copyPasteVoidConfig.getConfigPanel());
+        particleSettingsPanel.add(this.createSpacer());
 
         this.drosteConfig = new DrosteConfig(settings);
         particleSettingsPanel.add(drosteConfig);

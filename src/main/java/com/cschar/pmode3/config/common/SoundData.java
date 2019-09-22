@@ -9,13 +9,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class SoundData extends PathData{
 
-    public boolean enabled=true;
-    public int val1 =100;
 
     public SoundData(boolean enabled, int val1, String defaultPath, String customPath) {
-        super(defaultPath, customPath);
-        this.val1 = val1;
-        this.enabled = enabled;
+        super(enabled, defaultPath, customPath, val1);
 
         if(!customPath.equals("")){ //check if value on filesystem is bad on initialization
             VirtualFile tmp = LocalFileSystem.getInstance().findFileByPath(customPath);
@@ -80,31 +76,5 @@ public class SoundData extends PathData{
 //    }
 
 
-    public static int getWeightedAmountWinningIndex(Collection<? extends SoundData> soundData){
-        int sumWeight = 0;
-        for(SoundData d: soundData){
-            if(d.enabled){
-                sumWeight += d.val1;
-            }
-        }
-        if(sumWeight == 0){ return -1; }
 
-        int weightChance = ThreadLocalRandom.current().nextInt(0, sumWeight);
-        //roll random chance between 0-->w1+w2+...wn
-//       |--- w1-- | -------- weight 2 ------ | --X---- weight 3 --|
-        int winnerIndex = -1;
-        int limit = 0;
-        for(SoundData d: soundData){
-            if(d.enabled){
-                winnerIndex += 1;
-                limit += d.val1;
-                if(weightChance <= limit){ //we've found the winner
-                    break;
-                }
-            }
-
-        }
-        return winnerIndex;
-
-    }
 }

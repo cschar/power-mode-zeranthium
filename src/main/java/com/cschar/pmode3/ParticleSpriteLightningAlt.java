@@ -19,6 +19,10 @@ package com.cschar.pmode3;
 
 
 import com.cschar.pmode3.config.common.SpriteData;
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationType;
+import com.intellij.notification.Notifications;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -36,6 +40,14 @@ public class ParticleSpriteLightningAlt extends Particle{
         for(int i=1; i <= 150; i++){
             sprites.add(ParticleUtils.loadSprite(String.format("/blender/lightningAlt/main/lightning10%03d.png", i)));
         }
+
+//            Notifications.Bus.notify(new Notification(
+//                    GROUP_DISPLAY_ID,
+//                    TITLE,
+//                    CONTENT,
+//                    NotificationType.INFORMATION
+//            ), project);
+
 
     }
 

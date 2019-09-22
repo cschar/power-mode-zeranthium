@@ -36,7 +36,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
     private final JComponent parent;
     private final Editor editor;
     private boolean shakeDir;
-    ConcurrentLinkedQueue<Particle> particles = new ConcurrentLinkedQueue<Particle>();
+    public ConcurrentLinkedQueue<Particle> particles = new ConcurrentLinkedQueue<Particle>();
 
 //    private ArrayList<Particle> particles = new ArrayList<>(50);
 
@@ -116,18 +116,24 @@ public class ParticleContainer extends JComponent implements ComponentListener {
             ParticleSpriteDroste.cursorY = y;
 
 
+            boolean anyEnabled = false;
             for(int i = 0; i < ParticleSpriteDroste.spriteDataAnimated.size(); i++){
+
                 SpriteDataAnimated d = ParticleSpriteDroste.spriteDataAnimated.get(i);
 
                 if(!d.enabled) continue;
 
+                anyEnabled = true;
                 if( ParticleSpriteDroste.CUR_COUNT[i] <= 0 ) {
                     final ParticleSpriteDroste eVoid = new ParticleSpriteDroste(x, y, dx, dy, size, lifeSetting, i,
                             Color.ORANGE, h, w, d.val1);
                     particles.add(eVoid);
                 }
             }
-            ParticleSpriteDroste.recalculateExpandScales(w,h);
+            if(anyEnabled) {
+                //TODO: add custom CaretListeners for each Type of ParticleSprite?
+                ParticleSpriteDroste.recalculateExpandScales(w, h);
+            }
         }
 
         if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.MANDALA)){

@@ -18,13 +18,16 @@ package com.cschar.pmode3;
  */
 
 
+import com.cschar.pmode3.actionHandlers.MyPasteHandler;
 import com.cschar.pmode3.config.*;
 import com.cschar.pmode3.config.common.SoundData;
 import com.cschar.pmode3.config.common.SpriteData;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
+import com.intellij.codeInsight.editorActions.PasteHandler;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.BaseComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
@@ -32,13 +35,16 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.*;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.JBColor;
+import com.intellij.util.Producer;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
+import java.awt.datatransfer.Transferable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -105,8 +111,16 @@ public class PowerMode3 implements BaseComponent,
         LINKER,
         SOUND,
         MUSIC_TRIGGER,
-        DROSTE
+        DROSTE,
+        COPYPASTEVOID
     }
+
+    @com.intellij.util.xmlb.annotations.XCollection
+    private ArrayList<String[]> copyPasteVoidDataStringArrays = new ArrayList<String[]>(){{
+        //enabled, scale, speed, defaultPath, customPath, isCyclic, val2, alpha, val1
+        add(new String[]{"true","0.4f","2","/blender/droste2","", "false","1","1.0f","2"});
+        add(new String[]{"true","0.6f","2","/blender/droste2","", "false","1","0.6f","2"});
+    }};
 
     @com.intellij.util.xmlb.annotations.XCollection
     private ArrayList<String[]> drosteDataStringArrays = new ArrayList<String[]>(){{
@@ -188,7 +202,7 @@ public class PowerMode3 implements BaseComponent,
     void setSpriteTypeEnabled(Boolean enabled, ConfigType type){
         configMap.put("sprite" + type + "Enabled", enabled.toString());
     }
-    boolean getSpriteTypeEnabled(ConfigType type){
+    public boolean getSpriteTypeEnabled(ConfigType type){
         return Boolean.parseBoolean(configMap.get("sprite"+type+"Enabled"));
     }
 
@@ -247,25 +261,8 @@ public class PowerMode3 implements BaseComponent,
                                   });
 
 
-
-
-                //https://www.jetbrains.org/intellij/sdk/docs/reference_guide/multiple_carets.html
-//
-//        EditorActionHandler origHandler = actionManager.getActionHandler(IdeActions.ACTION_EDITOR_DELETE);
-//        EditorActionHandler h1 = new EditorActionHandler() {
-//            @Override
-//            protected void doExecute(@NotNull Editor editor, @Nullable Caret caret, DataContext dataContext) {
-//                super.doExecute(editor, caret, dataContext);
-//
-//                origHandler.execute(editor,caret,dataContext);
-//                PsiElement e = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
-//                if(e != null) {  System.out.println(e.toString());   }
-//            }
-//        };
-//        actionManager.setActionHandler(IdeActions.ACTION_EDITOR_DELETE, h1);
-
-
-
+//        this.setupCursorMovementAction();
+        this.setupExtraEditorActions();
 
 
 
@@ -381,6 +378,7 @@ public class PowerMode3 implements BaseComponent,
         LizardConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(lizardDataStringArrays, 60));
         LinkerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(linkerDataStringArrays, 60));
         DrosteConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(drosteDataStringArrays, 120));
+        CopyPasteVoidConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(copyPasteVoidDataStringArrays, 60));
 
         SoundConfig.setSoundData(this.deserializeSoundData(soundDataStringArrays));
         MusicTriggerConfig.setSoundData(this.deserializeSoundData(musicTriggerSoundDataStringArrays));
@@ -439,6 +437,8 @@ public class PowerMode3 implements BaseComponent,
                 this.linkerDataStringArrays = serialized;
             }else if( type == ConfigType.DROSTE){
                 this.drosteDataStringArrays = serialized;
+            }else if( type == ConfigType.COPYPASTEVOID){
+                this.copyPasteVoidDataStringArrays = serialized;
             }
 //        }
     }
@@ -504,5 +504,60 @@ public class PowerMode3 implements BaseComponent,
     public void setScrollBarPosition(int scrollBarPosition) {  this.scrollBarPosition = scrollBarPosition; }
     public int getLastTabIndex() {    return lastTabIndex;  }
     public void setLastTabIndex(int lastTabIndex) {    this.lastTabIndex = lastTabIndex;   }
+
+
+
+    private void setupExtraEditorActions(){
+        final EditorActionManager actionManager = EditorActionManager.getInstance();
+
+
+        String[] caret_movement = new String[]{
+                IdeActions.ACTION_EDITOR_PASTE};
+
+        for(String s : caret_movement){
+            EditorActionHandler origHandler = actionManager.getActionHandler(s);
+
+            MyPasteHandler myPasteHandler = new MyPasteHandler(origHandler);
+
+            actionManager.setActionHandler(s, myPasteHandler);
+        }
+    }
+
+    private void setupCursorMovementAction(){
+        final EditorActionManager actionManager = EditorActionManager.getInstance();
+
+
+        String[] caret_movement = new String[]{
+                IdeActions.ACTION_EDITOR_MOVE_CARET_DOWN,
+                IdeActions.ACTION_EDITOR_MOVE_CARET_UP,
+                IdeActions.ACTION_EDITOR_MOVE_CARET_LEFT,
+                IdeActions.ACTION_EDITOR_MOVE_CARET_RIGHT};
+
+        for(String s : caret_movement){
+            EditorActionHandler origHandler = actionManager.getActionHandler(s);
+            EditorActionHandler h1 = new EditorActionHandler() {
+                @Override
+                protected void doExecute(@NotNull Editor editor, @Nullable Caret caret, DataContext dataContext) {
+                    super.doExecute(editor, caret, dataContext);
+
+
+
+                    origHandler.execute(editor,caret,dataContext);
+                    LOGGER.info(s);
+                    VisualPosition visualPosition = editor.getCaretModel().getVisualPosition();
+                    Point point = editor.visualPositionToXY(visualPosition);
+                    ScrollingModel scrollingModel = editor.getScrollingModel();
+                    point.x = point.x - scrollingModel.getHorizontalScrollOffset();
+                    point.y = point.y - scrollingModel.getVerticalScrollOffset();
+
+                    ParticleSpriteDroste.cursorX = point.x;
+                    ParticleSpriteDroste.cursorY = point.y;
+                }
+            };
+            actionManager.setActionHandler(s, h1);
+        }
+
+
+    }
 }
 

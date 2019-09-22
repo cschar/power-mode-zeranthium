@@ -2,10 +2,16 @@
 
 TODO: everything
 
+- TEST winner function
+   - use only 1 function
 
-- replace prints with logging: https://stackoverflow.com/a/16448421/5198805
+- Update on cursor move instead of type
+   - some config (mandala/droste) have options to 'snap to new position' or move there with a 'speed' setting
+     or not be affected by caret movement without typing
 
-- Loading popup for sprites  
+- Lazy Loading popup for sprites
+   - dont load on program startup
+   = load at first type and show message  
 
 -  download assets button in settings (RED !)
    -  opens dialog pointing to isntructions to clone
@@ -13,7 +19,8 @@ TODO: everything
    -  once location is set, change to big green checkmark
    - Config panels can load a 'pack' of images if this location is set
       - e.g. load a 'plant growing' theme 
-      
+
+ 
 
 - Fiddle heads
 ```
@@ -33,7 +40,11 @@ TODO: everything
       - 
 - TOKEN callout with decoration above
 - 36daysofType callout https://mantissa.xyz/resources
-
+- 36daysofType COMPLETE replacement of all characters LOL
+   - would require minimum fontsize?
+   - or 'master font set 100x100px' would 'generate' font
+   size set for current fontsize e.g. 14pt
+   would show a 'genereating font' after setting is set
 
 Done;
 - vines
@@ -45,9 +56,12 @@ Done;
 - Sound panel (Tabbed Panel)
 - Play 2x Song w/ 2 Hotkeys to trigger each one
 - Void/DrosteEffect
+- copypasteVoid effect
 
 
 future TODO:
+- more Editor listeners (backspace/delete)     
+
 - code explorer (e.g. wave collapse for dungeon background)
 ---- when you type it lights up background, e.g. icnreasing alpha from 0->0.1
 
