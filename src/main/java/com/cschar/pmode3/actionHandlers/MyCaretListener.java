@@ -42,8 +42,10 @@ public class MyCaretListener implements CaretListener {
 //                int movespeed = Mandala2Config.CARET_MOVE_SPEED(settings);
 //                if()
 
-                ParticleSpriteMandala.cursorX = point.x;
-                ParticleSpriteMandala.cursorY = point.y;
+                ParticleSpriteMandala.targetX = point.x;
+                ParticleSpriteMandala.targetY = point.y;
+                ParticleSpriteMandala.moveSpeed = Mandala2Config.CARET_MOVE_SPEED(settings);
+                System.out.println(ParticleSpriteMandala.moveSpeed + " is pseed");
             }
         }
     }

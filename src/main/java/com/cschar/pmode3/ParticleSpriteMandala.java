@@ -18,6 +18,7 @@
 package com.cschar.pmode3;
 
 
+import com.cschar.pmode3.config.Mandala2Config;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
 
 import java.awt.*;
@@ -37,15 +38,15 @@ public class ParticleSpriteMandala extends Particle{
     public static ArrayList<SpriteDataAnimated> mandalaRingData;
     private BufferedImage sprite;
 
-    public static int cursorX;
-    public static int cursorY;
+
+    public static int targetX;
+    public static int targetY;
 
     private int frame = 0;
 
 
     private float maxAlpha;
 
-    private int randomNum;
 
     private float spriteScale = 1.0f;
 
@@ -53,6 +54,7 @@ public class ParticleSpriteMandala extends Particle{
     public static int[] CUR_RINGS = new int[4];
 
     public static boolean settingEnabled = true;
+    public static float moveSpeed = 0.1f;
 
     private int frameSpeed = 2;
     private int frameLife;
@@ -70,9 +72,10 @@ public class ParticleSpriteMandala extends Particle{
         this.ringIndex = ringIndex;
         this.maxAlpha = 1.0f;
         this.frameLife = 10000;
-        cursorX = x;
-        cursorY = y;
-        randomNum = ThreadLocalRandom.current().nextInt(1, 100 +1);
+
+        targetX = x;
+        targetY = y;
+
 
         CUR_RINGS[ringIndex] += 1;
 
@@ -88,6 +91,7 @@ public class ParticleSpriteMandala extends Particle{
     }
 
     public boolean update() {
+        PowerMode3 settings = PowerMode3.getInstance();
         frameLife--;
         //every X updates, increment frame, this controls how fast it animates
         if( this.frameLife % this.frameSpeed == 0){
@@ -102,7 +106,7 @@ public class ParticleSpriteMandala extends Particle{
         }
 
 
-        if (!PowerMode3.getInstance().isEnabled()) { // performance hit?
+        if (!settings.isEnabled()) { // performance hit?
             CUR_RINGS[ringIndex] -= 1;
             return true;
         }
@@ -111,8 +115,20 @@ public class ParticleSpriteMandala extends Particle{
             CUR_RINGS[ringIndex] -= 1;
             return true;
         }
-        x += dx;
-        y += dy;
+
+
+        if( life % 2 == 0){
+            int dx = targetX - x;
+            this.x = (int) (this.x + dx*moveSpeed);
+//            this.x = (int) (this.x + dx*0.03);
+
+            int dy = targetY - y;
+            this.y = (int) (this.y + dy*moveSpeed);
+//            this.y = (int) (this.y + dy*0.03);
+        }
+
+
+
         life--;
         boolean lifeOver = (life <= 0);
 
@@ -147,6 +163,9 @@ public class ParticleSpriteMandala extends Particle{
                 //TODO, just use data in array, see Droste Particle
                 this.frameSpeed = mandalaRingData.get(ringIndex).speedRate;
                 this.spriteScale = mandalaRingData.get(ringIndex).scale;
+
+                //TODO STICK THIS IN THE DAMN TABLE
+                moveSpeed = Mandala2Config.CARET_MOVE_SPEED(settings); //god forgive me lol
                 this.life = 99;
                 return false;
             } else {
@@ -173,7 +192,8 @@ public class ParticleSpriteMandala extends Particle{
 
             AffineTransform at = new AffineTransform();
             at.scale(this.spriteScale, this.spriteScale);
-            at.translate((int) cursorX * (1/this.spriteScale), (int) cursorY * (1/this.spriteScale));
+//            at.translate((int) cursorX * (1/this.spriteScale), (int) cursorY * (1/this.spriteScale));
+            at.translate((int) x * (1/this.spriteScale), (int) y * (1/this.spriteScale));
 
             at.translate(-sprite.getWidth()/2,
                     -sprite.getHeight()/2);
@@ -184,7 +204,7 @@ public class ParticleSpriteMandala extends Particle{
             g2d.drawImage(ringSprites.get(frame), at, null);
 
 //            g2d.setColor(Color.ORANGE);
-//            g2d.drawString(String.format("%d-RINGS %d",ringIndex, CUR_RINGS[ringIndex]), cursorX - 20, cursorY - 30*(ringIndex+1));
+//            g2d.drawString(String.format("%d-RINGS %d",ringIndex, CUR_RINGS[ringIndex]), x - 20, y - 30*(ringIndex+1));
 
 
 

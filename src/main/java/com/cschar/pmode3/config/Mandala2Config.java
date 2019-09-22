@@ -59,7 +59,7 @@ public class Mandala2Config extends JPanel{
         this.moveWithCaret = new JCheckBox("move with Caret?");
         caretMovementPanel.add(moveWithCaret);
         this.moveSpeedTextField = new JTextField();
-//        caretMovementPanel.add(Config.populateTextFieldPanel(this.moveSpeedTextField, "movespeed (1 - 10)"));
+        caretMovementPanel.add(Config.populateTextFieldPanel(this.moveSpeedTextField, "movespeed (0.001 - 1.0)"));
         firstRow.add(caretMovementPanel);
 
 
@@ -144,7 +144,7 @@ public class Mandala2Config extends JPanel{
     public void loadValues(){
 
         this.moveWithCaret.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.MANDALA,"moveWithCaretEnabled", false));
-        this.moveSpeedTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.MANDALA,"movespeed", 10)));
+        this.moveSpeedTextField.setText(String.valueOf(Config.getFloatProperty(settings, PowerMode3.ConfigType.MANDALA,"movespeed", 0.1f)));
 
     }
 
@@ -153,9 +153,9 @@ public class Mandala2Config extends JPanel{
 
         settings.setSpriteTypeProperty(PowerMode3.ConfigType.MANDALA, "moveWithCaretEnabled", String.valueOf(moveWithCaret.isSelected()));
 
-        settings.setSpriteTypeProperty(PowerMode3.ConfigType.MANDALA, "fadeAmount",
-                String.valueOf(Config.getJTextFieldWithinBoundsInt(this.moveSpeedTextField,
-                        1, 10,"movespeed")));
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.MANDALA, "movespeed",
+                String.valueOf(Config.getJTextFieldWithinBoundsFloat(this.moveSpeedTextField,
+                        0.001f, 1.0f,"movespeed")));
 
         settings.setSerializedSpriteDataAnimated(Mandala2Config.mandalaData, PowerMode3.ConfigType.MANDALA);
     }
@@ -172,8 +172,8 @@ public class Mandala2Config extends JPanel{
         return Config.getBoolProperty(settings, PowerMode3.ConfigType.MANDALA, "moveWithCaretEnabled",true);
     }
 
-    public static boolean CARET_MOVE_SPEED(PowerMode3 settings){
-        return Config.getBoolProperty(settings, PowerMode3.ConfigType.MANDALA, "movespeed",true);
+    public static float CARET_MOVE_SPEED(PowerMode3 settings){
+        return Config.getFloatProperty(settings, PowerMode3.ConfigType.MANDALA, "movespeed", 0.1f);
     }
 
 
