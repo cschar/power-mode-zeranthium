@@ -50,6 +50,7 @@ public class ParticleSpritePasteShape extends Particle{
     private SpriteDataAnimated d;
     private float fadeAmount;
     private boolean fadeColorEnabled;
+    private int speedRate;
 
     public ParticleSpritePasteShape(Shape shape, int life, Color c, float fadeAmount, boolean fadeColorEnabled, int winningIndex) {
         super(0,0,0,0,0,life,c);
@@ -58,16 +59,23 @@ public class ParticleSpritePasteShape extends Particle{
         this.fadeColorEnabled = fadeColorEnabled;
         this.shape = shape;
         this.winningIndex = winningIndex;
-        d = spriteDataAnimated.get(winningIndex);
-        sprites = spriteDataAnimated.get(winningIndex).images;
-        this.maxAlpha = d.alpha;
+        if(winningIndex != -1) {
+            d = spriteDataAnimated.get(winningIndex);
+            sprites = spriteDataAnimated.get(winningIndex).images;
+            this.maxAlpha = d.alpha;
+            speedRate = d.speedRate;
+        }else{
+            this.maxAlpha = 1.0f;
+            sprites = new ArrayList<>();
+            speedRate = 2;
+        }
 
 
     }
 
     public boolean update() {
         //every X updates, increment frame, this controls how fast it animates
-        if( this.life % d.speedRate == 0){
+        if( this.life % speedRate == 0){
             frame += 1;
             if (frame >= sprites.size()){
                 frame = 0;
@@ -103,28 +111,30 @@ public class ParticleSpritePasteShape extends Particle{
             }
 
 
-            Rectangle bounds  = this.shape.getBounds();
-            int x = bounds.x + bounds.width/2;
-            int y = bounds.y + bounds.height/2;
+            if(d != null) {
+                Rectangle bounds = this.shape.getBounds();
+                int x = bounds.x + bounds.width / 2;
+                int y = bounds.y + bounds.height / 2;
 
 
-            g2d.setClip(this.shape);
-            //TODO rename isCyclic to boolGeneric1
-            if(d.isCyclic) { //isCyllic is boolean placeholder for 'center to shape'
+                g2d.setClip(this.shape);
+                //TODO rename isCyclic to boolGeneric1
+                if (d.isCyclic) { //isCyllic is boolean placeholder for 'center to shape'
 
-                AffineTransform at = new AffineTransform();
-                at.scale(d.scale, d.scale);
-                at.translate((int) x * (1 / d.scale), (int) y * (1 / d.scale));
+                    AffineTransform at = new AffineTransform();
+                    at.scale(d.scale, d.scale);
+                    at.translate((int) x * (1 / d.scale), (int) y * (1 / d.scale));
 
 
-                at.translate(-sprites.get(frame).getWidth() / 2,
-                        -sprites.get(frame).getHeight() / 2);
-                g2d.drawImage(sprites.get(frame), at, null);
+                    at.translate(-sprites.get(frame).getWidth() / 2,
+                            -sprites.get(frame).getHeight() / 2);
+                    g2d.drawImage(sprites.get(frame), at, null);
 
-            }else {
-                AffineTransform at = new AffineTransform();
-                at.scale(d.scale, d.scale);
-                g2d.drawImage(sprites.get(frame), at, null);
+                } else {
+                    AffineTransform at = new AffineTransform();
+                    at.scale(d.scale, d.scale);
+                    g2d.drawImage(sprites.get(frame), at, null);
+                }
             }
 
 //            g2d.drawImage(sprites.get(frame), 0, 0, null);

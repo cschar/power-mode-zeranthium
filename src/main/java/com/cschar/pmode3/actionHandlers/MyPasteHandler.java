@@ -141,18 +141,17 @@ public class MyPasteHandler extends EditorActionHandler implements EditorTextIns
 
 
                 int winningIndex = SpriteDataAnimated.getWeightedAmountWinningIndex(ParticleSpritePasteShape.spriteDataAnimated);
-
-                if(winningIndex != -1){
-                    
-                    ParticleSpritePasteShape pFontShape = new ParticleSpritePasteShape(pasteShape,100,
+                if(winningIndex == -1 && !CopyPasteVoidConfig.FADE_ENABLED(settings)){
+                    //do nothing
+                }else {
+                    ParticleSpritePasteShape pFontShape = new ParticleSpritePasteShape(pasteShape, 100,
                             CopyPasteVoidConfig.FADE_COLOR(settings),
                             CopyPasteVoidConfig.FADE_AMOUNT(settings),
                             CopyPasteVoidConfig.FADE_ENABLED(settings),
                             winningIndex);
-
                     ParticleContainerManager.particleContainers.get(editor).particles.add(pFontShape);
                 }
-
+                
 
                 MyCaretListener.enabled = true;
             }
