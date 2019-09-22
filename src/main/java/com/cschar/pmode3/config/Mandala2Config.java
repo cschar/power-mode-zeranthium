@@ -26,13 +26,16 @@ public class Mandala2Config extends JPanel{
     JPanel firstRow;
     JComponent mandalaRingConfigPanel;
 
+    private JCheckBox moveWithCaret;
+    private JTextField moveSpeedTextField;
+
     PowerMode3 settings;
 
     public Mandala2Config(PowerMode3 settings){
         this.settings = settings;
 
         this.setMaximumSize(new Dimension(1000,300));
-        this.setLayout(new GridLayout(1,0)); //as many rows as necessary
+        this.setLayout(new GridLayout(1,1)); //as many rows as necessary
 
         firstRow = new JPanel();
         firstRow.setMaximumSize(new Dimension(1000,500));
@@ -43,12 +46,23 @@ public class Mandala2Config extends JPanel{
         headerPanel.add(headerLabel);
         headerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         headerPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        headerPanel.setMaximumSize(new Dimension(300,100));
+        headerPanel.setMaximumSize(new Dimension(500,100));
 
         this.add(firstRow);
 
         mandalaRingConfigPanel = createConfigTable();
         firstRow.add(headerPanel);
+        JPanel caretMovementPanel = new JPanel();
+        caretMovementPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        caretMovementPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        caretMovementPanel.setMaximumSize(new Dimension(500,100));
+        this.moveWithCaret = new JCheckBox("move with Caret?");
+        caretMovementPanel.add(moveWithCaret);
+        this.moveSpeedTextField = new JTextField();
+//        caretMovementPanel.add(Config.populateTextFieldPanel(this.moveSpeedTextField, "movespeed (1 - 10)"));
+        firstRow.add(caretMovementPanel);
+
+
         firstRow.add(mandalaRingConfigPanel);
 
 
@@ -129,11 +143,19 @@ public class Mandala2Config extends JPanel{
 
     public void loadValues(){
 
-        //sparkData is loaded on settings instantiation
+        this.moveWithCaret.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.MANDALA,"moveWithCaretEnabled", false));
+        this.moveSpeedTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.MANDALA,"movespeed", 10)));
+
     }
 
     public void saveValues(boolean isSettingEnabled) throws ConfigurationException {
         ParticleSpriteMandala.settingEnabled = isSettingEnabled; //to kill any lingering ones
+
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.MANDALA, "moveWithCaretEnabled", String.valueOf(moveWithCaret.isSelected()));
+
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.MANDALA, "fadeAmount",
+                String.valueOf(Config.getJTextFieldWithinBoundsInt(this.moveSpeedTextField,
+                        1, 10,"movespeed")));
 
         settings.setSerializedSpriteDataAnimated(Mandala2Config.mandalaData, PowerMode3.ConfigType.MANDALA);
     }
@@ -145,6 +167,16 @@ public class Mandala2Config extends JPanel{
         mandalaData = data;
         ParticleSpriteMandala.mandalaRingData = data;
     }
+
+    public static boolean MOVE_WITH_CARET(PowerMode3 settings){
+        return Config.getBoolProperty(settings, PowerMode3.ConfigType.MANDALA, "moveWithCaretEnabled",true);
+    }
+
+    public static boolean CARET_MOVE_SPEED(PowerMode3 settings){
+        return Config.getBoolProperty(settings, PowerMode3.ConfigType.MANDALA, "movespeed",true);
+    }
+
+
 }
 
 

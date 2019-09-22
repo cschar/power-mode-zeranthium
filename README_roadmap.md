@@ -2,11 +2,8 @@
 
 TODO: everything
 
-- TEST winner function
-   - use only 1 function
-
 - Update on cursor move instead of type
-   - some config (mandala/droste) have options to 'snap to new position' or move there with a 'speed' setting
+   - some config (mandala) have options to 'snap to new position' or move there with a 'speed' setting
      or not be affected by caret movement without typing
 
 - Lazy Loading popup for sprites

@@ -151,9 +151,11 @@ public class MyPasteHandler extends EditorActionHandler implements EditorTextIns
                             winningIndex);
                     ParticleContainerManager.particleContainers.get(editor).particles.add(pFontShape);
                 }
-                
+
 
                 MyCaretListener.enabled = true;
+                curCaret.moveToOffset(start+offset);
+
             }
         };
 
