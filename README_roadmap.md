@@ -9,12 +9,10 @@ https://stackoverflow.com/questions/29550006/how-to-have-jackson-use-a-method-to
 
 
 
-- Lazy Loading popup for sprites
-   - dont load on program startup
-   = load at first type and show message  
-   - Use a progressindicator
-   http://www.jetbrains.org/intellij/sdk/docs/basics/architectural_overview/general_threading_rules.html#background-processes-and-processcanceledexception
 
+  
+
+-- SANE FILE limits of animations e.g. max 1000 frames
 
 -  download assets button in settings (RED !)
    -  opens dialog pointing to isntructions to clone
@@ -62,7 +60,7 @@ Done;
 - Play 2x Song w/ 2 Hotkeys to trigger each one
 - Void/DrosteEffect
 - copypasteVoid effect
-  
+- Background Loading of Assets
 
 future TODO:
 - benchmark Powermode3.getInstance(); -- just use it everywhere if good

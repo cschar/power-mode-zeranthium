@@ -17,22 +17,31 @@ import com.cschar.pmode3.actionHandlers.MyCaretListener;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
+import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.event.CaretEvent;
 import com.intellij.openapi.editor.event.CaretListener;
 import com.intellij.openapi.editor.event.EditorFactoryAdapter;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressIndicatorProvider;
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.Task;
+import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;
+import com.intellij.openapi.progress.impl.ProgressManagerImpl;
+import com.intellij.openapi.progress.util.BackgroundTaskUtil;
+import com.intellij.openapi.vcs.changes.BackgroundFromStartOption;
 import com.intellij.psi.*;
 
 import com.intellij.psi.util.PsiUtil;
+import com.intellij.util.concurrency.AppExecutorUtil;
+import com.intellij.util.concurrency.NonUrgentExecutor;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Baptiste Mesta
@@ -76,16 +85,30 @@ public class ParticleContainerManager extends EditorFactoryAdapter {
     public void editorCreated(@NotNull EditorFactoryEvent event) {
         final Editor editor = event.getEditor();
 
-        PowerMode3 s = PowerMode3.getInstance();
-        if(!s.isConfigLoaded) {
-            Notifications.Bus.notify(new Notification(
-                    "POWERMODE3",
-                    "PowerMode Zeranthium: Initializing",
-                    "Assets are being loaded",
-                    NotificationType.INFORMATION
-            ), editor.getProject());
-            s.loadConfigData();
-        }
+//        PowerMode3 s = PowerMode3.getInstance();
+//
+//        Task.Backgroundable bgTask = new Task.Backgroundable(editor.getProject(), "Fun Task", false) {
+//            @Override
+//            public void run(@NotNull ProgressIndicator progressIndicator) {
+//
+//                progressIndicator.setIndeterminate(false);
+//
+//                for(int i = 1; i <100; i++) {
+//                    try {
+//                        Thread.sleep(200);
+//                    } catch (InterruptedException e) {
+//                    }
+//                    progressIndicator.setFraction(i*0.01);  // halfway done
+//                    progressIndicator.setText("This " + i);
+//                }
+//            }
+//        };
+
+//        if(!s.isConfigLoaded) {
+//            s.isConfigLoaded = true;
+//            ProgressManager.getInstance().run(bgTask);
+//        }
+
 
         particleContainers.put(editor, new ParticleContainer(editor));
 

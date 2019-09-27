@@ -28,14 +28,21 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.components.BaseComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.*;
+import com.intellij.openapi.progress.*;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.project.VetoableProjectManagerListener;
+import com.intellij.openapi.wm.WindowManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.JBColor;
+import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,6 +51,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 
@@ -92,8 +100,7 @@ public class PowerMode3 implements BaseComponent,
     private int maxPsiSearchDistance = 400;  //amount of total characters searched around caret for anchors
 
 
-    @com.intellij.util.xmlb.annotations.Transient
-    public boolean isConfigLoaded = false;
+
 
 
 
@@ -191,7 +198,9 @@ public class PowerMode3 implements BaseComponent,
 
         put("sprite"+ ConfigType.VINE + "Enabled", "false");
         put("sprite"+ ConfigType.MANDALA + "Enabled", "false");
-        put("sprite"+ ConfigType.LINKER + "Enabled", "true");
+        put("sprite"+ ConfigType.LINKER + "Enabled", "false");
+        put("sprite"+ ConfigType.DROSTE + "Enabled", "false");
+        put("sprite"+ ConfigType.COPYPASTEVOID + "Enabled", "true");
     }};
 
 
@@ -263,29 +272,6 @@ public class PowerMode3 implements BaseComponent,
 
 
 
-
-                //java.lang.ClassCastException: class com.intellij.ide.actions.PasteAction cannot be cast to class com.intellij.openapi.editor.actionSystem.EditorAction (com.intellij.ide.actions.PasteAction and com.intellij.openapi.editor.actionSystem.EditorAction are in unnamed module of
-                //actionManager.setActionHandler(IdeActions.ACTION_PASTE, h1);
-
-//        EditorActionHandler h = new EditorActionHandler() {
-//            @Override
-//            public boolean isEnabled(Editor editor, DataContext dataContext) {
-//                return super.isEnabled(editor, dataContext);
-//            }
-//        };
-//        PasteHandler ph = new MyPasteActionHandler(h);
-//        actionManager.setActionHandler(IdeActions.ACTION_PASTE, ph);
-
-
-//        EditorFactory.getInstance().getEventMulticaster().addCaretListener();
-//        EditorFactory.getInstance().getEventMulticaster().addEditorMouseMotionListener();
-//        EditorFactory.getInstance().getEventMulticaster().addSelectionListener();
-
-
-                //https://upsource.jetbrains.com/idea-ce/file/idea-ce-fb93870b390e3a0e4b2b3c15363651714a4f963b/platform/platform-api/src/com/intellij/openapi/editor/actionSystem/EditorActionManager.java
-//        EditorActionHandler commentblockhandler = actionManager.getActionHandler(IdeActions.ACTION_COMMENT_BLOCK);
-
-
         this.particleColor = new JBColor(new Color(this.getParticleRGB()), new Color(this.getParticleRGB()));
 
         final EditorActionManager editorActionManager = EditorActionManager.getInstance();
@@ -305,20 +291,6 @@ public class PowerMode3 implements BaseComponent,
 
 
                 PsiFile psiFile = dataContext.getData(CommonDataKeys.PSI_FILE);
-
-                //https://intellij-support.jetbrains.com/hc/en-us/community/posts/206150409-How-do-I-get-to-PSI-from-a-document-or-editor-
-                //ALternative way to get Psifile directly from editor
-//                final EditorEx editor = (EditorEx) CommonDataKeys.EDITOR.getData(e.getDataContext());
-//                if (editor != null) {
-//                    final Project project = editor.getProject();
-//                    if (project != null) {
-//                        final PsiFile psiFile = PsiManager.getInstance(project).findFile(editor.getVirtualFile());
-//                        if (psiFile != null) {
-//                            final CaretModel caretModel = editor.getCaretModel();
-//                            PsiElement element = psiFile.findElementAt(caretModel.getOffset());
-//                        }
-//                    }
-//                }
 
                 updateEditor(editor, psiFile);
                 rawHandler.execute(editor, c, dataContext);
@@ -362,14 +334,100 @@ public class PowerMode3 implements BaseComponent,
 
     @Override
     public void loadState(@NotNull PowerMode3 state) {
-        LOGGER.info("prevous state found -- setting up...");
+        LOGGER.info("previous state found -- setting up...");
 
         XmlSerializerUtil.copyBean(state, this);
-
-//        loadConfigData();
+        loadConfigData();
     }
 
+    @com.intellij.util.xmlb.annotations.Transient
+    public boolean isConfigLoaded = false;
+
+    // for use with experimental editor onCreated in particleManager
+//    @com.intellij.util.xmlb.annotations.Transient
+//    public boolean isLoading = false;
+
     public void loadConfigData(){
+        boolean DO_BACKGROUND_LOAD = true;
+
+        if(DO_BACKGROUND_LOAD) {
+            Task.Backgroundable bgTask = new Task.Backgroundable(null, "Zeranthium Setup...",
+                    false, null) {
+//            Task.Modal bgTask = new Task.Modal(null, "Zeranthium Setup...",
+//                    false) {
+                @Override
+                public void run(@NotNull ProgressIndicator progressIndicator) {
+                    loadConfigDataAsync(progressIndicator);
+                }
+//            @Override
+//            public boolean shouldStartInBackground() {
+//                return true;
+//            }
+            };
+            ProgressManager.getInstance().run(bgTask);
+        }else {
+//        set isConfigLoaded = true if this is enabled
+            isConfigLoaded = true;
+            loadConfigDataAtSplash();
+        }
+    }
+
+
+
+    private void loadConfigDataAsync(ProgressIndicator progressIndicator){
+        progressIndicator.setIndeterminate(false);
+        progressIndicator.setText("loading assets.. ");
+
+        boolean wasEnabled = this.enabled;
+        this.enabled = false;
+
+        if(!this.isConfigLoaded) {
+        LOGGER.info("Loading assets");
+//            for(ConfigType)
+
+
+            setUpdateProgress(progressIndicator, "lightning", 0.1);
+            LightningAltConfig.setSparkData(this.deserializeSpriteData(sparkDataStringArrays));
+            setUpdateProgress(progressIndicator, "mandala", 0.2);
+            Mandala2Config.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(mandalaDataStringArrays, 120));
+            setUpdateProgress(progressIndicator, "lizard", 0.3);
+            LizardConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(lizardDataStringArrays, 60));
+            setUpdateProgress(progressIndicator, "linker", 0.4);
+            LinkerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(linkerDataStringArrays, 60));
+            setUpdateProgress(progressIndicator, "Droste", 0.5);
+            DrosteConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(drosteDataStringArrays, 120));
+            setUpdateProgress(progressIndicator, "Copypaste", 0.6);
+            CopyPasteVoidConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(copyPasteVoidDataStringArrays, 60));
+
+            setUpdateProgress(progressIndicator, "Sounds", 0.8);
+            SoundConfig.setSoundData(this.deserializeSoundData(soundDataStringArrays));
+            MusicTriggerConfig.setSoundData(this.deserializeSoundData(musicTriggerSoundDataStringArrays));
+
+
+            this.enabled = wasEnabled;
+            this.isConfigLoaded = true;
+
+            MenuConfigurableUI ui = MenuConfigurableUI.getInstance();
+            if(ui != null) {
+                ui.updateConfigUIAfterAssetsAreLoaded(wasEnabled);
+            }
+        }
+    }
+
+    private void setUpdateProgress(ProgressIndicator progressIndicator, String info, double amt){
+
+        String s = "Loading - " + info + " " + amt;
+
+//        progressIndicator.setText(s);
+        progressIndicator.setText2(s);
+        progressIndicator.setFraction(amt);
+        MenuConfigurableUI.loadingLabel.setText(s);
+//        try {              Thread.sleep(3000);          } catch (InterruptedException e) {          }
+
+    }
+
+
+    private void loadConfigDataAtSplash(){
         if(!this.isConfigLoaded) {
             LightningAltConfig.setSparkData(this.deserializeSpriteData(sparkDataStringArrays));
             Mandala2Config.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(mandalaDataStringArrays, 120));
@@ -470,7 +528,7 @@ public class PowerMode3 implements BaseComponent,
         this.setParticleRGB(JBColor.darkGray.getRGB());
 
 
-//        loadConfigData();
+        loadConfigData();
     }
 
     public boolean isEnabled() {

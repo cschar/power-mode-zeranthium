@@ -3,6 +3,7 @@ package com.cschar.pmode3;
 import com.cschar.pmode3.config.*;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.Shortcut;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.options.ConfigurableUi;
 import com.intellij.openapi.options.ConfigurationException;
@@ -16,6 +17,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private JPanel mainPanel;
@@ -44,6 +46,8 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private JCheckBox enableLinkerCheckbox;
     private JCheckBox enableDrosteCheckbox;
     private JCheckBox enableCopyPasteVoid;
+    private JPanel mainBottomPanel;
+    private JPanel mainTopPanel;
 
 
     private BasicParticleConfig basicParticleConfig;
@@ -58,16 +62,34 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private CopyPasteVoidConfig copyPasteVoidConfig;
 
     PowerMode3 settings;
+
+    public static JLabel loadingLabel = new JLabel("Loading Config");
+
+    // static variable single_instance of type Singleton
+    private static MenuConfigurableUI single_instance = null;
+
+    // variable of type String
+    public String s;
+
+
+    // static method to create instance of Singleton class
+    public static MenuConfigurableUI getInstance()
+    {
+        return single_instance;
+    }
+
+    public MenuConfigurableUI() {};
+
     //Constructor is called _AFTER_ createUIComponents when using IntelliJ GUI designer
     public MenuConfigurableUI(PowerMode3 powerMode3) {
 //        particleSettingsPanel.setBackground(theCustomCreatePanel.getBackground());
+        MenuConfigurableUI.single_instance = this;
 
         settings = powerMode3;
         isEnabledCheckBox.setSelected(powerMode3.isEnabled());
+        System.out.println("Making menu: is enabled: " + powerMode3.isEnabled());
 
-        String labelText = getHotkeyLabelText();
-//        toggleHotkeyLabel.setText(toggleHotkeyLabel.getText() + sb.toString());
-        toggleHotkeyLabel.setText(labelText);
+        setupHotkeyText();
 
 
 
@@ -112,7 +134,27 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
             enableCopyPasteVoid.setSelected(true);
         }
 
+        if(!settings.isConfigLoaded){
+            isEnabledCheckBox.setEnabled(false);
+            mainTopPanel.setEnabled(false);
+            for(Component j : mainTopPanel.getComponents()){
+                j.setEnabled(false);
+            }
 
+
+            mainBottomPanel.setEnabled(false);
+            for(Component j : mainBottomPanel.getComponents()){
+                j.setEnabled(false);
+            }
+            return;
+        }
+
+        loadConfigValues();
+
+
+    }
+
+    private void loadConfigValues(){
 
 
         //already initialized from createUIComponents below
@@ -132,10 +174,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         //sound panel
         this.soundConfig.loadValues();
         this.musicTriggerConfig.loadValues();
-
-
     }
-
 
 
     @Override
@@ -178,6 +217,10 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         settings.setSpriteTypeEnabled(enableCopyPasteVoid.isSelected(), PowerMode3.ConfigType.COPYPASTEVOID);
 
 
+        if(!settings.isConfigLoaded){
+            return;
+        }
+
         //save values
         int maxPsiSearch = Integer.parseInt(maxPsiSearchDistanceTextField.getText());
         this.basicParticleConfig.saveValues();
@@ -206,48 +249,72 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
 
-        scrollPane.getVerticalScrollBar().getValue();
-        scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
-            @Override
-            public void adjustmentValueChanged(AdjustmentEvent e) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        settings.setScrollBarPosition(e.getValue());
-                        settings.setLastTabIndex(settingsTabbedPane.getSelectedIndex());
+        if(settings.isConfigLoaded) {
+            scrollPane.getVerticalScrollBar().getValue();
+            scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+                @Override
+                public void adjustmentValueChanged(AdjustmentEvent e) {
+                    ApplicationManager.getApplication().invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            settings.setScrollBarPosition(e.getValue());
+                            settings.setLastTabIndex(settingsTabbedPane.getSelectedIndex());
 
-                    }
-                });
-            }
-        });
+                        }
+                    });
+                }
+            });
 
-        //https://stackoverflow.com/a/46204157/403403
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                scrollPane.getVerticalScrollBar().setValue(settings.getScrollBarPosition());
-                settingsTabbedPane.setSelectedIndex(settings.getLastTabIndex());
-            }
-        });
+
+            //TODO switch up
+            //http://www.jetbrains.org/intellij/sdk/docs/basics/architectural_overview/general_threading_rules.html?search=BackgroundTaskUtil#invokelater
+            //ApplicationManager.getApplication().invokeLater()
+            //https://stackoverflow.com/a/46204157/403403
+            ApplicationManager.getApplication().invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    scrollPane.getVerticalScrollBar().setValue(settings.getScrollBarPosition());
+                    settingsTabbedPane.setSelectedIndex(settings.getLastTabIndex());
+                }
+            });
+        }
 
 
         return scrollPane;
     }
 
-    //https://www.jetbrains.com/help/idea/creating-form-initialization-code.html
-    private void createUIComponents() {
-        PowerMode3 settings = PowerMode3.getInstance();
 
+    public void updateConfigUIAfterAssetsAreLoaded(boolean wasEnabled){
+        //TODO weird extra setting needed here when enabled manually switched to "false"
+        // (since we dont want to have plugin enabled before assets are loaded)
+        // but ConfiguraleUI has already been loaded with 'false' setting
+        // ***other settings are loaded from config dict which isn't modified so not needed
 
+        isEnabledCheckBox.setEnabled(true);
+        isEnabledCheckBox.setSelected(wasEnabled);
+        settings.setEnabled(isEnabledCheckBox.isSelected());
 
+        mainTopPanel.setEnabled(true);
+        for(Component j : mainTopPanel.getComponents()){
+            j.setEnabled(true);
+        }
 
-        theCustomCreatePanel = new JPanel();
-        theCustomCreatePanel.setOpaque(false);
-        theCustomCreatePanel.setLayout(new BoxLayout(theCustomCreatePanel, BoxLayout.PAGE_AXIS));
+        mainBottomPanel.setEnabled(true);
+        for(Component j : mainBottomPanel.getComponents()){
+            j.setEnabled(true);
+        }
 
+        this.createConfig();
+        this.loadConfigValues();
+    }
 
+    private void createConfig(){
         //TODO , put as side tabs, but tab main options nad sound options, leave particles visible at all times below
 //        JBTabbedPane tabbedPane = new JBTabbedPane(JTabbedPane.LEFT);
+        if (loadingLabel.getParent() == this.theCustomCreatePanel) {
+            this.theCustomCreatePanel.remove(loadingLabel);
+        }
+
         settingsTabbedPane = new JBTabbedPane();
         settingsTabbedPane.setOpaque(false);
 
@@ -335,7 +402,25 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         particleSettingsPanel.add(footerPanel);
 
 
+    }
 
+    //Constructor is called _AFTER_ createUIComponents when using IntelliJ GUI designer
+    //https://www.jetbrains.com/help/idea/creating-form-initialization-code.html
+    private void createUIComponents() {
+        PowerMode3 settings = PowerMode3.getInstance();
+
+        theCustomCreatePanel = new JPanel();
+        theCustomCreatePanel.setOpaque(false);
+        theCustomCreatePanel.setLayout(new BoxLayout(theCustomCreatePanel, BoxLayout.PAGE_AXIS));
+
+
+        if(!settings.isConfigLoaded){
+            loadingLabel.setFont(new Font ("Arial", Font.BOLD, 30));
+            theCustomCreatePanel.add(loadingLabel);
+            return;
+        }else{
+            createConfig();
+        }
     }
 
 
@@ -363,7 +448,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         return newValue;
     }
 
-    private String getHotkeyLabelText(){
+    private void setupHotkeyText(){
         KeymapManager km = KeymapManager.getInstance();
         //defined in the META-INF/plugin.xml <action id=""> param
         Shortcut[] zShortcuts = km.getActiveKeymap().getShortcuts("com.cschar.pmode3.PowerModeZeranthiumToggleEnabled");
@@ -382,7 +467,8 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 //            }
         }
         String labelText = String.format("<html>%s - %s</html>", toggleHotkeyLabel.getText(), sb.toString());
-        return labelText;
+
+        toggleHotkeyLabel.setText(labelText);
     }
 
 }
