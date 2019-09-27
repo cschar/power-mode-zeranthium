@@ -14,6 +14,9 @@
 package com.cschar.pmode3;
 
 import com.cschar.pmode3.actionHandlers.MyCaretListener;
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationType;
+import com.intellij.notification.Notifications;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.event.CaretEvent;
 import com.intellij.openapi.editor.event.CaretListener;
@@ -72,6 +75,17 @@ public class ParticleContainerManager extends EditorFactoryAdapter {
     @Override
     public void editorCreated(@NotNull EditorFactoryEvent event) {
         final Editor editor = event.getEditor();
+
+        PowerMode3 s = PowerMode3.getInstance();
+        if(!s.isConfigLoaded) {
+            Notifications.Bus.notify(new Notification(
+                    "POWERMODE3",
+                    "PowerMode Zeranthium: Initializing",
+                    "Assets are being loaded",
+                    NotificationType.INFORMATION
+            ), editor.getProject());
+            s.loadConfigData();
+        }
 
         particleContainers.put(editor, new ParticleContainer(editor));
 

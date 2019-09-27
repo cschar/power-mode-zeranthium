@@ -40,15 +40,6 @@ public class ParticleSpriteLightningAlt extends Particle{
         for(int i=1; i <= 150; i++){
             sprites.add(ParticleUtils.loadSprite(String.format("/blender/lightningAlt/main/lightning10%03d.png", i)));
         }
-
-//            Notifications.Bus.notify(new Notification(
-//                    GROUP_DISPLAY_ID,
-//                    TITLE,
-//                    CONTENT,
-//                    NotificationType.INFORMATION
-//            ), project);
-
-
     }
 
     //TODO make arraylist

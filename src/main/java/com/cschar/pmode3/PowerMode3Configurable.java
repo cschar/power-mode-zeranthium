@@ -1,8 +1,6 @@
 package com.cschar.pmode3;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.options.ConfigurableBase;
-import com.intellij.openapi.util.Disposer;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -38,6 +36,10 @@ public class PowerMode3Configurable extends ConfigurableBase<MenuConfigurableUI,
     @Override
     protected MenuConfigurableUI createUi()
     {
+        if(!settings.isConfigLoaded){
+            System.out.println("Loading from UI");
+            settings.loadConfigData();
+        }
         return new MenuConfigurableUI(settings);
     }
 

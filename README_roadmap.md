@@ -12,6 +12,9 @@ https://stackoverflow.com/questions/29550006/how-to-have-jackson-use-a-method-to
 - Lazy Loading popup for sprites
    - dont load on program startup
    = load at first type and show message  
+   - Use a progressindicator
+   http://www.jetbrains.org/intellij/sdk/docs/basics/architectural_overview/general_threading_rules.html#background-processes-and-processcanceledexception
+
 
 -  download assets button in settings (RED !)
    -  opens dialog pointing to isntructions to clone

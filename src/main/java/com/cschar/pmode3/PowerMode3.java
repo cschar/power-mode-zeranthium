@@ -23,7 +23,6 @@ import com.cschar.pmode3.config.*;
 import com.cschar.pmode3.config.common.SoundData;
 import com.cschar.pmode3.config.common.SpriteData;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
-import com.intellij.codeInsight.editorActions.PasteHandler;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
@@ -35,16 +34,13 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.*;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.JBColor;
-import com.intellij.util.Producer;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
-import java.awt.datatransfer.Transferable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -96,7 +92,8 @@ public class PowerMode3 implements BaseComponent,
     private int maxPsiSearchDistance = 400;  //amount of total characters searched around caret for anchors
 
 
-
+    @com.intellij.util.xmlb.annotations.Transient
+    public boolean isConfigLoaded = false;
 
 
 
@@ -369,19 +366,22 @@ public class PowerMode3 implements BaseComponent,
 
         XmlSerializerUtil.copyBean(state, this);
 
-        loadConfigData();
+//        loadConfigData();
     }
 
-    private void loadConfigData(){
-        LightningAltConfig.setSparkData(this.deserializeSpriteData(sparkDataStringArrays));
-        Mandala2Config.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(mandalaDataStringArrays, 120));
-        LizardConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(lizardDataStringArrays, 60));
-        LinkerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(linkerDataStringArrays, 60));
-        DrosteConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(drosteDataStringArrays, 120));
-        CopyPasteVoidConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(copyPasteVoidDataStringArrays, 60));
+    public void loadConfigData(){
+        if(!this.isConfigLoaded) {
+            LightningAltConfig.setSparkData(this.deserializeSpriteData(sparkDataStringArrays));
+            Mandala2Config.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(mandalaDataStringArrays, 120));
+            LizardConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(lizardDataStringArrays, 60));
+            LinkerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(linkerDataStringArrays, 60));
+            DrosteConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(drosteDataStringArrays, 120));
+            CopyPasteVoidConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(copyPasteVoidDataStringArrays, 60));
 
-        SoundConfig.setSoundData(this.deserializeSoundData(soundDataStringArrays));
-        MusicTriggerConfig.setSoundData(this.deserializeSoundData(musicTriggerSoundDataStringArrays));
+            SoundConfig.setSoundData(this.deserializeSoundData(soundDataStringArrays));
+            MusicTriggerConfig.setSoundData(this.deserializeSoundData(musicTriggerSoundDataStringArrays));
+        }
+        this.isConfigLoaded = true;
     }
 
 
@@ -470,7 +470,7 @@ public class PowerMode3 implements BaseComponent,
         this.setParticleRGB(JBColor.darkGray.getRGB());
 
 
-        loadConfigData();
+//        loadConfigData();
     }
 
     public boolean isEnabled() {
