@@ -87,7 +87,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
         settings = powerMode3;
         isEnabledCheckBox.setSelected(powerMode3.isEnabled());
-        System.out.println("Making menu: is enabled: " + powerMode3.isEnabled());
+
 
         setupHotkeyText();
 

@@ -24,7 +24,7 @@ public class CustomPathCellHighlighterRenderer extends JLabel implements TableCe
 //            c = Color.WHITE;
             c = Color.lightGray;
             setText(row + " -- " + val);
-        }else if(this.data.get(row).customPath != ""){
+        }else if(!this.data.get(row).customPath.equals("")){
             c = Color.RED;
             setText(row + " -- " +  "!!Error loading path!!: " + val);
         }else{

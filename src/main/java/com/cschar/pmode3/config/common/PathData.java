@@ -3,6 +3,7 @@ package com.cschar.pmode3.config.common;
 import com.cschar.pmode3.ParticleSpriteLightning;
 import com.cschar.pmode3.ParticleUtils;
 import gherkin.lexer.Pa;
+import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -67,5 +68,8 @@ public abstract class PathData {
         return winnerIndex;
 
     }
+
+
+    public abstract JSONObject toJSONObject();
 
 }

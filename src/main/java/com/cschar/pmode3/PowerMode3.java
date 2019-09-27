@@ -42,12 +42,15 @@ import com.intellij.openapi.project.VetoableProjectManagerListener;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.JBColor;
+import com.intellij.util.SmartList;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.json.JSONObject;
 
 import java.awt.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -182,6 +185,147 @@ public class PowerMode3 implements BaseComponent,
         add(new String[]{"true","1.0f","2","/blender/mandala2/","","true","4", "1.0f", "1"});
         add(new String[]{"true","1.0f","2","/blender/mandala3/","","true","5", "1.0f", "1"});
         add(new String[]{"true","1.2f","4","/blender/mandala9/","","false","4", "1.0f", "1"});
+    }};
+
+//    @com.intellij.util.xmlb.annotations.XCollection
+
+    @com.intellij.util.xmlb.annotations.MapAnnotation
+    private Map<ConfigType,SmartList<String>> pathDataMap = new HashMap<ConfigType,SmartList<String>>(){{
+        put(ConfigType.MANDALA, new SmartList<String>(){{
+//            SpriteDataAnimated(int previewSize, boolean enabled, float scale, int speedRate, String defaultPath, String customPath,
+//            boolean isCyclic, int val2, float alpha, int val1) {
+//            SpriteDataAnimated sd = ;
+//            add((new SpriteDataAnimated(120,true, 1.0f, 3, "/blender/mandala1/",
+//                    "",false,5,1.0f,1)).toJSONObject().toString() );
+//            add((new SpriteDataAnimated(120,true, 1.0f, 2, "/blender/mandala2/",
+//                    "",true,5,1.0f,1)).toJSONObject().toString() );
+//            add((new SpriteDataAnimated(120,true, 1.0f, 2, "/blender/mandala3/",
+//                    "",true,5,1.0f,1)).toJSONObject().toString() );
+//            add((new SpriteDataAnimated(120,true, 1.0f, 4, "/blender/mandala9/",
+//                    "",false,5,1.0f,1)).toJSONObject().toString() );
+
+            add("{\"previewSize\":120,\"customPath\":\"\",\"defaultPath\":\"/blender/mandala1/\",\"val2\":5,\"isCyclic\":false,\"alpha\":1,\"val1\":1,\"scale\":1,\"enabled\":true,\"speedRate\":3}");
+            add("{\"previewSize\":120,\"customPath\":\"\",\"defaultPath\":\"/blender/mandala2/\",\"val2\":5,\"isCyclic\":true,\"alpha\":1,\"val1\":1,\"scale\":1,\"enabled\":true,\"speedRate\":2}");
+            add("{\"previewSize\":120,\"customPath\":\"\",\"defaultPath\":\"/blender/mandala3/\",\"val2\":5,\"isCyclic\":true,\"alpha\":1,\"val1\":1,\"scale\":1,\"enabled\":true,\"speedRate\":2}");
+            add("{\"previewSize\":120,\"customPath\":\"\",\"defaultPath\":\"/blender/mandala9/\",\"val2\":5,\"isCyclic\":false,\"alpha\":1,\"val1\":1,\"scale\":1,\"enabled\":true,\"speedRate\":4}");
+
+
+//            add(String.join(",",new String[]{"true","1.0f","3","/blender/mandala1/","","false","5", "1.0f", "1"}));
+//            add(String.join(",",new String[]{"true","1.0f","2","/blender/mandala2/","","true","4", "1.0f", "1"}));
+//            add(String.join(",",new String[]{"true","1.0f","2","/blender/mandala3/","","true","5", "1.0f", "1"}));
+//            add(String.join(",",new String[]{"true","1.2f","4","/blender/mandala9/","","false","4", "1.0f", "1"}));
+        }});
+
+        put(ConfigType.LIGHTNING_ALT, new SmartList<String>(){{
+            //public SpriteData(boolean enabled, float scale, int val1, String defaultPath, String customPath) {
+//            add( (new SpriteData(true,1.0f,6,
+//                    "/blender/lightningAlt/spark4/0150.png", "")).toJSONObject().toString());
+//            add( (new SpriteData(true,1.0f,30,
+//                    "/blender/lightningAlt/spark5/0150.png", "")).toJSONObject().toString());
+//            add( (new SpriteData(true,1.0f,80,
+//                    "/blender/lightningAlt/spark6/0150.png", "")).toJSONObject().toString());
+
+            add("{\"customPath\":\"\",\"defaultPath\":\"/blender/lightningAlt/spark4/0150.png\",\"val1\":6,\"scale\":1,\"enabled\":true}");
+            add("{\"customPath\":\"\",\"defaultPath\":\"/blender/lightningAlt/spark5/0150.png\",\"val1\":30,\"scale\":1,\"enabled\":true}");
+            add("{\"customPath\":\"\",\"defaultPath\":\"/blender/lightningAlt/spark6/0150.png\",\"val1\":80,\"scale\":1,\"enabled\":true}");
+
+
+//            add(String.join(",",new String[]{"true","1.0f","6","/blender/lightningAlt/spark4/0150.png",""}));
+//            add(String.join(",",new String[]{"true","1.0f","30","/blender/lightningAlt/spark5/0150.png",""}));
+//            add(String.join(",",new String[]{"true","1.0f","80","/blender/lightningAlt/spark6/0150.png",""}));
+        }});
+
+        put(ConfigType.LIZARD, new SmartList<String>(){{
+            add("{\"previewSize\":60,\"customPath\":\"\",\"defaultPath\":\"/blender/lizard\",\"val2\":1,\"isCyclic\":false,\"alpha\":1,\"val1\":2,\"scale\":0.4000000059604645,\"enabled\":true,\"speedRate\":3}");
+            add("{\"previewSize\":60,\"customPath\":\"\",\"defaultPath\":\"/blender/lizard2\",\"val2\":1,\"isCyclic\":false,\"alpha\":0.6000000238418579,\"val1\":2,\"scale\":0.6000000238418579,\"enabled\":true,\"speedRate\":3}");
+            add("{\"previewSize\":60,\"customPath\":\"\",\"defaultPath\":\"/blender/lizard\",\"val2\":1,\"isCyclic\":false,\"alpha\":1,\"val1\":10,\"scale\":0.20000000298023224,\"enabled\":true,\"speedRate\":3}");
+//            add((new SpriteDataAnimated(60,true, 0.4f, 3, "/blender/lizard",
+//                    "",false,1,1.0f,2)).toJSONObject().toString() );
+//            add((new SpriteDataAnimated(60,true, 0.6f, 3, "/blender/lizard2",
+//                    "",false,1,0.6f,2)).toJSONObject().toString() );
+//            add((new SpriteDataAnimated(60,true, 0.2f, 3, "/blender/lizard",
+//                    "",false,1,1.0f,10)).toJSONObject().toString() );
+
+//            add(String.join(",",new String[]{"true","0.4f","2","/blender/lizard","", "false","1","1.0f","2"}));
+//            add(String.join(",",new String[]{"true","0.6f","2","/blender/lizard2","", "false","1","0.6f","2"}));
+//            add(String.join(",",new String[]{"true","0.2f","2","/blender/lizard","", "false","1","1.0f","10"}));
+        }});
+
+        put(ConfigType.LINKER, new SmartList<String>(){{
+//            add((new SpriteDataAnimated(120,true, 0.3f, 2, "/blender/linkerI/chain1",
+//                    "",false,100,1.0f,1)).toJSONObject().toString() );
+//            add((new SpriteDataAnimated(120,true, 0.3f, 2, "/blender/linkerI/chain5",
+//                    "",false,6,0.6f,2)).toJSONObject().toString() );
+//            add((new SpriteDataAnimated(120,true, 0.2f, 2, "/blender/linkerI/chain4",
+//                    "",false,20,1.0f,10)).toJSONObject().toString() );
+
+            add("{\"previewSize\":60,\"customPath\":\"\",\"defaultPath\":\"/blender/linkerI/chain1\",\"val2\":100,\"isCyclic\":false,\"alpha\":1,\"val1\":1,\"scale\":0.30000001192092896,\"enabled\":true,\"speedRate\":2}");
+            add("{\"previewSize\":60,\"customPath\":\"\",\"defaultPath\":\"/blender/linkerI/chain5\",\"val2\":6,\"isCyclic\":false,\"alpha\":0.6000000238418579,\"val1\":2,\"scale\":0.30000001192092896,\"enabled\":true,\"speedRate\":2}");
+            add("{\"previewSize\":60,\"customPath\":\"\",\"defaultPath\":\"/blender/linkerI/chain4\",\"val2\":20,\"isCyclic\":false,\"alpha\":1,\"val1\":10,\"scale\":0.20000000298023224,\"enabled\":true,\"speedRate\":2}");
+
+//            add(String.join(",", new String[]{"true","0.3f","2","/blender/linkerI/chain1","", "false","100","1.0f","1"}));
+//            add(String.join(",", new String[]{"true","0.3f","2","/blender/linkerI/chain5","", "false","6","0.6f","2"}));
+//            add(String.join(",", new String[]{"true","0.2f","2","/blender/linkerI/chain4","", "false","20","1.0f","10"}));
+        }});
+
+        put(ConfigType.SOUND, new SmartList<String>(){{
+            //public SoundData(boolean enabled, int val1, String defaultPath, String customPath) {
+//            add( (new SoundData(true,20,"/sounds/h1.mp3","")).toJSONObject().toString());
+//            add( (new SoundData(true,20,"/sounds/h2.mp3","")).toJSONObject().toString());
+//            add( (new SoundData(true,20,"/sounds/h3.mp3","")).toJSONObject().toString());
+//            add( (new SoundData(true,20,"/sounds/h4.mp3","")).toJSONObject().toString());
+
+            add("{\"customPath\":\"\",\"defaultPath\":\"/sounds/h1.mp3\",\"val1\":20,\"enabled\":true}");
+            add("{\"customPath\":\"\",\"defaultPath\":\"/sounds/h2.mp3\",\"val1\":20,\"enabled\":true}");
+            add("{\"customPath\":\"\",\"defaultPath\":\"/sounds/h3.mp3\",\"val1\":20,\"enabled\":true}");
+            add("{\"customPath\":\"\",\"defaultPath\":\"/sounds/h4.mp3\",\"val1\":20,\"enabled\":true}");
+
+//            add(String.join(",", new String[]{"true","20","/sounds/h1.mp3",""}));
+//            add(String.join(",", new String[]{"true","20","/sounds/h2.mp3",""}));
+//            add(String.join(",", new String[]{"true","20","/sounds/h3.mp3",""}));
+//            add(String.join(",", new String[]{"true","20","/sounds/h4.mp3",""}));
+        }});
+
+        put(ConfigType.MUSIC_TRIGGER, new SmartList<String>(){{
+//            add( (new SoundData(true,0,"/sounds/music_triggers/trigger1.mp3","")).toJSONObject().toString());
+//            add( (new SoundData(true,1,"/sounds/music_triggers/trigger2.mp3","")).toJSONObject().toString());
+            add("{\"customPath\":\"\",\"defaultPath\":\"/sounds/music_triggers/trigger1.mp3\",\"val1\":0,\"enabled\":true}");
+            add("{\"customPath\":\"\",\"defaultPath\":\"/sounds/music_triggers/trigger2.mp3\",\"val1\":1,\"enabled\":true}");
+
+//            add(String.join(",", new String[]{"true","0","/sounds/music_triggers/trigger1.mp3",""}));
+//            add(String.join(",", new String[]{"true","1","/sounds/music_triggers/trigger2.mp3",""}));
+        }});
+
+        put(ConfigType.DROSTE, new SmartList<String>(){{
+
+            add("{\"previewSize\":120,\"customPath\":\"\",\"defaultPath\":\"/blender/droste1\",\"val2\":20,\"isCyclic\":false,\"alpha\":0.30000001192092896,\"val1\":40,\"scale\":0.4000000059604645,\"enabled\":true,\"speedRate\":2}");
+            add("{\"previewSize\":120,\"customPath\":\"\",\"defaultPath\":\"/blender/droste2\",\"val2\":20,\"isCyclic\":false,\"alpha\":1,\"val1\":80,\"scale\":0.6000000238418579,\"enabled\":false,\"speedRate\":2}");
+//            add((new SpriteDataAnimated(120,true, 0.4f, 2, "/blender/droste1",
+//                    "",false,20,0.3f,40)).toJSONObject().toString() );
+//            add((new SpriteDataAnimated(120,false, 0.6f, 2, "/blender/droste2",
+//                    "",false,20,1.0f,80)).toJSONObject().toString() );
+
+//            add(String.join(",", new String[]{"true","0.4f","2", "/blender/droste1","", "false","20","0.3f","40"}));
+//            add(String.join(",", new String[]{"false","0.6f","2", "/blender/droste2","", "false","20","1.0f","80"}));
+        }});
+
+        put(ConfigType.COPYPASTEVOID, new SmartList<String>(){{
+            add("{\"previewSize\":60,\"customPath\":\"\",\"defaultPath\":\"/blender/droste1\",\"val2\":1,\"isCyclic\":false,\"alpha\":1,\"val1\":2,\"scale\":0.4000000059604645,\"enabled\":true,\"speedRate\":2}");
+            add("{\"previewSize\":60,\"customPath\":\"\",\"defaultPath\":\"/blender/droste2\",\"val2\":1,\"isCyclic\":false,\"alpha\":0.6000000238418579,\"val1\":2,\"scale\":0.6000000238418579,\"enabled\":true,\"speedRate\":2}");
+
+//            add((new SpriteDataAnimated(60,true, 0.4f, 2, "/blender/droste1",
+//                    "",false,1,1.0f,2)).toJSONObject().toString() );
+//            add((new SpriteDataAnimated(60,true, 0.6f, 2, "/blender/droste2",
+//                    "",false,1,0.6f,2)).toJSONObject().toString() );
+
+//            add(String.join(",", new String[]{"true","0.4f","2","/blender/droste2","", "false","1","1.0f","2"}));
+//            add(String.join(",", new String[]{"true","0.6f","2","/blender/droste2","", "false","1","0.6f","2"}));
+        }});
+
+//        put(ConfigType.MUSIC_TRIGGER, new ArrayList<String[]>(){{
+//
+//
+//        }});
     }};
 
     //consider JSON https://stackabuse.com/reading-and-writing-json-in-java/ ??
@@ -349,6 +493,7 @@ public class PowerMode3 implements BaseComponent,
 
     public void loadConfigData(){
         boolean DO_BACKGROUND_LOAD = true;
+//        boolean DO_BACKGROUND_LOAD = false;
 
         if(DO_BACKGROUND_LOAD) {
             Task.Backgroundable bgTask = new Task.Backgroundable(null, "Zeranthium Setup...",
@@ -366,8 +511,6 @@ public class PowerMode3 implements BaseComponent,
             };
             ProgressManager.getInstance().run(bgTask);
         }else {
-//        set isConfigLoaded = true if this is enabled
-            isConfigLoaded = true;
             loadConfigDataAtSplash();
         }
     }
@@ -387,21 +530,25 @@ public class PowerMode3 implements BaseComponent,
 
 
             setUpdateProgress(progressIndicator, "lightning", 0.1);
-            LightningAltConfig.setSparkData(this.deserializeSpriteData(sparkDataStringArrays));
+
+//            pathData = new ArrayList<String>(s);
+
+            LightningAltConfig.setSparkData(this.deserializeSpriteData(pathDataMap.get(ConfigType.LIGHTNING_ALT)));
+
             setUpdateProgress(progressIndicator, "mandala", 0.2);
-            Mandala2Config.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(mandalaDataStringArrays, 120));
+            Mandala2Config.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MANDALA)));
             setUpdateProgress(progressIndicator, "lizard", 0.3);
-            LizardConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(lizardDataStringArrays, 60));
+            LizardConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LIZARD)));
             setUpdateProgress(progressIndicator, "linker", 0.4);
-            LinkerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(linkerDataStringArrays, 60));
+            LinkerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LINKER)));
             setUpdateProgress(progressIndicator, "Droste", 0.5);
-            DrosteConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(drosteDataStringArrays, 120));
+            DrosteConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.DROSTE)));
             setUpdateProgress(progressIndicator, "Copypaste", 0.6);
-            CopyPasteVoidConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(copyPasteVoidDataStringArrays, 60));
+            CopyPasteVoidConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.COPYPASTEVOID)));
 
             setUpdateProgress(progressIndicator, "Sounds", 0.8);
-            SoundConfig.setSoundData(this.deserializeSoundData(soundDataStringArrays));
-            MusicTriggerConfig.setSoundData(this.deserializeSoundData(musicTriggerSoundDataStringArrays));
+            SoundConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.SOUND)));
+            MusicTriggerConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.MUSIC_TRIGGER)));
 
 
             this.enabled = wasEnabled;
@@ -429,98 +576,102 @@ public class PowerMode3 implements BaseComponent,
 
     private void loadConfigDataAtSplash(){
         if(!this.isConfigLoaded) {
-            LightningAltConfig.setSparkData(this.deserializeSpriteData(sparkDataStringArrays));
-            Mandala2Config.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(mandalaDataStringArrays, 120));
-            LizardConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(lizardDataStringArrays, 60));
-            LinkerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(linkerDataStringArrays, 60));
-            DrosteConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(drosteDataStringArrays, 120));
-            CopyPasteVoidConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(copyPasteVoidDataStringArrays, 60));
+            LightningAltConfig.setSparkData(this.deserializeSpriteData(pathDataMap.get(ConfigType.LIGHTNING_ALT)));
 
-            SoundConfig.setSoundData(this.deserializeSoundData(soundDataStringArrays));
-            MusicTriggerConfig.setSoundData(this.deserializeSoundData(musicTriggerSoundDataStringArrays));
+            Mandala2Config.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MANDALA)));
+            LizardConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LIZARD)));
+            LinkerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LINKER)));
+            DrosteConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.DROSTE)));
+            CopyPasteVoidConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.COPYPASTEVOID)));
+
+            SoundConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.SOUND)));
+            MusicTriggerConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.MUSIC_TRIGGER)));
         }
         this.isConfigLoaded = true;
+
+//        if(!this.isConfigLoaded) {
+//            LightningAltConfig.setSparkData(this.deserializeSpriteData(sparkDataStringArrays));
+//            Mandala2Config.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(mandalaDataStringArrays, 120));
+//            LizardConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(lizardDataStringArrays, 60));
+//            LinkerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(linkerDataStringArrays, 60));
+//            DrosteConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(drosteDataStringArrays, 120));
+//            CopyPasteVoidConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(copyPasteVoidDataStringArrays, 60));
+//
+//            SoundConfig.setSoundData(this.deserializeSoundData(soundDataStringArrays));
+//            MusicTriggerConfig.setSoundData(this.deserializeSoundData(musicTriggerSoundDataStringArrays));
+//        }
+//        this.isConfigLoaded = true;
     }
 
 
-    public ArrayList<SpriteData> deserializeSpriteData(ArrayList<String[]> target){
-        ArrayList<SpriteData> sd = new ArrayList<SpriteData>();
-        for(String[] s: target){
-            sd.add(new SpriteData(Boolean.parseBoolean(s[0]), Float.parseFloat(s[1]), Integer.parseInt(s[2]),
-                     s[3], s[4]));
+
+    public ArrayList<SoundData> deserializeSoundData(SmartList<String> target){
+        ArrayList<SoundData> sd = new ArrayList<>();
+        for(String s1: target){
+            sd.add( SoundData.fromJsonObjectString(s1));
         }
         return sd;
     }
 
-    public void setSerializedSparkData(ArrayList<SpriteData> sparkData){
-        ArrayList<String[]> serialized = new ArrayList<>();
-        for( SpriteData d: sparkData){
-               serialized.add(new String[]{String.valueOf(d.enabled), String.valueOf(d.scale), String.valueOf(d.val1),
-                       String.valueOf(d.defaultPath), String.valueOf(d.customPath)});
+    public ArrayList<SpriteData> deserializeSpriteData(SmartList<String> target){
+        ArrayList<SpriteData> sd = new ArrayList<SpriteData>();
+        for(String s1: target){
+
+            sd.add( SpriteData.fromJsonObjectString(s1));
+
         }
-        this.sparkDataStringArrays = serialized;
+        return sd;
     }
 
-    public ArrayList<SpriteDataAnimated> deserializeSpriteDataAnimated(ArrayList<String[]> target, int previewSize){
+    public ArrayList<SpriteDataAnimated> deserializeSpriteDataAnimated(SmartList<String> target){
         LOGGER.info("deserializing sprite data animated");
         ArrayList<SpriteDataAnimated> sd = new ArrayList<SpriteDataAnimated>();
-        for(String[] s: target){
-            //TODO : jsut serialize the previewSize lol
-            sd.add(new SpriteDataAnimated(previewSize, Boolean.parseBoolean(s[0]),
-                                          Float.parseFloat(s[1]),
-                                          Integer.parseInt(s[2]),
-                                          s[3], s[4],
-                                          Boolean.parseBoolean(s[5]),
-                                          Integer.parseInt(s[6]),
-                                          Float.parseFloat(s[7]),
-                                          Integer.parseInt(s[8])));
+        for(String s1: target){
+            sd.add( SpriteDataAnimated.fromJsonObjectString(s1));
         }
         return sd;
     }
 
-    public void setSerializedSpriteDataAnimated(ArrayList<SpriteDataAnimated> spriteData, ConfigType type){
+
+
+    public void setSerializedSpriteData(ArrayList<SpriteData> spriteData, ConfigType configType){
+        SmartList<String> serialized = new SmartList<>();
+        for( SpriteData d: spriteData){
+            serialized.add(d.toJSONObject().toString());
+//            serialized.add(new String[]{String.valueOf(d.enabled), String.valueOf(d.scale), String.valueOf(d.val1),
+//                    String.valueOf(d.defaultPath), String.valueOf(d.customPath)});
+        }
+        this.pathDataMap.put(configType, serialized);
+    }
+
+    public void setSerializedSpriteDataAnimated(ArrayList<SpriteDataAnimated> spriteData, ConfigType configType){
 //        try {
-            ArrayList<String[]> serialized = new ArrayList<>();
+            SmartList<String> serialized = new SmartList<>();
             for (SpriteDataAnimated d : spriteData) {
-                serialized.add(new String[]{String.valueOf(d.enabled), String.valueOf(d.scale), String.valueOf(d.speedRate),
-                        String.valueOf(d.defaultPath), String.valueOf(d.customPath),
-                        String.valueOf(d.isCyclic), String.valueOf(d.val2),
-                        String.valueOf(d.alpha), String.valueOf(d.val1)});
+                serialized.add(d.toJSONObject().toString());
+
+//                serialized.add(String.join(",",
+//                        new String[]{String.valueOf(d.enabled), String.valueOf(d.scale), String.valueOf(d.speedRate),
+//                        String.valueOf(d.defaultPath), String.valueOf(d.customPath),
+//                        String.valueOf(d.isCyclic), String.valueOf(d.val2),
+//                        String.valueOf(d.alpha), String.valueOf(d.val1)}));
             }
-            if (type == ConfigType.MANDALA) {
-                this.mandalaDataStringArrays = serialized;
-            } else if (type == ConfigType.LIZARD) {
-                this.lizardDataStringArrays = serialized;
-            } else if (type == ConfigType.LINKER) {
-                this.linkerDataStringArrays = serialized;
-            }else if( type == ConfigType.DROSTE){
-                this.drosteDataStringArrays = serialized;
-            }else if( type == ConfigType.COPYPASTEVOID){
-                this.copyPasteVoidDataStringArrays = serialized;
-            }
-//        }
+
+            this.pathDataMap.put(configType, serialized);
+
     }
 
-    public void setSerializedSoundData(ArrayList<SoundData> soundData, ConfigType type){
-        ArrayList<String[]> serialized = new ArrayList<>();
+    public void setSerializedSoundData(ArrayList<SoundData> soundData, ConfigType configType){
+        SmartList<String> serialized = new SmartList<>();
         for (SoundData d : soundData) {
-            serialized.add(new String[]{String.valueOf(d.enabled), String.valueOf(d.val1),
-                    String.valueOf(d.defaultPath), String.valueOf(d.customPath)});
+            serialized.add(d.toJSONObject().toString());
+//            serialized.add(String.join(",",new String[]{String.valueOf(d.enabled), String.valueOf(d.val1),
+//                    String.valueOf(d.defaultPath), String.valueOf(d.customPath)}));
         }
-        if (type == ConfigType.SOUND) {
-            this.soundDataStringArrays = serialized;
-        }else if(type == ConfigType.MUSIC_TRIGGER){
-            this.musicTriggerSoundDataStringArrays = serialized;
-        }
+        this.pathDataMap.put(configType, serialized);
     }
 
-    public ArrayList<SoundData> deserializeSoundData(ArrayList<String[]> target){
-        ArrayList<SoundData> sd = new ArrayList<>();
-        for(String[] s: target){
-            sd.add(new SoundData(Boolean.parseBoolean(s[0]), Integer.parseInt(s[1]), s[2], s[3]));
-        }
-        return sd;
-    }
+
 
     @Override
     public void noStateLoaded() {

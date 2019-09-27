@@ -142,7 +142,7 @@ public class LightningAltConfig extends BaseConfig {
 
 
         ParticleSpriteLightningAlt.sparkData = sparkData;
-        settings.setSerializedSparkData(LightningAltConfig.sparkData);
+        settings.setSerializedSpriteData(LightningAltConfig.sparkData, PowerMode3.ConfigType.LIGHTNING_ALT);
 //        settings.setSerializedSparkData(SparksTableModel.data);
     }
 

@@ -3,6 +3,8 @@ package com.cschar.pmode3.config.common;
 import com.cschar.pmode3.ParticleSpriteLightning;
 import com.cschar.pmode3.ParticleUtils;
 import com.cschar.pmode3.PowerMode3;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -14,6 +16,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SpriteDataAnimated  extends SpriteData {
@@ -24,6 +27,7 @@ public class SpriteDataAnimated  extends SpriteData {
     public int val2 =20;
 
     public int previewSize=60;
+
 
     public ArrayList<BufferedImage> images = new ArrayList<>();
 //    public ArrayList<ImageIcon> previewIcons = new ArrayList<>();
@@ -42,8 +46,9 @@ public class SpriteDataAnimated  extends SpriteData {
 
         //TODO do some sanity check so w'ere not loading a million files in each of 30 mb size etc..
         // all files are the same dimensions
-        if(customPath == ""){
+        if(customPath.equals("")){
             setImageAnimated(defaultPath, true);
+//            customPathValid = true; //only valid if empty path
         }
         else{
             setImageAnimated(customPath, false);
@@ -164,5 +169,58 @@ public class SpriteDataAnimated  extends SpriteData {
 
             }
         }
+    }
+
+    @Override
+    public JSONObject toJSONObject(){
+        ////enabled, scale, speed, defaultPath, customPath, isCyclic, val2, alpha, val1
+        JSONObject jo = new JSONObject();
+        try {
+            jo.put("previewSize", this.previewSize);
+            jo.put("enabled", this.enabled);
+            jo.put("scale", this.scale);
+            jo.put("speedRate", this.speedRate);
+            jo.put("defaultPath",this.defaultPath);
+            jo.put("customPath",this.customPath);
+            jo.put("isCyclic",this.isCyclic);
+            jo.put("val2",this.val2);
+            jo.put("alpha",this.alpha);
+            jo.put("val1",this.val1);
+
+
+        }catch(JSONException e){
+            LOGGER.log(Level.SEVERE,e.toString(),e);
+        }
+
+        return jo;
+    }
+
+    public static SpriteDataAnimated fromJsonObjectString(String s){
+
+
+        SpriteDataAnimated sd = null;
+        try {
+            JSONObject jo = new JSONObject(s);
+            sd =  new SpriteDataAnimated(
+                    jo.getInt("previewSize"),
+                    jo.getBoolean("enabled"),
+                    (float) jo.getDouble("scale"),
+                    jo.getInt("speedRate"),
+                    jo.getString("defaultPath"),
+                    jo.getString("customPath"),
+                    jo.getBoolean("isCyclic"),
+                    jo.getInt("val2"),
+                    (float) jo.getDouble("alpha"),
+                    jo.getInt("val1"));
+
+
+        }catch(JSONException e){
+            LOGGER.log(Level.SEVERE,e.toString(),e);
+        }
+
+//public SpriteDataAnimated(int previewSize, boolean enabled, float scale, int speedRate, String defaultPath, String customPath,
+//        boolean isCyclic, int val2, float alpha, int val1) {
+
+        return sd;
     }
 }

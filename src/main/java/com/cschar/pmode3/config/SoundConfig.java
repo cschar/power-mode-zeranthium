@@ -50,6 +50,11 @@ public class SoundConfig extends JPanel {
         headerLabel.setFont(new Font ("Arial", Font.BOLD, 20));
         headerLabel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
         firstRow.add(headerLabel);
+        JLabel headerSubLabel = new JLabel("Will play on keypress");
+        headerSubLabel.setFont(new Font ("Arial", Font.BOLD, 14));
+        headerSubLabel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+        firstRow.add(headerSubLabel);
+
         soundEnabled = new JCheckBox("Sound Enabled?");
         soundEnabled.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
         firstRow.add(soundEnabled);

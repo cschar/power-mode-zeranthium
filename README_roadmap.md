@@ -22,6 +22,7 @@ https://stackoverflow.com/questions/29550006/how-to-have-jackson-use-a-method-to
       - e.g. load a 'plant growing' theme 
 
  
+- Special Key Sound Options (Copy/Paste/Del/Backspace)
 
 - Fiddle heads
 ```
@@ -65,7 +66,8 @@ Done;
 future TODO:
 - benchmark Powermode3.getInstance(); -- just use it everywhere if good
 
-- more Editor listeners (backspace/delete)     
+- more Editor listeners (backspace/delete/copy)
+   -- add sound for each type     
 
 - code explorer (e.g. wave collapse for dungeon background)
 ---- when you type it lights up background, e.g. icnreasing alpha from 0->0.1
