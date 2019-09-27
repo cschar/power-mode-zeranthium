@@ -61,7 +61,7 @@ public class Mandala2Config extends JPanel{
         this.moveWithCaret = new JCheckBox("move with arrowkeys/mouse?");
         caretMovementPanel.add(moveWithCaret);
         this.moveSpeedTextField = new JTextField();
-        caretMovementPanel.add(Config.populateTextFieldPanel(this.moveSpeedTextField, "movespeed (0.001 - 1.0)"));
+        caretMovementPanel.add(Config.populateTextFieldPanel(this.moveSpeedTextField, "speed (0.001 - 1.0)"));
         caretMovementPanel.setBackground(new JBColor(new Color(250, 250, 210), new Color(210,250,250)));
 
         firstRow.add(caretMovementPanel);

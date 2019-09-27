@@ -2,8 +2,12 @@
 
 TODO: everything
 
-- Update on cursor move instead of just typeAction (mandala/linker)
-  
+---- save pathData like this:
+- HashMap<Enum Type, ArrayList<String>>
+//have String a JSONString
+https://stackoverflow.com/questions/29550006/how-to-have-jackson-use-a-method-to-serialize-a-class-to-json
+
+
 
 - Lazy Loading popup for sprites
    - dont load on program startup
@@ -43,6 +47,7 @@ TODO: everything
    would show a 'genereating font' after setting is set
 - Test multiple editors w/ MAX_RINGS etc.
 
+
 Done;
 - vines
 - lizards
@@ -54,9 +59,11 @@ Done;
 - Play 2x Song w/ 2 Hotkeys to trigger each one
 - Void/DrosteEffect
 - copypasteVoid effect
-
+  
 
 future TODO:
+- benchmark Powermode3.getInstance(); -- just use it everywhere if good
+
 - more Editor listeners (backspace/delete)     
 
 - code explorer (e.g. wave collapse for dungeon background)
