@@ -2,6 +2,9 @@ package com.cschar.pmode3;
 
 import com.cschar.pmode3.config.*;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationType;
+import com.intellij.notification.Notifications;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.Shortcut;
 import com.intellij.openapi.application.ApplicationManager;
@@ -501,7 +504,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
                             " <a href='https://github.com/cschar/zeranthium-extras'> zeranthium-extras </a>" +
                             "github repo. " +
                             "\n\n" +
-                            "Please select a <h3> manifest.json </h3> file found inside one of the packs </html>",
+                            "Please select a <b> manifest.json </b> file found inside one of the packs </html>",
                     "LOAD PACK","yes","no", null);
 
             if(result == Messages.YES){
@@ -563,15 +566,34 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
                 if(configKey.equals("LIZARD")){
                     LizardConfig.loadJSONConfig(configKeyData, path.getParent());
                     enableLizardCheckBox.setSelected(true);
-                    settings.setSpriteTypeEnabled(enableLizardCheckBox.isSelected(), PowerMode3.ConfigType.LIZARD);
-                    LOGGER.info("Loaded pack for " + configKey);
+//                    settings.setSpriteTypeEnabled(enableLizardCheckBox.isSelected(), PowerMode3.ConfigType.LIZARD);
                 }
     
                 if(configKey.equals("SOUND")){
                     soundConfig.loadJSONConfig(configKeyData, path.getParent());
-                    LOGGER.info("Loaded pack for " + configKey);
                 }
+
+                //DROSTE
+                if(configKey.equals("DROSTE")){
+                    enableDrosteCheckbox.setSelected(true);
+                    DrosteConfig.loadJSONConfig(configKeyData, path.getParent());
+                }
+
+                //MANDALA
+                if(configKey.equals("MANDALA")){
+                    enableMandalaCheckbox.setSelected(true);
+                    Mandala2Config.loadJSONConfig(configKeyData, path.getParent());
+                }
+
+
+                LOGGER.info("Loaded pack for " + configKey);
             }
+
+            Notification n = new Notification(PowerMode3.NOTIFICATION_GROUP_DISPLAY_ID,
+                    PowerMode3.NOTIFICATION_GROUP_DISPLAY_ID + ": Loaded Config Pack",
+                    "Successfully loaded pack: " + path,
+                    NotificationType.INFORMATION);
+            Notifications.Bus.notify(n);
             
         }
         

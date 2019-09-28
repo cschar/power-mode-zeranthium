@@ -52,6 +52,12 @@ public class SpriteDataAnimated  extends SpriteData {
         this.isCyclic = isCyclic;
         this.val2 = val2; //maxNumCYcleParticles
         this.alpha = alpha;
+        if(this.alpha < 0.0f) this.alpha = 0.f;
+        if(this.alpha > 1.0f) this.alpha = 1.0f;
+        if(this.speedRate < 1) this.speedRate = 1;
+        if(this.speedRate > 10) this.speedRate = 10;
+        if(this.val2 < 1) this.val2 = 1;
+        if(this.val2 > 20) this.val2 = 20;
 
         //TODO do some sanity check so w'ere not loading a million files in each of 30 mb size etc..
         // all files are the same dimensions

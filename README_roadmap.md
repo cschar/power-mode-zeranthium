@@ -8,13 +8,7 @@ TODO: everything
    -  dialog then asks user to locate download location on drive
    - Config panels can load a 'pack' of images if this location is set
        
-      
-    --repo contents
-    --- root
-      - plant Theme
-      - chicken Theme
-      - Programming Language X Icon Theme (Python/Elixir/Go etc..) 
-
+     
  
 - Special Key Sound Options (Copy/Paste/Del/Backspace)
   - Howie Scream on paste 
@@ -67,6 +61,7 @@ Done;
 - Background Loading of Assets
 - Max 500 *.png or 1.0GB of data per Image Collection
 
+
 future TODO:
 
 - BUILDUP_MONITOR, where you hit different thresholds
@@ -81,8 +76,6 @@ future TODO:
 
 - benchmark Powermode3.getInstance(); -- just use it everywhere if good
 
-- more Editor listeners (backspace/delete/copy)
-   -- add sound for each type     
 
 - code explorer (e.g. wave collapse for dungeon background)
 ---- when you type it lights up background, e.g. icnreasing alpha from 0->0.1

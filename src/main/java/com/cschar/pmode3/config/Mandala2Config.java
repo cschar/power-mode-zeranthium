@@ -14,10 +14,14 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.EventObject;
 
@@ -31,6 +35,8 @@ public class Mandala2Config extends JPanel{
     private JTextField moveSpeedTextField;
 
     PowerMode3 settings;
+
+    public final static int PREVIEW_SIZE = 120;
 
     public Mandala2Config(PowerMode3 settings){
         this.settings = settings;
@@ -58,7 +64,7 @@ public class Mandala2Config extends JPanel{
         caretMovementPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
         caretMovementPanel.setMaximumSize(new Dimension(500,100));
 //        this.moveWithCaret = new JCheckBox("move with Caret?");
-        this.moveWithCaret = new JCheckBox("move with arrowkeys/mouse?");
+        this.moveWithCaret = new JCheckBox("move with caret/mouse?");
         caretMovementPanel.add(moveWithCaret);
         this.moveSpeedTextField = new JTextField();
         caretMovementPanel.add(Config.populateTextFieldPanel(this.moveSpeedTextField, "speed (0.001 - 1.0)"));
@@ -79,7 +85,7 @@ public class Mandala2Config extends JPanel{
         JBTable table = new JBTable();
 
 
-        table.setRowHeight(120);
+        table.setRowHeight(PREVIEW_SIZE);
         table.setModel(new MandalaRingTableModel());
 
         table.setCellSelectionEnabled(false);
@@ -102,7 +108,7 @@ public class Mandala2Config extends JPanel{
 //        table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
         TableColumnModel colModel=table.getColumnModel();
 
-        colModel.getColumn(0).setPreferredWidth(120); //preview
+        colModel.getColumn(0).setWidth(PREVIEW_SIZE); //preview
         colModel.getColumn(1).setPreferredWidth(70);  //enabled
         colModel.getColumn(1).setWidth(50);  //enabled
 
@@ -130,7 +136,7 @@ public class Mandala2Config extends JPanel{
         table.getColumn("reset").setCellRenderer(buttonRenderer);
         table.addMouseListener(new JTableButtonMouseListener(table));
 
-        TableCellRenderer pathRenderer = new CustomPathCellHighlighterRenderer(mandalaData);
+        TableCellRenderer pathRenderer = new CustomPathCellHighlighterRenderer(spriteDataAnimated);
         table.getColumn("path").setCellRenderer(pathRenderer);
 
         OtherPanelCellEditorRenderer OtherPanelCellEditorRenderer = new OtherPanelCellEditorRenderer();
@@ -161,14 +167,14 @@ public class Mandala2Config extends JPanel{
                 String.valueOf(Config.getJTextFieldWithinBoundsFloat(this.moveSpeedTextField,
                         0.001f, 1.0f,"movespeed")));
 
-        settings.setSerializedSpriteDataAnimated(Mandala2Config.mandalaData, PowerMode3.ConfigType.MANDALA);
+        settings.setSerializedSpriteDataAnimated(Mandala2Config.spriteDataAnimated, PowerMode3.ConfigType.MANDALA);
     }
 
 
-    static ArrayList<SpriteDataAnimated> mandalaData;
+    static ArrayList<SpriteDataAnimated> spriteDataAnimated;
 
     public static void setSpriteDataAnimated(ArrayList<SpriteDataAnimated> data){
-        mandalaData = data;
+        spriteDataAnimated = data;
         ParticleSpriteMandala.mandalaRingData = data;
     }
 
@@ -180,6 +186,29 @@ public class Mandala2Config extends JPanel{
         return Config.getFloatProperty(settings, PowerMode3.ConfigType.MANDALA, "movespeed", 0.1f);
     }
 
+    public static void loadJSONConfig(JSONObject configData, Path parentPath) throws JSONException {
+
+        JSONArray tableData = configData.getJSONArray("tableData");
+
+        for(int i =0; i<tableData.length(); i++){
+            JSONObject jo = tableData.getJSONObject(i);
+
+            SpriteDataAnimated sd =  new SpriteDataAnimated(
+                    PREVIEW_SIZE,
+                    jo.getBoolean("enabled"),
+                    (float) jo.getDouble("scale"),
+                    jo.getInt("speedRate"),
+                    spriteDataAnimated.get(i).defaultPath,
+                    parentPath.resolve(jo.getString("customPath")).toString(),
+                    jo.getBoolean("isCyclic"),
+                    1,
+//                    jo.getInt("val2"),
+                    (float) jo.getDouble("alpha"),
+                    1);
+            
+            spriteDataAnimated.set(i, sd);
+        }
+    }
 
 }
 
@@ -290,7 +319,7 @@ class OtherColCellPanelMandala extends JPanel {
 
 class MandalaRingTableModel extends AbstractTableModel {
 
-    static ArrayList<SpriteDataAnimated> data = Mandala2Config.mandalaData;
+    static ArrayList<SpriteDataAnimated> data = Mandala2Config.spriteDataAnimated;
 
 
 

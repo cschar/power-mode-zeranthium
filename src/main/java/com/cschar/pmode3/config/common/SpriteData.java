@@ -30,6 +30,8 @@ public class SpriteData extends PathData{
     public SpriteData(boolean enabled, float scale, int val1, String defaultPath, String customPath) {
         super(enabled, defaultPath,customPath, val1);
         this.scale = scale;
+        if(this.scale < 0.1) this.scale = 0.1f;
+        if(this.scale > 2) this.scale = 2.0f;
 
         setupImage();
 

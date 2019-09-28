@@ -14,6 +14,9 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -21,6 +24,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 public class DrosteConfig extends JPanel {
@@ -34,6 +38,8 @@ public class DrosteConfig extends JPanel {
     private JComponent drosteSpriteConfigPanel;
 
     public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
+
+    public final static int PREVIEW_SIZE = 120;
 
     public DrosteConfig(PowerMode3 settings){
         this.settings = settings;
@@ -73,7 +79,7 @@ public class DrosteConfig extends JPanel {
         JBTable table = new JBTable();
 
 
-        table.setRowHeight(120);
+        table.setRowHeight(PREVIEW_SIZE);
         DrosteTableModel tableModel = new DrosteTableModel();
         table.setModel(tableModel);
 
@@ -98,8 +104,7 @@ public class DrosteConfig extends JPanel {
 //        table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
         TableColumnModel colModel=table.getColumnModel();
 
-        colModel.getColumn(0).setWidth(120); //preview
-        colModel.getColumn(1).setPreferredWidth(70);  //enabled
+        colModel.getColumn(0).setWidth(PREVIEW_SIZE); //preview
         colModel.getColumn(1).setWidth(50);  //enabled
 
         colModel.getColumn(2).setPreferredWidth(50);  //scale
@@ -153,6 +158,31 @@ public class DrosteConfig extends JPanel {
     public static void setSpriteDataAnimated(ArrayList<SpriteDataAnimated> data){
         spriteDataAnimated = data;
         ParticleSpriteDroste.spriteDataAnimated = data;
+    }
+
+    public static void loadJSONConfig(JSONObject configData, Path parentPath) throws JSONException {
+
+        JSONArray tableData = configData.getJSONArray("tableData");
+
+        for(int i =0; i<tableData.length(); i++){
+            JSONObject jo = tableData.getJSONObject(i);
+
+            SpriteDataAnimated sd =  new SpriteDataAnimated(
+                    PREVIEW_SIZE,
+                    jo.getBoolean("enabled"),
+                    (float) jo.getDouble("scale"),
+                    jo.getInt("speedRate"),
+                    spriteDataAnimated.get(i).defaultPath,
+                    parentPath.resolve(jo.getString("customPath")).toString(),
+                    jo.getBoolean("isCyclic"),
+                    1,
+//                    jo.getInt("val2"),
+                    (float) jo.getDouble("alpha"),
+                    jo.getInt("offset")); //val1
+
+        //TODO take care of droste Only 1 at a time layer rule
+            spriteDataAnimated.set(i, sd);
+        }
     }
 }
 
@@ -275,8 +305,8 @@ class DrosteTableModel extends AbstractTableModel {
                     d.setImageAnimated(d.defaultPath, true);
                     d.customPath = "";
                     d.customPathValid = false;
-                    d.scale = 1.0f;
-                    d.val1 = 20;
+//                    d.scale = 1.0f;
+//                    d.val1 = 20;
 
 
                     this.fireTableDataChanged();

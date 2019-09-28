@@ -421,7 +421,7 @@ class LizardTableModel extends AbstractTableModel {
 
 
                     FileChooserDescriptor fd = new FileChooserDescriptor(false,true,false,false,false,false);
-                    fd.setForcedToUseIdeaFileChooser(true);
+//                    fd.setForcedToUseIdeaFileChooser(true);
                     FileChooserDialog fcDialog = FileChooserFactory.getInstance().createFileChooser(fd, null, null);
 
 

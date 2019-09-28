@@ -31,6 +31,8 @@ public abstract class PathData {
         this.defaultPath = defaultPath;
         this.customPathValid = false;
         this.val1 = val1;
+        if(this.val1 < 1 ) this.val1 = 1;
+        if(this.val1 > 1000) this.val1 = 1000;
     }
 
     public String getPath(){

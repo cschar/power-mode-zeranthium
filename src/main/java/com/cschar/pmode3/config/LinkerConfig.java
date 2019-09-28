@@ -173,7 +173,7 @@ public class LinkerConfig extends JPanel {
         caretMovementPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
         caretMovementPanel.setMaximumSize(new Dimension(500,100));
 //        this.moveWithCaret = new JCheckBox("move with Caret?");
-        this.moveWithCaret = new JCheckBox("move with arrow-keys/mouse?");
+        this.moveWithCaret = new JCheckBox("move with caret/mouse?");
         caretMovementPanel.add(moveWithCaret);
         this.moveSpeedTextField = new JTextField();
 //        this.moveSpeedTextField.setEditable(false);
