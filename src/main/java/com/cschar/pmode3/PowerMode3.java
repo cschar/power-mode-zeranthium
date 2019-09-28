@@ -28,7 +28,6 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.components.BaseComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
@@ -36,14 +35,9 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.*;
 import com.intellij.openapi.progress.*;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.project.VetoableProjectManagerListener;
-import com.intellij.openapi.wm.WindowManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.JBColor;
 import com.intellij.util.SmartList;
-import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -52,11 +46,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.awt.*;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
-import java.net.URL;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -127,7 +117,7 @@ public class PowerMode3 implements BaseComponent,
         COPYPASTEVOID
     }
 
-    static class ConfigLoader{
+    static class JSONLoader {
 
         public static HashMap<ConfigType,SmartList<String>> loadDefaultJSONTableConfigs(){
 
@@ -148,7 +138,7 @@ public class PowerMode3 implements BaseComponent,
 
             for(ConfigType t: defaultJSONTables.keySet()){
                 String jsonFile = defaultJSONTables.get(t);
-                InputStream inputStream = ConfigLoader.class.getResourceAsStream("/configJSON/"+jsonFile);
+                InputStream inputStream = JSONLoader.class.getResourceAsStream("/configJSON/"+jsonFile);
 
 
                 StringBuilder sb = new StringBuilder();
@@ -212,7 +202,7 @@ public class PowerMode3 implements BaseComponent,
     public void initializeComponent() {
 
         //Load JSON
-        ConfigLoader.loadDefaultJSONTableConfigs();
+        JSONLoader.loadDefaultJSONTableConfigs();
 
         //Setup SOUND handler
         final EditorActionManager actionManager = EditorActionManager.getInstance();
@@ -314,7 +304,7 @@ public class PowerMode3 implements BaseComponent,
     public void noStateLoaded() {
         LOGGER.info("NO State loaded previously");
         this.setParticleRGB(JBColor.darkGray.getRGB());
-        pathDataMap = ConfigLoader.loadDefaultJSONTableConfigs();
+        pathDataMap = JSONLoader.loadDefaultJSONTableConfigs();
 
         loadConfigData();
     }

@@ -10,6 +10,9 @@ import com.intellij.openapi.fileChooser.FileChooserFactory;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -17,6 +20,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 
@@ -142,12 +146,44 @@ public class SoundConfig extends JPanel {
 
     }
 
+    public static void setSoundData(ArrayList<SoundData> data){
+        soundData = data;
+    }
+
+
     public static boolean SOUND_ENABLED(PowerMode3 settings){
         return Config.getBoolProperty(settings, PowerMode3.ConfigType.SOUND, "soundEnabled");
     }
 
-    public static void setSoundData(ArrayList<SoundData> data){
-        soundData = data;
+
+
+
+
+    public void loadJSONConfig(JSONObject configData, Path parentPath) throws JSONException {
+
+        JSONArray tableData = configData.getJSONArray("tableData");
+
+        for(int i =0; i<tableData.length(); i++){
+            JSONObject spriteDataRow = tableData.getJSONObject(i);
+            SoundConfig.soundData.set(i, consumeJSONConfig(spriteDataRow, i, parentPath));
+        }//table data will change on scroll
+
+        //enable when loading
+        this.soundEnabled.setSelected(true);
+    }
+
+
+    //consume config according to how SoundConfig allows custom changes
+    private static SoundData consumeJSONConfig(JSONObject jo, int indexToReplace, Path parentPath) throws JSONException {
+
+        SoundData sd = new SoundData(
+                SoundConfig.soundData.get(indexToReplace).enabled,
+                jo.getInt("weight"),
+                SoundConfig.soundData.get(indexToReplace).defaultPath,
+                parentPath.resolve(jo.getString("customPath")).toString()
+                );
+
+        return sd;
     }
 }
 

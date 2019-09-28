@@ -130,7 +130,7 @@ public class SpriteDataAnimated  extends SpriteData {
             final File dir = new File(path);
 
             if (dir.isDirectory()) { // make sure it's a directory
-                LOGGER.info("Loading customPath directory");
+                LOGGER.info("Loading customPath directory: " + path);
 
                 File[] files = dir.listFiles(IMAGE_FILTER);
                 Arrays.sort(files);

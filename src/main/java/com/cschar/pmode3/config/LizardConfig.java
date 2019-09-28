@@ -13,6 +13,9 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -20,6 +23,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 public class LizardConfig{
@@ -36,6 +40,8 @@ public class LizardConfig{
     private JComponent lizardSpriteConfigPanel;
 
     public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
+
+    public static int PREVIEW_SIZE = 60;
 
     public LizardConfig(PowerMode3 settings){
         this.settings = settings;
@@ -144,7 +150,7 @@ public class LizardConfig{
         JBTable table = new JBTable();
 
 
-        table.setRowHeight(60);
+        table.setRowHeight(PREVIEW_SIZE);
         LizardTableModel tableModel = new LizardTableModel();
         table.setModel(tableModel);
 
@@ -281,6 +287,42 @@ public class LizardConfig{
         spriteDataAnimated = data;
         ParticleSpriteLizardAnchor.spriteDataAnimated = data;
     }
+
+    public static void loadJSONConfig(JSONObject configData, Path parentPath) throws JSONException {
+
+        JSONArray tableData = configData.getJSONArray("tableData");
+
+        for(int i =0; i<tableData.length(); i++){
+            JSONObject spriteDataRow = tableData.getJSONObject(i);
+
+            LizardConfig.spriteDataAnimated.set(i, consumeJSONConfig(spriteDataRow, i, parentPath));
+        }//table data will change on scroll
+    }
+
+    //TODO this mimics Powermod3.deserialize data
+
+    /*
+    consume config according to how LizardConfig allows custom changes . e.g. ignore defaultPath overrides
+     */
+    private static SpriteDataAnimated consumeJSONConfig(JSONObject jo, int indexToReplace, Path parentPath) throws JSONException {
+
+//        ;  //./LIZARD/chicken1
+
+
+        SpriteDataAnimated sd =  new SpriteDataAnimated(
+                PREVIEW_SIZE,
+                jo.getBoolean("enabled"),
+                (float) jo.getDouble("scale"),
+                jo.getInt("speedRate"),
+                LizardConfig.spriteDataAnimated.get(indexToReplace).defaultPath,
+                parentPath.resolve(jo.getString("customPath")).toString(),
+                false,
+                jo.getInt("val2"),
+                (float) jo.getDouble("alpha"),
+                jo.getInt("val1"));
+
+        return sd;
+    }
 }
 
 
@@ -405,8 +447,8 @@ class LizardTableModel extends AbstractTableModel {
                     d.setImageAnimated(d.defaultPath, true);
                     d.customPath = "";
                     d.customPathValid = false;
-                    d.scale = 1.0f;
-                    d.val1 = 20;
+//                    d.scale = 1.0f;
+//                    d.val1 = 20;
 
 
                     this.fireTableDataChanged();
@@ -469,3 +511,4 @@ class LizardTableModel extends AbstractTableModel {
     }
 
 }
+

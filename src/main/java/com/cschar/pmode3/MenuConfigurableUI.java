@@ -1,25 +1,45 @@
 package com.cschar.pmode3;
 
 import com.cschar.pmode3.config.*;
+import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.Shortcut;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import com.intellij.openapi.fileChooser.FileChooserDialog;
+import com.intellij.openapi.fileChooser.FileChooserFactory;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.options.ConfigurableUi;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTabbedPane;
+import com.intellij.util.SmartList;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Scanner;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
+    private static final Logger LOGGER = Logger.getLogger( MenuConfigurableUI.class.getName() );
     private JPanel mainPanel;
     private JTextField lifetimeTextField;
     private JCheckBox isEnabledCheckBox;
@@ -48,6 +68,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private JCheckBox enableCopyPasteVoid;
     private JPanel mainBottomPanel;
     private JPanel mainTopPanel;
+    private JButton loadPackButton;
 
 
     private BasicParticleConfig basicParticleConfig;
@@ -91,7 +112,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
         setupHotkeyText();
 
-
+        setupPackLoaderButton();
 
 
         shakeDistanceTextField.setText(Integer.toString(powerMode3.getShakeDistance()));
@@ -470,5 +491,101 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
         toggleHotkeyLabel.setText(labelText);
     }
+
+    public void setupPackLoaderButton(){
+        loadPackButton.addActionListener((event) -> {
+
+            int result = Messages.showYesNoDialog(null,
+                    "<html> <h1> Load config pack? </h1>" +
+                            " \n Config <b>packs</b> can be found on the " +
+                            " <a href='https://github.com/cschar/zeranthium-extras'> zeranthium-extras </a>" +
+                            "github repo. " +
+                            "\n\n" +
+                            "Please select a <h3> manifest.json </h3> file found inside one of the packs </html>",
+                    "LOAD PACK","yes","no", null);
+
+            if(result == Messages.YES){
+                FileChooserDescriptor fd = new FileChooserDescriptor(true,false,false,false,false,false);
+//                fd.setForcedToUseIdeaFileChooser(true);
+                FileChooserDialog fcDialog = FileChooserFactory.getInstance().createFileChooser(fd, null, null);
+
+
+                VirtualFile[] vfs = fcDialog.choose(null);
+                if(vfs.length == 1){
+                    if(!vfs[0].getName().equals("manifest.json")){
+                        Messages.showInfoMessage("Please select a manifest.json file in a pack directory", "Pack Load Failed");
+                    }else {
+                        try {
+                            this.loadConfigPack(vfs[0].getPath());
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch( JSONException je){
+                            Messages.showErrorDialog("<html><h1>Pack Failed to load</h1>" +
+                                            "\n There was an error processing the .json info" +
+                                            "\n <pre>" + je.toString() + "</pre>" +
+                                            "" +
+                                            "</html>",
+                                    "Pack Load Failed");
+                            LOGGER.log(Level.SEVERE, je.toString(), je);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+//    static class PackLoader {
+
+        private void loadConfigPack(String manifestPath) throws FileNotFoundException, JSONException {
+            PowerMode3 settings = PowerMode3.getInstance();
+            Path path = Paths.get(manifestPath);
+    
+    
+    
+            InputStream inputStream = new FileInputStream(manifestPath);
+    
+            StringBuilder sb = new StringBuilder();
+            Scanner s = new Scanner(inputStream);
+            while(s.hasNextLine()){
+                sb.append(s.nextLine());
+            }
+    
+    
+    
+            JSONObject jo = new JSONObject(sb.toString());
+    
+            JSONArray configsToLoad = jo.getJSONArray("configsToLoad");
+            JSONObject configSettings = jo.getJSONObject("configSettings");
+            for(int i=0; i < configsToLoad.length(); i++){
+                String configKey = configsToLoad.getString(i);
+    
+                JSONObject configKeyData = configSettings.getJSONObject(configKey);
+                if(configKey.equals("LIZARD")){
+                    LizardConfig.loadJSONConfig(configKeyData, path.getParent());
+                    enableLizardCheckBox.setSelected(true);
+                    settings.setSpriteTypeEnabled(enableLizardCheckBox.isSelected(), PowerMode3.ConfigType.LIZARD);
+                    LOGGER.info("Loaded pack for " + configKey);
+                }
+    
+                if(configKey.equals("SOUND")){
+                    soundConfig.loadJSONConfig(configKeyData, path.getParent());
+                    LOGGER.info("Loaded pack for " + configKey);
+                }
+            }
+            
+        }
+        
+        private void disableAllParticleSettings(){
+                enableBasicParticleCheckBox.setSelected(false);
+                enableLightningCheckBox.setSelected(false);
+                lightningAltCheckBox.setSelected(false);
+                enableLizardCheckBox.setSelected(false);
+                enableMOMACheckBox.setSelected(false);
+                enableVineCheckBox.setSelected(false);
+                enableMandalaCheckbox.setSelected(false);
+                enableLinkerCheckbox.setSelected(false);
+                enableDrosteCheckbox.setSelected(false);
+                enableCopyPasteVoid.setSelected(false);
+        }
 
 }
