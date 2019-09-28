@@ -3,8 +3,14 @@ package com.cschar.pmode3.config.common;
 import com.cschar.pmode3.ParticleSpriteLightning;
 import com.cschar.pmode3.ParticleUtils;
 import com.cschar.pmode3.PowerMode3;
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationType;
+import com.intellij.notification.Notifications;
+import com.intellij.openapi.ui.Messages;
+import com.intellij.util.messages.impl.Message;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -33,6 +39,9 @@ public class SpriteDataAnimated  extends SpriteData {
 //    public ArrayList<ImageIcon> previewIcons = new ArrayList<>();
 
     public float alpha =1.0f;
+
+    private int MAX_NUM_FILES = 500;
+    private double MAX_TOTAL_GB_SIZE = 1.0;
 
     public SpriteDataAnimated(int previewSize, boolean enabled, float scale, int speedRate, String defaultPath, String customPath,
                               boolean isCyclic, int val2, float alpha, int val1) {
@@ -125,10 +134,41 @@ public class SpriteDataAnimated  extends SpriteData {
 
                 File[] files = dir.listFiles(IMAGE_FILTER);
                 Arrays.sort(files);
+
+                double totalSize = 0;
+                int fileCount = 0;
                 //Load Buffered Images
                 try {
                     for (final File f : files) {
                         BufferedImage img = null;
+                        totalSize += getGBFileSize(f);
+                        fileCount += 1;
+
+
+
+                        if(totalSize > MAX_TOTAL_GB_SIZE){
+                            String msg = path + "\n Reached Max Size: " + MAX_TOTAL_GB_SIZE + " GB of files already loaded";
+                            LOGGER.severe(msg);
+
+                            Notification n = new Notification(PowerMode3.NOTIFICATION_GROUP_DISPLAY_ID,
+                                    PowerMode3.NOTIFICATION_GROUP_DISPLAY_ID + ": Error loading image set",
+                                    msg,
+                                    NotificationType.WARNING);
+                            Notifications.Bus.notify(n);
+                            break;
+                        }
+                        if(fileCount > MAX_NUM_FILES){
+                            String msg = path + "\n Reached Max File Count: " + MAX_NUM_FILES + " files already loaded";
+                            LOGGER.severe(msg);
+//                            Messages.showInfoMessage(msg,"Error Loading Image Set");
+                            Notification n = new Notification(PowerMode3.NOTIFICATION_GROUP_DISPLAY_ID,
+                                    PowerMode3.NOTIFICATION_GROUP_DISPLAY_ID + ": Error Loading Image Set",
+                                    msg,
+                                    NotificationType.ERROR);
+                            Notifications.Bus.notify(n);
+                            break;
+                        }
+
                         img = ImageIO.read(f);
                         newImages.add(img);
                     }
@@ -222,5 +262,14 @@ public class SpriteDataAnimated  extends SpriteData {
 //        boolean isCyclic, int val2, float alpha, int val1) {
 
         return sd;
+    }
+
+
+    private double getGBFileSize(File file){
+        double bytes = file.length();
+        double kilobytes = (bytes / 1024);
+        double megabytes = (kilobytes / 1024);
+        double gigabytes = (megabytes / 1024);
+        return gigabytes;
     }
 }

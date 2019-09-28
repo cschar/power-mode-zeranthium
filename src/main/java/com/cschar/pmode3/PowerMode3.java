@@ -81,6 +81,8 @@ public class PowerMode3 implements BaseComponent,
     //https://www.jetbrains.org/intellij/sdk/docs/basics/persisting_state_of_components.html#implementing-the-persistentstatecomponent-interface
     private static final Logger LOGGER = Logger.getLogger( PowerMode3.class.getName() );
 
+    public static String NOTIFICATION_GROUP_DISPLAY_ID = "PowerMode - Zeranthium";
+
     @com.intellij.util.xmlb.annotations.Transient
     private ParticleContainerManager particleContainerManager;
 

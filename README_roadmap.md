@@ -3,16 +3,11 @@
 TODO: everything
 
 ---- save pathData like this:
-- HashMap<Enum Type, ArrayList<String>>
+- HashMap<Enum Type, SmartList<String>>
 //have String a JSONString
 https://stackoverflow.com/questions/29550006/how-to-have-jackson-use-a-method-to-serialize-a-class-to-json
 
 
-
-
-  
-
--- SANE FILE limits of animations e.g. max 1000 frames
 
 -  download assets button in settings (RED !)
    -  opens dialog pointing to isntructions to clone
@@ -23,6 +18,7 @@ https://stackoverflow.com/questions/29550006/how-to-have-jackson-use-a-method-to
 
  
 - Special Key Sound Options (Copy/Paste/Del/Backspace)
+  - Howie Scream on paste 
 
 - Fiddle heads
 ```
@@ -50,6 +46,8 @@ https://stackoverflow.com/questions/29550006/how-to-have-jackson-use-a-method-to
 - Test multiple editors w/ MAX_RINGS etc.
 
 
+
+
 Done;
 - vines
 - lizards
@@ -62,6 +60,7 @@ Done;
 - Void/DrosteEffect
 - copypasteVoid effect
 - Background Loading of Assets
+- Max 500 *.png or 1.0GB of data per Image Collection
 
 future TODO:
 - benchmark Powermode3.getInstance(); -- just use it everywhere if good
