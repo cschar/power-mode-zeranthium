@@ -1,0 +1,16 @@
+{
+  "data": [
+    {
+      "customPath": "",
+      "defaultPath": "/sounds/music_triggers/trigger1.mp3",
+      "val1": 0,
+      "enabled": true
+    },
+    {
+      "customPath": "",
+      "defaultPath": "/sounds/music_triggers/trigger2.mp3",
+      "val1": 1,
+      "enabled": true
+    }
+  ]
+}

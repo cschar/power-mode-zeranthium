@@ -140,35 +140,21 @@ public class SpriteDataAnimated  extends SpriteData {
                 //Load Buffered Images
                 try {
                     for (final File f : files) {
-                        BufferedImage img = null;
                         totalSize += getGBFileSize(f);
                         fileCount += 1;
 
-
-
                         if(totalSize > MAX_TOTAL_GB_SIZE){
                             String msg = path + "\n Reached Max Size: " + MAX_TOTAL_GB_SIZE + " GB of files already loaded";
-                            LOGGER.severe(msg);
-
-                            Notification n = new Notification(PowerMode3.NOTIFICATION_GROUP_DISPLAY_ID,
-                                    PowerMode3.NOTIFICATION_GROUP_DISPLAY_ID + ": Error loading image set",
-                                    msg,
-                                    NotificationType.WARNING);
-                            Notifications.Bus.notify(n);
+                            notifyError(msg);
                             break;
                         }
                         if(fileCount > MAX_NUM_FILES){
                             String msg = path + "\n Reached Max File Count: " + MAX_NUM_FILES + " files already loaded";
-                            LOGGER.severe(msg);
-//                            Messages.showInfoMessage(msg,"Error Loading Image Set");
-                            Notification n = new Notification(PowerMode3.NOTIFICATION_GROUP_DISPLAY_ID,
-                                    PowerMode3.NOTIFICATION_GROUP_DISPLAY_ID + ": Error Loading Image Set",
-                                    msg,
-                                    NotificationType.ERROR);
-                            Notifications.Bus.notify(n);
+                            notifyError(msg);
                             break;
                         }
 
+                        BufferedImage img = null;
                         img = ImageIO.read(f);
                         newImages.add(img);
                     }
@@ -271,5 +257,14 @@ public class SpriteDataAnimated  extends SpriteData {
         double megabytes = (kilobytes / 1024);
         double gigabytes = (megabytes / 1024);
         return gigabytes;
+    }
+
+    private void notifyError(String msg){
+        LOGGER.severe(msg);
+        Notification n = new Notification(PowerMode3.NOTIFICATION_GROUP_DISPLAY_ID,
+                PowerMode3.NOTIFICATION_GROUP_DISPLAY_ID + ": Error loading image set",
+                msg,
+                NotificationType.WARNING);
+        Notifications.Bus.notify(n);
     }
 }

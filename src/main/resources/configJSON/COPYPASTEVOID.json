@@ -1,0 +1,28 @@
+{
+  "data": [
+    {
+      "previewSize": 60,
+      "customPath": "",
+      "defaultPath": "/blender/droste1",
+      "val2": 1,
+      "isCyclic": false,
+      "alpha": 1,
+      "val1": 2,
+      "scale": 0.4,
+      "enabled": true,
+      "speedRate": 2
+    },
+    {
+      "previewSize": 60,
+      "customPath": "",
+      "defaultPath": "/blender/droste2",
+      "val2": 1,
+      "isCyclic": false,
+      "alpha": 0.6,
+      "val1": 2,
+      "scale": 0.6,
+      "enabled": true,
+      "speedRate": 2
+    }
+  ]
+}

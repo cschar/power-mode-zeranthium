@@ -11,11 +11,9 @@ for future ideas see README_roadmap.md
 
 
 
+You may need to increase memory heap:
+https://www.jetbrains.com/help/idea/increasing-memory-heap.html
 
-
-FFmpeg Tip:
-
-ffmpeg -i video.mp4 -vf scale=720x405 output/frame%04d.png
 
 
 Open Source LIbraries Used: \

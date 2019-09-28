@@ -1,0 +1,28 @@
+{
+  "data": [
+    {
+      "customPath": "",
+      "defaultPath": "/sounds/h1.mp3",
+      "val1": 20,
+      "enabled": true
+    },
+    {
+      "customPath": "",
+      "defaultPath": "/sounds/h2.mp3",
+      "val1": 20,
+      "enabled": true
+    },
+    {
+      "customPath": "",
+      "defaultPath": "/sounds/h3.mp3",
+      "val1": 20,
+      "enabled": true
+    },
+    {
+      "customPath": "",
+      "defaultPath": "/sounds/h4.mp3",
+      "val1": 20,
+      "enabled": true
+    }
+  ]
+}

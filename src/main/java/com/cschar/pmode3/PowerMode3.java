@@ -47,14 +47,17 @@ import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.awt.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.net.URL;
+import java.util.*;
 import java.util.logging.Logger;
 
 
@@ -124,210 +127,60 @@ public class PowerMode3 implements BaseComponent,
         COPYPASTEVOID
     }
 
-    @com.intellij.util.xmlb.annotations.XCollection
-    private ArrayList<String[]> copyPasteVoidDataStringArrays = new ArrayList<String[]>(){{
-        //enabled, scale, speed, defaultPath, customPath, isCyclic, val2, alpha, val1
-        add(new String[]{"true","0.4f","2","/blender/droste2","", "false","1","1.0f","2"});
-        add(new String[]{"true","0.6f","2","/blender/droste2","", "false","1","0.6f","2"});
-    }};
+    static class ConfigLoader{
 
-    @com.intellij.util.xmlb.annotations.XCollection
-    private ArrayList<String[]> drosteDataStringArrays = new ArrayList<String[]>(){{
-        //enabled, scale, speed, defaultPath, customPath, isCyclic, val2, alpha, val1
-        //enabled, scale, speed, defaultPath, customPath, isCyclic, val2, alpha, val1--->expandOffset
-        add(new String[]{"true","0.4f","2", "/blender/droste1","", "false","20","0.3f","40"});
-        add(new String[]{"false","0.6f","2", "/blender/droste2","", "false","20","1.0f","80"});
-    }};
+        public static HashMap<ConfigType,SmartList<String>> loadDefaultJSONTableConfigs(){
+
+            HashMap<ConfigType, String> defaultJSONTables = new HashMap<ConfigType, String>() {{
+
+                put(ConfigType.COPYPASTEVOID, "COPYPASTEVOID.json");
+                put(ConfigType.DROSTE, "DROSTE.json");
+                put(ConfigType.LIGHTNING_ALT, "LIGHTNING_ALT2.json");
+                put(ConfigType.LINKER, "LINKER.json");
+                put(ConfigType.LIZARD, "LIZARD.json");
+                put(ConfigType.MANDALA, "MANDALA.json");
+                put(ConfigType.MUSIC_TRIGGER, "MUSIC_TRIGGERS.json");
+                put(ConfigType.SOUND, "SOUND.json");
+
+            }};
+            HashMap<ConfigType,SmartList<String>> pathDataMap = new HashMap<ConfigType,SmartList<String>>();
 
 
-    @com.intellij.util.xmlb.annotations.XCollection
-    private ArrayList<String[]> musicTriggerSoundDataStringArrays = new ArrayList<String[]>(){{
-        //enabled,val1,defaultPath,customPath
-        add(new String[]{"true","0","/sounds/music_triggers/trigger1.mp3",""});
-        add(new String[]{"true","1","/sounds/music_triggers/trigger2.mp3",""});
-    }};
+            for(ConfigType t: defaultJSONTables.keySet()){
+                String jsonFile = defaultJSONTables.get(t);
+                InputStream inputStream = ConfigLoader.class.getResourceAsStream("/configJSON/"+jsonFile);
 
-    @com.intellij.util.xmlb.annotations.XCollection
-    private ArrayList<String[]> soundDataStringArrays = new ArrayList<String[]>(){{
-        //enabled,val1,defaultPath,customPath
-        add(new String[]{"true","20","/sounds/h1.mp3",""});
-        add(new String[]{"true","20","/sounds/h2.mp3",""});
-        add(new String[]{"true","20","/sounds/h3.mp3",""});
-        add(new String[]{"true","20","/sounds/h4.mp3",""});
-    }};
 
-    @com.intellij.util.xmlb.annotations.XCollection
-    private ArrayList<String[]> linkerDataStringArrays = new ArrayList<String[]>(){{
-        //enabled, scale, speed, defaultPath, customPath, isCyclic, val2, alpha, val1
-        add(new String[]{"true","0.3f","2","/blender/linkerI/chain1","", "false","100","1.0f","1"});
-        add(new String[]{"true","0.3f","2","/blender/linkerI/chain5","", "false","6","0.6f","2"});
-        add(new String[]{"true","0.2f","2","/blender/linkerI/chain4","", "false","20","1.0f","10"});
-    }};
+                StringBuilder sb = new StringBuilder();
+                Scanner s = new Scanner(inputStream);
+                while(s.hasNextLine()){
+                    sb.append(s.nextLine());
+                }
 
-    @com.intellij.util.xmlb.annotations.XCollection
-    private ArrayList<String[]> lizardDataStringArrays = new ArrayList<String[]>(){{
-        //enabled, scale, speed, defaultPath, customPath, isCyclic, val2, alpha, val1
-        add(new String[]{"true","0.4f","2","/blender/lizard","", "false","1","1.0f","2"});
-        add(new String[]{"true","0.6f","2","/blender/lizard2","", "false","1","0.6f","2"});
-        add(new String[]{"true","0.2f","2","/blender/lizard","", "false","1","1.0f","10"});
-    }};
+                SmartList<String> smartList = new SmartList<>();
+                try {
+                    JSONObject jo = new JSONObject(sb.toString());
 
-    @com.intellij.util.xmlb.annotations.XCollection
-    private ArrayList<String[]> sparkDataStringArrays = new ArrayList<String[]>(){{
-        //enabled,scale,weight,defaultPath,customPath
-        add(new String[]{"true","1.0f","6","/blender/lightningAlt/spark4/0150.png",""});
-        add(new String[]{"true","1.0f","30","/blender/lightningAlt/spark5/0150.png",""});
-        add(new String[]{"true","1.0f","80","/blender/lightningAlt/spark6/0150.png",""});
-    }};
+                    //TODO this is extra work, we go .json --> JSONObject --> string ( ..later --> JSONObject ---> pathData)
+                    JSONArray tableData = jo.getJSONArray("data");
+                    for(int i=0; i < tableData.length(); i++){
+                        smartList.add(tableData.getJSONObject(i).toString());
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                pathDataMap.put(t, smartList);
+            }
 
-    @com.intellij.util.xmlb.annotations.XCollection
-    private ArrayList<String[]> mandalaDataStringArrays = new ArrayList<String[]>(){{
-        //enabled, scale, speed, defaultPath, customPath, isCyclic, val2, alpha, val1
-        add(new String[]{"true","1.0f","3","/blender/mandala1/","","false","5", "1.0f", "1"});
-        add(new String[]{"true","1.0f","2","/blender/mandala2/","","true","4", "1.0f", "1"});
-        add(new String[]{"true","1.0f","2","/blender/mandala3/","","true","5", "1.0f", "1"});
-        add(new String[]{"true","1.2f","4","/blender/mandala9/","","false","4", "1.0f", "1"});
-    }};
+            return pathDataMap;
+        }
 
-//    @com.intellij.util.xmlb.annotations.XCollection
+    }
+
 
     @com.intellij.util.xmlb.annotations.MapAnnotation
     private Map<ConfigType,SmartList<String>> pathDataMap = new HashMap<ConfigType,SmartList<String>>(){{
-        put(ConfigType.MANDALA, new SmartList<String>(){{
-//            SpriteDataAnimated(int previewSize, boolean enabled, float scale, int speedRate, String defaultPath, String customPath,
-//            boolean isCyclic, int val2, float alpha, int val1) {
-//            SpriteDataAnimated sd = ;
-//            add((new SpriteDataAnimated(120,true, 1.0f, 3, "/blender/mandala1/",
-//                    "",false,5,1.0f,1)).toJSONObject().toString() );
-//            add((new SpriteDataAnimated(120,true, 1.0f, 2, "/blender/mandala2/",
-//                    "",true,5,1.0f,1)).toJSONObject().toString() );
-//            add((new SpriteDataAnimated(120,true, 1.0f, 2, "/blender/mandala3/",
-//                    "",true,5,1.0f,1)).toJSONObject().toString() );
-//            add((new SpriteDataAnimated(120,true, 1.0f, 4, "/blender/mandala9/",
-//                    "",false,5,1.0f,1)).toJSONObject().toString() );
-
-            add("{\"previewSize\":120,\"customPath\":\"\",\"defaultPath\":\"/blender/mandala1/\",\"val2\":5,\"isCyclic\":false,\"alpha\":1,\"val1\":1,\"scale\":1,\"enabled\":true,\"speedRate\":3}");
-            add("{\"previewSize\":120,\"customPath\":\"\",\"defaultPath\":\"/blender/mandala2/\",\"val2\":5,\"isCyclic\":true,\"alpha\":1,\"val1\":1,\"scale\":1,\"enabled\":true,\"speedRate\":2}");
-            add("{\"previewSize\":120,\"customPath\":\"\",\"defaultPath\":\"/blender/mandala3/\",\"val2\":5,\"isCyclic\":true,\"alpha\":1,\"val1\":1,\"scale\":1,\"enabled\":true,\"speedRate\":2}");
-            add("{\"previewSize\":120,\"customPath\":\"\",\"defaultPath\":\"/blender/mandala9/\",\"val2\":5,\"isCyclic\":false,\"alpha\":1,\"val1\":1,\"scale\":1,\"enabled\":true,\"speedRate\":4}");
-
-
-//            add(String.join(",",new String[]{"true","1.0f","3","/blender/mandala1/","","false","5", "1.0f", "1"}));
-//            add(String.join(",",new String[]{"true","1.0f","2","/blender/mandala2/","","true","4", "1.0f", "1"}));
-//            add(String.join(",",new String[]{"true","1.0f","2","/blender/mandala3/","","true","5", "1.0f", "1"}));
-//            add(String.join(",",new String[]{"true","1.2f","4","/blender/mandala9/","","false","4", "1.0f", "1"}));
-        }});
-
-        put(ConfigType.LIGHTNING_ALT, new SmartList<String>(){{
-            //public SpriteData(boolean enabled, float scale, int val1, String defaultPath, String customPath) {
-//            add( (new SpriteData(true,1.0f,6,
-//                    "/blender/lightningAlt/spark4/0150.png", "")).toJSONObject().toString());
-//            add( (new SpriteData(true,1.0f,30,
-//                    "/blender/lightningAlt/spark5/0150.png", "")).toJSONObject().toString());
-//            add( (new SpriteData(true,1.0f,80,
-//                    "/blender/lightningAlt/spark6/0150.png", "")).toJSONObject().toString());
-
-            add("{\"customPath\":\"\",\"defaultPath\":\"/blender/lightningAlt/spark4/0150.png\",\"val1\":6,\"scale\":1,\"enabled\":true}");
-            add("{\"customPath\":\"\",\"defaultPath\":\"/blender/lightningAlt/spark5/0150.png\",\"val1\":30,\"scale\":1,\"enabled\":true}");
-            add("{\"customPath\":\"\",\"defaultPath\":\"/blender/lightningAlt/spark6/0150.png\",\"val1\":80,\"scale\":1,\"enabled\":true}");
-
-
-//            add(String.join(",",new String[]{"true","1.0f","6","/blender/lightningAlt/spark4/0150.png",""}));
-//            add(String.join(",",new String[]{"true","1.0f","30","/blender/lightningAlt/spark5/0150.png",""}));
-//            add(String.join(",",new String[]{"true","1.0f","80","/blender/lightningAlt/spark6/0150.png",""}));
-        }});
-
-        put(ConfigType.LIZARD, new SmartList<String>(){{
-            add("{\"previewSize\":60,\"customPath\":\"\",\"defaultPath\":\"/blender/lizard\",\"val2\":1,\"isCyclic\":false,\"alpha\":1,\"val1\":2,\"scale\":0.4000000059604645,\"enabled\":true,\"speedRate\":3}");
-            add("{\"previewSize\":60,\"customPath\":\"\",\"defaultPath\":\"/blender/lizard2\",\"val2\":1,\"isCyclic\":false,\"alpha\":0.6000000238418579,\"val1\":2,\"scale\":0.6000000238418579,\"enabled\":true,\"speedRate\":3}");
-            add("{\"previewSize\":60,\"customPath\":\"\",\"defaultPath\":\"/blender/lizard\",\"val2\":1,\"isCyclic\":false,\"alpha\":1,\"val1\":10,\"scale\":0.20000000298023224,\"enabled\":true,\"speedRate\":3}");
-//            add((new SpriteDataAnimated(60,true, 0.4f, 3, "/blender/lizard",
-//                    "",false,1,1.0f,2)).toJSONObject().toString() );
-//            add((new SpriteDataAnimated(60,true, 0.6f, 3, "/blender/lizard2",
-//                    "",false,1,0.6f,2)).toJSONObject().toString() );
-//            add((new SpriteDataAnimated(60,true, 0.2f, 3, "/blender/lizard",
-//                    "",false,1,1.0f,10)).toJSONObject().toString() );
-
-//            add(String.join(",",new String[]{"true","0.4f","2","/blender/lizard","", "false","1","1.0f","2"}));
-//            add(String.join(",",new String[]{"true","0.6f","2","/blender/lizard2","", "false","1","0.6f","2"}));
-//            add(String.join(",",new String[]{"true","0.2f","2","/blender/lizard","", "false","1","1.0f","10"}));
-        }});
-
-        put(ConfigType.LINKER, new SmartList<String>(){{
-//            add((new SpriteDataAnimated(120,true, 0.3f, 2, "/blender/linkerI/chain1",
-//                    "",false,100,1.0f,1)).toJSONObject().toString() );
-//            add((new SpriteDataAnimated(120,true, 0.3f, 2, "/blender/linkerI/chain5",
-//                    "",false,6,0.6f,2)).toJSONObject().toString() );
-//            add((new SpriteDataAnimated(120,true, 0.2f, 2, "/blender/linkerI/chain4",
-//                    "",false,20,1.0f,10)).toJSONObject().toString() );
-
-            add("{\"previewSize\":60,\"customPath\":\"\",\"defaultPath\":\"/blender/linkerI/chain1\",\"val2\":100,\"isCyclic\":false,\"alpha\":1,\"val1\":1,\"scale\":0.30000001192092896,\"enabled\":true,\"speedRate\":2}");
-            add("{\"previewSize\":60,\"customPath\":\"\",\"defaultPath\":\"/blender/linkerI/chain5\",\"val2\":6,\"isCyclic\":false,\"alpha\":0.6000000238418579,\"val1\":2,\"scale\":0.30000001192092896,\"enabled\":true,\"speedRate\":2}");
-            add("{\"previewSize\":60,\"customPath\":\"\",\"defaultPath\":\"/blender/linkerI/chain4\",\"val2\":20,\"isCyclic\":false,\"alpha\":1,\"val1\":10,\"scale\":0.20000000298023224,\"enabled\":true,\"speedRate\":2}");
-
-//            add(String.join(",", new String[]{"true","0.3f","2","/blender/linkerI/chain1","", "false","100","1.0f","1"}));
-//            add(String.join(",", new String[]{"true","0.3f","2","/blender/linkerI/chain5","", "false","6","0.6f","2"}));
-//            add(String.join(",", new String[]{"true","0.2f","2","/blender/linkerI/chain4","", "false","20","1.0f","10"}));
-        }});
-
-        put(ConfigType.SOUND, new SmartList<String>(){{
-            //public SoundData(boolean enabled, int val1, String defaultPath, String customPath) {
-//            add( (new SoundData(true,20,"/sounds/h1.mp3","")).toJSONObject().toString());
-//            add( (new SoundData(true,20,"/sounds/h2.mp3","")).toJSONObject().toString());
-//            add( (new SoundData(true,20,"/sounds/h3.mp3","")).toJSONObject().toString());
-//            add( (new SoundData(true,20,"/sounds/h4.mp3","")).toJSONObject().toString());
-
-            add("{\"customPath\":\"\",\"defaultPath\":\"/sounds/h1.mp3\",\"val1\":20,\"enabled\":true}");
-            add("{\"customPath\":\"\",\"defaultPath\":\"/sounds/h2.mp3\",\"val1\":20,\"enabled\":true}");
-            add("{\"customPath\":\"\",\"defaultPath\":\"/sounds/h3.mp3\",\"val1\":20,\"enabled\":true}");
-            add("{\"customPath\":\"\",\"defaultPath\":\"/sounds/h4.mp3\",\"val1\":20,\"enabled\":true}");
-
-//            add(String.join(",", new String[]{"true","20","/sounds/h1.mp3",""}));
-//            add(String.join(",", new String[]{"true","20","/sounds/h2.mp3",""}));
-//            add(String.join(",", new String[]{"true","20","/sounds/h3.mp3",""}));
-//            add(String.join(",", new String[]{"true","20","/sounds/h4.mp3",""}));
-        }});
-
-        put(ConfigType.MUSIC_TRIGGER, new SmartList<String>(){{
-//            add( (new SoundData(true,0,"/sounds/music_triggers/trigger1.mp3","")).toJSONObject().toString());
-//            add( (new SoundData(true,1,"/sounds/music_triggers/trigger2.mp3","")).toJSONObject().toString());
-            add("{\"customPath\":\"\",\"defaultPath\":\"/sounds/music_triggers/trigger1.mp3\",\"val1\":0,\"enabled\":true}");
-            add("{\"customPath\":\"\",\"defaultPath\":\"/sounds/music_triggers/trigger2.mp3\",\"val1\":1,\"enabled\":true}");
-
-//            add(String.join(",", new String[]{"true","0","/sounds/music_triggers/trigger1.mp3",""}));
-//            add(String.join(",", new String[]{"true","1","/sounds/music_triggers/trigger2.mp3",""}));
-        }});
-
-        put(ConfigType.DROSTE, new SmartList<String>(){{
-
-            add("{\"previewSize\":120,\"customPath\":\"\",\"defaultPath\":\"/blender/droste1\",\"val2\":20,\"isCyclic\":false,\"alpha\":0.30000001192092896,\"val1\":40,\"scale\":0.4000000059604645,\"enabled\":true,\"speedRate\":2}");
-            add("{\"previewSize\":120,\"customPath\":\"\",\"defaultPath\":\"/blender/droste2\",\"val2\":20,\"isCyclic\":false,\"alpha\":1,\"val1\":80,\"scale\":0.6000000238418579,\"enabled\":false,\"speedRate\":2}");
-//            add((new SpriteDataAnimated(120,true, 0.4f, 2, "/blender/droste1",
-//                    "",false,20,0.3f,40)).toJSONObject().toString() );
-//            add((new SpriteDataAnimated(120,false, 0.6f, 2, "/blender/droste2",
-//                    "",false,20,1.0f,80)).toJSONObject().toString() );
-
-//            add(String.join(",", new String[]{"true","0.4f","2", "/blender/droste1","", "false","20","0.3f","40"}));
-//            add(String.join(",", new String[]{"false","0.6f","2", "/blender/droste2","", "false","20","1.0f","80"}));
-        }});
-
-        put(ConfigType.COPYPASTEVOID, new SmartList<String>(){{
-            add("{\"previewSize\":60,\"customPath\":\"\",\"defaultPath\":\"/blender/droste1\",\"val2\":1,\"isCyclic\":false,\"alpha\":1,\"val1\":2,\"scale\":0.4000000059604645,\"enabled\":true,\"speedRate\":2}");
-            add("{\"previewSize\":60,\"customPath\":\"\",\"defaultPath\":\"/blender/droste2\",\"val2\":1,\"isCyclic\":false,\"alpha\":0.6000000238418579,\"val1\":2,\"scale\":0.6000000238418579,\"enabled\":true,\"speedRate\":2}");
-
-//            add((new SpriteDataAnimated(60,true, 0.4f, 2, "/blender/droste1",
-//                    "",false,1,1.0f,2)).toJSONObject().toString() );
-//            add((new SpriteDataAnimated(60,true, 0.6f, 2, "/blender/droste2",
-//                    "",false,1,0.6f,2)).toJSONObject().toString() );
-
-//            add(String.join(",", new String[]{"true","0.4f","2","/blender/droste2","", "false","1","1.0f","2"}));
-//            add(String.join(",", new String[]{"true","0.6f","2","/blender/droste2","", "false","1","0.6f","2"}));
-        }});
-
-//        put(ConfigType.MUSIC_TRIGGER, new ArrayList<String[]>(){{
-//
-//
-//        }});
+        //populated by loading in .json files in resources folder.
     }};
 
     //consider JSON https://stackabuse.com/reading-and-writing-json-in-java/ ??
@@ -351,36 +204,15 @@ public class PowerMode3 implements BaseComponent,
 
 
 
-    void setSpriteTypeEnabled(Boolean enabled, ConfigType type){
-        configMap.put("sprite" + type + "Enabled", enabled.toString());
-    }
-    public boolean getSpriteTypeEnabled(ConfigType type){
-        return Boolean.parseBoolean(configMap.get("sprite"+type+"Enabled"));
-    }
-
-    public void setSpriteTypeProperty(ConfigType type, String property, String value){
-        configMap.put(String.format("sprite%s_%s", type, property), value);
-    }
-
-    public String getSpriteTypeProperty(ConfigType type, String property){
-        return configMap.get(String.format("sprite%s_%s", type, property));
-    }
-
-
-
-
-
-
-
-
-
-
     public static PowerMode3 getInstance() {
         return ApplicationManager.getApplication().getComponent(PowerMode3.class);
     }
 
     @Override
     public void initializeComponent() {
+
+        //Load JSON
+        ConfigLoader.loadDefaultJSONTableConfigs();
 
         //Setup SOUND handler
         final EditorActionManager actionManager = EditorActionManager.getInstance();
@@ -479,11 +311,26 @@ public class PowerMode3 implements BaseComponent,
     }
 
     @Override
+    public void noStateLoaded() {
+        LOGGER.info("NO State loaded previously");
+        this.setParticleRGB(JBColor.darkGray.getRGB());
+        pathDataMap = ConfigLoader.loadDefaultJSONTableConfigs();
+
+        loadConfigData();
+    }
+
+    @Override
     public void loadState(@NotNull PowerMode3 state) {
         LOGGER.info("previous state found -- setting up...");
+//        pathDataMap = ConfigLoader.loadDefaultJSONTableConfigs();
 
         XmlSerializerUtil.copyBean(state, this);
+
+
+
+
         loadConfigData();
+
     }
 
     @com.intellij.util.xmlb.annotations.Transient
@@ -494,7 +341,7 @@ public class PowerMode3 implements BaseComponent,
 //    public boolean isLoading = false;
 
     public void loadConfigData(){
-        boolean DO_BACKGROUND_LOAD = true;
+        boolean DO_BACKGROUND_LOAD = false;
 //        boolean DO_BACKGROUND_LOAD = false;
 
         if(DO_BACKGROUND_LOAD) {
@@ -675,14 +522,7 @@ public class PowerMode3 implements BaseComponent,
 
 
 
-    @Override
-    public void noStateLoaded() {
-        LOGGER.info("NO State loaded previously");
-        this.setParticleRGB(JBColor.darkGray.getRGB());
 
-
-        loadConfigData();
-    }
 
     public boolean isEnabled() {
         return enabled;
@@ -690,6 +530,23 @@ public class PowerMode3 implements BaseComponent,
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
+
+
+    void setSpriteTypeEnabled(Boolean enabled, ConfigType type){
+        configMap.put("sprite" + type + "Enabled", enabled.toString());
+    }
+    public boolean getSpriteTypeEnabled(ConfigType type){
+        return Boolean.parseBoolean(configMap.get("sprite"+type+"Enabled"));
+    }
+
+    public void setSpriteTypeProperty(ConfigType type, String property, String value){
+        configMap.put(String.format("sprite%s_%s", type, property), value);
+    }
+
+    public String getSpriteTypeProperty(ConfigType type, String property){
+        return configMap.get(String.format("sprite%s_%s", type, property));
+    }
+
 
 
     public int getLifetime() { return lifetime; }
@@ -770,5 +627,9 @@ public class PowerMode3 implements BaseComponent,
 
 
     }
+
+
+
 }
+
 

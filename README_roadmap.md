@@ -2,19 +2,18 @@
 
 TODO: everything
 
----- save pathData like this:
-- HashMap<Enum Type, SmartList<String>>
-//have String a JSONString
-https://stackoverflow.com/questions/29550006/how-to-have-jackson-use-a-method-to-serialize-a-class-to-json
 
-
-
--  download assets button in settings (RED !)
-   -  opens dialog pointing to isntructions to clone
+-  "LOAD Custom Config pack" button
+   -  opens dialog pointing to instructions to clone
    -  dialog then asks user to locate download location on drive
-   -  once location is set, change to big green checkmark
    - Config panels can load a 'pack' of images if this location is set
-      - e.g. load a 'plant growing' theme 
+       
+      
+    --repo contents
+    --- root
+      - plant Theme
+      - chicken Theme
+      - Programming Language X Icon Theme (Python/Elixir/Go etc..) 
 
  
 - Special Key Sound Options (Copy/Paste/Del/Backspace)
@@ -32,11 +31,17 @@ https://stackoverflow.com/questions/29550006/how-to-have-jackson-use-a-method-to
  x
  x
  ```
+
 - glyph chain (3-4 glyph thing) (gold)
    -  each keypress moves animation 1 frame
       - horse running
-      - 
+      
+      
+BELOW NEED "FONTSET" type datatype;      
 - TOKEN callout with decoration above
+  - can choose 'holder' animation/image
+  - can choose 'font' to display each char typed
+  
 - 36daysofType callout https://mantissa.xyz/resources
 - 36daysofType COMPLETE replacement of all characters LOL
    - would require minimum fontsize?
@@ -63,6 +68,17 @@ Done;
 - Max 500 *.png or 1.0GB of data per Image Collection
 
 future TODO:
+
+- BUILDUP_MONITOR, where you hit different thresholds
+  - based on threshold, different SOUNDS/EFFECTS HAPPEN
+  - thresholds can be based on wpm
+  - can be based on typing X characters to achieve threshold 2
+     - then type Y characters more to achieve threshold 3
+     - then resets back to threshold 1  
+
+- investigate Jackson with Config Objects...
+   - https://stackoverflow.com/questions/29550006/how-to-have-jackson-use-a-method-to-serialize-a-class-to-json
+
 - benchmark Powermode3.getInstance(); -- just use it everywhere if good
 
 - more Editor listeners (backspace/delete/copy)

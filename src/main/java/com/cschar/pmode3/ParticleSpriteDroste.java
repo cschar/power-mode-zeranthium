@@ -176,7 +176,14 @@ public class ParticleSpriteDroste extends Particle{
 
     public boolean update() {
 //        If entire plugin is turned off
-        if(!PowerMode3.getInstance().isEnabled()){
+        //TODO cleanup with class access to settings
+        PowerMode3 s = PowerMode3.getInstance();
+        if(!s.isEnabled()){
+            CUR_COUNT[spriteDataIndex] -= 1;
+            return true;
+        }
+
+        if(!s.getSpriteTypeEnabled(PowerMode3.ConfigType.DROSTE)){
             CUR_COUNT[spriteDataIndex] -= 1;
             return true;
         }

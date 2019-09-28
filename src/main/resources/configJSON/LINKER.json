@@ -1,0 +1,40 @@
+{
+  "data": [
+    {
+      "previewSize": 60,
+      "customPath": "",
+      "defaultPath": "/blender/linkerI/chain1",
+      "val2": 100,
+      "isCyclic": false,
+      "alpha": 1,
+      "val1": 1,
+      "scale": 0.3,
+      "enabled": true,
+      "speedRate": 2
+    },
+    {
+      "previewSize": 60,
+      "customPath": "",
+      "defaultPath": "/blender/linkerI/chain5",
+      "val2": 6,
+      "isCyclic": false,
+      "alpha": 0.6,
+      "val1": 2,
+      "scale": 0.3,
+      "enabled": true,
+      "speedRate": 2
+    },
+    {
+      "previewSize": 60,
+      "customPath": "",
+      "defaultPath": "/blender/linkerI/chain4",
+      "val2": 20,
+      "isCyclic": false,
+      "alpha": 1,
+      "val1": 10,
+      "scale": 0.2,
+      "enabled": true,
+      "speedRate": 2
+    }
+  ]
+}

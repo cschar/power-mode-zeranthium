@@ -1,0 +1,25 @@
+{
+  "data": [
+    {
+      "customPath": "",
+      "defaultPath": "/blender/lightningAlt/spark4/0150.png",
+      "val1": 6,
+      "scale": 1,
+      "enabled": true
+    },
+    {
+      "customPath": "",
+      "defaultPath": "/blender/lightningAlt/spark5/0150.png",
+      "val1": 30,
+      "scale": 1,
+      "enabled": true
+    },
+    {
+      "customPath": "",
+      "defaultPath": "/blender/lightningAlt/spark6/0150.png",
+      "val1": 80,
+      "scale": 1,
+      "enabled": true
+    }
+  ]
+}

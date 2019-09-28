@@ -1,0 +1,12 @@
+
+
+{"data":
+   [
+  {"previewSize":60,"customPath":"","defaultPath":"/blender/lizard","val2":1,
+    "isCyclic":false,"alpha":1,"val1":2,"scale":0.4,"enabled":true,"speedRate":3},
+  {"previewSize":60,"customPath":"","defaultPath":"/blender/lizard2","val2":1,
+    "isCyclic":false,"alpha":0.6,"val1":2,"scale":0.6,"enabled":true,"speedRate":3},
+  {"previewSize":60,"customPath":"","defaultPath":"/blender/lizard","val2":1,
+    "isCyclic":false,"alpha":1,"val1":10,"scale":0.2,"enabled":true,"speedRate":3}
+ ]
+}
