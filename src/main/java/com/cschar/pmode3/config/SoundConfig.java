@@ -30,7 +30,6 @@ import java.util.ArrayList;
 public class SoundConfig extends JPanel {
 
 
-    private JCheckBox soundEnabled;
     public static ArrayList<SoundData> soundData;
 
     PowerMode3 settings;
@@ -59,9 +58,6 @@ public class SoundConfig extends JPanel {
         headerSubLabel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
         firstRow.add(headerSubLabel);
 
-        soundEnabled = new JCheckBox("Sound Enabled?");
-        soundEnabled.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
-        firstRow.add(soundEnabled);
 
         this.add(firstRow);
 
@@ -134,16 +130,11 @@ public class SoundConfig extends JPanel {
     }
 
     public void loadValues(){
-
-        this.soundEnabled.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.SOUND,"soundEnabled", true));
+        //Done in plugin setup since config panel may not be launched before typing action
     }
 
     public void saveValues() {
-
-        settings.setSpriteTypeProperty(PowerMode3.ConfigType.SOUND, "soundEnabled", String.valueOf(soundEnabled.isSelected()));
-
         settings.setSerializedSoundData(SoundConfig.soundData, PowerMode3.ConfigType.SOUND);
-
     }
 
     public static void setSoundData(ArrayList<SoundData> data){
@@ -151,9 +142,6 @@ public class SoundConfig extends JPanel {
     }
 
 
-    public static boolean SOUND_ENABLED(PowerMode3 settings){
-        return Config.getBoolProperty(settings, PowerMode3.ConfigType.SOUND, "soundEnabled");
-    }
 
 
 
@@ -168,8 +156,6 @@ public class SoundConfig extends JPanel {
             SoundConfig.soundData.set(i, consumeJSONConfig(spriteDataRow, i, parentPath));
         }//table data will change on scroll
 
-        //enable when loading
-        this.soundEnabled.setSelected(true);
     }
 
 

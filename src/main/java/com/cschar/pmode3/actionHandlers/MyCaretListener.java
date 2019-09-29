@@ -17,7 +17,7 @@ import java.awt.*;
 
 public class MyCaretListener implements CaretListener {
 
-    public static boolean enabled = true;
+    public static boolean enabled = true; //CopyPasteVoid
 
     @Override
     public void caretPositionChanged(@NotNull CaretEvent event) {

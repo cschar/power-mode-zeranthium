@@ -67,6 +67,8 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private JPanel mainBottomPanel;
     private JPanel mainTopPanel;
     private JButton loadPackButton;
+    private JCheckBox enableBasicSound;
+    private JCheckBox enableActionSound;
 
 
     private BasicParticleConfig basicParticleConfig;
@@ -153,6 +155,15 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
             enableCopyPasteVoid.setSelected(true);
         }
 
+        //Sound
+        if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.SOUND)){
+            enableBasicSound.setSelected(true);
+        }
+        if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.SPECIAL_ACTION_SOUND)){
+            enableActionSound.setSelected(true);
+        }
+
+
         if(!settings.isConfigLoaded){
             isEnabledCheckBox.setEnabled(false);
             mainTopPanel.setEnabled(false);
@@ -235,6 +246,10 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         settings.setSpriteTypeEnabled(enableLinkerCheckbox.isSelected(), PowerMode3.ConfigType.LINKER);
         settings.setSpriteTypeEnabled(enableDrosteCheckbox.isSelected(), PowerMode3.ConfigType.DROSTE);
         settings.setSpriteTypeEnabled(enableCopyPasteVoid.isSelected(), PowerMode3.ConfigType.COPYPASTEVOID);
+
+        //Sound
+        settings.setSpriteTypeEnabled(enableBasicSound.isSelected(), PowerMode3.ConfigType.SOUND);
+        settings.setSpriteTypeEnabled(enableActionSound.isSelected(), PowerMode3.ConfigType.SPECIAL_ACTION_SOUND);
 
 
         if(!settings.isConfigLoaded){
@@ -573,6 +588,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
                 }
     
                 if(configKey.equals("SOUND")){
+                    enableBasicSound.setSelected(true);
                     soundConfig.loadJSONConfig(configKeyData, path.getParent());
                 }
 

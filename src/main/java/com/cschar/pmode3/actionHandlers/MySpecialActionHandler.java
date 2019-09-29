@@ -42,8 +42,8 @@ public class MySpecialActionHandler extends EditorActionHandler implements Edito
 
         PowerMode3 settings = PowerMode3.getInstance();
 
-//        if(!settings.isEnabled() || !settings.getSpriteTypeEnabled(PowerMode3.ConfigType.SPECIAL_ACTION_SOUND)){
-        if(!settings.isEnabled()){
+        if(!settings.isEnabled() || !settings.getSpriteTypeEnabled(PowerMode3.ConfigType.SPECIAL_ACTION_SOUND)){
+//        if(!settings.isEnabled()){
             origEditorActionHandler.execute(editor, caret, dataContext);
             return;
         }

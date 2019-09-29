@@ -193,6 +193,9 @@ public class PowerMode3 implements BaseComponent,
         put("sprite"+ ConfigType.LINKER + "Enabled", "false");
         put("sprite"+ ConfigType.DROSTE + "Enabled", "false");
         put("sprite"+ ConfigType.COPYPASTEVOID + "Enabled", "true");
+
+        put("sprite"+ ConfigType.SOUND + "Enabled", "true");
+        put("sprite"+ ConfigType.SPECIAL_ACTION_SOUND + "Enabled", "false");
     }};
 
 
@@ -216,17 +219,16 @@ public class PowerMode3 implements BaseComponent,
                                       @Override
                                       public void execute(@NotNull Editor editor, char c, @NotNull DataContext dataContext) {
 //                                          PowerMode3 settings = PowerMode3.getInstance();
-                                          if(PowerMode3.this.isEnabled()) {
+                                          if(PowerMode3.this.isEnabled() && PowerMode3.this.getSpriteTypeEnabled(ConfigType.SOUND)) {
 
-                                              if (SoundConfig.SOUND_ENABLED(PowerMode3.this)) {
-                                                  int winner = SoundData.getWeightedAmountWinningIndex(SoundConfig.soundData);
-                                                  if( winner != -1){
-                                                      //TODO refactor to just return object or null
-                                                      SoundData d = SoundConfig.soundData.get(winner);
-                                                      Sound s = new Sound(d.getPath(), !d.customPathValid);
-                                                      s.play();
-                                                  }
+                                              int winner = SoundData.getWeightedAmountWinningIndex(SoundConfig.soundData);
+                                              if( winner != -1){
+                                                  //TODO refactor to just return object or null
+                                                  SoundData d = SoundConfig.soundData.get(winner);
+                                                  Sound s = new Sound(d.getPath(), !d.customPathValid);
+                                                  s.play();
                                               }
+
                                           }
                                           rawHandler2.execute(editor,c,dataContext);
                                       }
@@ -567,7 +569,7 @@ public class PowerMode3 implements BaseComponent,
 
     private void setupActionEditorKeys(){
         final EditorActionManager actionManager = EditorActionManager.getInstance();
-        
+
 
         MySpecialActionHandler h1;
         EditorActionHandler origHandler;
