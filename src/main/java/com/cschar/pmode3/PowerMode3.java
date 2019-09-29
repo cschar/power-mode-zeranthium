@@ -19,6 +19,7 @@ package com.cschar.pmode3;
 
 
 import com.cschar.pmode3.actionHandlers.MyPasteHandler;
+import com.cschar.pmode3.actionHandlers.MySpecialActionHandler;
 import com.cschar.pmode3.config.*;
 import com.cschar.pmode3.config.common.SoundData;
 import com.cschar.pmode3.config.common.SpriteData;
@@ -114,7 +115,8 @@ public class PowerMode3 implements BaseComponent,
         SOUND,
         MUSIC_TRIGGER,
         DROSTE,
-        COPYPASTEVOID
+        COPYPASTEVOID,
+        SPECIAL_ACTION_SOUND
     }
 
     static class JSONLoader {
@@ -131,6 +133,7 @@ public class PowerMode3 implements BaseComponent,
                 put(ConfigType.MANDALA, "MANDALA.json");
                 put(ConfigType.MUSIC_TRIGGER, "MUSIC_TRIGGERS.json");
                 put(ConfigType.SOUND, "SOUND.json");
+                put(ConfigType.SPECIAL_ACTION_SOUND, "SPECIAL_ACTION_SOUND.json");
 
             }};
             HashMap<ConfigType,SmartList<String>> pathDataMap = new HashMap<ConfigType,SmartList<String>>();
@@ -206,8 +209,6 @@ public class PowerMode3 implements BaseComponent,
 
         //Setup SOUND handler
         final EditorActionManager actionManager = EditorActionManager.getInstance();
-//        final TypedAction typedAction0 = actionManager.getTypedAction();
-//        typedAction0.setupHandler(new SoundTypedActionHandler(typedAction0));
 
         final TypedAction typedAction2 = actionManager.getTypedAction();
         TypedActionHandler rawHandler2 = typedAction2.getRawHandler();
@@ -219,7 +220,6 @@ public class PowerMode3 implements BaseComponent,
 
                                               if (SoundConfig.SOUND_ENABLED(PowerMode3.this)) {
                                                   int winner = SoundData.getWeightedAmountWinningIndex(SoundConfig.soundData);
-//                                              int r = ThreadLocalRandom.current().nextInt(0, SoundConfig.soundData.size());
                                                   if( winner != -1){
                                                       //TODO refactor to just return object or null
                                                       SoundData d = SoundConfig.soundData.get(winner);
@@ -227,17 +227,14 @@ public class PowerMode3 implements BaseComponent,
                                                       s.play();
                                                   }
                                               }
-
                                           }
-
                                           rawHandler2.execute(editor,c,dataContext);
                                       }
                                   });
 
 
-//        this.setupCursorMovementAction();
-        this.setupExtraEditorActions();
 
+        this.setupActionEditorKeys();
 
 
         this.particleColor = new JBColor(new Color(this.getParticleRGB()), new Color(this.getParticleRGB()));
@@ -364,7 +361,7 @@ public class PowerMode3 implements BaseComponent,
         this.enabled = false;
 
         if(!this.isConfigLoaded) {
-        LOGGER.info("Loading assets");
+            LOGGER.info("Loading assets");
 //            for(ConfigType)
 
 
@@ -388,6 +385,7 @@ public class PowerMode3 implements BaseComponent,
             setUpdateProgress(progressIndicator, "Sounds", 0.8);
             SoundConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.SOUND)));
             MusicTriggerConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.MUSIC_TRIGGER)));
+            SpecialActionSoundConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.SPECIAL_ACTION_SOUND)));
 
 
             this.enabled = wasEnabled;
@@ -425,6 +423,7 @@ public class PowerMode3 implements BaseComponent,
 
             SoundConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.SOUND)));
             MusicTriggerConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.MUSIC_TRIGGER)));
+            SpecialActionSoundConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.SPECIAL_ACTION_SOUND)));
         }
         this.isConfigLoaded = true;
 
@@ -565,55 +564,39 @@ public class PowerMode3 implements BaseComponent,
 
 
 
-    private void setupExtraEditorActions(){
+
+    private void setupActionEditorKeys(){
         final EditorActionManager actionManager = EditorActionManager.getInstance();
+        
 
+        MySpecialActionHandler h1;
+        EditorActionHandler origHandler;
 
-        String[] caret_movement = new String[]{
-                IdeActions.ACTION_EDITOR_PASTE};
+        //COPYPASTEVOID
+        origHandler = actionManager.getActionHandler(IdeActions.ACTION_EDITOR_PASTE);
+        MyPasteHandler myPasteHandler = new MyPasteHandler(origHandler);
+        actionManager.setActionHandler(IdeActions.ACTION_EDITOR_PASTE, myPasteHandler);
 
-        for(String s : caret_movement){
-            EditorActionHandler origHandler = actionManager.getActionHandler(s);
+        //SPECIAL_ACTION_SOUND
+        origHandler = actionManager.getActionHandler(IdeActions.ACTION_EDITOR_COPY);
+        h1 = new MySpecialActionHandler(origHandler, SpecialActionSoundConfig.KEYS.COPY);
+        actionManager.setActionHandler(IdeActions.ACTION_EDITOR_COPY, h1);
 
-            MyPasteHandler myPasteHandler = new MyPasteHandler(origHandler);
+        origHandler = actionManager.getActionHandler(IdeActions.ACTION_EDITOR_PASTE);
+        h1 = new MySpecialActionHandler(origHandler, SpecialActionSoundConfig.KEYS.PASTE);
+        actionManager.setActionHandler(IdeActions.ACTION_EDITOR_PASTE, h1);
 
-            actionManager.setActionHandler(s, myPasteHandler);
-        }
-    }
+        origHandler = actionManager.getActionHandler(IdeActions.ACTION_EDITOR_DELETE);
+        h1 = new MySpecialActionHandler(origHandler, SpecialActionSoundConfig.KEYS.DELETE);
+        actionManager.setActionHandler(IdeActions.ACTION_EDITOR_DELETE, h1);
 
-    private void setupCursorMovementAction(){
-        final EditorActionManager actionManager = EditorActionManager.getInstance();
+        origHandler = actionManager.getActionHandler(IdeActions.ACTION_EDITOR_BACKSPACE);
+        h1 = new MySpecialActionHandler(origHandler, SpecialActionSoundConfig.KEYS.BACKSPACE);
+        actionManager.setActionHandler(IdeActions.ACTION_EDITOR_BACKSPACE, h1);
 
-
-        String[] caret_movement = new String[]{
-                IdeActions.ACTION_EDITOR_MOVE_CARET_DOWN,
-                IdeActions.ACTION_EDITOR_MOVE_CARET_UP,
-                IdeActions.ACTION_EDITOR_MOVE_CARET_LEFT,
-                IdeActions.ACTION_EDITOR_MOVE_CARET_RIGHT};
-
-        for(String s : caret_movement){
-            EditorActionHandler origHandler = actionManager.getActionHandler(s);
-            EditorActionHandler h1 = new EditorActionHandler() {
-                @Override
-                protected void doExecute(@NotNull Editor editor, @Nullable Caret caret, DataContext dataContext) {
-                    super.doExecute(editor, caret, dataContext);
-
-
-
-                    origHandler.execute(editor,caret,dataContext);
-                    LOGGER.info(s);
-                    VisualPosition visualPosition = editor.getCaretModel().getVisualPosition();
-                    Point point = editor.visualPositionToXY(visualPosition);
-                    ScrollingModel scrollingModel = editor.getScrollingModel();
-                    point.x = point.x - scrollingModel.getHorizontalScrollOffset();
-                    point.y = point.y - scrollingModel.getVerticalScrollOffset();
-
-                    ParticleSpriteDroste.cursorX = point.x;
-                    ParticleSpriteDroste.cursorY = point.y;
-                }
-            };
-            actionManager.setActionHandler(s, h1);
-        }
+        origHandler = actionManager.getActionHandler(IdeActions.ACTION_EDITOR_ENTER);
+        h1 = new MySpecialActionHandler(origHandler, SpecialActionSoundConfig.KEYS.ENTER);
+        actionManager.setActionHandler(IdeActions.ACTION_EDITOR_ENTER, h1);
 
 
     }

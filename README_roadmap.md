@@ -2,14 +2,6 @@
 
 TODO: everything
 
-
--  "LOAD Custom Config pack" button
-   -  opens dialog pointing to instructions to clone
-   -  dialog then asks user to locate download location on drive
-   - Config panels can load a 'pack' of images if this location is set
-       
-     
- 
 - Special Key Sound Options (Copy/Paste/Del/Backspace)
   - Howie Scream on paste 
 
@@ -29,7 +21,7 @@ TODO: everything
 - glyph chain (3-4 glyph thing) (gold)
    -  each keypress moves animation 1 frame
       - horse running
-      
+      - chicken pecking dirt lol
       
 BELOW NEED "FONTSET" type datatype;      
 - TOKEN callout with decoration above
@@ -42,7 +34,7 @@ BELOW NEED "FONTSET" type datatype;
    - or 'master font set 100x100px' would 'generate' font
    size set for current fontsize e.g. 14pt
    would show a 'genereating font' after setting is set
-- Test multiple editors w/ MAX_RINGS etc.
+- Test multiple editors w/ MAX_RINGS etc./ DROSTE
 
 
 
@@ -60,7 +52,8 @@ Done;
 - copypasteVoid effect
 - Background Loading of Assets
 - Max 500 *.png or 1.0GB of data per Image Collection
-
+- "LOAD Custom Config packs" -- Support DROSTE/LIZARD/SOUND/MANDALA
+   
 
 future TODO:
 
@@ -76,6 +69,7 @@ future TODO:
 
 - benchmark Powermode3.getInstance(); -- just use it everywhere if good
 
+- Add PackLoader support for all settings, provide template for how to write config file
 
 - code explorer (e.g. wave collapse for dungeon background)
 ---- when you type it lights up background, e.g. icnreasing alpha from 0->0.1

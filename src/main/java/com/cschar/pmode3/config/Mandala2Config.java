@@ -205,7 +205,7 @@ public class Mandala2Config extends JPanel{
 //                    jo.getInt("val2"),
                     (float) jo.getDouble("alpha"),
                     1);
-            
+
             spriteDataAnimated.set(i, sd);
         }
     }

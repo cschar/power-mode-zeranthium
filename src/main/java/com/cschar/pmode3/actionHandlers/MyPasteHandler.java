@@ -33,7 +33,8 @@ public class MyPasteHandler extends EditorActionHandler implements EditorTextIns
 
 
         PowerMode3 settings = PowerMode3.getInstance();
-        if(!settings.getSpriteTypeEnabled(PowerMode3.ConfigType.COPYPASTEVOID)){
+
+        if(!settings.isEnabled() || !settings.getSpriteTypeEnabled(PowerMode3.ConfigType.COPYPASTEVOID)){
             origEditorActionHandler.execute(editor, caret, dataContext);
             return;
         }

@@ -1,11 +1,9 @@
 package com.cschar.pmode3;
 
 import com.cschar.pmode3.config.*;
-import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.Shortcut;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
@@ -15,11 +13,9 @@ import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.options.ConfigurableUi;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTabbedPane;
-import com.intellij.util.SmartList;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -35,9 +31,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.Scanner;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -54,6 +48,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
     private SoundConfig soundConfig;
     private MusicTriggerConfig musicTriggerConfig;
+    private SpecialActionSoundConfig specialActionSoundConfig;
 
     private JCheckBox enableLightningCheckBox;
     private JCheckBox enableLizardCheckBox;
@@ -198,6 +193,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         //sound panel
         this.soundConfig.loadValues();
         this.musicTriggerConfig.loadValues();
+        this.specialActionSoundConfig.loadValues();
     }
 
 
@@ -261,6 +257,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         //sound panel
         this.soundConfig.saveValues();
         this.musicTriggerConfig.saveValues();
+        this.specialActionSoundConfig.saveValues();
 
     }
 
@@ -366,8 +363,14 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         soundSettingsPanel.add(soundConfig);
 
         soundSettingsPanel.add(this.createSpacer());
+        specialActionSoundConfig = new SpecialActionSoundConfig(settings);
+        soundSettingsPanel.add(specialActionSoundConfig);
+
+        soundSettingsPanel.add(this.createSpacer());
         musicTriggerConfig = new MusicTriggerConfig(settings);
         soundSettingsPanel.add(musicTriggerConfig);
+
+
 
         JPanel footerPanel = new JPanel();
         footerPanel.setMinimumSize(new Dimension(100, 300));
