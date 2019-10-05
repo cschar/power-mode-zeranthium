@@ -96,6 +96,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         ParticleSpriteLockedLayer.cleanup(this.editor);
         ParticleSpriteDroste.cleanup(this.editor);
         ParticleSpriteMandala.cleanup(this.editor);
+        ParticleSpriteLinkerAnchor.cleanup(this.editor);
 
     }
 
@@ -373,20 +374,17 @@ public class ParticleContainer extends JComponent implements ComponentListener {
                 validAnchors.add(a);
             }
 
-            boolean createParticle = false;
+            boolean createParticle = true;
             if(LinkerConfig.IS_CYCLIC_ENABLED(settings)){
                 //TODO make a config init() on each particle that loads when plugin launches
                 //so its loaded on startup without cranking open config
                 ParticleSpriteLinkerAnchor.MAX_CYCLE_PARTICLES = LinkerConfig.MAX_CYCLE_PARTICLES(settings);
                 ParticleSpriteLinkerAnchor.cyclicToggleEnabled = true;
 
-
-                if(ParticleSpriteLinkerAnchor.CUR_CYCLE_PARTICLES < ParticleSpriteLinkerAnchor.MAX_CYCLE_PARTICLES) {
-                    ParticleSpriteLinkerAnchor.CUR_CYCLE_PARTICLES += 1;
-                    createParticle = true;
+                Integer CUR_PARTICLES = ParticleSpriteLinkerAnchor.spawnMap.get(this.editor);
+                if( CUR_PARTICLES != null && (CUR_PARTICLES >= ParticleSpriteLinkerAnchor.MAX_CYCLE_PARTICLES)) {
+                    createParticle = false;
                 }
-            }else {
-                createParticle = true;
             }
 
             if(createParticle){
@@ -397,7 +395,8 @@ public class ParticleContainer extends JComponent implements ComponentListener {
                         LinkerConfig.WOBBLE_AMOUNT(settings),
                         LinkerConfig.TRACER_ENABLED(settings),
                         LinkerConfig.CURVE1_AMOUNT(settings),
-                        LinkerConfig.IS_CYCLIC_ENABLED(settings));
+                        LinkerConfig.IS_CYCLIC_ENABLED(settings),
+                        this.editor);
                 particles.add(e);
             }
 

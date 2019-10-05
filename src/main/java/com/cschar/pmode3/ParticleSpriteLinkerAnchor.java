@@ -19,11 +19,14 @@ package com.cschar.pmode3;
 
 import com.cschar.pmode3.config.Mandala2Config;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
+import com.intellij.openapi.editor.Editor;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ParticleSpriteLinkerAnchor extends Particle{
 
@@ -58,24 +61,27 @@ public class ParticleSpriteLinkerAnchor extends Particle{
     private boolean tracerEnabled;
     private int curve1Amount;
     private boolean isSingleCyclicEnabled;
-    private int maxLife;
+
     private int frameLife;
 
     int[][] repeats_offsets;
     boolean[][] validOnPosIndex;
     private int[] pointsToStartFrom;
 
-    //TODO:: QUESTIONABLE way to do cyclic particle
+
     public static int MAX_CYCLE_PARTICLES = 3;
-    public static int CUR_CYCLE_PARTICLES = 0;
 
 
-    PowerMode3 settings;
+    public static Map<Editor, Integer> spawnMap = new HashMap<>();
+    private Editor editor;
+
+
+
     public ParticleSpriteLinkerAnchor(int x, int y, int dx, int dy, int size, int life, Color c,
                                       ArrayList<Anchor> anchors, int distanceFromCenter, int maxLinks, int wobbleAmount,
-                                      boolean tracerEnabled, int curve1Amount, boolean isCyclic) {
+                                      boolean tracerEnabled, int curve1Amount, boolean isCyclic, Editor editor) {
         super(x,y,dx,dy,size,life,c);
-         settings = PowerMode3.getInstance();
+        this.editor = editor;
 
         this.anchors = anchors;
 
@@ -91,9 +97,14 @@ public class ParticleSpriteLinkerAnchor extends Particle{
         this.isSingleCyclicEnabled = isCyclic;
 
 
-        this.frameLife = 1000000;
+        if(spawnMap.get(this.editor) != null) {
+            spawnMap.put(this.editor, spawnMap.get(this.editor) + 1);
+        }else {
+            spawnMap.put(this.editor, 1);
+        }
 
-        this.maxLife = this.life;
+
+        this.frameLife = 1000000;
 
 
         this.frames = new int[spriteDataAnimated.size()];
@@ -185,24 +196,24 @@ public class ParticleSpriteLinkerAnchor extends Particle{
 
         if (!settings.isEnabled()) {
             if(this.isSingleCyclicEnabled) {
-                CUR_CYCLE_PARTICLES -= 1;
+                cleanupSingle(this.editor);
             }
             return true;
         }
 
         //TODO FIX THIS GARBAGE LOL
         if(this.isSingleCyclicEnabled){
-            if(MAX_CYCLE_PARTICLES < CUR_CYCLE_PARTICLES){ // if changed in settings
-                CUR_CYCLE_PARTICLES -= 1;
+            if(MAX_CYCLE_PARTICLES < spawnMap.get(editor)){ // if changed in settings
+                cleanupSingle(this.editor);
                 return true;
             }
             if(!cyclicToggleEnabled){ //checkbox toggle in config
-                CUR_CYCLE_PARTICLES -= 1;
+                cleanupSingle(this.editor);
                 return true;
             }
             //added to kill any lingering particles
             if(!settingEnabled){ //checkbox of entire LINKER type
-                CUR_CYCLE_PARTICLES -= 1;
+                cleanupSingle(this.editor);
                 return true;
             }
 
@@ -241,11 +252,6 @@ public class ParticleSpriteLinkerAnchor extends Particle{
         if(lifeOver) { //ready to reset?
             if (this.isSingleCyclicEnabled) {
 
-                //If entire plugin is turned off
-//                if (!PowerMode3.getInstance().isEnabled()) {
-//                    CUR_CYCLE_PARTICLES -= 1;
-//                    return true;
-//                }
                 this.life = 99; //wont last long if cycle switch off
                 if(frameLife < 1000){
                     frameLife = 1000000;
@@ -255,6 +261,24 @@ public class ParticleSpriteLinkerAnchor extends Particle{
         }
 
         return lifeOver;
+    }
+
+    private static void cleanupSingle(Editor e){
+        Integer CUR_PARTICLES = spawnMap.get(e);
+        if(CUR_PARTICLES != null){
+            if(CUR_PARTICLES > 1){
+                spawnMap.put(e, CUR_PARTICLES -1);
+            }else {
+                spawnMap.remove(e);
+            }
+        }
+    }
+
+    public static void cleanup(Editor e){
+
+        if(spawnMap.get(e) != null){
+            spawnMap.remove(e);
+        }
     }
 
 

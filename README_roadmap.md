@@ -22,10 +22,7 @@ TODO: everything
       - horse running
       - chicken pecking dirt lol
       
-- locked layer that fills up entire editor screen
-   - e.g. for a clippy style avatar
-   - 'Stretch' or
-   - Anchor Top/Bot  Left/Right
+
       
 BELOW NEED "FONTSET" type datatype;      
 - TOKEN callout with decoration above
@@ -52,12 +49,13 @@ Done;
 - hotkey to activate (bonus: configurable?)
 - Sound panel (Tabbed Panel)
 - Play 2x Song w/ 2 Hotkeys to trigger each one
-- Void/DrosteEffect
-- copypasteVoid effect
+- DrosteEffect
+- CopyPasteVoid effect
 - Background Loading of Assets
 - Max 500 *.png or 1.0GB of data per Image Collection
 - "LOAD Custom Config packs" -- Support DROSTE/LIZARD/SOUND/MANDALA
 - Action Key Sound Options (Copy/Paste/Backspace/Del/Enter) 
+- Locked layer that stretches or pins to corner
 
 future TODO:
 
