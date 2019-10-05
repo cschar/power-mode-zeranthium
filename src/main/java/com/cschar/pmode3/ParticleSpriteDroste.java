@@ -21,6 +21,7 @@ package com.cschar.pmode3;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.intellij.notification.Notification;
 import com.intellij.notification.Notifications;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.ui.Messages;
 import org.imgscalr.Scalr;
 
@@ -29,41 +30,20 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 
 //TODO: rename to ReverseDrosteEffect ?
 public class ParticleSpriteDroste extends Particle{
 
-    private static ArrayList<BufferedImage> sprites;
-
+    private static ArrayList<BufferedImage> sprites = new ArrayList<BufferedImage>();
     public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
-
-    static {
-        //TODO load up sprites here if the list is empty....
-        // the list will only be empty if an options panel as not been opened.
-
-//        Messages.showInfoMessage("Loading Droste","Loading Droste Sprites");
-//        Notification n = new Notification()?
-//        Notifications.Bus.notify();
-        sprites = new ArrayList<BufferedImage>();
-//        for(int i=1; i <= 60; i++){
-//            sprites.add(ParticleUtils.loadSprite(String.format("/blender/droste1/0%03d.png", i)));
-//        }
-//        for(int i=1; i <= 1; i++){
-//            sprites.add(ParticleUtils.loadSprite(String.format("/blender/droste2/0%03d.png", i)));
-//        }
-
-    }
-
-
     private static BufferedImage sprite;
 
 
 
     private int frame = 0;
-
-
-    private float maxAlpha;
 
 
     public static int cursorX;
@@ -72,13 +52,12 @@ public class ParticleSpriteDroste extends Particle{
     static int[] margins = new int[4];
     static double[][] expandScales;
 
-    public static int[] CUR_COUNT = new int[2];
+
+    public static Map<Editor, Integer> spawnMap = new HashMap<>();
+    private Editor editor;
 
 
-    private int maxLife;
     private int frameLife;
-
-    private int spriteDataIndex;
     public static int expandOffset;
     public static float curScale;
 
@@ -94,9 +73,12 @@ public class ParticleSpriteDroste extends Particle{
 
     public ParticleSpriteDroste(int x, int y, int dx, int dy,
                                 int size, int life, int spriteDataIndex, Color c,
-                                int editorHeight, int editorWidth, int expandOffset) {
+                                int editorHeight, int editorWidth, int expandOffset, Editor editor) {
         super(x,y,dx,dy,size,life,c);
-        this.maxLife = life;
+        spawnMap.put(editor, 1);
+        this.editor = editor;
+
+
         this.frameLife = 10000;
         this.editorHeight = editorHeight;
         this.editorWidth = editorWidth;
@@ -108,7 +90,7 @@ public class ParticleSpriteDroste extends Particle{
 
 
         sprites = spriteDataAnimated.get(spriteDataIndex).images;
-        this.spriteDataIndex = spriteDataIndex;
+
 //        this.frameSpeed = spriteDataAnimated.get(spriteDataIndex).speedRate;
         this.d = spriteDataAnimated.get(spriteDataIndex);
         this.spritePath = d.customPath;
@@ -124,7 +106,7 @@ public class ParticleSpriteDroste extends Particle{
         //TODO inital scale increase in config
 
         //TODO
-        CUR_COUNT[spriteDataIndex] += 1;
+
         recalculateExpandScales(editorWidth, editorHeight);
     }
 
@@ -176,15 +158,13 @@ public class ParticleSpriteDroste extends Particle{
 
     public boolean update() {
 //        If entire plugin is turned off
-        //TODO cleanup with class access to settings
-        PowerMode3 s = PowerMode3.getInstance();
-        if(!s.isEnabled()){
-            CUR_COUNT[spriteDataIndex] -= 1;
+        if(!settings.isEnabled()){
+            spawnMap.remove(this.editor);
             return true;
         }
 
-        if(!s.getSpriteTypeEnabled(PowerMode3.ConfigType.DROSTE)){
-            CUR_COUNT[spriteDataIndex] -= 1;
+        if(!settings.getSpriteTypeEnabled(PowerMode3.ConfigType.DROSTE)){
+            spawnMap.remove(this.editor);
             return true;
         }
 
@@ -201,6 +181,7 @@ public class ParticleSpriteDroste extends Particle{
             }
         }
 
+        //TODO have this setting for each editor, not class
         //ARHGHG my eyes
         //way to update without relying on "typing" triggering addParticle in ParticleContainer
         if(needsUpdate){
@@ -216,24 +197,22 @@ public class ParticleSpriteDroste extends Particle{
         if(lifeOver) { //ready to reset?
             if (d.isCyclic) {
                 if(!d.enabled){
-                    CUR_COUNT[spriteDataIndex] -= 1;
+                    spawnMap.remove(this.editor);
                     return true;
                 }
 
                 if(!d.customPath.equals(this.spritePath)){
                     //we've changed the sprites being cycled, so kill this particle
-                    CUR_COUNT[spriteDataIndex] -= 1;
+                    spawnMap.remove(this.editor);
                     return true;
                 }
-
-
 
 
                 //cyclic: reset next cycle
                 this.life = 99;
                 return false;
             } else {
-                CUR_COUNT[spriteDataIndex] -= 1;
+                spawnMap.remove(this.editor);
             }
         }
 
@@ -241,7 +220,11 @@ public class ParticleSpriteDroste extends Particle{
     }
 
 
-
+    public static void cleanup(Editor e){
+        if(spawnMap.get(e) != null){
+            spawnMap.remove(e);
+        }
+    }
 
 
 

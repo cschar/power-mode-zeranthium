@@ -96,10 +96,8 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
     public void cleanupParticles(){
 
-        if(ParticleSpriteLockedLayer.spawnMap.get(this.editor) != null){
-            ParticleSpriteLockedLayer.spawnMap.remove(this.editor);
-            System.out.println("Editor cleanup");
-        }
+        ParticleSpriteLockedLayer.cleanup(this.editor);
+        ParticleSpriteDroste.cleanup(this.editor);
     }
 
     public void addParticle(int x, int y, PowerMode3 settings) {
@@ -148,9 +146,9 @@ public class ParticleContainer extends JComponent implements ComponentListener {
                 if(!d.enabled) continue;
 
                 anyEnabled = true;
-                if( ParticleSpriteDroste.CUR_COUNT[i] <= 0 ) {
+                if(ParticleSpriteDroste.spawnMap.get(this.editor) == null) {
                     final ParticleSpriteDroste eVoid = new ParticleSpriteDroste(x, y, dx, dy, size, lifeSetting, i,
-                            Color.ORANGE, h, w, d.val1);
+                            Color.ORANGE, h, w, d.val1, editor);
                     particles.add(eVoid);
                 }
             }

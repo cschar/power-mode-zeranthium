@@ -170,17 +170,23 @@ public class LockedLayerConfig extends JPanel{
         for(int i =0; i<tableData.length(); i++){
             JSONObject jo = tableData.getJSONObject(i);
 
+            int screenPosition = jo.getInt("val2");
+            screenPosition = Math.max(screenPosition, 0);
+            screenPosition = Math.min(screenPosition, 4);
+
             SpriteDataAnimated sd =  new SpriteDataAnimated(
                     PREVIEW_SIZE,
                     jo.getBoolean("enabled"),
-                    (float) jo.getDouble("scale"),
+                1.0f,
+//                    (float) jo.getDouble("scale"),
                     jo.getInt("speedRate"),
                     spriteDataAnimated.get(i).defaultPath,
                     parentPath.resolve(jo.getString("customPath")).toString(),
                     jo.getBoolean("isCyclic"),
-                    jo.getInt("val2"),
+                    screenPosition,
                     (float) jo.getDouble("alpha"),
-                    jo.getInt("val1")); // --> gutterWidth
+                    60); // --> gutterWidth
+//                    jo.getInt("val1")); // --> gutterWidth
 
             spriteDataAnimated.set(i, sd);
         }

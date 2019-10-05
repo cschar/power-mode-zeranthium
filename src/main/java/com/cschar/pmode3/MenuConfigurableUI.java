@@ -32,6 +32,7 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
+import java.util.concurrent.locks.Lock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -610,6 +611,12 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
                 if(configKey.equals("MANDALA")){
                     enableMandalaCheckbox.setSelected(true);
                     Mandala2Config.loadJSONConfig(configKeyData, path.getParent());
+                }
+
+                //LOCKED LAYER
+                if(configKey.equals("LOCKED_LAYER")){
+                    enableLockedLayerCheckbox.setSelected(true);
+                    LockedLayerConfig.loadJSONConfig(configKeyData, path.getParent());
                 }
 
 

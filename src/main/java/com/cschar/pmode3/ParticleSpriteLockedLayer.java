@@ -51,7 +51,6 @@ public class ParticleSpriteLockedLayer extends Particle{
     private SpriteDataAnimated d;
     private String spritePath;
 
-    private PowerMode3 settings;
 
     private Editor editor;
 
@@ -61,8 +60,7 @@ public class ParticleSpriteLockedLayer extends Particle{
                                      int size, int life, int spriteDataIndex, Color c,
                                      Editor editor) {
         super(x,y,dx,dy,size,life,c);
-        //TODO add to parent class
-        settings = PowerMode3.getInstance();
+
         spawnMap.put(editor, 1);
 
         this.editor = editor;
@@ -143,6 +141,11 @@ public class ParticleSpriteLockedLayer extends Particle{
     }
 
 
+    public static void cleanup(Editor e){
+        if(spawnMap.get(e) != null){
+            spawnMap.remove(e);
+        }
+    }
 
 
 

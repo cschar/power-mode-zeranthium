@@ -91,7 +91,7 @@ public class ParticleSpriteMandala extends Particle{
     }
 
     public boolean update() {
-        PowerMode3 settings = PowerMode3.getInstance();
+        
         frameLife--;
         //every X updates, increment frame, this controls how fast it animates
         if( this.frameLife % this.frameSpeed == 0){

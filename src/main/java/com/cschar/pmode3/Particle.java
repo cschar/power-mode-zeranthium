@@ -35,6 +35,7 @@ public class Particle {
     final Color c;
     //higher will be rendered first
     public int renderZIndex = 1;
+    PowerMode3 settings;
 
     public Particle(int x, int y, int dx, int dy, int size, int life, Color c) {
         this.x = x;
@@ -44,6 +45,7 @@ public class Particle {
         this.size = size;
         this.life = life;
         this.c = c;
+        settings = PowerMode3.getInstance();
     }
 
     public boolean update() {
