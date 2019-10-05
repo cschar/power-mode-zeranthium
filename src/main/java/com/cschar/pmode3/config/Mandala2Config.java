@@ -153,7 +153,7 @@ public class Mandala2Config extends JPanel{
 
     public void loadValues(){
 
-        this.moveWithCaret.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.MANDALA,"moveWithCaretEnabled", false));
+        this.moveWithCaret.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.MANDALA,"moveWithCaretEnabled", true));
         this.moveSpeedTextField.setText(String.valueOf(Config.getFloatProperty(settings, PowerMode3.ConfigType.MANDALA,"movespeed", 0.1f)));
 
     }

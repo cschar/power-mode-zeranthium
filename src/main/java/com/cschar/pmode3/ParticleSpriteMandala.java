@@ -20,12 +20,14 @@ package com.cschar.pmode3;
 
 import com.cschar.pmode3.config.Mandala2Config;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
+import com.intellij.openapi.editor.Editor;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class ParticleSpriteMandala extends Particle{
@@ -45,13 +47,13 @@ public class ParticleSpriteMandala extends Particle{
     private int frame = 0;
 
 
-    private float maxAlpha;
 
 
-    private float spriteScale = 1.0f;
 
 
-    public static int[] CUR_RINGS = new int[4];
+    //editor --> ring_num, # of particles
+    public static Map<Editor, int[]> spawnMap = new HashMap<>();
+    private Editor editor;
 
     public static boolean settingEnabled = true;
     public static float moveSpeed = 0.1f;
@@ -61,28 +63,37 @@ public class ParticleSpriteMandala extends Particle{
     private int ringIndex;
     private String spritePath;
     private ArrayList<BufferedImage> ringSprites;
+    private SpriteDataAnimated d;
+    public static int MAX_RINGS = 4;
 
     public ParticleSpriteMandala(int x, int y, int dx, int dy,
-                                 int size, int life, int ringIndex) {
+                                 int size, int life, int ringIndex, Editor editor) {
         super(x,y,dx,dy,size,life,Color.GREEN);
-//        if(mandalaRingData.get(ringIndex).isCyclic){
+        this.editor = editor;
+
         this.renderZIndex = 2;
 //        }
 
         this.ringIndex = ringIndex;
-        this.maxAlpha = 1.0f;
         this.frameLife = 10000;
 
         targetX = x;
         targetY = y;
 
+        if(spawnMap.get(this.editor) == null){
+            int[] state = new int[MAX_RINGS];
 
-        CUR_RINGS[ringIndex] += 1;
+            state[ringIndex] += 1;
+            spawnMap.put(this.editor, state);
 
-        this.frameSpeed = mandalaRingData.get(ringIndex).speedRate;
-        this.spriteScale = mandalaRingData.get(ringIndex).scale;
-//        this.spritePath = mandalaRingData.get(ringIndex).customPath;
-        this.spritePath = mandalaRingData.get(ringIndex).customPath;
+        }else{
+            int[] state = spawnMap.get(this.editor);
+            state[ringIndex] = state[ringIndex] + 1;
+//            spawnMap.put(this.editor, state);
+        }
+
+        d = mandalaRingData.get(ringIndex);
+        this.spritePath = d.customPath;
 
         ringSprites = mandalaRingData.get(ringIndex).images;
         sprite = ringSprites.get(0);
@@ -91,10 +102,10 @@ public class ParticleSpriteMandala extends Particle{
     }
 
     public boolean update() {
-        
+
         frameLife--;
         //every X updates, increment frame, this controls how fast it animates
-        if( this.frameLife % this.frameSpeed == 0){
+        if( this.frameLife % d.speedRate == 0){
             frame += 1;
             if (frame >= ringSprites.size()){
                 frame = 0;
@@ -107,12 +118,12 @@ public class ParticleSpriteMandala extends Particle{
 
 
         if (!settings.isEnabled()) { // performance hit?
-            CUR_RINGS[ringIndex] -= 1;
+            cleanupSingle(this);
             return true;
         }
 
         if(!settingEnabled){ //main config toggle
-            CUR_RINGS[ringIndex] -= 1;
+            cleanupSingle(this);
             return true;
         }
 
@@ -135,50 +146,65 @@ public class ParticleSpriteMandala extends Particle{
         boolean lifeOver = (life <= 0);
 
         if(lifeOver) { //ready to reset?
-            if (mandalaRingData.get(ringIndex).isCyclic) {
+            if (d.isCyclic) {
 
-                //If entire plugin is turned off
-//                if(!PowerMode3.getInstance().isEnabled()){
-//                    CUR_RINGS[ringIndex] -= 1;
-//                    return true;
-//                }
-
-                if(!mandalaRingData.get(ringIndex).enabled){
-                    CUR_RINGS[ringIndex] -= 1;
+                if(!d.enabled){
+                    cleanupSingle(this);
                     return true;
                 }
 
-                if(!mandalaRingData.get(ringIndex).customPath.equals(this.spritePath)){
+                if(!d.customPath.equals(this.spritePath)){
                     //we've changed the sprites being cycled, so kill this particle
-                    CUR_RINGS[ringIndex] -= 1;
+                    cleanupSingle(this);
                     return true;
                 }
+
 
 
                 //num particles changed?
-                if( CUR_RINGS[ringIndex] > mandalaRingData.get(ringIndex).val2){
-                    CUR_RINGS[ringIndex] -= 1;
+                if( spawnMap.get(this.editor)[ringIndex] > d.val2){
+                    cleanupSingle(this);
                     return true;
                 }
 
-                //cyclic: reset next cycle , if changed in config
-                //TODO, just use data in array, see Droste Particle
-                this.frameSpeed = mandalaRingData.get(ringIndex).speedRate;
-                this.spriteScale = mandalaRingData.get(ringIndex).scale;
 
-                //TODO STICK THIS IN THE DAMN TABLE
-                moveSpeed = Mandala2Config.CARET_MOVE_SPEED(settings); //god forgive me lol
+                moveSpeed = Mandala2Config.CARET_MOVE_SPEED(settings);
                 this.life = 99;
                 return false;
             } else {
-                CUR_RINGS[ringIndex] -= 1;
+                cleanupSingle(this);
             }
         }
         return lifeOver;
     }
 
 
+    private static void cleanupSingle(ParticleSpriteMandala e){
+        if(spawnMap.get(e.editor) != null){
+            int[] state = spawnMap.get(e.editor);
+            if(state[e.ringIndex] >= 1){
+                state[e.ringIndex] = state[e.ringIndex] - 1;
+//                spawnMap.put(e.editor, state);
+            }else{
 
+                boolean doDelete = true;
+                //scan other ring indexes and only remove if all others are empty
+                for(int i = 0; i < MAX_RINGS; i++){
+                    if( i == e.ringIndex) continue;
+                    if(state[i] > 1) doDelete = false;
+                }
+                if(doDelete) spawnMap.remove(e.editor);
+
+                //just let it exist, cleanup when editor closes
+            }
+        }
+    }
+
+    public static void cleanup(Editor e){
+        if(spawnMap.get(e) != null){
+            spawnMap.remove(e);
+        }
+    }
 
 
 
@@ -193,20 +219,24 @@ public class ParticleSpriteMandala extends Particle{
 
 
             AffineTransform at = new AffineTransform();
-            at.scale(this.spriteScale, this.spriteScale);
+            at.scale(d.scale, d.scale);
 //            at.translate((int) cursorX * (1/this.spriteScale), (int) cursorY * (1/this.spriteScale));
-            at.translate((int) x * (1/this.spriteScale), (int) y * (1/this.spriteScale));
+            at.translate((int) x * (1/d.scale), (int) y * (1/d.scale));
 
             at.translate(-sprite.getWidth()/2,
                     -sprite.getHeight()/2);
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.maxAlpha));
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 
 
 
             g2d.drawImage(ringSprites.get(frame), at, null);
 
-//            g2d.setColor(Color.ORANGE);
-//            g2d.drawString(String.format("%d-RINGS %d",ringIndex, CUR_RINGS[ringIndex]), x - 20, y - 30*(ringIndex+1));
+//            try {
+//                g2d.setColor(Color.ORANGE);
+//                g2d.drawString(String.format("%d-RINGS %d", ringIndex, spawnMap.get(this.editor)[ringIndex]), x - 20, y - 30 * (ringIndex + 1));
+//            }catch(NullPointerException e){
+//
+//            }
 
 
 

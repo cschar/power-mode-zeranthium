@@ -15,9 +15,6 @@ package com.cschar.pmode3;
 
 import com.cschar.pmode3.config.*;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 
@@ -98,6 +95,8 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
         ParticleSpriteLockedLayer.cleanup(this.editor);
         ParticleSpriteDroste.cleanup(this.editor);
+        ParticleSpriteMandala.cleanup(this.editor);
+
     }
 
     public void addParticle(int x, int y, PowerMode3 settings) {
@@ -139,6 +138,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
 
             boolean anyEnabled = false;
+
             for(int i = 0; i < ParticleSpriteDroste.spriteDataAnimated.size(); i++){
 
                 SpriteDataAnimated d = ParticleSpriteDroste.spriteDataAnimated.get(i);
@@ -165,14 +165,15 @@ public class ParticleContainer extends JComponent implements ComponentListener {
             for(int i = 0; i < ParticleSpriteMandala.mandalaRingData.size(); i++){
 
                 SpriteDataAnimated d = ParticleSpriteMandala.mandalaRingData.get(i);
-                if (ParticleSpriteMandala.CUR_RINGS[i] >= d.val2){
+                if (ParticleSpriteMandala.spawnMap.get(this.editor) != null &&
+                        ParticleSpriteMandala.spawnMap.get(this.editor)[i] >= d.val2){
                     continue;
                 }
 
                 if(!d.enabled) continue;
 
 
-                final ParticleSpriteMandala e = new ParticleSpriteMandala(x,y,dx,dy,size,lifeSetting, i);
+                final ParticleSpriteMandala e = new ParticleSpriteMandala(x,y,dx,dy,size,lifeSetting, i, editor);
                 particles.add(e);
             }
         }

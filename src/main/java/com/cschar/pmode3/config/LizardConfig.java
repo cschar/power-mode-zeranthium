@@ -215,7 +215,7 @@ public class LizardConfig{
 
 
     public void loadValues(){
-        this.maxPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LIZARD,"maxPsiSearchDistance", 300)));
+        this.maxPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LIZARD,"maxPsiSearchDistance", 400)));
         this.minPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LIZARD,"minPsiSearchDistance", 100)));
 
         this.chancePerKeyPressTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LIZARD,"chancePerKeyPress", 100)));
