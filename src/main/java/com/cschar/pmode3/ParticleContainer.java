@@ -94,6 +94,14 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
     }
 
+    public void cleanupParticles(){
+
+        if(ParticleSpriteLockedLayer.spawnMap.get(this.editor) != null){
+            ParticleSpriteLockedLayer.spawnMap.remove(this.editor);
+            System.out.println("Editor cleanup");
+        }
+    }
+
     public void addParticle(int x, int y, PowerMode3 settings) {
 
 
@@ -110,16 +118,22 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
         if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.LOCKED_LAYER)) {
 
-            final ParticleSpriteLockedLayer p = new ParticleSpriteLockedLayer(x, y, dx, dy, size, lifeSetting,
-                    0, Color.GREEN, editor);
-            particles.add(p);
+            //Only spawn 1 particle per editor
+            if(ParticleSpriteLockedLayer.spawnMap.get(this.editor) == null) {
+                final ParticleSpriteLockedLayer p = new ParticleSpriteLockedLayer(x, y, dx, dy, size, lifeSetting,
+                        0, Color.GREEN, editor);
+
+                particles.add(p);
+            }
 
         }
 
 
         if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.DROSTE)){
 
-            int h = this.editor.getComponent().getHeight();
+//            int h = this.editor.getContentComponent().getHeight();
+//            int w = this.editor.getContentComponent().getWidth();
+            int h = this.editor.getComponent().getHeight(); // has gutter
             int w = this.editor.getComponent().getWidth();
 
             ParticleSpriteDroste.cursorX = x;

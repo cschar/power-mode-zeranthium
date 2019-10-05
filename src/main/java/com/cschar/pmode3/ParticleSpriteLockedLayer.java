@@ -27,7 +27,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
-
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class ParticleSpriteLockedLayer extends Particle{
@@ -46,19 +47,15 @@ public class ParticleSpriteLockedLayer extends Particle{
 
 
     private int frameLife;
-    private int spriteDataIndex;
 
     private SpriteDataAnimated d;
     private String spritePath;
-
-    private int editorWidth;
-    private int editorHeight;
 
     private PowerMode3 settings;
 
     private Editor editor;
 
-//    private ArrayList<>
+    public static Map<Editor, Integer> spawnMap = new HashMap<>();
 
     public ParticleSpriteLockedLayer(int x, int y, int dx, int dy,
                                      int size, int life, int spriteDataIndex, Color c,
@@ -66,6 +63,7 @@ public class ParticleSpriteLockedLayer extends Particle{
         super(x,y,dx,dy,size,life,c);
         //TODO add to parent class
         settings = PowerMode3.getInstance();
+        spawnMap.put(editor, 1);
 
         this.editor = editor;
         this.frameLife = 10000;
@@ -76,7 +74,7 @@ public class ParticleSpriteLockedLayer extends Particle{
 
 
         sprites = spriteDataAnimated.get(spriteDataIndex).images;
-        this.spriteDataIndex = spriteDataIndex;
+
 
         this.d = spriteDataAnimated.get(spriteDataIndex);
         this.spritePath = d.customPath;
@@ -93,12 +91,12 @@ public class ParticleSpriteLockedLayer extends Particle{
 //        If entire plugin is turned off
 
         if(!settings.isEnabled()){
-            //CUR_COUNT[spriteDataIndex] -= 1;
+            ParticleSpriteLockedLayer.spawnMap.remove(this.editor);
             return true;
         }
 
         if(!settings.getSpriteTypeEnabled(PowerMode3.ConfigType.LOCKED_LAYER)){
-            //CUR_COUNT[spriteDataIndex] -= 1;
+            ParticleSpriteLockedLayer.spawnMap.remove(this.editor);
             return true;
         }
 
@@ -120,13 +118,13 @@ public class ParticleSpriteLockedLayer extends Particle{
         if(lifeOver) { //ready to reset?
             if (d.isCyclic) {
                 if(!d.enabled){
-                //    CUR_COUNT[spriteDataIndex] -= 1;
+                    ParticleSpriteLockedLayer.spawnMap.remove(this.editor);
                     return true;
                 }
 
                 if(!d.customPath.equals(this.spritePath)){
                     //we've changed the sprites being cycled, so kill this particle
-                  //  CUR_COUNT[spriteDataIndex] -= 1;
+                    ParticleSpriteLockedLayer.spawnMap.remove(this.editor);
                     return true;
                 }
 
@@ -137,7 +135,7 @@ public class ParticleSpriteLockedLayer extends Particle{
                 this.life = 99;
                 return false;
             } else {
-              //  CUR_COUNT[spriteDataIndex] -= 1;
+                ParticleSpriteLockedLayer.spawnMap.remove(this.editor);
             }
         }
 
@@ -158,26 +156,38 @@ public class ParticleSpriteLockedLayer extends Particle{
             g2d.setColor(c);
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, d.alpha));
 
-
-
-            //Finally draw original sprite
             AffineTransform at = new AffineTransform();
+
+//            Component ec = editor.getComponent();
+            Rectangle bounds = editor.getComponent().getBounds();
+            int gutterWidthOffset = d.val1;
+            bounds.setBounds(bounds.x, bounds.y, bounds.width - gutterWidthOffset, bounds.height);
 
 
             //stretch
-            Component ec = editor.getComponent();
+            if(d.val2 == 0) {
+                double widthScale = (bounds.width) / (double) sprite.getWidth();
+                double heightScale = bounds.height / (double) sprite.getHeight();
+                Point midPoint = new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+                at.scale(widthScale, heightScale);
+                at.translate((int) midPoint.x * (1 / widthScale), (int) midPoint.y * (1 / heightScale));
 
-            double widthScale = ec.getWidth() / (double) sprite.getWidth();
-            double heightScale = ec.getHeight() / (double) sprite.getHeight();
+                at.translate(-sprite.getWidth() / 2,
+                        -sprite.getHeight() / 2);
 
-            Point midPoint = new Point(ec.getBounds().x + ec.getWidth()/2, ec.getBounds().y + ec.getHeight()/2);
-            g2d.drawRect(midPoint.x, midPoint.y, 30, 30);
-
-            at.scale(widthScale, heightScale);
-            at.translate((int)midPoint.x*(1/widthScale) ,(int)midPoint.y *(1/heightScale));
-
-            at.translate(-sprite.getWidth()/2,
-                             -sprite.getHeight()/2);
+            }else if(d.val2 == 1){ //top/right
+                Point drawPoint = new Point(bounds.x + bounds.width - sprite.getWidth(), bounds.y);
+                at.translate(drawPoint.x,   drawPoint.y);
+            }else if(d.val2 == 2) { //top left
+                Point drawPoint = new Point(bounds.x, bounds.y);
+                at.translate(drawPoint.x,   drawPoint.y);
+            }else if(d.val2 == 3) { //bot/right
+                Point drawPoint = new Point(bounds.x + bounds.width - sprite.getWidth(), bounds.y + bounds.height - sprite.getHeight());
+                at.translate(drawPoint.x,   drawPoint.y);
+            }else if(d.val2 == 4) { //bot/left
+                Point drawPoint = new Point(bounds.x, bounds.y + bounds.height - sprite.getHeight());
+                at.translate(drawPoint.x,   drawPoint.y);
+            }
 
             g2d.drawImage(sprites.get(frame), at, null);
 

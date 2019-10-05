@@ -12,6 +12,7 @@ import com.intellij.openapi.fileChooser.FileChooserDialog;
 import com.intellij.openapi.fileChooser.FileChooserFactory;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.ui.JBColor;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
 import org.json.JSONArray;
@@ -30,6 +31,8 @@ public class LockedLayerConfig extends JPanel{
 
     JPanel firstRow;
     JComponent configPanel;
+
+    private JTextField gutterWidthTextField;
 
     PowerMode3 settings;
 
@@ -56,6 +59,12 @@ public class LockedLayerConfig extends JPanel{
 
         configPanel = createConfigTable();
         firstRow.add(headerPanel);
+
+
+
+        this.gutterWidthTextField = new JTextField();
+        firstRow.add(Config.populateTextFieldPanel(this.gutterWidthTextField, "gutter offset (0 - 200)"));
+
         firstRow.add(configPanel);
 
 
@@ -76,7 +85,7 @@ public class LockedLayerConfig extends JPanel{
         table.setRowSelectionAllowed(false);
 
         table.setPreferredScrollableViewportSize(new Dimension(400,
-                table.getRowHeight() * 4));
+                table.getRowHeight()));
         table.getTableHeader().setReorderingAllowed(false);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
@@ -90,14 +99,13 @@ public class LockedLayerConfig extends JPanel{
         colModel.getColumn(0).setWidth(PREVIEW_SIZE); //preview
         colModel.getColumn(1).setWidth(50);  //enabled
 
-        colModel.getColumn(2).setPreferredWidth(50);  //scale
+        colModel.getColumn(2).setPreferredWidth(50);  //alpha
         colModel.getColumn(3).setPreferredWidth(80);  //speed rate
         colModel.getColumn(4).setPreferredWidth(100);  //set path
         colModel.getColumn(5).setPreferredWidth(50);  // path
         colModel.getColumn(6).setPreferredWidth(70);  //reset
         colModel.getColumn(6).setMaxWidth(70);  //reset
-        colModel.getColumn(7).setPreferredWidth(400);  //other options
-        colModel.getColumn(7).setMinWidth(300);
+        colModel.getColumn(7).setMinWidth(200);
 
 
         //make table transparent
@@ -131,9 +139,17 @@ public class LockedLayerConfig extends JPanel{
 
     public void loadValues(){
         //table loaded during plugin initialization
+        this.gutterWidthTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LOCKED_LAYER,"gutterWidth", 50)));
     }
 
     public void saveValues() throws ConfigurationException {
+
+        int gutterVal = Config.getJTextFieldWithinBoundsInt(this.gutterWidthTextField,0, 200,"gutterWidth");
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.LOCKED_LAYER, "gutterWidth", String.valueOf(gutterVal));
+
+        for(SpriteDataAnimated d: spriteDataAnimated){
+            d.val1 = gutterVal;
+        }
 
         settings.setSerializedSpriteDataAnimated(LockedLayerConfig.spriteDataAnimated, PowerMode3.ConfigType.LOCKED_LAYER);
     }
@@ -162,10 +178,9 @@ public class LockedLayerConfig extends JPanel{
                     spriteDataAnimated.get(i).defaultPath,
                     parentPath.resolve(jo.getString("customPath")).toString(),
                     jo.getBoolean("isCyclic"),
-                    1,
-//                    jo.getInt("val2"),
+                    jo.getInt("val2"),
                     (float) jo.getDouble("alpha"),
-                    1);
+                    jo.getInt("val1")); // --> gutterWidth
 
             spriteDataAnimated.set(i, sd);
         }
@@ -240,24 +255,25 @@ class LockedLayerOtherColCellPanel extends JPanel {
             //limit input
             try {
                 int v0 = Integer.parseInt(numParticles.getText());
-                v0 = Math.max(1, v0);
-                v0 = Math.min(v0, 10);
+                v0 = Math.max(0, v0);
+                v0 = Math.min(v0, 4);
                 numParticles.setText(String.valueOf(v0));
             }catch (NumberFormatException e){
                 numParticles.setText("1");
             }
         });
-        JLabel maxParticlesLabel = new JLabel("Max Particles (1-10)");
+        JLabel maxParticlesLabel = new JLabel("<html>Stretch -> 0 <br/> Top/Right -> 1  <br/>\n Top/Left -> 2 <br/>\n Bot/Right -> 3 <br/>\n Bot/Left -> 4 </html>");
         JPanel maxParticlesPanel = new JPanel();
         maxParticlesPanel.add(maxParticlesLabel);
         maxParticlesPanel.add(numParticles);
         maxParticlesPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         maxParticlesPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);
-        maxParticlesPanel.setMaximumSize(new Dimension(300, 50));
+//        maxParticlesPanel.setMaximumSize(new Dimension(300, 50));
         maxParticlesPanel.setBackground(Color.LIGHT_GRAY);
         maxParticlesPanel.setOpaque(true);
 
         isCyclicCheckbox = new JCheckBox("is cyclic");
+//        isCyclicCheckbox.setEnabled(false);
         isCyclicCheckbox.setAlignmentX( Component.RIGHT_ALIGNMENT);
 
         this.add(isCyclicCheckbox);
@@ -286,7 +302,7 @@ class LockedLayerTableModel extends AbstractTableModel {
     public static final String[] columnNames = new String[]{
             "preview",
             "enabled?",
-            "scale",
+            "alpha",
             "speed rate",
             "set path",
             "path",
@@ -307,9 +323,8 @@ class LockedLayerTableModel extends AbstractTableModel {
             JButton.class,
             String.class,
             JButton.class,
-            OtherColMandala.class,
-//            OtherPanel.class
-//            MandalaOtherCellData.class
+            LockedLayerOtherCol.class,
+
     };
 
     @Override
@@ -359,7 +374,7 @@ class LockedLayerTableModel extends AbstractTableModel {
             case 1:
                 return data.get(row).enabled;
             case 2:
-                return data.get(row).scale;
+                return data.get(row).alpha;
             case 3:
                 return data.get(row).speedRate;
             case 4:
@@ -427,8 +442,8 @@ class LockedLayerTableModel extends AbstractTableModel {
             case 2:
                 float v0 = (Float) value;
                 v0 = Math.max(0.0f, v0);
-                v0 = Math.min(v0, 2.0f);
-                data.get(row).scale = v0;
+                v0 = Math.min(v0, 1.0f);
+                data.get(row).alpha = v0;
                 return;
             case 3:
                 int v = (Integer) value;

@@ -4,10 +4,10 @@
     "previewSize":120,
     "customPath":"",
     "defaultPath":"/blender/droste1",
-    "val2":5,
+    "val2":0,
     "isCyclic":false,
     "alpha":1,
-    "val1":1,
+    "val1":60,
     "scale":1,
     "enabled":true,
     "speedRate":3

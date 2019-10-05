@@ -98,9 +98,13 @@ public class ParticleContainerManager extends EditorFactoryAdapter {
     @Override
     public void editorReleased(@NotNull EditorFactoryEvent event)
     {
+        ParticleContainer pc = particleContainers.get(event.getEditor());
+
+        pc.cleanupParticles();
+
         particleContainers.remove(event.getEditor());
 
-        
+
     }
 
     public void update(final Editor editor, PsiFile psiFile) {
