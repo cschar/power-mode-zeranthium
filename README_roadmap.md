@@ -2,8 +2,7 @@
 
 TODO: everything
 
-- Special Key Sound Options (Copy/Paste/Del/Backspace)
-  - Howie Scream on paste 
+- Test multiple editors w/ MAX_RINGS / DROSTE / etc.
 
 - Fiddle heads
 ```
@@ -18,10 +17,15 @@ TODO: everything
  x
  ```
 
-- glyph chain (3-4 glyph thing) (gold)
+- glyph chain (3-4 glyph thing) (gold) (zoetrope?chainer?)
    -  each keypress moves animation 1 frame
       - horse running
       - chicken pecking dirt lol
+      
+- locked layer that fills up entire editor screen
+   - e.g. for a clippy style avatar
+   - 'Stretch' or
+   - Anchor Top/Bot  Left/Right
       
 BELOW NEED "FONTSET" type datatype;      
 - TOKEN callout with decoration above
@@ -34,15 +38,15 @@ BELOW NEED "FONTSET" type datatype;
    - or 'master font set 100x100px' would 'generate' font
    size set for current fontsize e.g. 14pt
    would show a 'genereating font' after setting is set
-- Test multiple editors w/ MAX_RINGS etc./ DROSTE
+
 
 
 
 
 Done;
-- vines
-- lizards
-- lightning sparks
+- Vines
+- Lizards
+- Lightning sparks
 - Void / Mandala  (max 3-4 layers as typing increases)
 - Mandala Chains based off Vine
 - hotkey to activate (bonus: configurable?)
@@ -53,7 +57,7 @@ Done;
 - Background Loading of Assets
 - Max 500 *.png or 1.0GB of data per Image Collection
 - "LOAD Custom Config packs" -- Support DROSTE/LIZARD/SOUND/MANDALA
-   
+- Action Key Sound Options (Copy/Paste/Backspace/Del/Enter) 
 
 future TODO:
 

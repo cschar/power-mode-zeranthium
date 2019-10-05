@@ -85,30 +85,6 @@ public class ParticleContainerManager extends EditorFactoryAdapter {
     public void editorCreated(@NotNull EditorFactoryEvent event) {
         final Editor editor = event.getEditor();
 
-//        PowerMode3 s = PowerMode3.getInstance();
-//
-//        Task.Backgroundable bgTask = new Task.Backgroundable(editor.getProject(), "Fun Task", false) {
-//            @Override
-//            public void run(@NotNull ProgressIndicator progressIndicator) {
-//
-//                progressIndicator.setIndeterminate(false);
-//
-//                for(int i = 1; i <100; i++) {
-//                    try {
-//                        Thread.sleep(200);
-//                    } catch (InterruptedException e) {
-//                    }
-//                    progressIndicator.setFraction(i*0.01);  // halfway done
-//                    progressIndicator.setText("This " + i);
-//                }
-//            }
-//        };
-
-//        if(!s.isConfigLoaded) {
-//            s.isConfigLoaded = true;
-//            ProgressManager.getInstance().run(bgTask);
-//        }
-
 
         particleContainers.put(editor, new ParticleContainer(editor));
 
@@ -123,6 +99,8 @@ public class ParticleContainerManager extends EditorFactoryAdapter {
     public void editorReleased(@NotNull EditorFactoryEvent event)
     {
         particleContainers.remove(event.getEditor());
+
+        
     }
 
     public void update(final Editor editor, PsiFile psiFile) {
@@ -217,5 +195,7 @@ public class ParticleContainerManager extends EditorFactoryAdapter {
     public void dispose() {
         thread.interrupt();
         particleContainers.clear();
+
+
     }
 }

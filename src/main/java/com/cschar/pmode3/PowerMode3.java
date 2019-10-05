@@ -49,6 +49,7 @@ import org.json.JSONObject;
 import java.awt.*;
 import java.io.InputStream;
 import java.util.*;
+import java.util.List;
 import java.util.logging.Logger;
 
 
@@ -116,7 +117,8 @@ public class PowerMode3 implements BaseComponent,
         MUSIC_TRIGGER,
         DROSTE,
         COPYPASTEVOID,
-        SPECIAL_ACTION_SOUND
+        SPECIAL_ACTION_SOUND,
+        LOCKED_LAYER
     }
 
     static class JSONLoader {
@@ -125,6 +127,7 @@ public class PowerMode3 implements BaseComponent,
 
             HashMap<ConfigType, String> defaultJSONTables = new HashMap<ConfigType, String>() {{
 
+                put(ConfigType.LOCKED_LAYER, "LOCKED_LAYER.json");
                 put(ConfigType.COPYPASTEVOID, "COPYPASTEVOID.json");
                 put(ConfigType.DROSTE, "DROSTE.json");
                 put(ConfigType.LIGHTNING_ALT, "LIGHTNING_ALT2.json");
@@ -193,6 +196,7 @@ public class PowerMode3 implements BaseComponent,
         put("sprite"+ ConfigType.LINKER + "Enabled", "false");
         put("sprite"+ ConfigType.DROSTE + "Enabled", "false");
         put("sprite"+ ConfigType.COPYPASTEVOID + "Enabled", "true");
+        put("sprite"+ ConfigType.LOCKED_LAYER + "Enabled", "false");
 
         put("sprite"+ ConfigType.SOUND + "Enabled", "true");
         put("sprite"+ ConfigType.SPECIAL_ACTION_SOUND + "Enabled", "false");
@@ -308,6 +312,20 @@ public class PowerMode3 implements BaseComponent,
         loadConfigData();
     }
 
+    private List<ConfigType> getMissingPathConfigs(){
+        List<ConfigType> missing = new ArrayList<>();
+        for(ConfigType c: ConfigType.values()){
+            if(c == ConfigType.BASIC_PARTICLE || c == ConfigType.LIGHTNING || c == ConfigType.MOMA || c == ConfigType.VINE){
+                continue;
+            }
+            Object val =  pathDataMap.get(c);
+            if(val == null){
+                missing.add(c);
+            }
+        }
+        return missing;
+    }
+
     @Override
     public void loadState(@NotNull PowerMode3 state) {
         LOGGER.info("previous state found -- setting up...");
@@ -316,6 +334,16 @@ public class PowerMode3 implements BaseComponent,
         XmlSerializerUtil.copyBean(state, this);
 
 
+        //check for missing config data e.g. new setting has been added
+        List<ConfigType> missingConfigs = getMissingPathConfigs();
+        if (missingConfigs.size() != 0) {
+            LOGGER.info("Missing configs found: " + missingConfigs.size() + " -- loading defaults");
+            for(ConfigType c: missingConfigs){
+                LOGGER.info(c.name());
+            }
+            //TODO only load missingConfigs default setting , not all of them
+            pathDataMap = JSONLoader.loadDefaultJSONTableConfigs();
+        }
 
 
         loadConfigData();
@@ -383,6 +411,9 @@ public class PowerMode3 implements BaseComponent,
             DrosteConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.DROSTE)));
             setUpdateProgress(progressIndicator, "Copypaste", 0.6);
             CopyPasteVoidConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.COPYPASTEVOID)));
+            setUpdateProgress(progressIndicator, "Locked Layer", 0.7);
+            LockedLayerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LOCKED_LAYER)));
+
 
             setUpdateProgress(progressIndicator, "Sounds", 0.8);
             SoundConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.SOUND)));
@@ -422,6 +453,7 @@ public class PowerMode3 implements BaseComponent,
             LinkerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LINKER)));
             DrosteConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.DROSTE)));
             CopyPasteVoidConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.COPYPASTEVOID)));
+            LockedLayerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LOCKED_LAYER)));
 
             SoundConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.SOUND)));
             MusicTriggerConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.MUSIC_TRIGGER)));

@@ -69,6 +69,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private JButton loadPackButton;
     private JCheckBox enableBasicSound;
     private JCheckBox enableActionSound;
+    private JCheckBox enableLockedLayerCheckbox;
 
 
     private BasicParticleConfig basicParticleConfig;
@@ -81,6 +82,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private LinkerConfig linkerConfig;
     private DrosteConfig drosteConfig;
     private CopyPasteVoidConfig copyPasteVoidConfig;
+    private LockedLayerConfig lockedLayerConfig;
 
     PowerMode3 settings;
 
@@ -154,6 +156,9 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.COPYPASTEVOID)){
             enableCopyPasteVoid.setSelected(true);
         }
+        if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.LOCKED_LAYER)){
+            enableLockedLayerCheckbox.setSelected(true);
+        }
 
         //Sound
         if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.SOUND)){
@@ -195,6 +200,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         this.vineConfig.loadValues();
         this.momaConfig.loadValues();
         this.mandala2Config.loadValues();
+        this.lockedLayerConfig.loadValues();
         this.linkerConfig.loadValues();
         this.drosteConfig.loadValues();
         this.copyPasteVoidConfig.loadValues();
@@ -246,6 +252,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         settings.setSpriteTypeEnabled(enableLinkerCheckbox.isSelected(), PowerMode3.ConfigType.LINKER);
         settings.setSpriteTypeEnabled(enableDrosteCheckbox.isSelected(), PowerMode3.ConfigType.DROSTE);
         settings.setSpriteTypeEnabled(enableCopyPasteVoid.isSelected(), PowerMode3.ConfigType.COPYPASTEVOID);
+        settings.setSpriteTypeEnabled(enableLockedLayerCheckbox.isSelected(), PowerMode3.ConfigType.LOCKED_LAYER);
 
         //Sound
         settings.setSpriteTypeEnabled(enableBasicSound.isSelected(), PowerMode3.ConfigType.SOUND);
@@ -268,6 +275,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         this.linkerConfig.saveValues(maxPsiSearch, enableLinkerCheckbox.isSelected());
         this.drosteConfig.saveValues();
         this.copyPasteVoidConfig.saveValues();
+        this.lockedLayerConfig.saveValues();
 
         //sound panel
         this.soundConfig.saveValues();
@@ -301,10 +309,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
                 }
             });
 
-
-            //TODO switch up
             //http://www.jetbrains.org/intellij/sdk/docs/basics/architectural_overview/general_threading_rules.html?search=BackgroundTaskUtil#invokelater
-            //ApplicationManager.getApplication().invokeLater()
             //https://stackoverflow.com/a/46204157/403403
             ApplicationManager.getApplication().invokeLater(new Runnable() {
                 @Override
@@ -321,7 +326,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
 
     public void updateConfigUIAfterAssetsAreLoaded(boolean wasEnabled){
-        //TODO weird extra setting needed here when enabled manually switched to "false"
+        //TODO weird extra setting 'wasEnabled' here, needed when 'enabled' manually switched to "false" during load
         // (since we dont want to have plugin enabled before assets are loaded)
         // but ConfiguraleUI has already been loaded with 'false' setting
         // ***other settings are loaded from config dict which isn't modified so not needed
@@ -430,6 +435,9 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         particleSettingsPanel.add(drosteConfig);
         particleSettingsPanel.add(this.createSpacer());
 
+        this.lockedLayerConfig = new LockedLayerConfig(settings);
+        particleSettingsPanel.add(lockedLayerConfig);
+        particleSettingsPanel.add(this.createSpacer());
 
         this.vineConfig = new VineConfig(settings);
         particleSettingsPanel.add(vineConfig.getConfigPanel());

@@ -108,6 +108,13 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         int lifeSetting = settings.getLifetime();
 
 
+        if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.LOCKED_LAYER)) {
+
+            final ParticleSpriteLockedLayer p = new ParticleSpriteLockedLayer(x, y, dx, dy, size, lifeSetting,
+                    0, Color.GREEN, editor);
+            particles.add(p);
+
+        }
 
 
         if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.DROSTE)){
