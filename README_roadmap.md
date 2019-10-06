@@ -2,20 +2,7 @@
 
 TODO: everything
 
-- Test multiple editors w/ MAX_RINGS / DROSTE / etc.
 
-- Fiddle heads
-```
-  xxxxxxx
- x   xxxxxxxxxx
- x   x  x     x
- x   xxxx     x
- x           xxx
- x           xxx    lantern style hanging
- x
- x
- x
- ```
 
 - glyph chain (3-4 glyph thing) (gold) (zoetrope?chainer?)
    -  each keypress moves animation 1 frame
@@ -56,6 +43,7 @@ Done;
 - "LOAD Custom Config packs" -- Support DROSTE/LIZARD/SOUND/MANDALA
 - Action Key Sound Options (Copy/Paste/Backspace/Del/Enter) 
 - Locked layer that stretches or pins to corner
+- Supports multiple editors
 
 future TODO:
 

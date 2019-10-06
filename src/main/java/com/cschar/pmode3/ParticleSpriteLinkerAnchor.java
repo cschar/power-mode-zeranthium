@@ -17,6 +17,7 @@
 
 package com.cschar.pmode3;
 
+import com.cschar.pmode3.config.LinkerConfig;
 import com.cschar.pmode3.config.Mandala2Config;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.intellij.openapi.editor.Editor;
@@ -221,7 +222,7 @@ public class ParticleSpriteLinkerAnchor extends Particle{
 //            this.x = typeX;
 //            this.y = typeY;
         }
-        if(Mandala2Config.MOVE_WITH_CARET(settings)) { //otherwise linkers will stay where intial typeAction spawned them
+        if(LinkerConfig.MOVE_WITH_CARET(settings)) { //otherwise linkers will stay where intial typeAction spawned them
             if( life % 2 == 0){
                 //TODO fix bug here where small moveSpeed values turn dx into virutally 0
                 //make it 1,2or3px min movement speed if targetX - x != 0

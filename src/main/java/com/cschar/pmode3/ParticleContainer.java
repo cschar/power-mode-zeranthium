@@ -114,6 +114,11 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         int lifeSetting = settings.getLifetime();
 
 
+        final ParticleSpriteLantern l = new ParticleSpriteLantern(x, y, dx, dy, size, lifeSetting,
+                Color.GREEN, editor);
+        particles.add(l);
+
+
         if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.LOCKED_LAYER)) {
 
             //Only spawn 1 particle per editor
