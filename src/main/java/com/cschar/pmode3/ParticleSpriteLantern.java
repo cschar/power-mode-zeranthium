@@ -21,6 +21,7 @@ import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.intellij.openapi.editor.Editor;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,6 +70,9 @@ public class ParticleSpriteLantern extends Particle{
     private Editor editor;
 
 
+    int randomNum;
+    int randomNum50;
+    int randomNum100;
 
     public ParticleSpriteLantern(int x, int y, int dx, int dy, int size, int life, Color c,
                                  Editor editor) {
@@ -82,6 +86,10 @@ public class ParticleSpriteLantern extends Particle{
         this.prevX = x;
         this.prevY= y;
 
+        int bound = editor.getContentComponent().getWidth()/40;
+        randomNum = ThreadLocalRandom.current().nextInt(-bound, bound +1);
+        randomNum50 = ThreadLocalRandom.current().nextInt(1, 50 +1);
+        randomNum100 = ThreadLocalRandom.current().nextInt(1, 100 +1);
 
         if(spawnMap.get(this.editor) != null) {
             spawnMap.put(this.editor, spawnMap.get(this.editor) + 1);
@@ -100,7 +108,7 @@ public class ParticleSpriteLantern extends Particle{
     int stemPointsToDraw = 0;
     public boolean update() {
 
-        if(this.frameLife % 3 == 0){
+        if(this.frameLife % 2 == 0){
             stemPointsToDraw += 1;
         }
         stemPointsToDraw = Math.min(stemPointsToDraw, MAX_QUAD_POINTS+300);
@@ -145,102 +153,98 @@ public class ParticleSpriteLantern extends Particle{
 //            g2d.drawRect(this.x, this.y, 5 ,5);
 
             g2d.setStroke(new BasicStroke(2.0f));
+            g2d.setPaint(this.c);
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.c.getAlpha()/255f));
 
+//            AffineTransform at = new AffineTransform();
+//            at.scale(-1.0f, 1.0f);
+//            g2d.setTransform(at);
 
+            Path2D path = new Path2D.Double();
+            path.moveTo(x, y - 20);
+
+            int offsetX0 = (int) (50 + 250*(randomNum100/100.0));
             Point[] controlPoints0 = new Point[]{
                     new Point(this.x, this.y - 20),
                     new Point(this.x, this.y - 200),
-                    new Point(this.x + 300, this.y - 200)
+                    new Point(this.x + offsetX0, this.y - 200)
             };
-            drawSegment(g2d, 0, 10, controlPoints0);
-
-            Point[] controlPoints = new Point[]{
-                    new Point(x + 300,y - 200),
-                    new Point(x + 350,y - 200),
-                    new Point(x + 350,y - 100)
-            };
-
-            drawSegment(g2d, 10, 10, controlPoints);
-
-
-            Point[] controlPoints2 = new Point[]{
-                    new Point(x + 350,y - 100),
-                    new Point(x + 350,y - 50),
-                    new Point(x + 300,y - 50)
-            };
-            drawSegment(g2d, 20, 10, controlPoints2);
-
-            Point[] controlPoints3 = new Point[]{
-                    new Point(x + 300,y - 50),
-                    new Point(x + 275,y - 50),
-                    new Point(x + 275,y - 100)
-            };
-            drawSegment(g2d, 30, 10, controlPoints3);
-
-
-            Point[] controlPoints4 = new Point[]{
-                    new Point(x + 275,y - 100),
-                    new Point(x + 275,y - 150),
-                    new Point(x + 400,y - 150)
-            };
-            drawSegment(g2d, 40, 10, controlPoints4);
-
-            Point[] controlPoints5 = new Point[]{
-                    new Point(x + 400,y - 150),
-                    new Point(x + 500,y - 150),
-                    new Point(x + 500,y - 100)
-            };
-            drawSegment(g2d, 50, 10, controlPoints5);
-
-            drawLanternSegment(g2d, 60, 10, new Point(x + 500,y - 100));
-
-
-
-
-            Point[] quadPoints = new Point[MAX_QUAD_POINTS];
-
-
-            Point midPoint = new Point(this.x, this.y - 200);
-            Point startPoint = new Point(this.x, this.y - 20);
-            Point endPoint = new Point(this.x + 300, this.y - 200);
-
-            double t = 0.0;
-            for (int i = 0; i < MAX_QUAD_POINTS; i++) {
-                t += (1.0/MAX_QUAD_POINTS);
-                Point p = this.quadTo(startPoint, midPoint, endPoint, t);
-                quadPoints[i] = p;
-            }
-
-            Path2D path = new Path2D.Double();
-
-
-
-             boolean pathInitialized = false;
-             for(int i = 0; i <quadPoints.length; i++){
-                 if (i <= stemPointsToDraw){
-                     if(!pathInitialized){
-                         pathInitialized = true;
-                         path.moveTo(quadPoints[i].x, quadPoints[i].y);
-                     }else{
-                         path.lineTo(quadPoints[i].x, quadPoints[i].y);
-                     }
-                 }
-            }
-
-            g2d.setPaint(this.c);
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.c.getAlpha()/255f));
+            int next0 = drawSegment(g2d, path,0, 10, controlPoints0);
             g2d.draw(path);
 
 
+            Point startPoint = controlPoints0[2];
+            Point endPoint = new Point(x + offsetX0 + 100 + randomNum50,y - 50 + randomNum50/2);
+            int next = drawLoopSegment(g2d, next0, 40,
+                    startPoint,
+                    endPoint
+                    );
+
+            drawLanternSegment(g2d, next, 10, endPoint);
 
             g2d.dispose();
         } //life > 0
     }
 
+    private int drawLoopSegment(Graphics2D g2d, int start, int SEGMENT_POINTS, Point entryPoint, Point exitPoint){
+        if(stemPointsToDraw < start && exitPoint != null) return start + 5*SEGMENT_POINTS;
+        if(stemPointsToDraw < start) return start + 4*SEGMENT_POINTS;
+
+        Path2D path = new Path2D.Double();
+        path.moveTo(entryPoint.x, entryPoint.y);
+
+        int SEGMENT_PER_QUARTER = SEGMENT_POINTS/4;
+
+        int xOffset = randomNum50 + 30;
+        int yOffset = randomNum50 + 30;
+        Point[] controlPoints2 = new Point[]{
+                entryPoint,
+                new Point(entryPoint.x + xOffset, entryPoint.y),
+                new Point(entryPoint.x + xOffset, entryPoint.y + yOffset),
+        };
+        drawSegment(g2d, path, start, SEGMENT_PER_QUARTER, controlPoints2);
+
+        controlPoints2 = new Point[]{
+                new Point(entryPoint.x + xOffset, entryPoint.y + yOffset),
+                new Point(entryPoint.x + xOffset, entryPoint.y + yOffset*2),
+                new Point(entryPoint.x, entryPoint.y + yOffset*2),
+        };
+        drawSegment(g2d, path,start+SEGMENT_PER_QUARTER, SEGMENT_PER_QUARTER, controlPoints2);
+
+        controlPoints2 = new Point[]{
+                new Point(entryPoint.x, entryPoint.y + yOffset*2),
+                new Point(entryPoint.x - xOffset, entryPoint.y + yOffset*2),
+                new Point(entryPoint.x - xOffset, entryPoint.y + yOffset),
+        };
+        drawSegment(g2d, path,start+2*SEGMENT_PER_QUARTER, SEGMENT_PER_QUARTER, controlPoints2);
+
+        controlPoints2 = new Point[]{
+                new Point(entryPoint.x - xOffset, entryPoint.y + yOffset),
+                new Point(entryPoint.x - xOffset, entryPoint.y + yOffset/3),
+                new Point(entryPoint.x, entryPoint.y + yOffset/3)
+        };
+        drawSegment(g2d, path,start+3*SEGMENT_PER_QUARTER, SEGMENT_PER_QUARTER, controlPoints2);
+
+
+        if(exitPoint != null){
+            controlPoints2 = new Point[]{
+                    new Point(entryPoint.x, entryPoint.y + yOffset/3),
+                    new Point(exitPoint.x, entryPoint.y + yOffset/3),
+                    exitPoint
+            };
+            drawSegment(g2d, path,start+4*SEGMENT_PER_QUARTER, SEGMENT_PER_QUARTER, controlPoints2);
+            g2d.draw(path);
+            return start+4*SEGMENT_PER_QUARTER+SEGMENT_PER_QUARTER;
+        }
+
+        g2d.draw(path);
+        return start+3*SEGMENT_PER_QUARTER+SEGMENT_PER_QUARTER;
+    }
+
     private void drawLanternSegment(Graphics2D g2d, int start, int SEGMENT_POINTS, Point controlPoint) {
         if (stemPointsToDraw < start) return;
 
-        int randomNum = ThreadLocalRandom.current().nextInt(1, editor.getContentComponent().getWidth()/3 +1);
+
 
         Path2D path = new Path2D.Double();
 
@@ -260,8 +264,8 @@ public class ParticleSpriteLantern extends Particle{
 
     }
 
-    private void drawSegment(Graphics2D g2d, int start, int SEGMENT_POINTS, Point[] controlPoints){
-        if(stemPointsToDraw < start) return;
+    private int drawSegment(Graphics2D g2d, Path2D path, int start, int SEGMENT_POINTS, Point[] controlPoints){
+        if(stemPointsToDraw < start) return start+SEGMENT_POINTS;
 
         Point[] quadPoints = new Point[SEGMENT_POINTS];
 
@@ -274,30 +278,21 @@ public class ParticleSpriteLantern extends Particle{
             quadPoints[i] = p;
         }
 
-        Path2D path = new Path2D.Double();
 
-
-
-        boolean pathInitialized = false;
         for(int i = 0;  i <SEGMENT_POINTS; i++){
-
-
-            if(!pathInitialized){
-                pathInitialized = true;
-                path.moveTo(quadPoints[i].x, quadPoints[i].y);
-            }else{
-                path.lineTo(quadPoints[i].x, quadPoints[i].y);
-            }
+            path.lineTo(quadPoints[i].x, quadPoints[i].y);
 
             if(start + i > stemPointsToDraw){
                 break;
             }
 
+            if(i == SEGMENT_POINTS - 1){
+                g2d.drawRect(quadPoints[SEGMENT_POINTS-1].x - 10, quadPoints[SEGMENT_POINTS-1].y - 10, 20,20);
+            }
         }
 
-        g2d.setPaint(this.c);
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.c.getAlpha()/255f));
-        g2d.draw(path);
+
+        return start+SEGMENT_POINTS;
     }
 
 

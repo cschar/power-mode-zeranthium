@@ -115,7 +115,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
 
         final ParticleSpriteLantern l = new ParticleSpriteLantern(x, y, dx, dy, size, lifeSetting,
-                Color.GREEN, editor);
+                Color.LIGHT_GRAY, editor);
         particles.add(l);
 
 
