@@ -19,6 +19,8 @@ package com.cschar.pmode3;
 
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.ScrollingModel;
+import com.intellij.openapi.editor.VisualPosition;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -35,9 +37,6 @@ public class ParticleSpriteLantern extends Particle{
 
 
     public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
-    public static boolean settingEnabled = true;
-
-    public static boolean cyclicToggleEnabled = false;
 
     static {}
 
@@ -45,25 +44,8 @@ public class ParticleSpriteLantern extends Particle{
     public static int typeX;
     public static int typeY;
 
-    public static int targetX;
-    public static int targetY;
-    public static float moveSpeed;
-
-    private int prevX;
-    private int prevY;
-
-
-    //    private Anchor a;
-    private ArrayList<Anchor> anchors;
-
 
     private int frameLife;
-
-
-
-
-
-    public static int MAX_CYCLE_PARTICLES = 3;
 
 
     public static Map<Editor, Integer> spawnMap = new HashMap<>();
@@ -73,7 +55,9 @@ public class ParticleSpriteLantern extends Particle{
     int randomNum;
     int randomNum50;
     int randomNum100;
+    int randomNum200;
 
+    //TODO add trigger key?
     public ParticleSpriteLantern(int x, int y, int dx, int dy, int size, int life, Color c,
                                  Editor editor) {
         super(x,y,dx,dy,size,life,c);
@@ -83,13 +67,12 @@ public class ParticleSpriteLantern extends Particle{
 
         this.typeX = x;
         this.typeY = y;
-        this.prevX = x;
-        this.prevY= y;
 
         int bound = editor.getContentComponent().getWidth()/40;
         randomNum = ThreadLocalRandom.current().nextInt(-bound, bound +1);
         randomNum50 = ThreadLocalRandom.current().nextInt(1, 50 +1);
         randomNum100 = ThreadLocalRandom.current().nextInt(1, 100 +1);
+        randomNum200 = ThreadLocalRandom.current().nextInt(1, 200 +1);
 
         if(spawnMap.get(this.editor) != null) {
             spawnMap.put(this.editor, spawnMap.get(this.editor) + 1);
@@ -100,18 +83,42 @@ public class ParticleSpriteLantern extends Particle{
 
         this.frameLife = 1000000;
 
+
+//        VisualPosition visualPosition = editor.getCaretModel().getVisualPosition();
+//        Point point = editor.visualPositionToXY(visualPosition);
+//        ScrollingModel scrollingModel = editor.getScrollingModel();
+//        point.x = point.x - scrollingModel.getHorizontalScrollOffset();
+//        point.y = point.y - scrollingModel.getVerticalScrollOffset();
+//        this.y = this.y + editor.getScrollingModel().getVisibleArea().y;
+//        this.x = this.x + editor.getScrollingModel().getVisibleArea().x;
+
+        Rectangle visibleArea = this.editor.getScrollingModel().getVisibleArea();
+        this.y = this.y + visibleArea.y;
+        this.x = this.x + visibleArea.x;
+
+        editorOffsets[0] = -1*visibleArea.x;
+        editorOffsets[1] = -1*visibleArea.y;
+
+
     }
 
 
 
 
-    int stemPointsToDraw = 0;
+    private int editorOffsets[] = new int[2];
+    private int stemPointsToDraw = 0;
+    private int MAX_POINTS_TO_DRAW= 300;
     public boolean update() {
 
         if(this.frameLife % 2 == 0){
             stemPointsToDraw += 1;
         }
-        stemPointsToDraw = Math.min(stemPointsToDraw, MAX_QUAD_POINTS+300);
+        stemPointsToDraw = Math.min(stemPointsToDraw, MAX_POINTS_TO_DRAW);
+
+        Rectangle visibleArea = this.editor.getScrollingModel().getVisibleArea();
+        editorOffsets[0] = -1*visibleArea.x;
+        editorOffsets[1] = -1*visibleArea.y;
+
 
 
         life--;
@@ -146,8 +153,11 @@ public class ParticleSpriteLantern extends Particle{
     int frames[];
     public void render(Graphics g) {
 
+
         if (life > 0) {
             Graphics2D g2d = (Graphics2D) g.create();
+            g2d.translate(editorOffsets[0],  editorOffsets[1]);
+
 
             g2d.setColor(this.c);
 //            g2d.drawRect(this.x, this.y, 5 ,5);
@@ -164,17 +174,19 @@ public class ParticleSpriteLantern extends Particle{
             path.moveTo(x, y - 20);
 
             int offsetX0 = (int) (50 + 250*(randomNum100/100.0));
+            int offsetY0 = (int) (100 + 300*(randomNum200/200.0));
+            if(offsetY0 > 300) offsetX0 = Math.min(offsetX0 / 2, 100);
             Point[] controlPoints0 = new Point[]{
                     new Point(this.x, this.y - 20),
-                    new Point(this.x, this.y - 200),
-                    new Point(this.x + offsetX0, this.y - 200)
+                    new Point(this.x, this.y - offsetY0),
+                    new Point(this.x + offsetX0, this.y - offsetY0)
             };
             int next0 = drawSegment(g2d, path,0, 10, controlPoints0);
             g2d.draw(path);
 
 
             Point startPoint = controlPoints0[2];
-            Point endPoint = new Point(x + offsetX0 + 100 + randomNum50,y - 50 + randomNum50/2);
+            Point endPoint = new Point(x + offsetX0 + 100 + randomNum50,y - offsetY0/2);
             int next = drawLoopSegment(g2d, next0, 40,
                     startPoint,
                     endPoint
@@ -255,9 +267,9 @@ public class ParticleSpriteLantern extends Particle{
 
         g2d.setPaint(Color.YELLOW);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
-        g2d.draw(path);
 
 
+//        g2d.draw(path);
         g2d.fill(path);
 
 //        g2d.setClip(path);
