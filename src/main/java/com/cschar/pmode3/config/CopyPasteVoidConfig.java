@@ -22,9 +22,9 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class CopyPasteVoidConfig {
+public class CopyPasteVoidConfig extends JPanel{
 
-    JPanel mainPanel;
+
     PowerMode3 settings;
 
 
@@ -38,12 +38,12 @@ public class CopyPasteVoidConfig {
     public CopyPasteVoidConfig(PowerMode3 settings){
         this.settings = settings;
 
-        mainPanel = new JPanel();
-        mainPanel.setMaximumSize(new Dimension(1000,300));
-        mainPanel.setLayout(new GridLayout(1,2));
+
+        this.setMaximumSize(new Dimension(1000,300));
+        this.setLayout(new GridLayout(1,2));
         JPanel firstCol = new JPanel();
         firstCol.setLayout(new BoxLayout(firstCol, BoxLayout.PAGE_AXIS));
-        mainPanel.add(firstCol);
+        this.add(firstCol);
 
         JPanel secondCol = new JPanel();
         secondCol.setLayout(new BoxLayout(secondCol, BoxLayout.Y_AXIS));
@@ -57,7 +57,7 @@ public class CopyPasteVoidConfig {
 //        headerPanel.setBackground(Color.ORANGE);
 //        secondCol.add(headerLabel);
         secondCol.add(headerPanel);
-        mainPanel.add(secondCol);
+        this.add(secondCol);
 
         this.fadeAmountTextField = new JTextField();
         JPanel wobbleConfig = Config.populateTextFieldPanel(this.fadeAmountTextField, "Fade amount (0.01 - 0.1)");
@@ -86,9 +86,7 @@ public class CopyPasteVoidConfig {
 
     }
 
-    public JPanel getConfigPanel(){
-        return this.mainPanel;
-    }
+
 
     public JComponent createConfigTable(){
 

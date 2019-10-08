@@ -8,7 +8,7 @@ import java.awt.*;
 
 public class MOMAConfig extends JPanel {
 
-    JPanel mainPanel;
+
     PowerMode3 settings;
 
     private JCheckBox oneSquareEnabledCheckBox;
@@ -28,12 +28,12 @@ public class MOMAConfig extends JPanel {
         this.settings = settings;
 
 
-        mainPanel = new JPanel();
-        mainPanel.setMaximumSize(new Dimension(1000,300));
-        mainPanel.setLayout(new GridLayout(0,2));
+
+        this.setMaximumSize(new Dimension(1000,300));
+        this.setLayout(new GridLayout(0,2));
         JPanel firstCol = new JPanel();
         firstCol.setLayout(new BoxLayout(firstCol, BoxLayout.PAGE_AXIS));
-        mainPanel.add(firstCol);
+        this.add(firstCol);
 
         JPanel secondCol = new JPanel();
         secondCol.setLayout(new BoxLayout(secondCol, BoxLayout.Y_AXIS));
@@ -45,7 +45,7 @@ public class MOMAConfig extends JPanel {
         headerPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
         headerPanel.setMaximumSize(new Dimension(300,100));
         secondCol.add(headerPanel);
-        mainPanel.add(secondCol);
+        this.add(secondCol);
 
 
         //save values so we can check if we need to reload sprites
@@ -148,11 +148,6 @@ public class MOMAConfig extends JPanel {
 
     }
 
-
-
-    public JPanel getConfigPanel(){
-        return this.mainPanel;
-    }
 
 
 

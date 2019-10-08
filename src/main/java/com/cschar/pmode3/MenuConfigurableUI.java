@@ -414,40 +414,39 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
 
         //Particle Settings tab
-        //TODO make them all extend JPANEL
         particleSettingsPanel.add(this.createSpacer());
         this.basicParticleConfig = new BasicParticleConfig(settings);
         particleSettingsPanel.add(this.basicParticleConfig);
-
         particleSettingsPanel.add(this.createSpacer());
+
         this.mandala2Config = new Mandala2Config(settings);
         particleSettingsPanel.add(mandala2Config);
-
         particleSettingsPanel.add(this.createSpacer());
+
         this.linkerConfig = new LinkerConfig(settings);
-        particleSettingsPanel.add(linkerConfig.getConfigPanel());
-
+        particleSettingsPanel.add(linkerConfig);
         particleSettingsPanel.add(this.createSpacer());
+
         this.lanternConfig = new LanternConfig(settings);
         particleSettingsPanel.add(lanternConfig);
-
         particleSettingsPanel.add(this.createSpacer());
+
         this.lightningConfig = new LightningConfig(settings);
-        particleSettingsPanel.add(lightningConfig.getConfigPanel());
-
+        particleSettingsPanel.add(lightningConfig);
         particleSettingsPanel.add(this.createSpacer());
+
         this.lightningAltConfig = new LightningAltConfig(settings);
         particleSettingsPanel.add(lightningAltConfig);
-
-
         particleSettingsPanel.add(this.createSpacer());
+
+
         this.lizardConfig = new LizardConfig(settings);
-        particleSettingsPanel.add(lizardConfig.getConfigPanel());
+        particleSettingsPanel.add(lizardConfig);
         particleSettingsPanel.add(this.createSpacer());
 
 
         this.copyPasteVoidConfig = new CopyPasteVoidConfig(settings);
-        particleSettingsPanel.add(copyPasteVoidConfig.getConfigPanel());
+        particleSettingsPanel.add(copyPasteVoidConfig);
         particleSettingsPanel.add(this.createSpacer());
 
         this.drosteConfig = new DrosteConfig(settings);
@@ -463,11 +462,11 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         particleSettingsPanel.add(this.createSpacer());
 
         this.vineConfig = new VineConfig(settings);
-        particleSettingsPanel.add(vineConfig.getConfigPanel());
+        particleSettingsPanel.add(vineConfig);
         particleSettingsPanel.add(this.createSpacer());
 
         this.momaConfig = new MOMAConfig(settings);
-        particleSettingsPanel.add(momaConfig.getConfigPanel());
+        particleSettingsPanel.add(momaConfig);
         particleSettingsPanel.add(this.createSpacer());
 
         footerPanel = new JPanel();
@@ -547,6 +546,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     public void setupPackLoaderButton(){
         loadPackButton.addActionListener((event) -> {
 
+            ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/bar_small.png"));
             int result = Messages.showYesNoDialog(null,
                     "<html> <h1> Load config pack? </h1>" +
                             " \n Config <b>packs</b> can be found on the " +
@@ -554,7 +554,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
                             "github repo. " +
                             "\n\n" +
                             "Please select a <b> manifest.json </b> file found inside one of the packs </html>",
-                    "LOAD PACK","yes","no", null);
+                    "LOAD PACK","yes","no", sliderIcon);
 
             if(result == Messages.YES){
                 FileChooserDescriptor fd = new FileChooserDescriptor(true,false,false,false,false,false);

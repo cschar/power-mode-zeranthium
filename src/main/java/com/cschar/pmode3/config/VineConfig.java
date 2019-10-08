@@ -11,26 +11,25 @@ import java.awt.event.ActionListener;
 
 public class VineConfig extends JPanel {
 
-    JPanel mainPanel;
+
     PowerMode3 settings;
 
     public JTextField maxPsiAnchorDistanceTextField;
     public JTextField minPsiAnchorDistanceTextField;
     public JTextField chancePerKeyPressTextField;
-    JCheckBox spriteEnabled;
-    JCheckBox sprite2Enabled;
-    JCheckBox growFromRight;
+    private JCheckBox spriteEnabled;
+    private JCheckBox growFromRight;
 
     public VineConfig(PowerMode3 settings){
         this.settings = settings;
 
 
-        mainPanel = new JPanel();
-        mainPanel.setMaximumSize(new Dimension(1000,300));
-        mainPanel.setLayout(new GridLayout(0,2));
+
+        this.setMaximumSize(new Dimension(1000,300));
+        this.setLayout(new GridLayout(0,2));
         JPanel firstCol = new JPanel();
         firstCol.setLayout(new BoxLayout(firstCol, BoxLayout.PAGE_AXIS));
-        mainPanel.add(firstCol);
+        this.add(firstCol);
 
         JPanel secondCol = new JPanel();
         secondCol.setLayout(new BoxLayout(secondCol, BoxLayout.Y_AXIS));
@@ -38,7 +37,7 @@ public class VineConfig extends JPanel {
         headerLabel.setFont(new Font ("Arial", Font.BOLD, 20));
         secondCol.add(headerLabel);
         headerLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        mainPanel.add(secondCol);
+        this.add(secondCol);
 
 
         JPanel vineTopColorPanel = Config.getColorPickerPanel("Vine Top Color", PowerMode3.ConfigType.VINE, settings, Color.GREEN);
@@ -86,30 +85,6 @@ public class VineConfig extends JPanel {
         spriteEnabledPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         spriteEnabledPanel.setMaximumSize(new Dimension(500, 50));
         firstCol.add(spriteEnabledPanel);
-        this.spriteEnabled.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(spriteEnabled.isSelected()){
-                    sprite2Enabled.setSelected(false);
-                }
-            }
-        });
-
-        JPanel sprite2EnabledPanel = new JPanel();
-        this.sprite2Enabled = new JCheckBox("Sprite2 Enabled?");
-        sprite2EnabledPanel.add(sprite2Enabled);
-        sprite2EnabledPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        sprite2EnabledPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        sprite2EnabledPanel.setMaximumSize(new Dimension(500, 50));
-        firstCol.add(sprite2EnabledPanel);
-        this.sprite2Enabled.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(sprite2Enabled.isSelected()){
-                    spriteEnabled.setSelected(false);
-                }
-            }
-        });
 
 
         JPanel growFromRightPanel = new JPanel();
@@ -127,9 +102,6 @@ public class VineConfig extends JPanel {
 
     }
 
-    public JPanel getConfigPanel(){
-        return this.mainPanel;
-    }
 
 
     public void loadValues(){
@@ -140,7 +112,6 @@ public class VineConfig extends JPanel {
         this.chancePerKeyPressTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.VINE,"chancePerKeyPress", 100)));
 
         this.spriteEnabled.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.VINE,"spriteEnabled"));
-        this.sprite2Enabled.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.VINE,"sprite2Enabled"));
         this.growFromRight.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.VINE,"growFromRight"));
 
 
@@ -167,7 +138,6 @@ public class VineConfig extends JPanel {
 
 
         settings.setSpriteTypeProperty(PowerMode3.ConfigType.VINE, "spriteEnabled", String.valueOf(spriteEnabled.isSelected()));
-        settings.setSpriteTypeProperty(PowerMode3.ConfigType.VINE, "sprite2Enabled", String.valueOf(sprite2Enabled.isSelected()));
         settings.setSpriteTypeProperty(PowerMode3.ConfigType.VINE, "growFromRight", String.valueOf(growFromRight.isSelected()));
     }
 
@@ -177,9 +147,6 @@ public class VineConfig extends JPanel {
         return Config.getBoolProperty(settings, PowerMode3.ConfigType.VINE,"spriteEnabled");
     }
 
-    public static boolean USE_SPRITE2(PowerMode3 settings){
-        return Config.getBoolProperty(settings, PowerMode3.ConfigType.VINE,"sprite2Enabled");
-    }
 
 
     public static int MAX_PSI_SEARCH(PowerMode3 settings) {

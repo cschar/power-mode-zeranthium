@@ -231,9 +231,6 @@ public class LinkerConfig extends JPanel {
 
     }
 
-    public JPanel getConfigPanel(){
-        return this;
-    }
 
     public JComponent createConfigTable(){
 

@@ -263,11 +263,6 @@ public class ParticleSpriteLantern extends Particle{
                 Point p0 = pathPoints.get(pos_index-1);
                 Point p1 = pathPoints.get(pos_index);
 
-//                int pos_index = (MAX_QUAD_POINTS-1) - i; // 0,1,2,3....
-
-//                SpriteDataAnimated.drawSprite(g2d, p0, p1, spriteDataAnimated.get(0), frames[0]);
-
-
                 if(pos_index < this.maxLinks) {
                     for (int spriteDataIndex = 0; spriteDataIndex < repeats_offsets.length; spriteDataIndex++) {
                         if (validOnPosIndex[spriteDataIndex][pos_index]) {
@@ -349,7 +344,7 @@ public class ParticleSpriteLantern extends Particle{
         path.lineTo(controlPoint.x - 100 + randomNum, editor.getContentComponent().getHeight());
         path.lineTo(controlPoint.x, controlPoint.y);
 
-        g2d.setPaint(Color.YELLOW);
+        g2d.setPaint(this.c);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
 
 

@@ -1,16 +1,11 @@
 
 
-TODO: everything
-
-
+TODO: 
 
 
 
       
 BELOW NEED "FONTSET" type datatype;      
-- TOKEN callout with decoration above
-  - can choose 'holder' animation/image
-  - can choose 'font' to display each char typed
   
 - 36daysofType callout https://mantissa.xyz/resources
 - 36daysofType COMPLETE replacement of all characters LOL
@@ -30,8 +25,8 @@ Done;
 - Void / Mandala  (max 3-4 layers as typing increases)
 - Mandala Chains based off Vine
 - hotkey to activate (bonus: configurable?)
-- Sound panel (Tabbed Panel)
-- Play 2x Song w/ 2 Hotkeys to trigger each one
+- Sound panel (Tabbed Panel)  (MP3)
+- Play 2x Song w/ 2 Hotkeys to trigger each one (MP3)
 - DrosteEffect
 - CopyPasteVoid effect
 - Background Loading of Assets
@@ -41,7 +36,7 @@ Done;
 - Locked layer that stretches or pins to corner
 - Supports multiple editors
 - 'Lantern' Particles
-- Frame-by-Frame trigger via type action
+- 'Tap Animation' -- keypress controls how fast it animates
       
       
 future TODO:
@@ -56,7 +51,6 @@ future TODO:
 - investigate Jackson with Config Objects...
    - https://stackoverflow.com/questions/29550006/how-to-have-jackson-use-a-method-to-serialize-a-class-to-json
 
-- benchmark Powermode3.getInstance(); -- just use it everywhere if good
 
 - Add PackLoader support for all settings, provide template for how to write config file
 
@@ -67,3 +61,7 @@ future TODO:
 ---- typing lights up dungeion PLUS sends out ai units to battle spiders etc.. LOL
  
 - plant growth using wave collapse function?
+
+- TOKEN callout with decoration above
+  - can choose 'holder' animation/image
+  - can choose 'font' to display each char typed

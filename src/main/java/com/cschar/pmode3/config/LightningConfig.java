@@ -9,7 +9,7 @@ import java.awt.*;
 
 public class LightningConfig extends JPanel {
 
-    JPanel mainPanel;
+
     PowerMode3 settings;
 
     private JCheckBox innerBeamEnabledCheckBox;
@@ -23,12 +23,12 @@ public class LightningConfig extends JPanel {
         this.settings = settings;
 
 
-        mainPanel = new JPanel();
-        mainPanel.setMaximumSize(new Dimension(1000,300));
-        mainPanel.setLayout(new GridLayout(0,2));
+
+        this.setMaximumSize(new Dimension(1000,300));
+        this.setLayout(new GridLayout(0,2));
         JPanel firstCol = new JPanel();
         firstCol.setLayout(new BoxLayout(firstCol, BoxLayout.PAGE_AXIS));
-        mainPanel.add(firstCol);
+        this.add(firstCol);
 
         JPanel secondCol = new JPanel();
         secondCol.setLayout(new BoxLayout(secondCol, BoxLayout.PAGE_AXIS));
@@ -36,7 +36,7 @@ public class LightningConfig extends JPanel {
         headerLabel.setFont(new Font ("Arial", Font.BOLD, 20));
         headerLabel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
         secondCol.add(headerLabel);
-        mainPanel.add(secondCol);
+        this.add(secondCol);
 
 
         //save values so we can check if we need to reload sprites
@@ -132,10 +132,6 @@ public class LightningConfig extends JPanel {
         }
     }
 
-
-    public JPanel getConfigPanel(){
-        return this.mainPanel;
-    }
 
 
     public static int CHANCE_OF_LIGHTNING(PowerMode3 settings){

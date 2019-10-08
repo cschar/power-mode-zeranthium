@@ -296,9 +296,9 @@ public class ParticleSpriteVineAnchor extends Particle{
                     break;
                 }
                 VinePoint p = iter.next();
-                if (iter.hasNext()) { //skip every 2nd point
-                    p = iter.next();
-                }
+//                if (iter.hasNext()) { //skip every 2nd point
+//                    p = iter.next();
+//                }
 
                 at = new AffineTransform();
 

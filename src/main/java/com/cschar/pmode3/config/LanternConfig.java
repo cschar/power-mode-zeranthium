@@ -13,7 +13,6 @@ import com.intellij.openapi.fileChooser.FileChooserDialog;
 import com.intellij.openapi.fileChooser.FileChooserFactory;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.JBColor;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
 
@@ -27,7 +26,7 @@ import java.util.ArrayList;
 
 public class LanternConfig extends JPanel {
 
-    JPanel mainPanel;
+    JPanel topPanel;
     PowerMode3 settings;
 
 
@@ -57,14 +56,15 @@ public class LanternConfig extends JPanel {
 
 //        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 //        this.setMaximumSize(new Dimension(1000,300));
-        this.setLayout(new GridLayout(2,0)); //as many rows as necessary
+//        this.setLayout(new GridLayout(2,0)); //as many rows as necessary
+        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
-        mainPanel = new JPanel();
-        mainPanel.setMaximumSize(new Dimension(1000,500));
-        mainPanel.setLayout(new GridLayout(0,2));
+        topPanel = new JPanel();
+        topPanel.setMaximumSize(new Dimension(1000,500));
+        topPanel.setLayout(new GridLayout(1,2));
         JPanel firstCol = new JPanel();
         firstCol.setLayout(new BoxLayout(firstCol, BoxLayout.PAGE_AXIS));
-        mainPanel.add(firstCol);
+        topPanel.add(firstCol);
 
         JPanel secondCol = new JPanel();
         secondCol.setLayout(new BoxLayout(secondCol, BoxLayout.Y_AXIS));
@@ -78,7 +78,7 @@ public class LanternConfig extends JPanel {
 //        headerPanel.setBackground(Color.ORANGE);
 //        secondCol.add(headerLabel);
         secondCol.add(headerPanel);
-        mainPanel.add(secondCol);
+        topPanel.add(secondCol);
 
 //        JPanel lizardColorPanel = Config.getColorPickerPanel("Lizard Color", PowerMode3.SpriteType.LIZARD, settings, Color.GREEN);
 //        secondCol.add(lizardColorPanel);
@@ -139,7 +139,7 @@ public class LanternConfig extends JPanel {
         spriteConfigPanel = createConfigTable();
 
 
-        this.add(mainPanel);
+        this.add(topPanel);
         this.add(spriteConfigPanel);
 
         this.loadValues();

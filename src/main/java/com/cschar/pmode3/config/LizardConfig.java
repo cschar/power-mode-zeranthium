@@ -28,9 +28,9 @@ import java.awt.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-public class LizardConfig{
+public class LizardConfig extends JPanel{
 
-    JPanel mainPanel;
+
     PowerMode3 settings;
 
     public JTextField maxPsiAnchorDistanceTextField;
@@ -52,12 +52,11 @@ public class LizardConfig{
         //LIZARD
         //Build without GUI designer
 
-        mainPanel = new JPanel();
-        mainPanel.setMaximumSize(new Dimension(1000,300));
-        mainPanel.setLayout(new GridLayout(0,2));
+        this.setMaximumSize(new Dimension(1000,300));
+        this.setLayout(new GridLayout(0,2));
         JPanel firstCol = new JPanel();
         firstCol.setLayout(new BoxLayout(firstCol, BoxLayout.PAGE_AXIS));
-        mainPanel.add(firstCol);
+        this.add(firstCol);
 
         JPanel secondCol = new JPanel();
         secondCol.setLayout(new BoxLayout(secondCol, BoxLayout.Y_AXIS));
@@ -71,7 +70,7 @@ public class LizardConfig{
 //        headerPanel.setBackground(Color.ORANGE);
 //        secondCol.add(headerLabel);
         secondCol.add(headerPanel);
-        mainPanel.add(secondCol);
+        this.add(secondCol);
 
 //        JPanel lizardColorPanel = Config.getColorPickerPanel("Lizard Color", PowerMode3.SpriteType.LIZARD, settings, Color.GREEN);
 //        secondCol.add(lizardColorPanel);
@@ -143,9 +142,6 @@ public class LizardConfig{
 
     }
 
-    public JPanel getConfigPanel(){
-        return this.mainPanel;
-    }
 
     public JComponent createConfigTable(){
 
