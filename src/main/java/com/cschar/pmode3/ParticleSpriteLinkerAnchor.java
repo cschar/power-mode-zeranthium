@@ -218,10 +218,6 @@ public class ParticleSpriteLinkerAnchor extends Particle{
                 cleanupSingle(this.editor);
                 return true;
             }
-
-            //only update move position of cycle chains, let non-cyclic chains stay at original spawn spot
-//            this.x = typeX;
-//            this.y = typeY;
         }
         if(LinkerConfig.MOVE_WITH_CARET(settings)) { //otherwise linkers will stay where intial typeAction spawned them
             if( life % 2 == 0){

@@ -137,13 +137,28 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
 
         if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.LANTERN)) {
-            final ParticleSpriteLantern l = new ParticleSpriteLantern(x, y, dx, dy, size, lifeSetting,
-                    LanternConfig.TRACER_COLOR(settings),
-                    editor,
-                    LanternConfig.MAX_LINKS(settings),
-                    LanternConfig.TRACER_ENABLED(settings),
-                    LanternConfig.MOVE_WITH_CARET(settings));
-            particles.add(l);
+
+            boolean doCreate = false;
+            if(ParticleSpriteLantern.spawnMap.get(this.editor) == null){
+                doCreate = true;
+            }
+
+            if(ParticleSpriteLantern.spawnMap.get(this.editor) != null &&
+                    LanternConfig.MAX_PARTICLES(settings) > ParticleSpriteLantern.spawnMap.get(this.editor)){
+                doCreate = true;
+            }
+            if(doCreate){
+                final ParticleSpriteLantern l = new ParticleSpriteLantern(x, y, dx, dy, size, lifeSetting,
+                        LanternConfig.TRACER_COLOR(settings),
+                        editor,
+                        LanternConfig.MAX_LINKS(settings),
+                        LanternConfig.TRACER_ENABLED(settings),
+                        LanternConfig.MOVE_WITH_CARET(settings),
+                        LanternConfig.CARET_MOVE_SPEED(settings),
+                        LanternConfig.IS_CYCLIC_ENABLED(settings));
+                particles.add(l);
+            }
+
         }
 
 

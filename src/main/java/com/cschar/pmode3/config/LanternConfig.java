@@ -37,7 +37,7 @@ public class LanternConfig extends JPanel {
 
 
     private JCheckBox isCyclicEnabled;
-    private JTextField maxCycleParticlesTextField;
+    private JTextField maxParticlesTextField;
 
     private JCheckBox moveWithCaret;
     private JTextField moveSpeedTextField;
@@ -92,12 +92,12 @@ public class LanternConfig extends JPanel {
         secondCol.add(tracerConfig);
 
         isCyclicEnabled = new JCheckBox("cyclic?");
-        this.maxCycleParticlesTextField = new JTextField();
-        JLabel maxCycleParticleLabel = new JLabel("Cycle Particles (1-5)");
+        this.maxParticlesTextField = new JTextField();
+        JLabel maxCycleParticleLabel = new JLabel("MAX Particles (1-50)");
         JPanel cyclicPanel = new JPanel();
         cyclicPanel.add(isCyclicEnabled);
         cyclicPanel.add(maxCycleParticleLabel);
-        cyclicPanel.add(this.maxCycleParticlesTextField);
+        cyclicPanel.add(this.maxParticlesTextField);
         cyclicPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         cyclicPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
         cyclicPanel.setMaximumSize(new Dimension(500, 50));
@@ -224,7 +224,7 @@ public class LanternConfig extends JPanel {
         this.moveSpeedTextField.setText(String.valueOf(Config.getFloatProperty(settings, PowerMode3.ConfigType.LANTERN,"movespeed", 1.0f)));
         this.maxLinksTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LANTERN,"maxLinks", 20)));
 
-        this.maxCycleParticlesTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LANTERN,"maxCycleParticles", 3)));
+        this.maxParticlesTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LANTERN,"maxParticles", 10)));
         this.isCyclicEnabled.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.LANTERN,"isCyclicEnabled", false));
 
 
@@ -253,10 +253,10 @@ public class LanternConfig extends JPanel {
         //Cyclic global garbage lol
         settings.setSpriteTypeProperty(PowerMode3.ConfigType.LANTERN, "isCyclicEnabled", String.valueOf(isCyclicEnabled.isSelected()));
         ParticleSpriteLinkerAnchor.cyclicToggleEnabled = isCyclicEnabled.isSelected();
-        int maxCycleParticles = Config.getJTextFieldWithinBoundsInt(this.maxCycleParticlesTextField,
-                1, 5,
-                "max cycle particles");
-        settings.setSpriteTypeProperty(PowerMode3.ConfigType.LANTERN, "maxCycleParticles",
+        int maxCycleParticles = Config.getJTextFieldWithinBoundsInt(this.maxParticlesTextField,
+                1, 50,
+                "max particles");
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.LANTERN, "maxParticles",
                 String.valueOf(maxCycleParticles));
         ParticleSpriteLinkerAnchor.MAX_CYCLE_PARTICLES = LinkerConfig.MAX_CYCLE_PARTICLES(settings);
 
@@ -285,8 +285,8 @@ public class LanternConfig extends JPanel {
         return Config.getBoolProperty(settings, PowerMode3.ConfigType.LANTERN, "isCyclicEnabled");
     }
 
-    public static int MAX_CYCLE_PARTICLES(PowerMode3 settings){
-        return Config.getIntProperty(settings, PowerMode3.ConfigType.LANTERN, "maxCycleParticles");
+    public static int MAX_PARTICLES(PowerMode3 settings){
+        return Config.getIntProperty(settings, PowerMode3.ConfigType.LANTERN, "maxParticles");
     }
 
     public static boolean MOVE_WITH_CARET(PowerMode3 settings){

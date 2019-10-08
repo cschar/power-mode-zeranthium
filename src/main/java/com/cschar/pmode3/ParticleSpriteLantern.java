@@ -17,16 +17,13 @@
 
 package com.cschar.pmode3;
 
+import com.cschar.pmode3.config.LanternConfig;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.ScrollingModel;
-import com.intellij.openapi.editor.VisualPosition;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
-import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,6 +42,8 @@ public class ParticleSpriteLantern extends Particle{
 
     public static int typeX;
     public static int typeY;
+    public static int targetX;
+    public static int targetY;
 
 
     private int frames[];
@@ -65,21 +64,30 @@ public class ParticleSpriteLantern extends Particle{
     private int maxLinks = 0;
     private boolean tracerEnabled = true;
     private boolean moveWithCaret = false;
+    private double moveSpeed = 1.0;
+    private boolean isCylic = false;
+    private int lineHeight = 10;
+
+
 
     //TODO add trigger key?
     public ParticleSpriteLantern(int x, int y, int dx, int dy, int size, int life, Color c,
-                                 Editor editor, int maxLinks, boolean tracerEnabled, boolean moveWithCaret) {
+                                 Editor editor, int maxLinks, boolean tracerEnabled, boolean moveWithCaret,
+                                 double moveSpeed, boolean isCyclic) {
         super(x,y,dx,dy,size,life,c);
         this.editor = editor;
-
-        this.life = life*2;
 
         this.maxLinks = maxLinks;
         this.tracerEnabled = tracerEnabled;
         this.moveWithCaret = moveWithCaret;
+        this.moveSpeed = moveSpeed;
+        this.isCylic = isCyclic;
+        this.lineHeight = editor.getLineHeight();
 
         this.typeX = x;
         this.typeY = y;
+        this.targetX = x;
+        this.targetY = y;
 
         this.frames = new int[spriteDataAnimated.size()];
 
@@ -194,23 +202,79 @@ public class ParticleSpriteLantern extends Particle{
             }
         }
 
+        if( life % 2 == 0){
+            //TODO fix bug here where small moveSpeed values turn dx into virutally 0
+            //make it 1,2or3px min movement speed if targetX - x != 0
+            int dx = (targetX - editorOffsets[0]) - x;
+            this.x = (int) (this.x + dx*moveSpeed);
+
+            int dy = (targetY - editorOffsets[1]) - y;
+            this.y = (int) (this.y + dy*moveSpeed);
+        }
+
 
         if(this.frameLife % 2 == 0){
-            stemPointsToDraw += MAX_POINTS_TO_DRAW;
+//            stemPointsToDraw += MAX_POINTS_TO_DRAW;
+            stemPointsToDraw += 1;
         }
         stemPointsToDraw = Math.min(stemPointsToDraw, MAX_POINTS_TO_DRAW);
 
 
+        if (!settings.isEnabled()) {
+            if(this.isCylic) {
+                cleanupSingle(this.editor);
+            }
+            return true;
+        }
+
+        //TODO FIX THIS GARBAGE LOL
+        if(this.isCylic){
+            if(LanternConfig.MAX_PARTICLES(this.settings) < spawnMap.get(editor)){ // if changed in settings
+                cleanupSingle(this.editor);
+                return true;
+            }
+            if(!LanternConfig.IS_CYCLIC_ENABLED(this.settings)){ //checkbox toggle in config
+                cleanupSingle(this.editor);
+                return true;
+            }
+            //added to kill any lingering particles
+            if(!settings.getSpriteTypeEnabled(PowerMode3.ConfigType.LANTERN)){ //checkbox of entire LANTERN type
+                cleanupSingle(this.editor);
+                return true;
+            }
+        }
 
 
 
         life--;
         frameLife--;
         boolean lifeOver = (life <= 0);
+        if(lifeOver){
+            if (this.isCylic) {
+
+                this.life = 99; //wont last long if cycle switch off
+                if(frameLife < 1000){
+                    frameLife = 1000000;
+                }
+                return false;
+            }else{
+                cleanupSingle(this.editor);
+            }
+        }
         return lifeOver;
     }
 
 
+    private static void cleanupSingle(Editor e){
+        Integer CUR_PARTICLES = spawnMap.get(e);
+        if(CUR_PARTICLES != null){
+            if(CUR_PARTICLES > 1){
+                spawnMap.put(e, CUR_PARTICLES -1);
+            }else {
+                spawnMap.remove(e);
+            }
+        }
+    }
 
 
     public Point quadTo(Point from, Point mid, Point destination, double t){
@@ -349,42 +413,28 @@ public class ParticleSpriteLantern extends Particle{
 
 
         g2d.setPaint(this.c);
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.c.getAlpha()/255f * 0.3f));
         Path2D path = new Path2D.Double();
 
-        if(moveWithCaret) {
-            path.moveTo(0, 0);
-            path.lineTo(100 +randomNum, editor.getContentComponent().getHeight()*2);
-            path.lineTo(-100 + randomNum, editor.getContentComponent().getHeight()*2);
-            path.lineTo(0, 0);
+//        if(moveWithCaret && this.y > controlPoint.y + 20) { //if we're 'below' lantern
+        if(moveWithCaret) { //if we're 'below' lantern
 
-            AffineTransform at = new AffineTransform();
-            at.translate(controlPoint.x, controlPoint.y);
+            path.moveTo(controlPoint.x, controlPoint.y);
 
-
-            double radius = Point.distance(controlPoint.x, controlPoint.y, typeX, typeY);
-            int adjacent = (controlPoint.x - typeX);
-            double initAnchorAngle = Math.acos(adjacent / radius);
-            initAnchorAngle = Math.PI / 2 - initAnchorAngle;
-//        if (controlPoint.x > typeX) {
-//            initAnchorAngle *= -1;
-//        }
-//        initAnchorAngle -= Math.PI/2;
-//        initAnchorAngle -= Math.PI/2;
-//        if (controlPoint.y - typeY < 0) {
-//            initAnchorAngle *= -1;
-//        }
-
-            if (typeY < controlPoint.y + 10) {
-                //dont rotate
-            } else {
-
-                at.rotate(initAnchorAngle);
-//            at.rotate(0,1); //90
-//            at.rotate(0,1); //90
+            Point p1 = new Point(this.x + 100, this.y);
+            Point p2 = new Point(this.x - 100, this.y);
+            if(this.y < controlPoint.y) {
+                p1 = new Point(this.x + 100, this.y + lineHeight);
+                p2 = new Point(this.x - 100, this.y + lineHeight);
             }
-            path.transform(at);
+
+            path.lineTo(p1.x, p1.y);
+            path.lineTo(p2.x, p2.y);
+            path.lineTo(controlPoint.x, controlPoint.y);
+
+
         }else{
+
 
             path.moveTo(controlPoint.x, controlPoint.y);
             path.lineTo(controlPoint.x + 100 + randomNum, editor.getContentComponent().getHeight());

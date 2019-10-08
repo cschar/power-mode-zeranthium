@@ -58,8 +58,10 @@ public class MyCaretListener implements CaretListener {
             if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.LANTERN) &&
                     LanternConfig.MOVE_WITH_CARET(settings)){
 
-                ParticleSpriteLantern.typeX = point.x;
-                ParticleSpriteLantern.typeY = point.y;
+                ParticleSpriteLantern.targetX = point.x;
+                ParticleSpriteLantern.targetY = point.y;
+//                ParticleSpriteLantern.typeX = point.x;
+//                ParticleSpriteLantern.typeY = point.y;
             }
         }
     }
