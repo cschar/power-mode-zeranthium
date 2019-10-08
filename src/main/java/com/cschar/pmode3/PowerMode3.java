@@ -119,7 +119,8 @@ public class PowerMode3 implements BaseComponent,
         COPYPASTEVOID,
         SPECIAL_ACTION_SOUND,
         LOCKED_LAYER,
-        LANTERN
+        LANTERN,
+        TAP_ANIM
     }
 
     static class JSONLoader {
@@ -136,6 +137,9 @@ public class PowerMode3 implements BaseComponent,
                 put(ConfigType.LANTERN, "LANTERN.json");
                 put(ConfigType.LIZARD, "LIZARD.json");
                 put(ConfigType.MANDALA, "MANDALA.json");
+                put(ConfigType.TAP_ANIM, "TAP_ANIM.json");
+
+
                 put(ConfigType.MUSIC_TRIGGER, "MUSIC_TRIGGERS.json");
                 put(ConfigType.SOUND, "SOUND.json");
                 put(ConfigType.SPECIAL_ACTION_SOUND, "SPECIAL_ACTION_SOUND.json");
@@ -200,6 +204,7 @@ public class PowerMode3 implements BaseComponent,
         put("sprite"+ ConfigType.COPYPASTEVOID + "Enabled", "true");
         put("sprite"+ ConfigType.LOCKED_LAYER + "Enabled", "false");
         put("sprite"+ ConfigType.LANTERN + "Enabled", "false");
+        put("sprite"+ ConfigType.TAP_ANIM + "Enabled", "false");
 
         put("sprite"+ ConfigType.SOUND + "Enabled", "true");
         put("sprite"+ ConfigType.SPECIAL_ACTION_SOUND + "Enabled", "false");
@@ -414,7 +419,8 @@ public class PowerMode3 implements BaseComponent,
             LockedLayerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LOCKED_LAYER)));
             setUpdateProgress(progressIndicator, "Lantern", 0.8);
             LanternConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LANTERN)));
-
+            setUpdateProgress(progressIndicator, "Tap Anim", 0.85);
+            TapAnimConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.TAP_ANIM)));
 
             setUpdateProgress(progressIndicator, "Sounds", 0.9);
             SoundConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.SOUND)));
@@ -456,6 +462,7 @@ public class PowerMode3 implements BaseComponent,
             CopyPasteVoidConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.COPYPASTEVOID)));
             LockedLayerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LOCKED_LAYER)));
             LanternConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LANTERN)));
+            TapAnimConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.TAP_ANIM)));
 
             SoundConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.SOUND)));
             MusicTriggerConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.MUSIC_TRIGGER)));

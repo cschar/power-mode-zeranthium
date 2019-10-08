@@ -44,6 +44,7 @@ Done;
 - Action Key Sound Options (Copy/Paste/Backspace/Del/Enter) 
 - Locked layer that stretches or pins to corner
 - Supports multiple editors
+- 'Lantern' Particles
 
 future TODO:
 

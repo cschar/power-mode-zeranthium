@@ -1,7 +1,7 @@
 package com.cschar.pmode3.config;
 
 import com.cschar.pmode3.ParticleSpriteDroste;
-import com.cschar.pmode3.ParticleSpriteLinkerAnchor;
+import com.cschar.pmode3.ParticleSpriteTapAnim;
 import com.cschar.pmode3.PowerMode3;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.cschar.pmode3.config.common.ui.CustomPathCellHighlighterRenderer;
@@ -27,7 +27,7 @@ import java.awt.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-public class DrosteConfig extends JPanel {
+public class TapAnimConfig extends JPanel {
 
     JPanel mainPanel;
     PowerMode3 settings;
@@ -35,13 +35,13 @@ public class DrosteConfig extends JPanel {
 
 
     private static Color originalTracerColor = Color.WHITE;
-    private JComponent drosteSpriteConfigPanel;
+    private JComponent spriteConfigPanel;
 
     public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
 
     public final static int PREVIEW_SIZE = 120;
 
-    public DrosteConfig(PowerMode3 settings){
+    public TapAnimConfig(PowerMode3 settings){
         this.settings = settings;
 
 
@@ -54,7 +54,7 @@ public class DrosteConfig extends JPanel {
         firstRow.setMaximumSize(new Dimension(1000,300));
 
         JPanel headerPanel = new JPanel();
-        JLabel headerLabel = new JLabel("Droste Options");
+        JLabel headerLabel = new JLabel("Tap Anim Options");
         headerLabel.setFont(new Font ("Arial", Font.BOLD, 20));
         headerPanel.add(headerLabel);
         headerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -63,8 +63,8 @@ public class DrosteConfig extends JPanel {
         firstRow.add(headerPanel);
 
 
-        drosteSpriteConfigPanel = createConfigTable();
-        firstRow.add(drosteSpriteConfigPanel);
+        spriteConfigPanel = createConfigTable();
+        firstRow.add(spriteConfigPanel);
         this.add(firstRow);
 //        this.add(drosteSpriteConfigPanel);
 
@@ -80,7 +80,7 @@ public class DrosteConfig extends JPanel {
 
 
         table.setRowHeight(PREVIEW_SIZE);
-        table.setModel(new DrosteTableModel());
+        table.setModel( new TapAnimTableModel());
 
         table.setCellSelectionEnabled(false);
         table.setColumnSelectionAllowed(false);
@@ -88,7 +88,7 @@ public class DrosteConfig extends JPanel {
         table.getTableHeader().setReorderingAllowed(false);
 
         table.setPreferredScrollableViewportSize(new Dimension(400,
-                table.getRowHeight() * 2));
+                table.getRowHeight() * 1));
 
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 //        table.setBackground(Color.yellow);
@@ -100,20 +100,19 @@ public class DrosteConfig extends JPanel {
         sp.setOpaque(true);
 //        sp.setAlignmentX(Component.RIGHT_ALIGNMENT);
 //        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-//        table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
         TableColumnModel colModel=table.getColumnModel();
 
         colModel.getColumn(0).setWidth(PREVIEW_SIZE); //preview
-        colModel.getColumn(1).setWidth(50);  //enabled
+        colModel.getColumn(1).setWidth(40);  //enabled
 
-        colModel.getColumn(2).setPreferredWidth(50);  //scale
-        colModel.getColumn(3).setPreferredWidth(80);  //speed rate
-        colModel.getColumn(4).setPreferredWidth(100);  //set path
-        colModel.getColumn(5).setPreferredWidth(50);  // path
-        colModel.getColumn(6).setPreferredWidth(70);  //reset
+        colModel.getColumn(2).setWidth(50);  //scale
+        colModel.getColumn(3).setWidth(120);  //speed rate
+        colModel.getColumn(4).setWidth(100);  //set path
+        colModel.getColumn(5).setWidth(50);  // path
         colModel.getColumn(6).setWidth(60);  //reset
-        colModel.getColumn(7).setPreferredWidth(60);  //alpha
-        colModel.getColumn(7).setWidth(60);
+        colModel.getColumn(7).setWidth(60); //alpha
 
 
         //make table transparent
@@ -130,7 +129,7 @@ public class DrosteConfig extends JPanel {
         table.getColumn("reset").setCellRenderer(buttonRenderer);
         table.addMouseListener(new JTableButtonMouseListener(table));
 
-        TableCellRenderer pathRenderer = new CustomPathCellHighlighterRenderer(DrosteConfig.spriteDataAnimated);
+        TableCellRenderer pathRenderer = new CustomPathCellHighlighterRenderer(TapAnimConfig.spriteDataAnimated);
         table.getColumn("path").setCellRenderer(pathRenderer);
 
 
@@ -149,14 +148,14 @@ public class DrosteConfig extends JPanel {
 
     public void saveValues() throws ConfigurationException {
 
-        settings.setSerializedSpriteDataAnimated(DrosteConfig.spriteDataAnimated, PowerMode3.ConfigType.DROSTE);
+        settings.setSerializedSpriteDataAnimated(TapAnimConfig.spriteDataAnimated, PowerMode3.ConfigType.TAP_ANIM);
     }
 
 
 
     public static void setSpriteDataAnimated(ArrayList<SpriteDataAnimated> data){
         spriteDataAnimated = data;
-        ParticleSpriteDroste.spriteDataAnimated = data;
+        ParticleSpriteTapAnim.spriteDataAnimated = data;
     }
 
     public static void loadJSONConfig(JSONObject configData, Path parentPath) throws JSONException {
@@ -179,16 +178,16 @@ public class DrosteConfig extends JPanel {
                     (float) jo.getDouble("alpha"),
                     jo.getInt("offset")); //val1
 
-        //TODO take care of droste Only 1 at a time layer rule
+
             spriteDataAnimated.set(i, sd);
         }
     }
 }
 
 
-class DrosteTableModel extends AbstractTableModel {
+class TapAnimTableModel extends AbstractTableModel {
 
-    static ArrayList<SpriteDataAnimated> data = DrosteConfig.spriteDataAnimated;
+    static ArrayList<SpriteDataAnimated> data = TapAnimConfig.spriteDataAnimated;
 
 
 
@@ -196,14 +195,14 @@ class DrosteTableModel extends AbstractTableModel {
             "preview",
             "enabled?",
             "scale",
-            "speed",
+            "steps per press",
 //            "weighted amount (1-100)",
 
             "set path",
             "path",
             "reset",
             "alpha",
-            "offset (10-400)",
+            "y offset (+/- 400)",
             "is cyclic"
 
     };
@@ -377,7 +376,7 @@ class DrosteTableModel extends AbstractTableModel {
                 return;
             case 8:    // expandOffset
                 int v0 = (Integer) value;
-                v0 = Math.max(10, v0);
+                v0 = Math.max(-400, v0);
                 v0 = Math.min(v0,400);
                 d.val1 = v0;
 

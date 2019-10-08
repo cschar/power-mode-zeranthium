@@ -6,6 +6,7 @@ import com.cschar.pmode3.config.common.ui.CustomPathCellHighlighterRenderer;
 import com.cschar.pmode3.config.common.ui.JTableButtonMouseListener;
 import com.cschar.pmode3.config.common.ui.JTableButtonRenderer;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
+import com.cschar.pmode3.config.common.ui.ZeranthiumColors;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDialog;
 import com.intellij.openapi.fileChooser.FileChooserFactory;
@@ -179,7 +180,7 @@ public class LinkerConfig extends JPanel {
 //        this.moveSpeedTextField.setEditable(false);
         caretMovementPanel.add(Config.populateTextFieldPanel(this.moveSpeedTextField, "speed (0.01 - 1.0)"));
         caretMovementPanel.setOpaque(true);
-        caretMovementPanel.setBackground(new JBColor(new Color(250, 250, 210), new Color(210,250,250)));
+        caretMovementPanel.setBackground(ZeranthiumColors.specialOption1);
         firstCol.add(caretMovementPanel);
 
 

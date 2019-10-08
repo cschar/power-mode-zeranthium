@@ -40,10 +40,6 @@ public class MyCaretListener implements CaretListener {
             if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.MANDALA) &&
                     Mandala2Config.MOVE_WITH_CARET(settings)){
 
-
-//                int movespeed = Mandala2Config.CARET_MOVE_SPEED(settings);
-//                if()
-
                 ParticleSpriteMandala.targetX = point.x;
                 ParticleSpriteMandala.targetY = point.y;
                 ParticleSpriteMandala.moveSpeed = Mandala2Config.CARET_MOVE_SPEED(settings);
@@ -52,10 +48,6 @@ public class MyCaretListener implements CaretListener {
 
             if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.LINKER) &&
                     LinkerConfig.MOVE_WITH_CARET(settings)){
-
-
-//                int movespeed = Mandala2Config.CARET_MOVE_SPEED(settings);
-//                if()
 
 //                ParticleSpriteLinkerAnchor.cursorX = point.x;
 //                ParticleSpriteLinkerAnchor.cursorY = point.y;

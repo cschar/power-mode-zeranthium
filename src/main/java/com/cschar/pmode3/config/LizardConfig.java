@@ -6,11 +6,13 @@ import com.cschar.pmode3.config.common.*;
 import com.cschar.pmode3.config.common.ui.CustomPathCellHighlighterRenderer;
 import com.cschar.pmode3.config.common.ui.JTableButtonMouseListener;
 import com.cschar.pmode3.config.common.ui.JTableButtonRenderer;
+import com.cschar.pmode3.config.common.ui.ZeranthiumColors;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDialog;
 import com.intellij.openapi.fileChooser.FileChooserFactory;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.ui.JBColor;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
 import org.json.JSONArray;
@@ -107,7 +109,7 @@ public class LizardConfig{
         chancePerKeyPressPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         chancePerKeyPressPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
         chancePerKeyPressPanel.setMaximumSize(new Dimension(400, 50));
-        chancePerKeyPressPanel.setBackground(Color.lightGray);
+        chancePerKeyPressPanel.setBackground(ZeranthiumColors.specialOption2);
         secondCol.add(chancePerKeyPressPanel);
 
         this.chanceOfSpawnTextField = new JTextField();

@@ -72,6 +72,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private JCheckBox enableActionSound;
     private JCheckBox enableLockedLayerCheckbox;
     private JCheckBox enableLantern;
+    private JCheckBox enableTapAnim;
 
 
     private BasicParticleConfig basicParticleConfig;
@@ -86,6 +87,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private CopyPasteVoidConfig copyPasteVoidConfig;
     private LockedLayerConfig lockedLayerConfig;
     private LanternConfig lanternConfig;
+    private TapAnimConfig tapAnimConfig;
 
     PowerMode3 settings;
 
@@ -165,6 +167,9 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.LANTERN)){
             enableLantern.setSelected(true);
         }
+        if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.TAP_ANIM)){
+            enableTapAnim.setSelected(true);
+        }
 
         //Sound
         if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.SOUND)){
@@ -211,6 +216,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         this.drosteConfig.loadValues();
         this.copyPasteVoidConfig.loadValues();
         this.lanternConfig.loadValues();
+        this.tapAnimConfig.loadValues();
 
 
         //sound panel
@@ -260,6 +266,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         settings.setSpriteTypeEnabled(enableCopyPasteVoid.isSelected(), PowerMode3.ConfigType.COPYPASTEVOID);
         settings.setSpriteTypeEnabled(enableLockedLayerCheckbox.isSelected(), PowerMode3.ConfigType.LOCKED_LAYER);
         settings.setSpriteTypeEnabled(enableLantern.isSelected(), PowerMode3.ConfigType.LANTERN);
+        settings.setSpriteTypeEnabled(enableTapAnim.isSelected(), PowerMode3.ConfigType.TAP_ANIM);
 
         //Sound
         settings.setSpriteTypeEnabled(enableBasicSound.isSelected(), PowerMode3.ConfigType.SOUND);
@@ -284,6 +291,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         this.copyPasteVoidConfig.saveValues();
         this.lockedLayerConfig.saveValues();
         this.lanternConfig.saveValues();
+        this.tapAnimConfig.saveValues();
 
         //sound panel
         this.soundConfig.saveValues();
@@ -448,6 +456,10 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
 
         this.lockedLayerConfig = new LockedLayerConfig(settings);
         particleSettingsPanel.add(lockedLayerConfig);
+        particleSettingsPanel.add(this.createSpacer());
+
+        this.tapAnimConfig = new TapAnimConfig(settings);
+        particleSettingsPanel.add(tapAnimConfig);
         particleSettingsPanel.add(this.createSpacer());
 
         this.vineConfig = new VineConfig(settings);

@@ -2,6 +2,7 @@ package com.cschar.pmode3.config;
 
 import com.cschar.pmode3.PowerMode3;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.ui.JBColor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -74,7 +75,7 @@ public class VineConfig extends JPanel {
         chancePerKeyPressPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         chancePerKeyPressPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
         chancePerKeyPressPanel.setMaximumSize(new Dimension(400, 50));
-        chancePerKeyPressPanel.setBackground(Color.lightGray);
+        chancePerKeyPressPanel.setBackground(JBColor.LIGHT_GRAY);
         secondCol.add(chancePerKeyPressPanel);
 
 

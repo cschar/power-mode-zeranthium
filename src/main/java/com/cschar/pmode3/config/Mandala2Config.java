@@ -6,6 +6,7 @@ import com.cschar.pmode3.config.common.ui.CustomPathCellHighlighterRenderer;
 import com.cschar.pmode3.config.common.ui.JTableButtonMouseListener;
 import com.cschar.pmode3.config.common.ui.JTableButtonRenderer;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
+import com.cschar.pmode3.config.common.ui.ZeranthiumColors;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDialog;
 import com.intellij.openapi.fileChooser.FileChooserFactory;
@@ -68,7 +69,7 @@ public class Mandala2Config extends JPanel{
         caretMovementPanel.add(moveWithCaret);
         this.moveSpeedTextField = new JTextField();
         caretMovementPanel.add(Config.populateTextFieldPanel(this.moveSpeedTextField, "speed (0.001 - 1.0)"));
-        caretMovementPanel.setBackground(new JBColor(new Color(250, 250, 210), new Color(210,250,250)));
+        caretMovementPanel.setBackground(ZeranthiumColors.specialOption1);
 
         firstRow.add(caretMovementPanel);
 
@@ -294,7 +295,7 @@ class OtherColCellPanelMandala extends JPanel {
         maxParticlesPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         maxParticlesPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);
         maxParticlesPanel.setMaximumSize(new Dimension(300, 50));
-        maxParticlesPanel.setBackground(Color.LIGHT_GRAY);
+        maxParticlesPanel.setBackground(ZeranthiumColors.specialOption2);
         maxParticlesPanel.setOpaque(true);
 
         isCyclicCheckbox = new JCheckBox("is cyclic");

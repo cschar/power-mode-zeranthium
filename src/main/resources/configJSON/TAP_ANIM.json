@@ -1,0 +1,16 @@
+{
+  "data": [
+    {
+      "previewSize": 120,
+      "customPath": "",
+      "defaultPath": "/blender/droste1",
+      "val2": 20,
+      "isCyclic": false,
+      "alpha": 0.3,
+      "val1": 20,
+      "scale": 1,
+      "enabled": true,
+      "speedRate": 2
+    }
+  ]
+}

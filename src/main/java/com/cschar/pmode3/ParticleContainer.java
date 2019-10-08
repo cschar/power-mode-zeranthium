@@ -95,6 +95,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
         ParticleSpriteLockedLayer.cleanup(this.editor);
         ParticleSpriteDroste.cleanup(this.editor);
+        ParticleSpriteTapAnim.cleanup(this.editor);
         ParticleSpriteMandala.cleanup(this.editor);
         ParticleSpriteLinkerAnchor.cleanup(this.editor);
 
@@ -112,6 +113,27 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 //        int size = (int) (Math.random() * settings.getParticleSize() + 1);
         int life = 45;
         int lifeSetting = settings.getLifetime();
+
+
+        if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.TAP_ANIM)){
+
+
+            ParticleSpriteTapAnim.updateCursor(this.editor, x, y);
+            ParticleSpriteTapAnim.incrementFrame(this.editor);
+
+            for(int i = 0; i < ParticleSpriteTapAnim.spriteDataAnimated.size(); i++){
+
+                SpriteDataAnimated d = ParticleSpriteTapAnim.spriteDataAnimated.get(i);
+
+                if(!d.enabled) continue;
+
+                if(ParticleSpriteTapAnim.spawnMap.get(this.editor) == null) {
+                    final ParticleSpriteTapAnim eTapAnim = new ParticleSpriteTapAnim(x, y, dx, dy, size, lifeSetting, i,
+                            Color.ORANGE, editor);
+                    particles.add(eTapAnim);
+                }
+            }
+        }
 
 
         if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.LANTERN)) {
