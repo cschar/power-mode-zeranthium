@@ -114,9 +114,14 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         int lifeSetting = settings.getLifetime();
 
 
-        final ParticleSpriteLantern l = new ParticleSpriteLantern(x, y, dx, dy, size, lifeSetting,
-                Color.LIGHT_GRAY, editor);
-        particles.add(l);
+        if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.LANTERN)) {
+            final ParticleSpriteLantern l = new ParticleSpriteLantern(x, y, dx, dy, size, lifeSetting,
+                    LanternConfig.TRACER_COLOR(settings),
+                    editor,
+                    LanternConfig.MAX_LINKS(settings),
+                    LinkerConfig.TRACER_ENABLED(settings));
+            particles.add(l);
+        }
 
 
         if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.LOCKED_LAYER)) {

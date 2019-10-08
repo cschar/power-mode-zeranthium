@@ -193,14 +193,6 @@
               <text value="Load Pack"/>
             </properties>
           </component>
-          <component id="1d3b0" class="javax.swing.JCheckBox" binding="enableVineCheckBox" default-binding="true">
-            <constraints>
-              <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Enable Vine"/>
-            </properties>
-          </component>
           <component id="7f2a2" class="javax.swing.JCheckBox" binding="enableLizardCheckBox" default-binding="true">
             <constraints>
               <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -231,6 +223,22 @@
             </constraints>
             <properties>
               <text value="Enable Locked Layer"/>
+            </properties>
+          </component>
+          <component id="5d4c0" class="javax.swing.JCheckBox" binding="enableLantern">
+            <constraints>
+              <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Enable Lantern"/>
+            </properties>
+          </component>
+          <component id="1d3b0" class="javax.swing.JCheckBox" binding="enableVineCheckBox" default-binding="true">
+            <constraints>
+              <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Enable Vine"/>
             </properties>
           </component>
         </children>

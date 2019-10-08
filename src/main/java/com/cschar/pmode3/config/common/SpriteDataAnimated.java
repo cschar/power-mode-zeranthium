@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FilenameFilter;
@@ -272,5 +273,32 @@ public class SpriteDataAnimated  extends SpriteData {
                 msg,
                 NotificationType.WARNING);
         Notifications.Bus.notify(n);
+    }
+
+
+    public static void drawSprite(Graphics2D g2d, Point p0, Point p1, SpriteDataAnimated pData, int frame){
+        if( !pData.enabled) return;
+
+        AffineTransform at = new AffineTransform();
+        at.scale(pData.scale, pData.scale);
+        at.translate((int) p0.x * (1 / pData.scale), (int) p0.y * (1 / pData.scale));
+
+
+        double radius = Point.distance(p0.x, p0.y, p1.x, p1.y);
+        int adjacent = (p0.x - p1.x);
+        double initAnchorAngle = Math.acos(adjacent / radius);
+
+        if (p0.y - p1.y < 0) {
+            initAnchorAngle *= -1;
+        }
+
+        at.rotate(initAnchorAngle);
+
+        at.translate(-pData.image.getWidth() / 2,
+                -pData.image.getHeight() / 2);
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pData.alpha));
+
+
+        g2d.drawImage(pData.images.get(frame), at, null);
     }
 }

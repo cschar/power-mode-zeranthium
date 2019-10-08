@@ -118,7 +118,8 @@ public class PowerMode3 implements BaseComponent,
         DROSTE,
         COPYPASTEVOID,
         SPECIAL_ACTION_SOUND,
-        LOCKED_LAYER
+        LOCKED_LAYER,
+        LANTERN
     }
 
     static class JSONLoader {
@@ -132,6 +133,7 @@ public class PowerMode3 implements BaseComponent,
                 put(ConfigType.DROSTE, "DROSTE.json");
                 put(ConfigType.LIGHTNING_ALT, "LIGHTNING_ALT2.json");
                 put(ConfigType.LINKER, "LINKER.json");
+                put(ConfigType.LANTERN, "LANTERN.json");
                 put(ConfigType.LIZARD, "LIZARD.json");
                 put(ConfigType.MANDALA, "MANDALA.json");
                 put(ConfigType.MUSIC_TRIGGER, "MUSIC_TRIGGERS.json");
@@ -197,6 +199,7 @@ public class PowerMode3 implements BaseComponent,
         put("sprite"+ ConfigType.DROSTE + "Enabled", "false");
         put("sprite"+ ConfigType.COPYPASTEVOID + "Enabled", "true");
         put("sprite"+ ConfigType.LOCKED_LAYER + "Enabled", "false");
+        put("sprite"+ ConfigType.LANTERN + "Enabled", "false");
 
         put("sprite"+ ConfigType.SOUND + "Enabled", "true");
         put("sprite"+ ConfigType.SPECIAL_ACTION_SOUND + "Enabled", "false");
@@ -370,10 +373,6 @@ public class PowerMode3 implements BaseComponent,
                 public void run(@NotNull ProgressIndicator progressIndicator) {
                     loadConfigDataAsync(progressIndicator);
                 }
-//            @Override
-//            public boolean shouldStartInBackground() {
-//                return true;
-//            }
             };
             ProgressManager.getInstance().run(bgTask);
         }else {
@@ -413,9 +412,11 @@ public class PowerMode3 implements BaseComponent,
             CopyPasteVoidConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.COPYPASTEVOID)));
             setUpdateProgress(progressIndicator, "Locked Layer", 0.7);
             LockedLayerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LOCKED_LAYER)));
+            setUpdateProgress(progressIndicator, "Lantern", 0.8);
+            LanternConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LANTERN)));
 
 
-            setUpdateProgress(progressIndicator, "Sounds", 0.8);
+            setUpdateProgress(progressIndicator, "Sounds", 0.9);
             SoundConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.SOUND)));
             MusicTriggerConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.MUSIC_TRIGGER)));
             SpecialActionSoundConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.SPECIAL_ACTION_SOUND)));
@@ -454,6 +455,7 @@ public class PowerMode3 implements BaseComponent,
             DrosteConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.DROSTE)));
             CopyPasteVoidConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.COPYPASTEVOID)));
             LockedLayerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LOCKED_LAYER)));
+            LanternConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LANTERN)));
 
             SoundConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.SOUND)));
             MusicTriggerConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.MUSIC_TRIGGER)));
@@ -461,18 +463,6 @@ public class PowerMode3 implements BaseComponent,
         }
         this.isConfigLoaded = true;
 
-//        if(!this.isConfigLoaded) {
-//            LightningAltConfig.setSparkData(this.deserializeSpriteData(sparkDataStringArrays));
-//            Mandala2Config.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(mandalaDataStringArrays, 120));
-//            LizardConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(lizardDataStringArrays, 60));
-//            LinkerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(linkerDataStringArrays, 60));
-//            DrosteConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(drosteDataStringArrays, 120));
-//            CopyPasteVoidConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(copyPasteVoidDataStringArrays, 60));
-//
-//            SoundConfig.setSoundData(this.deserializeSoundData(soundDataStringArrays));
-//            MusicTriggerConfig.setSoundData(this.deserializeSoundData(musicTriggerSoundDataStringArrays));
-//        }
-//        this.isConfigLoaded = true;
     }
 
 

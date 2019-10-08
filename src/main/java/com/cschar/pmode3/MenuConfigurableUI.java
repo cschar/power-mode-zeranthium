@@ -71,6 +71,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private JCheckBox enableBasicSound;
     private JCheckBox enableActionSound;
     private JCheckBox enableLockedLayerCheckbox;
+    private JCheckBox enableLantern;
 
 
     private BasicParticleConfig basicParticleConfig;
@@ -84,6 +85,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private DrosteConfig drosteConfig;
     private CopyPasteVoidConfig copyPasteVoidConfig;
     private LockedLayerConfig lockedLayerConfig;
+    private LanternConfig lanternConfig;
 
     PowerMode3 settings;
 
@@ -160,6 +162,9 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.LOCKED_LAYER)){
             enableLockedLayerCheckbox.setSelected(true);
         }
+        if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.LANTERN)){
+            enableLantern.setSelected(true);
+        }
 
         //Sound
         if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.SOUND)){
@@ -205,7 +210,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         this.linkerConfig.loadValues();
         this.drosteConfig.loadValues();
         this.copyPasteVoidConfig.loadValues();
-
+        this.lanternConfig.loadValues();
 
 
         //sound panel
@@ -254,6 +259,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         settings.setSpriteTypeEnabled(enableDrosteCheckbox.isSelected(), PowerMode3.ConfigType.DROSTE);
         settings.setSpriteTypeEnabled(enableCopyPasteVoid.isSelected(), PowerMode3.ConfigType.COPYPASTEVOID);
         settings.setSpriteTypeEnabled(enableLockedLayerCheckbox.isSelected(), PowerMode3.ConfigType.LOCKED_LAYER);
+        settings.setSpriteTypeEnabled(enableLantern.isSelected(), PowerMode3.ConfigType.LANTERN);
 
         //Sound
         settings.setSpriteTypeEnabled(enableBasicSound.isSelected(), PowerMode3.ConfigType.SOUND);
@@ -277,6 +283,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         this.drosteConfig.saveValues();
         this.copyPasteVoidConfig.saveValues();
         this.lockedLayerConfig.saveValues();
+        this.lanternConfig.saveValues();
 
         //sound panel
         this.soundConfig.saveValues();
@@ -412,6 +419,9 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         this.linkerConfig = new LinkerConfig(settings);
         particleSettingsPanel.add(linkerConfig.getConfigPanel());
 
+        particleSettingsPanel.add(this.createSpacer());
+        this.lanternConfig = new LanternConfig(settings);
+        particleSettingsPanel.add(lanternConfig);
 
         particleSettingsPanel.add(this.createSpacer());
         this.lightningConfig = new LightningConfig(settings);

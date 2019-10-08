@@ -63,6 +63,7 @@ public class ParticleSpriteLinkerAnchor extends Particle{
     private int curve1Amount;
     private boolean isSingleCyclicEnabled;
 
+    private int frames[];
     private int frameLife;
 
     int[][] repeats_offsets;
@@ -302,7 +303,7 @@ public class ParticleSpriteLinkerAnchor extends Particle{
     }
 
 
-    int frames[];
+
     public void render(Graphics g) {
 
         if (life > 0) {
@@ -399,7 +400,7 @@ public class ParticleSpriteLinkerAnchor extends Particle{
                     for(int spriteDataIndex =0; spriteDataIndex < repeats_offsets.length; spriteDataIndex++){
                        if(validOnPosIndex[spriteDataIndex][pos_index]){
                             frame = frames[spriteDataIndex];
-                            drawSprite(g2d, p0, p1, spriteDataAnimated.get(spriteDataIndex), frame);
+                            SpriteDataAnimated.drawSprite(g2d, p0, p1, spriteDataAnimated.get(spriteDataIndex), frame);
                         }
                     }
                 }
@@ -412,31 +413,7 @@ public class ParticleSpriteLinkerAnchor extends Particle{
         } //life > 0
     }
 
-    private void drawSprite(Graphics2D g2d, Point p0, Point p1, SpriteDataAnimated pData, int frame){
-        if( !pData.enabled) return;
 
-        AffineTransform at = new AffineTransform();
-        at.scale(pData.scale, pData.scale);
-        at.translate((int) p0.x * (1 / pData.scale), (int) p0.y * (1 / pData.scale));
-
-
-        double radius = Point.distance(p0.x, p0.y, p1.x, p1.y);
-        int adjacent = (p0.x - p1.x);
-        double initAnchorAngle = Math.acos(adjacent / radius);
-
-        if (p0.y - p1.y < 0) {
-            initAnchorAngle *= -1;
-        }
-
-        at.rotate(initAnchorAngle);
-
-        at.translate(-pData.image.getWidth() / 2,
-                -pData.image.getHeight() / 2);
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pData.alpha));
-
-
-        g2d.drawImage(pData.images.get(frame), at, null);
-    }
 
 
 
