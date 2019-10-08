@@ -191,6 +191,7 @@ public class Mandala2Config extends JPanel{
 
         JSONArray tableData = configData.getJSONArray("tableData");
 
+        int count = 0;
         for(int i =0; i<tableData.length(); i++){
             JSONObject jo = tableData.getJSONObject(i);
 
@@ -208,6 +209,11 @@ public class Mandala2Config extends JPanel{
                     1);
 
             spriteDataAnimated.set(i, sd);
+            count += 1;
+        }
+
+        for(int i = count; i < spriteDataAnimated.size(); i++){
+            spriteDataAnimated.get(i).enabled = false;
         }
     }
 

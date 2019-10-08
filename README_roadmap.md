@@ -4,11 +4,7 @@ TODO: everything
 
 
 
-- glyph chain (3-4 glyph thing) (gold) (zoetrope?chainer?)
-   -  each keypress moves animation 1 frame
-      - horse running
-      - chicken pecking dirt lol
-      
+
 
       
 BELOW NEED "FONTSET" type datatype;      
@@ -45,7 +41,9 @@ Done;
 - Locked layer that stretches or pins to corner
 - Supports multiple editors
 - 'Lantern' Particles
-
+- Frame-by-Frame trigger via type action
+      
+      
 future TODO:
 
 - BUILDUP_MONITOR, where you hit different thresholds

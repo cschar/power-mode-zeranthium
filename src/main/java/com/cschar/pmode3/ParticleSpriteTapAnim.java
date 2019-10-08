@@ -43,6 +43,7 @@ public class ParticleSpriteTapAnim extends Particle{
     private String spritePath;
 
 
+    private int frameLife;
     private Editor editor;
 
     // editor --> frame, maxFrame, cursorX, cursorY, speedRate
@@ -53,6 +54,7 @@ public class ParticleSpriteTapAnim extends Particle{
                                  Editor editor) {
         super(x,y,dx,dy,size,life,c);
         this.editor = editor;
+        this.frameLife = 10000;
 
 
         sprites = spriteDataAnimated.get(spriteDataIndex).images;
@@ -77,17 +79,31 @@ public class ParticleSpriteTapAnim extends Particle{
     public static void incrementFrame(Editor e){
         int[] val = ParticleSpriteTapAnim.spawnMap.get(e);
         if(val != null){
-//            val[0] = val[0] + 1;
-            val[0] = val[0] + val[4];
-            if( val[0] % val[1] == 0){
-                val[0] = 0;
-            }
+
+            val[0] = Math.min(val[0] + val[4], 20); //don't buffer more than 20 frames
+
+
+            //only used if this is controlling frames directly
+//            val[0] = val[0] + val[4];
+//            if( val[0] % val[1] == 0){
+//                val[0] = 0;
+//            }
         }
     }
 
 
+    int frame = 0;
     public boolean update() {
 //        If entire plugin is turned off
+        if(this.frameLife % 2 == 0){
+            if(spawnMap.get(this.editor)[0] > 0) {
+                spawnMap.get(this.editor)[0] -= 1;
+                frame += 1;
+                if (frame >= sprites.size()) {
+                    frame = 0;
+                }
+            }
+        }
 
         if(!settings.isEnabled()){
             ParticleSpriteTapAnim.spawnMap.remove(this.editor);
@@ -99,6 +115,7 @@ public class ParticleSpriteTapAnim extends Particle{
             return true;
         }
 
+        frameLife--;
         life--;
 
         boolean lifeOver = (life <= 0);
@@ -120,6 +137,9 @@ public class ParticleSpriteTapAnim extends Particle{
 
                 //cyclic: reset next cycle
                 this.life = 50;
+                if(frameLife < 1000){
+                    frameLife = 10000;
+                }
                 spawnMap.get(this.editor)[4] = d.speedRate; //update speed
                 return false;
             } else {
@@ -152,11 +172,14 @@ public class ParticleSpriteTapAnim extends Particle{
             int[] state = spawnMap.get(this.editor);
 
             AffineTransform at = new AffineTransform();
-            at.translate(state[2], state[3]);
-            at.translate(-sprite.getWidth()/2,
-                    -sprite.getHeight() - d.val1);   //val1 --> y offset
+            at.scale(d.scale, d.scale);
+            at.translate(state[2] * (1/d.scale), state[3] * (1/d.scale));
 
-            g2d.drawImage(sprites.get(state[0]), at, null);
+            at.translate(-sprite.getWidth()/2 + (d.val2 / d.scale),
+                    -sprite.getHeight() + (d.val1 /d.scale));   //val1 --> y offset
+
+//            g2d.drawImage(sprites.get(state[0]), at, null);
+            g2d.drawImage(sprites.get(frame), at, null);
 
 
             g2d.dispose();

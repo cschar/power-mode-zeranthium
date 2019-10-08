@@ -34,7 +34,7 @@ public class TapAnimConfig extends JPanel {
 
 
 
-    private static Color originalTracerColor = Color.WHITE;
+
     private JComponent spriteConfigPanel;
 
     public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
@@ -66,7 +66,7 @@ public class TapAnimConfig extends JPanel {
         spriteConfigPanel = createConfigTable();
         firstRow.add(spriteConfigPanel);
         this.add(firstRow);
-//        this.add(drosteSpriteConfigPanel);
+
 
         this.loadValues();
 
@@ -173,10 +173,10 @@ public class TapAnimConfig extends JPanel {
                     spriteDataAnimated.get(i).defaultPath,
                     parentPath.resolve(jo.getString("customPath")).toString(),
                     jo.getBoolean("isCyclic"),
-                    1,
-//                    jo.getInt("val2"),
+//                    1,
+                    jo.getInt("xoffset"), //val2
                     (float) jo.getDouble("alpha"),
-                    jo.getInt("offset")); //val1
+                    jo.getInt("yoffset")); //val1
 
 
             spriteDataAnimated.set(i, sd);
@@ -203,6 +203,7 @@ class TapAnimTableModel extends AbstractTableModel {
             "reset",
             "alpha",
             "y offset (+/- 400)",
+            "x offset (+/- 400)",
             "is cyclic"
 
     };
@@ -220,6 +221,7 @@ class TapAnimTableModel extends AbstractTableModel {
             String.class,
             JButton.class,
             Float.class,
+            Integer.class,
             Integer.class,
             Boolean.class
     };
@@ -312,11 +314,12 @@ class TapAnimTableModel extends AbstractTableModel {
                 return resetButton;
             case 7:
                 return d.alpha;
-//                SpriteDataAnimated d = data.get(row);
-//                return new OtherCol(d.maxNumParticles, d.isCyclic);
-            case 8: // weight --> offset
+
+            case 8: // weight --> yoffset
                 return d.val1;
-            case 9: // maxParticles --> repeatEvery
+            case 9: // val2 --> xoffset
+                return d.val2;
+            case 10: // maxParticles --> repeatEvery
                 return d.isCyclic;
 
         }
@@ -352,7 +355,7 @@ class TapAnimTableModel extends AbstractTableModel {
                 f = Math.max(0.0f, f);
                 f = Math.min(f,2.0f);
                 d.scale = f;
-                ParticleSpriteDroste.needsUpdate = true;
+
 
                 return;
             case 3: //speed rate
@@ -379,18 +382,14 @@ class TapAnimTableModel extends AbstractTableModel {
                 v0 = Math.max(-400, v0);
                 v0 = Math.min(v0,400);
                 d.val1 = v0;
-
-                //Hacky way to update expensive computation
-                ParticleSpriteDroste.needsUpdate = true;
-
-
                 return;
-            case 9:
-//                int v1 = (Integer) value;
-//                v1 = Math.max(1, v1);
-//                v1 = Math.min(v1,100);
-//                d.val2 = v1;
-//                return;
+            case 9:    // expandOffset
+                v0 = (Integer) value;
+                v0 = Math.max(-400, v0);
+                v0 = Math.min(v0,400);
+                d.val2 = v0;
+                return;
+            case 10:
                 d.isCyclic =  (Boolean) value;
                 return;
 

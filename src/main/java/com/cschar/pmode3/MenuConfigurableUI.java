@@ -623,22 +623,28 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
                     soundConfig.loadJSONConfig(configKeyData, path.getParent());
                 }
 
-                //DROSTE
+
                 if(configKey.equals("DROSTE")){
                     enableDrosteCheckbox.setSelected(true);
                     DrosteConfig.loadJSONConfig(configKeyData, path.getParent());
                 }
 
-                //MANDALA
+
                 if(configKey.equals("MANDALA")){
                     enableMandalaCheckbox.setSelected(true);
                     Mandala2Config.loadJSONConfig(configKeyData, path.getParent());
                 }
 
-                //LOCKED LAYER
+
                 if(configKey.equals("LOCKED_LAYER")){
                     enableLockedLayerCheckbox.setSelected(true);
                     LockedLayerConfig.loadJSONConfig(configKeyData, path.getParent());
+                }
+
+
+                if(configKey.equals("TAP_ANIM")){
+                    enableTapAnim.setSelected(true);
+                    TapAnimConfig.loadJSONConfig(configKeyData, path.getParent());
                 }
 
 
