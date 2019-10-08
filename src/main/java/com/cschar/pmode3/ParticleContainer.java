@@ -141,7 +141,8 @@ public class ParticleContainer extends JComponent implements ComponentListener {
                     LanternConfig.TRACER_COLOR(settings),
                     editor,
                     LanternConfig.MAX_LINKS(settings),
-                    LinkerConfig.TRACER_ENABLED(settings));
+                    LanternConfig.TRACER_ENABLED(settings),
+                    LanternConfig.MOVE_WITH_CARET(settings));
             particles.add(l);
         }
 

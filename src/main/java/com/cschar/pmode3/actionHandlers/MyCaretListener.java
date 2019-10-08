@@ -1,9 +1,7 @@
 package com.cschar.pmode3.actionHandlers;
 
-import com.cschar.pmode3.ParticleSpriteDroste;
-import com.cschar.pmode3.ParticleSpriteLinkerAnchor;
-import com.cschar.pmode3.ParticleSpriteMandala;
-import com.cschar.pmode3.PowerMode3;
+import com.cschar.pmode3.*;
+import com.cschar.pmode3.config.LanternConfig;
 import com.cschar.pmode3.config.LinkerConfig;
 import com.cschar.pmode3.config.Mandala2Config;
 import com.intellij.openapi.editor.Editor;
@@ -55,6 +53,13 @@ public class MyCaretListener implements CaretListener {
                 ParticleSpriteLinkerAnchor.targetY = point.y;
                 ParticleSpriteLinkerAnchor.moveSpeed = LinkerConfig.CARET_MOVE_SPEED(settings);
 
+            }
+
+            if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.LANTERN) &&
+                    LanternConfig.MOVE_WITH_CARET(settings)){
+
+                ParticleSpriteLantern.typeX = point.x;
+                ParticleSpriteLantern.typeY = point.y;
             }
         }
     }

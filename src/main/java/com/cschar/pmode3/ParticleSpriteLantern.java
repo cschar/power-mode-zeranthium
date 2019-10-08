@@ -21,6 +21,7 @@ import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollingModel;
 import com.intellij.openapi.editor.VisualPosition;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -63,11 +64,11 @@ public class ParticleSpriteLantern extends Particle{
     int randomNum200;
     private int maxLinks = 0;
     private boolean tracerEnabled = true;
-
+    private boolean moveWithCaret = false;
 
     //TODO add trigger key?
     public ParticleSpriteLantern(int x, int y, int dx, int dy, int size, int life, Color c,
-                                 Editor editor, int maxLinks, boolean tracerEnabled) {
+                                 Editor editor, int maxLinks, boolean tracerEnabled, boolean moveWithCaret) {
         super(x,y,dx,dy,size,life,c);
         this.editor = editor;
 
@@ -75,6 +76,7 @@ public class ParticleSpriteLantern extends Particle{
 
         this.maxLinks = maxLinks;
         this.tracerEnabled = tracerEnabled;
+        this.moveWithCaret = moveWithCaret;
 
         this.typeX = x;
         this.typeY = y;
@@ -134,7 +136,44 @@ public class ParticleSpriteLantern extends Particle{
             }
         }
 
+        //Populate pathPoints, jointPoints
+        calculateLanternPath();
 
+
+    }
+
+    private void calculateLanternPath(){
+        Path2D path = new Path2D.Double();
+        path.moveTo(x, y - 20);
+        pathPoints.add(new Point(x, y-20));
+
+        //TODO do path calculations ONCE in constructor, wont need to return the 'next' variable
+        int offsetX0 = (int) (50 + 250*(randomNum100/100.0));
+        int offsetY0 = (int) (100 + 300*(randomNum200/200.0));
+        if(offsetY0 > 300) offsetX0 = Math.min(offsetX0 / 2, 100);
+        Point[] controlPoints0 = new Point[]{
+                new Point(this.x, this.y - 20),
+                new Point(this.x, this.y - offsetY0),
+                new Point(this.x + offsetX0, this.y - offsetY0)
+        };
+
+
+        int next0 = drawSegment(0, 10, controlPoints0);
+
+
+
+        int xOffset = randomNum50 + 30;
+        if(offsetY0 < 150) xOffset = Math.min(40, xOffset);
+        int yOffset = xOffset;
+        Point startPoint = controlPoints0[2];
+        Point endPoint = new Point(x + offsetX0 + 100 + randomNum50,y - offsetY0/2);
+        int next = drawLoopSegment(next0, 40,
+                xOffset,yOffset,
+                startPoint,
+                endPoint
+        );
+
+//        drawLanternSegment(g2d, next, 10, endPoint);
     }
 
 
@@ -157,7 +196,7 @@ public class ParticleSpriteLantern extends Particle{
 
 
         if(this.frameLife % 2 == 0){
-            stemPointsToDraw += 1;
+            stemPointsToDraw += MAX_POINTS_TO_DRAW;
         }
         stemPointsToDraw = Math.min(stemPointsToDraw, MAX_POINTS_TO_DRAW);
 
@@ -196,6 +235,7 @@ public class ParticleSpriteLantern extends Particle{
     int MAX_QUAD_POINTS = 20;
 
     ArrayList<Point> pathPoints = new ArrayList<>();
+    ArrayList<Point> jointPoints = new ArrayList<>();
     public void render(Graphics g) {
 
         int curPointsToDraw = stemPointsToDraw;
@@ -203,60 +243,38 @@ public class ParticleSpriteLantern extends Particle{
         if (life > 0) {
             Graphics2D g2d = (Graphics2D) g.create();
 
-            pathPoints = new ArrayList<>();
+//            pathPoints = new ArrayList<>();
 
             //On a different thread, cant put in update()
             Rectangle visibleArea = this.editor.getScrollingModel().getVisibleArea();
             editorOffsets[0] = -1*visibleArea.x;
             editorOffsets[1] = -1*visibleArea.y;
-
             g2d.translate(editorOffsets[0],  editorOffsets[1]);
 
 
-            g2d.setColor(this.c);
-//            g2d.drawRect(this.x, this.y, 5 ,5);
+            if(tracerEnabled) {
+                g2d.setColor(this.c);
+                g2d.setStroke(new BasicStroke(2.0f));
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.c.getAlpha()/255f));
 
-            g2d.setStroke(new BasicStroke(2.0f));
-            g2d.setPaint(this.c);
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.c.getAlpha()/255f));
+                Path2D path = new Path2D.Double();
+                path.moveTo(pathPoints.get(0).x, pathPoints.get(0).y);
+                for (int i = 1; i < pathPoints.size() && i < curPointsToDraw; i++) {
+                    Point p = pathPoints.get(i);
+                    path.lineTo(p.x, p.y);
+                }
+                g2d.draw(path);
 
-            Path2D path = new Path2D.Double();
-            path.moveTo(x, y - 20);
-            pathPoints.add(new Point(x, y-20));
+                for (int i = 0; i < jointPoints.size() && i < curPointsToDraw / 10; i++) {
+                    Point p = jointPoints.get(i);
+                    g2d.drawRect(p.x - 10, p.y - 10, 20, 20);
+                }
 
-            //TODO do path calculations ONCE in constructor, wont need to return the 'next' variable
-            int offsetX0 = (int) (50 + 250*(randomNum100/100.0));
-            int offsetY0 = (int) (100 + 300*(randomNum200/200.0));
-            if(offsetY0 > 300) offsetX0 = Math.min(offsetX0 / 2, 100);
-            Point[] controlPoints0 = new Point[]{
-                    new Point(this.x, this.y - 20),
-                    new Point(this.x, this.y - offsetY0),
-                    new Point(this.x + offsetX0, this.y - offsetY0)
-            };
+                int n = pathPoints.size();
+                drawLanternSegment(g2d, n, pathPoints.get(n - 1));
+            }
 
-
-            int next0 = drawSegment(g2d, path,0, 10, controlPoints0);
-            g2d.draw(path);
-
-
-            int xOffset = randomNum50 + 30;
-            if(offsetY0 < 150) xOffset = Math.min(40, xOffset);
-            int yOffset = xOffset;
-            Point startPoint = controlPoints0[2];
-            Point endPoint = new Point(x + offsetX0 + 100 + randomNum50,y - offsetY0/2);
-            int next = drawLoopSegment(g2d, next0, 40,
-                    xOffset,yOffset,
-                    startPoint,
-                    endPoint
-                    );
-
-            drawLanternSegment(g2d, next, 10, endPoint);
-
-
-            //https://stackoverflow.com/questions/47728519/getting-the-coordinate-pairs-of-a-path2d-object-in-java
-//            PathIterator pathPoints = path.getPathIterator(null);
             //draw sprites
-
             for (int pos_index = 1; pos_index < pathPoints.size() && pos_index < curPointsToDraw; pos_index++) {
 
 
@@ -277,13 +295,8 @@ public class ParticleSpriteLantern extends Particle{
         } //life > 0
     }
 
-    private int drawLoopSegment(Graphics2D g2d, int start, int SEGMENT_POINTS, int xOffset, int yOffset,
-                                Point entryPoint, Point exitPoint){
-        if(stemPointsToDraw < start && exitPoint != null) return start + 5*SEGMENT_POINTS;
-        if(stemPointsToDraw < start) return start + 4*SEGMENT_POINTS;
-
-        Path2D path = new Path2D.Double();
-        path.moveTo(entryPoint.x, entryPoint.y);
+    private int drawLoopSegment(int start, int SEGMENT_POINTS, int xOffset, int yOffset,
+                                @NotNull Point entryPoint, Point exitPoint){
 
         int SEGMENT_PER_QUARTER = SEGMENT_POINTS/4;
 
@@ -293,28 +306,28 @@ public class ParticleSpriteLantern extends Particle{
                 new Point(entryPoint.x + xOffset, entryPoint.y),
                 new Point(entryPoint.x + xOffset, entryPoint.y + yOffset),
         };
-        drawSegment(g2d, path, start, SEGMENT_PER_QUARTER, controlPoints2);
+        drawSegment(start, SEGMENT_PER_QUARTER, controlPoints2);
 
         controlPoints2 = new Point[]{
                 new Point(entryPoint.x + xOffset, entryPoint.y + yOffset),
                 new Point(entryPoint.x + xOffset, entryPoint.y + yOffset*2),
                 new Point(entryPoint.x, entryPoint.y + yOffset*2),
         };
-        drawSegment(g2d, path,start+SEGMENT_PER_QUARTER, SEGMENT_PER_QUARTER, controlPoints2);
+        drawSegment(start+SEGMENT_PER_QUARTER, SEGMENT_PER_QUARTER, controlPoints2);
 
         controlPoints2 = new Point[]{
                 new Point(entryPoint.x, entryPoint.y + yOffset*2),
                 new Point(entryPoint.x - xOffset, entryPoint.y + yOffset*2),
                 new Point(entryPoint.x - xOffset, entryPoint.y + yOffset),
         };
-        drawSegment(g2d, path,start+2*SEGMENT_PER_QUARTER, SEGMENT_PER_QUARTER, controlPoints2);
+        drawSegment(start+2*SEGMENT_PER_QUARTER, SEGMENT_PER_QUARTER, controlPoints2);
 
         controlPoints2 = new Point[]{
                 new Point(entryPoint.x - xOffset, entryPoint.y + yOffset),
                 new Point(entryPoint.x - xOffset, entryPoint.y + yOffset/3),
                 new Point(entryPoint.x, entryPoint.y + yOffset/3)
         };
-        drawSegment(g2d, path,start+3*SEGMENT_PER_QUARTER, SEGMENT_PER_QUARTER, controlPoints2);
+        drawSegment(start+3*SEGMENT_PER_QUARTER, SEGMENT_PER_QUARTER, controlPoints2);
 
 
         if(exitPoint != null){
@@ -323,44 +336,73 @@ public class ParticleSpriteLantern extends Particle{
                     new Point(exitPoint.x, entryPoint.y + yOffset/3),
                     exitPoint
             };
-            drawSegment(g2d, path,start+4*SEGMENT_PER_QUARTER, SEGMENT_PER_QUARTER, controlPoints2);
-            g2d.draw(path);
+            drawSegment(start+4*SEGMENT_PER_QUARTER, SEGMENT_PER_QUARTER, controlPoints2);
+
             return start+4*SEGMENT_PER_QUARTER+SEGMENT_PER_QUARTER;
         }
 
-        g2d.draw(path);
         return start+3*SEGMENT_PER_QUARTER+SEGMENT_PER_QUARTER;
     }
 
-    private void drawLanternSegment(Graphics2D g2d, int start, int SEGMENT_POINTS, Point controlPoint) {
+    private void drawLanternSegment(Graphics2D g2d, int start, Point controlPoint) {
         if (stemPointsToDraw < start) return;
 
 
-
-        Path2D path = new Path2D.Double();
-
-        path.moveTo(controlPoint.x, controlPoint.y);
-        path.lineTo(controlPoint.x + 100 + randomNum, editor.getContentComponent().getHeight());
-        path.lineTo(controlPoint.x - 100 + randomNum, editor.getContentComponent().getHeight());
-        path.lineTo(controlPoint.x, controlPoint.y);
-
         g2d.setPaint(this.c);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+        Path2D path = new Path2D.Double();
+
+        if(moveWithCaret) {
+            path.moveTo(0, 0);
+            path.lineTo(100 +randomNum, editor.getContentComponent().getHeight()*2);
+            path.lineTo(-100 + randomNum, editor.getContentComponent().getHeight()*2);
+            path.lineTo(0, 0);
+
+            AffineTransform at = new AffineTransform();
+            at.translate(controlPoint.x, controlPoint.y);
 
 
-//        g2d.draw(path);
+            double radius = Point.distance(controlPoint.x, controlPoint.y, typeX, typeY);
+            int adjacent = (controlPoint.x - typeX);
+            double initAnchorAngle = Math.acos(adjacent / radius);
+            initAnchorAngle = Math.PI / 2 - initAnchorAngle;
+//        if (controlPoint.x > typeX) {
+//            initAnchorAngle *= -1;
+//        }
+//        initAnchorAngle -= Math.PI/2;
+//        initAnchorAngle -= Math.PI/2;
+//        if (controlPoint.y - typeY < 0) {
+//            initAnchorAngle *= -1;
+//        }
+
+            if (typeY < controlPoint.y + 10) {
+                //dont rotate
+            } else {
+
+                at.rotate(initAnchorAngle);
+//            at.rotate(0,1); //90
+//            at.rotate(0,1); //90
+            }
+            path.transform(at);
+        }else{
+
+            path.moveTo(controlPoint.x, controlPoint.y);
+            path.lineTo(controlPoint.x + 100 + randomNum, editor.getContentComponent().getHeight());
+            path.lineTo(controlPoint.x - 100 + randomNum, editor.getContentComponent().getHeight());
+            path.lineTo(controlPoint.x, controlPoint.y);
+
+        }
+
+
+
         g2d.fill(path);
 
-//        g2d.setClip(path);
 
     }
 
-    private int drawSegment(Graphics2D g2d, Path2D path, int start, int SEGMENT_POINTS, Point[] controlPoints){
-        if(stemPointsToDraw < start) return start+SEGMENT_POINTS;
+    private int drawSegment(int start, int SEGMENT_POINTS, Point[] controlPoints){
 
         Point[] points = new Point[SEGMENT_POINTS];
-
-
 
         double t = 0.0;
         for (int i = 0; i < SEGMENT_POINTS; i++) {
@@ -368,47 +410,15 @@ public class ParticleSpriteLantern extends Particle{
             Point p = this.quadTo(controlPoints[0], controlPoints[1], controlPoints[2], t);
             points[i] = p;
             pathPoints.add(p);
-        }
-
-
-        for(int i = 0;  i <SEGMENT_POINTS; i++){
-            path.lineTo(points[i].x, points[i].y);
-
-            if(start + i > stemPointsToDraw){
-                break;
-            }
-
-            if(i == SEGMENT_POINTS - 1){
-                g2d.drawRect(points[SEGMENT_POINTS-1].x - 10, points[SEGMENT_POINTS-1].y - 10, 20,20);
+            if(i == SEGMENT_POINTS -1){
+                jointPoints.add(p);
             }
         }
-
-
         return start+SEGMENT_POINTS;
     }
 
 
 
 
-//    private void drawJavaQuad(){
-//        Java quadTo doesnt give us intermediary quad points
-//            for( Anchor a : this.anchors) {
-//                Path2D path = new Path2D.Double();
-//
-//                path.moveTo(this.initialX, this.initialY);
-//
-//                double midPointX = (this.initialX + a.p.x)/2;
-//                double midPointY = (this.initialY + a.p.y)/2;
-//
-////                int incr = this.life % 2;
-//                int incr = this.life;
-//                midPointX += 100 * Math.sin(0.1 * incr );
-//                midPointY += 100 * Math.sin(0.1 * incr + 50 + a.cursorOffset);
-//
-//                path.quadTo(midPointX, midPointY, a.p.x, a.p.y );
-//
-//                g2d.draw(path);
-//            }
-//    }
 
 }
