@@ -4,6 +4,7 @@ import com.cschar.pmode3.ParticleSpriteDroste;
 import com.cschar.pmode3.ParticleSpriteLinkerAnchor;
 import com.cschar.pmode3.PowerMode3;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
+import com.cschar.pmode3.config.common.ui.AbstractConfigTableModel;
 import com.cschar.pmode3.config.common.ui.CustomPathCellHighlighterRenderer;
 import com.cschar.pmode3.config.common.ui.JTableButtonMouseListener;
 import com.cschar.pmode3.config.common.ui.JTableButtonRenderer;
@@ -73,7 +74,7 @@ public class DrosteConfig extends BaseConfigPanel {
 
 
         table.setRowHeight(PREVIEW_SIZE);
-        table.setModel(new DrosteTableModel());
+        table.setModel(new DrosteTableModel(this));
 
         table.setCellSelectionEnabled(false);
         table.setColumnSelectionAllowed(false);
@@ -179,7 +180,7 @@ public class DrosteConfig extends BaseConfigPanel {
 }
 
 
-class DrosteTableModel extends AbstractTableModel {
+class DrosteTableModel extends AbstractConfigTableModel {
 
     static ArrayList<SpriteDataAnimated> data = DrosteConfig.spriteDataAnimated;
 
@@ -217,6 +218,10 @@ class DrosteTableModel extends AbstractTableModel {
             Integer.class,
             Boolean.class
     };
+
+    public DrosteTableModel(BaseConfigPanel config) {
+        super(config);
+    }
 
     @Override
     public int getRowCount() {
@@ -267,43 +272,11 @@ class DrosteTableModel extends AbstractTableModel {
             case 3:
                 return d.speedRate;
             case 4:
-                final JButton button = new JButton("Set path");
-                button.addActionListener(arg0 -> {
-
-
-                    FileChooserDescriptor fd = new FileChooserDescriptor(false,true,false,false,false,false);
-                    FileChooserDialog fcDialog = FileChooserFactory.getInstance().createFileChooser(fd, null, null);
-
-
-                    VirtualFile[] vfs = fcDialog.choose(null);
-
-                    if(vfs.length != 0){
-
-                        d.customPath = vfs[0].getPath();
-                        d.setImageAnimated(vfs[0].getPath(), false);
-
-                        DrosteConfig.calculateSize(data);
-                        this.fireTableDataChanged();
-                    }
-
-                });
-                return button;
+                return this.getSetPathButton(d, data);
             case 5:
                 return data.get(row).customPath;
             case 6:
-                final JButton resetButton = new JButton("reset");
-                resetButton.addActionListener(arg0 -> {
-
-                    d.setImageAnimated(d.defaultPath, true);
-                    d.customPath = "";
-                    d.customPathValid = false;
-//                    d.scale = 1.0f;
-//                    d.val1 = 20;
-
-                    DrosteConfig.calculateSize(data);
-                    this.fireTableDataChanged();
-                });
-                return resetButton;
+                return this.getResetButton(d, data);
             case 7:
                 return d.alpha;
 //                SpriteDataAnimated d = data.get(row);

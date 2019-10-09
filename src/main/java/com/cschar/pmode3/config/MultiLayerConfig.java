@@ -2,11 +2,8 @@ package com.cschar.pmode3.config;
 
 import com.cschar.pmode3.ParticleSpriteMultiLayer;
 import com.cschar.pmode3.PowerMode3;
-import com.cschar.pmode3.config.common.ui.CustomPathCellHighlighterRenderer;
-import com.cschar.pmode3.config.common.ui.JTableButtonMouseListener;
-import com.cschar.pmode3.config.common.ui.JTableButtonRenderer;
+import com.cschar.pmode3.config.common.ui.*;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
-import com.cschar.pmode3.config.common.ui.ZeranthiumColors;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDialog;
 import com.intellij.openapi.fileChooser.FileChooserFactory;
@@ -98,7 +95,7 @@ public class MultiLayerConfig extends BaseConfigPanel{
 
 
         table.setRowHeight(PREVIEW_SIZE);
-        table.setModel(new MultiLayerTableModel());
+        table.setModel(new MultiLayerTableModel(this));
 
         table.setCellSelectionEnabled(false);
         table.setColumnSelectionAllowed(false);
@@ -335,7 +332,7 @@ class OtherColCellPanelMultiLayer extends JPanel {
 }
 
 
-class MultiLayerTableModel extends AbstractTableModel {
+class MultiLayerTableModel extends AbstractConfigTableModel {
 
     static ArrayList<SpriteDataAnimated> data = MultiLayerConfig.spriteDataAnimated;
 
@@ -369,6 +366,10 @@ class MultiLayerTableModel extends AbstractTableModel {
 //            OtherPanel.class
 //            MandalaOtherCellData.class
     };
+
+    public MultiLayerTableModel(BaseConfigPanel config) {
+        super(config);
+    }
 
     @Override
     public int getRowCount() {
@@ -421,45 +422,11 @@ class MultiLayerTableModel extends AbstractTableModel {
             case 3:
                 return data.get(row).speedRate;
             case 4:
-                final JButton button = new JButton("Set path");
-                button.addActionListener(arg0 -> {
-
-
-                    FileChooserDescriptor fd = new FileChooserDescriptor(false,true,false,false,false,false);
-                    FileChooserDialog fcDialog = FileChooserFactory.getInstance().createFileChooser(fd, null, null);
-
-
-                    VirtualFile[] vfs = fcDialog.choose(null);
-
-                    if(vfs.length != 0){
-
-                        data.get(row).customPath = vfs[0].getPath();
-                        data.get(row).setImageAnimated(vfs[0].getPath(), false);
-
-
-                        MultiLayerConfig.calculateSize(data);
-                        this.fireTableDataChanged();
-                    }
-
-                });
-                return button;
+                return this.getSetPathButton(data.get(row), data);
             case 5:
                 return data.get(row).customPath;
             case 6:
-                final JButton resetButton = new JButton("reset");
-                resetButton.addActionListener(arg0 -> {
-
-                    SpriteDataAnimated d = data.get(row);
-                    d.setImageAnimated(d.defaultPath, true);
-                    d.customPath = "";
-                    d.customPathValid = false;
-                    d.scale = 1.0f;
-                    d.speedRate = 2;
-
-                    MultiLayerConfig.calculateSize(data);
-                    this.fireTableDataChanged();
-                });
-                return resetButton;
+                return this.getResetButton(data.get(row), data);
             case 7:
                 SpriteDataAnimated d = data.get(row);
                 return new OtherColMultiLayer(d.val2, d.isCyclic);

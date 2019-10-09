@@ -3,10 +3,7 @@ package com.cschar.pmode3.config;
 import com.cschar.pmode3.ParticleSpriteLizardAnchor;
 import com.cschar.pmode3.PowerMode3;
 import com.cschar.pmode3.config.common.*;
-import com.cschar.pmode3.config.common.ui.CustomPathCellHighlighterRenderer;
-import com.cschar.pmode3.config.common.ui.JTableButtonMouseListener;
-import com.cschar.pmode3.config.common.ui.JTableButtonRenderer;
-import com.cschar.pmode3.config.common.ui.ZeranthiumColors;
+import com.cschar.pmode3.config.common.ui.*;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDialog;
 import com.intellij.openapi.fileChooser.FileChooserFactory;
@@ -140,7 +137,7 @@ public class LizardConfig extends BaseConfigPanel{
 
 
         table.setRowHeight(PREVIEW_SIZE);
-        LizardTableModel tableModel = new LizardTableModel();
+        LizardTableModel tableModel = new LizardTableModel(this);
         table.setModel(tableModel);
 
         table.setCellSelectionEnabled(false);
@@ -315,7 +312,7 @@ public class LizardConfig extends BaseConfigPanel{
 }
 
 
-class LizardTableModel extends AbstractTableModel {
+class LizardTableModel extends AbstractConfigTableModel {
 
     static ArrayList<SpriteDataAnimated> data = LizardConfig.spriteDataAnimated;
 
@@ -349,6 +346,10 @@ class LizardTableModel extends AbstractTableModel {
             JButton.class,
             Float.class
     };
+
+    public LizardTableModel(BaseConfigPanel config) {
+        super(config);
+    }
 
     @Override
     public int getRowCount() {
@@ -404,46 +405,11 @@ class LizardTableModel extends AbstractTableModel {
             case 3:
                 return d.val1;
             case 4:
-                final JButton button = new JButton("Set path");
-                button.addActionListener(arg0 -> {
-
-
-
-                    FileChooserDescriptor fd = new FileChooserDescriptor(false,true,false,false,false,false);
-//                    fd.setForcedToUseIdeaFileChooser(true);
-                    FileChooserDialog fcDialog = FileChooserFactory.getInstance().createFileChooser(fd, null, null);
-
-
-                    VirtualFile[] vfs = fcDialog.choose(null);
-
-                    if(vfs.length != 0){
-
-                        d.customPath = vfs[0].getPath();
-                        d.setImageAnimated(vfs[0].getPath(), false);
-
-
-                        LizardConfig.calculateSize(data);
-                        this.fireTableDataChanged();
-                    }
-
-                });
-                return button;
+                return this.getSetPathButton(d, data);
             case 5:
                 return data.get(row).customPath;
             case 6:
-                final JButton resetButton = new JButton("reset");
-                resetButton.addActionListener(arg0 -> {
-
-                    d.setImageAnimated(d.defaultPath, true);
-                    d.customPath = "";
-                    d.customPathValid = false;
-//                    d.scale = 1.0f;
-//                    d.val1 = 20;
-
-                    LizardConfig.calculateSize(data);
-                    this.fireTableDataChanged();
-                });
-                return resetButton;
+                return this.getResetButton(d, data);
             case 7:
                 return d.alpha;
 //                SpriteDataAnimated d = data.get(row);

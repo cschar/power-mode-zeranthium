@@ -2,11 +2,8 @@ package com.cschar.pmode3.config;
 
 import com.cschar.pmode3.ParticleSpriteLinkerAnchor;
 import com.cschar.pmode3.PowerMode3;
-import com.cschar.pmode3.config.common.ui.CustomPathCellHighlighterRenderer;
-import com.cschar.pmode3.config.common.ui.JTableButtonMouseListener;
-import com.cschar.pmode3.config.common.ui.JTableButtonRenderer;
+import com.cschar.pmode3.config.common.ui.*;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
-import com.cschar.pmode3.config.common.ui.ZeranthiumColors;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDialog;
 import com.intellij.openapi.fileChooser.FileChooserFactory;
@@ -231,7 +228,7 @@ public class LinkerConfig extends BaseConfigPanel {
 
 
         table.setRowHeight(60);
-        LinkerTableModel tableModel = new LinkerTableModel();
+        LinkerTableModel tableModel = new LinkerTableModel(this);
         table.setModel(tableModel);
 
         table.setCellSelectionEnabled(false);
@@ -475,7 +472,7 @@ public class LinkerConfig extends BaseConfigPanel {
 }
 
 
-class LinkerTableModel extends AbstractTableModel {
+class LinkerTableModel extends AbstractConfigTableModel {
 
     static ArrayList<SpriteDataAnimated> data = LinkerConfig.spriteDataAnimated;
 
@@ -513,6 +510,10 @@ class LinkerTableModel extends AbstractTableModel {
             Integer.class,
             Integer.class
     };
+
+    public LinkerTableModel(BaseConfigPanel config) {
+        super(config);
+    }
 
     @Override
     public int getRowCount() {
@@ -563,43 +564,11 @@ class LinkerTableModel extends AbstractTableModel {
             case 3:
                 return d.speedRate;
             case 4:
-                final JButton button = new JButton("Set path");
-                button.addActionListener(arg0 -> {
-
-
-                    FileChooserDescriptor fd = new FileChooserDescriptor(false,true,false,false,false,false);
-                    FileChooserDialog fcDialog = FileChooserFactory.getInstance().createFileChooser(fd, null, null);
-
-
-                    VirtualFile[] vfs = fcDialog.choose(null);
-
-                    if(vfs.length != 0){
-
-                        d.customPath = vfs[0].getPath();
-                        d.setImageAnimated(vfs[0].getPath(), false);
-
-                        LinkerConfig.calculateSize(data);
-                        this.fireTableDataChanged();
-                    }
-
-                });
-                return button;
+                return this.getSetPathButton(d, data);
             case 5:
                 return data.get(row).customPath;
             case 6:
-                final JButton resetButton = new JButton("reset");
-                resetButton.addActionListener(arg0 -> {
-
-                    d.setImageAnimated(d.defaultPath, true);
-                    d.customPath = "";
-                    d.customPathValid = false;
-                    d.scale = 1.0f;
-                    d.val1 = 20;
-
-                    LinkerConfig.calculateSize(data);
-                    this.fireTableDataChanged();
-                });
-                return resetButton;
+                return this.getResetButton(d, data);
             case 7:
                 return d.alpha;
 //                SpriteDataAnimated d = data.get(row);

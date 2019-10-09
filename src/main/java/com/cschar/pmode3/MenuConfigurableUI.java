@@ -634,9 +634,10 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
                         options,
                         settings.anchorType.ordinal(), settings.anchorType.ordinal(), sliderIcon, null);
 
-                settings.anchorType = PowerMode3.AnchorTypes.values()[result];
-
-                anchorConfigButton.setText("<html> anchor config: <br/>" + choices.get(settings.anchorType) + "  </html>");
+                if(result != -1){
+                    settings.anchorType = PowerMode3.AnchorTypes.values()[result];
+                    anchorConfigButton.setText("<html> anchor config: <br/>" + choices.get(settings.anchorType) + "  </html>");
+                }
             }
         });
     }

@@ -13,8 +13,8 @@ import java.util.ArrayList;
 
 public abstract class BaseConfigPanel extends JPanel {
 
-    static JPanel headerPanel;
-    private static JLabel headerSizeLabel;
+    public JPanel headerPanel;
+    public JLabel headerSizeLabel;
 
 
 
@@ -26,7 +26,7 @@ public abstract class BaseConfigPanel extends JPanel {
 
 
         headerSizeLabel = new JLabel();
-        calculateSize(spriteDataAnimated);
+        calculateSize(spriteDataAnimated, this.headerSizeLabel);
         headerSizeLabel.setBackground(ZeranthiumColors.specialOption3);
         headerSizeLabel.setOpaque(true);
         headerSizeLabel.setBorder(JBUI.Borders.empty(5));
@@ -37,7 +37,7 @@ public abstract class BaseConfigPanel extends JPanel {
         headerPanel.setMaximumSize(new Dimension(500,100));
     }
 
-    public static void calculateSize(ArrayList<SpriteDataAnimated> spriteDataAnimated){
+    public static void calculateSize(ArrayList<SpriteDataAnimated> spriteDataAnimated, JLabel headerSizeLabel){
         double totalSizeMB = 0;
         for(SpriteDataAnimated d : spriteDataAnimated){
             totalSizeMB += d.getAssetSizeMB();
