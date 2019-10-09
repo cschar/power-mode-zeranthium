@@ -3,31 +3,37 @@
 TODO: 
 
 
+- Choose between Anchor type
+  - LBRACE,RBRACE, COLON
+
 - fixup plugin decription in .xml
 
 
 
 
 Done;
+- Basic Particle Effects
 - Vines
-- Lizards
-- Lightning sparks
-- MultiLayer  (max 3-4 layers as typing increases)
-- Mandala Chains based off Vine
+- Lizards (swarms to anchors)
+- Lightning 
+- Weird square effect (MOMA)
+- MultiLayer w/ caret tracking
+- Linker Chains w/ caret tracking
 - hotkey to activate (bonus: configurable?)
 - Sound panel (Tabbed Panel)  (MP3)
 - Play 2x Song w/ 2 Hotkeys to trigger each one (MP3)
-- DrosteEffect
+- Droste effect
 - CopyPasteVoid effect
 - Background Loading of Assets
 - Max 500 *.png or 1.0GB of data per Image Collection
-- "LOAD Custom Config packs" -- Support DROSTE/LIZARD/SOUND/MULTI_LAYER/LOCKED_LAYER
+- LOAD Custom Config packs -- Support DROSTE/LIZARD/SOUND/MULTI_LAYER/LOCKED_LAYER
+- clone zeranthium-extras repo and select config pack to load
 - Action Key Sound Options (Copy/Paste/Backspace/Del/Enter) 
 - Locked layer that stretches or pins to corner
 - Supports multiple editors
 - 'Lantern' Particles
 - 'Tap Animation' -- keypress controls how fast it animates
-      
+- ON/OFF hotkey to quickly toggle Zeranthium      
       
 future TODO:
 
