@@ -71,8 +71,8 @@
     <extensions defaultExtensionNs="com.intellij">
         <applicationConfigurable groupId="appearance"
                                  groupWeight="20"
-                                 id="power.mode3"
-                                 displayName="Power Mode 3 - Zeranthium"
+                                 id="power.mode3.zeranthium"
+                                 displayName="Power Mode - Zeranthium"
                                  instance="com.cschar.pmode3.PowerMode3Configurable" />
     </extensions>
 
@@ -80,8 +80,8 @@
 
         <action id="com.cschar.pmode3.PowerModeZeranthiumToggleEnabled"
                 class="com.cschar.pmode3.hotkeys.HotKeyEnabledAction"
-                text="Powermode Zeranthium Toggle"
-                description="Toggle powermode Zeranthium">
+                text="Power Mode Zeranthium Toggle"
+                description="Toggle power mode Zeranthium">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
             <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl z"/>
         </action>
@@ -91,15 +91,15 @@
 
             <action id="com.cschar.pmode3.PowerModeZeranthiumTriggerSongA"
                     class="com.cschar.pmode3.hotkeys.HotKeyMusicTriggerAAction"
-                    text="Trigger Music A for Powermode Zeranthium"
-                    description="Trigger music A for powermode Zeranthium">
+                    text="Trigger Music A for Power Mode Zeranthium"
+                    description="Trigger music A for power mode Zeranthium">
                 <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl j"/>
             </action>
 
             <action id="com.cschar.pmode3.PowerModeZeranthiumTriggerSongB"
                     class="com.cschar.pmode3.hotkeys.HotKeyMusicTriggerBAction"
-                    text="Trigger Music B for Powermode Zeranthium"
-                    description="Trigger music B for powermode Zeranthium">
+                    text="Trigger Music B for Power Mode Zeranthium"
+                    description="Trigger music B for power mode Zeranthium">
                 <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl l"/>
             </action>
         </group>
