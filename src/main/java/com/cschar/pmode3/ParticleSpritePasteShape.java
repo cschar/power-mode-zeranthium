@@ -19,6 +19,7 @@ package com.cschar.pmode3;
 
 
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
+import com.intellij.openapi.editor.Editor;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -48,17 +49,20 @@ public class ParticleSpritePasteShape extends Particle{
     private int winningIndex;
 
     private SpriteDataAnimated d;
+    private BufferedImage sprite;
     private float fadeAmount;
     private boolean fadeColorEnabled;
     private int speedRate;
+    private Editor editor;
 
-    public ParticleSpritePasteShape(Shape shape, int life, Color c, float fadeAmount, boolean fadeColorEnabled, int winningIndex) {
+    public ParticleSpritePasteShape(Shape shape, int life, Color c, float fadeAmount, boolean fadeColorEnabled, int winningIndex, Editor editor) {
         super(0,0,0,0,0,life,c);
 
         this.fadeAmount = fadeAmount;
         this.fadeColorEnabled = fadeColorEnabled;
         this.shape = shape;
         this.winningIndex = winningIndex;
+        this.editor = editor;
         if(winningIndex != -1) {
             d = spriteDataAnimated.get(winningIndex);
             sprites = spriteDataAnimated.get(winningIndex).images;
@@ -69,8 +73,7 @@ public class ParticleSpritePasteShape extends Particle{
             sprites = new ArrayList<>();
             speedRate = 2;
         }
-
-
+        sprite = sprites.get(0);
     }
 
     public boolean update() {
@@ -131,13 +134,23 @@ public class ParticleSpritePasteShape extends Particle{
                     g2d.drawImage(sprites.get(frame), at, null);
 
                 } else {
+                    Rectangle editorBounds = editor.getComponent().getBounds();
+
+                    bounds.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
+
                     AffineTransform at = new AffineTransform();
-                    at.scale(d.scale, d.scale);
+                    double widthScale = (editorBounds.width) / (double) sprite.getWidth();
+                    double heightScale = editorBounds.height / (double) sprite.getHeight();
+                    Point midPoint = new Point(editorBounds.width / 2, editorBounds.height / 2);
+                    at.scale(widthScale, heightScale);
+                    at.translate((int) midPoint.x * (1 / widthScale), (int) midPoint.y * (1 / heightScale));
+
+                    at.translate(-sprite.getWidth() / 2,
+                            -sprite.getHeight() / 2);
                     g2d.drawImage(sprites.get(frame), at, null);
                 }
             }
 
-//            g2d.drawImage(sprites.get(frame), 0, 0, null);
 
 
             g2d.dispose();

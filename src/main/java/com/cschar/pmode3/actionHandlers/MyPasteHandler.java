@@ -149,7 +149,8 @@ public class MyPasteHandler extends EditorActionHandler implements EditorTextIns
                             CopyPasteVoidConfig.FADE_COLOR(settings),
                             CopyPasteVoidConfig.FADE_AMOUNT(settings),
                             CopyPasteVoidConfig.FADE_ENABLED(settings),
-                            winningIndex);
+                            winningIndex,
+                            editor);
                     ParticleContainerManager.particleContainers.get(editor).particles.add(pFontShape);
                 }
 

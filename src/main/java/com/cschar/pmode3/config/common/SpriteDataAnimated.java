@@ -165,7 +165,7 @@ public class SpriteDataAnimated  extends SpriteData {
             final File dir = new File(path);
 
             if (dir.isDirectory()) { // make sure it's a directory
-                LOGGER.info("Loading customPath directory: " + path);
+
 
                 File[] files = dir.listFiles(IMAGE_FILTER);
                 Arrays.sort(files);
@@ -227,6 +227,7 @@ public class SpriteDataAnimated  extends SpriteData {
                     this.previewIcon = new ImageIcon(previewImage);
 
                     this.totalLoadedAssetSizeMB = totalSizeGB * 1024;
+                    LOGGER.info("Loaded customPath directory: " + path + "   total size (MB): " + this.totalLoadedAssetSizeMB);
                 }
 
 

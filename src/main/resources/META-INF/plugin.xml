@@ -31,7 +31,7 @@
 <li>- Sound panel (Tabbed Panel)  (MP3)</li>
 <li>- Play 2x Song w/ 2 Hotkeys to trigger each one (MP3)</li>
 <li>- Droste effect</li>
-<li>- CopyPasteVoid effect</li>
+<li>- CopyPasteVoid effect (pasting in displays a customizable image & color fade behind the paste shape)</li>
 <li>- Background Loading of Assets</li>
 <li>- Max 500 *.png or 1.0GB of data per Image Collection</li>
 <li>- LOAD Custom Config packs -- Support DROSTE/LIZARD/SOUND/MULTI_LAYER/LOCKED_LAYER</li>

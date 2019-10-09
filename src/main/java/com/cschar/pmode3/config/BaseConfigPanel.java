@@ -43,5 +43,6 @@ public abstract class BaseConfigPanel extends JPanel {
             totalSizeMB += d.getAssetSizeMB();
         }
         headerSizeLabel.setText(String.format("Mem: %.2f MB", totalSizeMB));
+        headerSizeLabel.revalidate(); //doesnt work because static , only revalidating last panel method was used on
     }
 }
