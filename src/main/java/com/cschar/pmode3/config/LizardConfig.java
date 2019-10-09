@@ -28,7 +28,7 @@ import java.awt.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-public class LizardConfig extends JPanel{
+public class LizardConfig extends BaseConfigPanel{
 
 
     PowerMode3 settings;
@@ -41,8 +41,7 @@ public class LizardConfig extends JPanel{
 
     private JComponent lizardSpriteConfigPanel;
 
-    public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
-
+    static ArrayList<SpriteDataAnimated> spriteDataAnimated;
     public static int PREVIEW_SIZE = 60;
 
     public LizardConfig(PowerMode3 settings){
@@ -60,15 +59,7 @@ public class LizardConfig extends JPanel{
 
         JPanel secondCol = new JPanel();
         secondCol.setLayout(new BoxLayout(secondCol, BoxLayout.Y_AXIS));
-        JPanel headerPanel = new JPanel();
-        JLabel headerLabel = new JLabel("Lizard Options");
-        headerLabel.setFont(new Font ("Arial", Font.BOLD, 20));
-        headerPanel.add(headerLabel);
-        headerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        headerPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        headerPanel.setMaximumSize(new Dimension(300,100));
-//        headerPanel.setBackground(Color.ORANGE);
-//        secondCol.add(headerLabel);
+        this.setupHeaderPanel("Lizard Options", spriteDataAnimated);
         secondCol.add(headerPanel);
         this.add(secondCol);
 
@@ -431,6 +422,7 @@ class LizardTableModel extends AbstractTableModel {
                         d.setImageAnimated(vfs[0].getPath(), false);
 
 
+                        LizardConfig.calculateSize(data);
                         this.fireTableDataChanged();
                     }
 
@@ -448,7 +440,7 @@ class LizardTableModel extends AbstractTableModel {
 //                    d.scale = 1.0f;
 //                    d.val1 = 20;
 
-
+                    LizardConfig.calculateSize(data);
                     this.fireTableDataChanged();
                 });
                 return resetButton;

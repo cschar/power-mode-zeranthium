@@ -15,6 +15,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
+import org.jvnet.ws.wadl.Link;
 
 
 import javax.swing.*;
@@ -25,7 +26,7 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class LinkerConfig extends JPanel {
+public class LinkerConfig extends BaseConfigPanel {
 
     JPanel mainPanel;
     PowerMode3 settings;
@@ -56,8 +57,7 @@ public class LinkerConfig extends JPanel {
 
 
     private JComponent linkerSpriteConfigPanel;
-
-    public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
+    static ArrayList<SpriteDataAnimated> spriteDataAnimated;
 
     public LinkerConfig(PowerMode3 settings){
         this.settings = settings;
@@ -75,15 +75,8 @@ public class LinkerConfig extends JPanel {
 
         JPanel secondCol = new JPanel();
         secondCol.setLayout(new BoxLayout(secondCol, BoxLayout.Y_AXIS));
-        JPanel headerPanel = new JPanel();
-        JLabel headerLabel = new JLabel("LinkerI Options");
-        headerLabel.setFont(new Font ("Arial", Font.BOLD, 20));
-        headerPanel.add(headerLabel);
-        headerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        headerPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        headerPanel.setMaximumSize(new Dimension(300,100));
-//        headerPanel.setBackground(Color.ORANGE);
-//        secondCol.add(headerLabel);
+
+        this.setupHeaderPanel("LinkerI Options", spriteDataAnimated);
         secondCol.add(headerPanel);
         mainPanel.add(secondCol);
 
@@ -585,7 +578,7 @@ class LinkerTableModel extends AbstractTableModel {
                         d.customPath = vfs[0].getPath();
                         d.setImageAnimated(vfs[0].getPath(), false);
 
-
+                        LinkerConfig.calculateSize(data);
                         this.fireTableDataChanged();
                     }
 
@@ -603,7 +596,7 @@ class LinkerTableModel extends AbstractTableModel {
                     d.scale = 1.0f;
                     d.val1 = 20;
 
-
+                    LinkerConfig.calculateSize(data);
                     this.fireTableDataChanged();
                 });
                 return resetButton;

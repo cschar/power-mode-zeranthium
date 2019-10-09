@@ -27,7 +27,7 @@ import java.awt.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-public class TapAnimConfig extends JPanel {
+public class TapAnimConfig extends BaseConfigPanel {
 
     JPanel mainPanel;
     PowerMode3 settings;
@@ -36,10 +36,8 @@ public class TapAnimConfig extends JPanel {
 
 
     private JComponent spriteConfigPanel;
-
-    public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
-
     public final static int PREVIEW_SIZE = 120;
+    static ArrayList<SpriteDataAnimated> spriteDataAnimated;
 
     public TapAnimConfig(PowerMode3 settings){
         this.settings = settings;
@@ -53,13 +51,7 @@ public class TapAnimConfig extends JPanel {
         firstRow.setLayout(new BoxLayout(firstRow, BoxLayout.PAGE_AXIS));
         firstRow.setMaximumSize(new Dimension(1000,300));
 
-        JPanel headerPanel = new JPanel();
-        JLabel headerLabel = new JLabel("Tap Anim Options");
-        headerLabel.setFont(new Font ("Arial", Font.BOLD, 20));
-        headerPanel.add(headerLabel);
-        headerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        headerPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        headerPanel.setMaximumSize(new Dimension(300,100));
+        this.setupHeaderPanel("Tap Anim Options", spriteDataAnimated);
         firstRow.add(headerPanel);
 
 
@@ -290,7 +282,7 @@ class TapAnimTableModel extends AbstractTableModel {
                         d.customPath = vfs[0].getPath();
                         d.setImageAnimated(vfs[0].getPath(), false);
 
-
+                        TapAnimConfig.calculateSize(data);
                         this.fireTableDataChanged();
                     }
 
@@ -308,7 +300,7 @@ class TapAnimTableModel extends AbstractTableModel {
 //                    d.scale = 1.0f;
 //                    d.val1 = 20;
 
-
+                    TapAnimConfig.calculateSize(data);
                     this.fireTableDataChanged();
                 });
                 return resetButton;

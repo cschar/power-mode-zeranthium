@@ -8,6 +8,7 @@ import com.intellij.ui.JBColor;
 import javax.swing.*;
 import java.awt.*;
 
+//TODO DELETE THIS
 public abstract class BaseConfig extends JPanel {
 
 

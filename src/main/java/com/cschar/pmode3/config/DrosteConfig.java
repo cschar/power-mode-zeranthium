@@ -27,7 +27,7 @@ import java.awt.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-public class DrosteConfig extends JPanel {
+public class DrosteConfig extends BaseConfigPanel {
 
     JPanel mainPanel;
     PowerMode3 settings;
@@ -36,8 +36,7 @@ public class DrosteConfig extends JPanel {
 
     private static Color originalTracerColor = Color.WHITE;
     private JComponent drosteSpriteConfigPanel;
-
-    public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
+    static ArrayList<SpriteDataAnimated> spriteDataAnimated;
 
     public final static int PREVIEW_SIZE = 120;
 
@@ -53,13 +52,7 @@ public class DrosteConfig extends JPanel {
         firstRow.setLayout(new BoxLayout(firstRow, BoxLayout.PAGE_AXIS));
         firstRow.setMaximumSize(new Dimension(1000,300));
 
-        JPanel headerPanel = new JPanel();
-        JLabel headerLabel = new JLabel("Droste Options");
-        headerLabel.setFont(new Font ("Arial", Font.BOLD, 20));
-        headerPanel.add(headerLabel);
-        headerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        headerPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        headerPanel.setMaximumSize(new Dimension(300,100));
+        this.setupHeaderPanel("Droste Options", spriteDataAnimated);
         firstRow.add(headerPanel);
 
 
@@ -289,7 +282,7 @@ class DrosteTableModel extends AbstractTableModel {
                         d.customPath = vfs[0].getPath();
                         d.setImageAnimated(vfs[0].getPath(), false);
 
-
+                        DrosteConfig.calculateSize(data);
                         this.fireTableDataChanged();
                     }
 
@@ -307,7 +300,7 @@ class DrosteTableModel extends AbstractTableModel {
 //                    d.scale = 1.0f;
 //                    d.val1 = 20;
 
-
+                    DrosteConfig.calculateSize(data);
                     this.fireTableDataChanged();
                 });
                 return resetButton;

@@ -19,6 +19,7 @@ import com.intellij.ui.table.JBTable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.kohsuke.rngom.parse.host.Base;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -27,7 +28,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.EventObject;
 
-public class LockedLayerConfig extends JPanel{
+public class LockedLayerConfig extends BaseConfigPanel {
 
 
     JPanel firstRow;
@@ -36,7 +37,7 @@ public class LockedLayerConfig extends JPanel{
     private JTextField gutterWidthTextField;
 
     PowerMode3 settings;
-
+    static ArrayList<SpriteDataAnimated> spriteDataAnimated;
     public final static int PREVIEW_SIZE = 120;
 
     public LockedLayerConfig(PowerMode3 settings){
@@ -48,28 +49,19 @@ public class LockedLayerConfig extends JPanel{
         firstRow = new JPanel();
         firstRow.setMaximumSize(new Dimension(1000,500));
         firstRow.setLayout(new BoxLayout(firstRow, BoxLayout.Y_AXIS));
-        JPanel headerPanel = new JPanel();
-        JLabel headerLabel = new JLabel("Locked Layer Options");
-        headerLabel.setFont(new Font ("Arial", Font.BOLD, 20));
-        headerPanel.add(headerLabel);
-        headerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        headerPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        headerPanel.setMaximumSize(new Dimension(500,100));
+        this.setupHeaderPanel("Locked Layer Options", spriteDataAnimated);
+        firstRow.add(headerPanel);
 
         this.add(firstRow);
 
-        configPanel = createConfigTable();
-        firstRow.add(headerPanel);
-
-
-
         this.gutterWidthTextField = new JTextField();
         firstRow.add(Config.populateTextFieldPanel(this.gutterWidthTextField, "gutter offset (0 - 200)"));
+        firstRow.setOpaque(true);
 
+        configPanel = createConfigTable();
         firstRow.add(configPanel);
 
 
-        firstRow.setOpaque(true);
 
     }
 
@@ -154,9 +146,6 @@ public class LockedLayerConfig extends JPanel{
 
         settings.setSerializedSpriteDataAnimated(LockedLayerConfig.spriteDataAnimated, PowerMode3.ConfigType.LOCKED_LAYER);
     }
-
-
-    static ArrayList<SpriteDataAnimated> spriteDataAnimated;
 
     public static void setSpriteDataAnimated(ArrayList<SpriteDataAnimated> data){
         spriteDataAnimated = data;
@@ -400,7 +389,7 @@ class LockedLayerTableModel extends AbstractTableModel {
                         data.get(row).customPath = vfs[0].getPath();
                         data.get(row).setImageAnimated(vfs[0].getPath(), false);
 
-
+                        LockedLayerConfig.calculateSize(data);
                         this.fireTableDataChanged();
                     }
 
@@ -419,7 +408,7 @@ class LockedLayerTableModel extends AbstractTableModel {
                     d.scale = 1.0f;
                     d.speedRate = 2;
 
-
+                    LockedLayerConfig.calculateSize(data);
                     this.fireTableDataChanged();
                 });
                 return resetButton;

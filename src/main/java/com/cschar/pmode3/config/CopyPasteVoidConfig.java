@@ -22,7 +22,7 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class CopyPasteVoidConfig extends JPanel{
+public class CopyPasteVoidConfig extends BaseConfigPanel{
 
 
     PowerMode3 settings;
@@ -32,8 +32,7 @@ public class CopyPasteVoidConfig extends JPanel{
     private JCheckBox fadeColorEnabledCheckBox;
 
     private static Color fadeColor = Color.GREEN;
-
-    public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
+    static ArrayList<SpriteDataAnimated> spriteDataAnimated;
 
     public CopyPasteVoidConfig(PowerMode3 settings){
         this.settings = settings;
@@ -47,15 +46,8 @@ public class CopyPasteVoidConfig extends JPanel{
 
         JPanel secondCol = new JPanel();
         secondCol.setLayout(new BoxLayout(secondCol, BoxLayout.Y_AXIS));
-        JPanel headerPanel = new JPanel();
-        JLabel headerLabel = new JLabel("CopyPasteVoid Options");
-        headerLabel.setFont(new Font ("Arial", Font.BOLD, 20));
-        headerPanel.add(headerLabel);
-        headerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        headerPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        headerPanel.setMaximumSize(new Dimension(300,100));
-//        headerPanel.setBackground(Color.ORANGE);
-//        secondCol.add(headerLabel);
+
+        this.setupHeaderPanel("CopyPasteVoid Options", spriteDataAnimated);
         secondCol.add(headerPanel);
         this.add(secondCol);
 
@@ -303,6 +295,8 @@ class CopyPasteVoidTableModel extends AbstractTableModel {
                     if(vfs.length != 0){
                         d.customPath = vfs[0].getPath();
                         d.setImageAnimated(vfs[0].getPath(), false);
+
+                        CopyPasteVoidConfig.calculateSize(data);
                         this.fireTableDataChanged();
                     }
 
@@ -320,7 +314,7 @@ class CopyPasteVoidTableModel extends AbstractTableModel {
                     d.scale = 1.0f;
                     d.val1 = 20;
 
-
+                    CopyPasteVoidConfig.calculateSize(data);
                     this.fireTableDataChanged();
                 });
                 return resetButton;

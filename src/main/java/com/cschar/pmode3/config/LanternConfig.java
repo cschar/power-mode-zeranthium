@@ -24,7 +24,7 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class LanternConfig extends JPanel {
+public class LanternConfig extends BaseConfigPanel {
 
     JPanel topPanel;
     PowerMode3 settings;
@@ -48,8 +48,8 @@ public class LanternConfig extends JPanel {
 
 
     private JComponent spriteConfigPanel;
+    static ArrayList<SpriteDataAnimated> spriteDataAnimated;
 
-    public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
 
     public LanternConfig(PowerMode3 settings){
         this.settings = settings;
@@ -68,15 +68,7 @@ public class LanternConfig extends JPanel {
 
         JPanel secondCol = new JPanel();
         secondCol.setLayout(new BoxLayout(secondCol, BoxLayout.Y_AXIS));
-        JPanel headerPanel = new JPanel();
-        JLabel headerLabel = new JLabel("Lantern Options");
-        headerLabel.setFont(new Font ("Arial", Font.BOLD, 20));
-        headerPanel.add(headerLabel);
-        headerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        headerPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        headerPanel.setMaximumSize(new Dimension(300,50));
-//        headerPanel.setBackground(Color.ORANGE);
-//        secondCol.add(headerLabel);
+        this.setupHeaderPanel("Lantern Options", spriteDataAnimated);
         secondCol.add(headerPanel);
         topPanel.add(secondCol);
 
@@ -410,7 +402,7 @@ class LanternTableModel extends AbstractTableModel {
                         d.customPath = vfs[0].getPath();
                         d.setImageAnimated(vfs[0].getPath(), false);
 
-
+                        LanternConfig.calculateSize(data);
                         this.fireTableDataChanged();
                     }
 
@@ -428,7 +420,7 @@ class LanternTableModel extends AbstractTableModel {
                     d.scale = 1.0f;
                     d.val1 = 20;
 
-
+                    LanternConfig.calculateSize(data);
                     this.fireTableDataChanged();
                 });
                 return resetButton;

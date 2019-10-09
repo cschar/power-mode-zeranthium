@@ -25,7 +25,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.EventObject;
 
-public class Mandala2Config extends JPanel{
+public class Mandala2Config extends BaseConfigPanel{
 
 
     JPanel firstRow;
@@ -33,8 +33,7 @@ public class Mandala2Config extends JPanel{
 
     private JCheckBox moveWithCaret;
     private JTextField moveSpeedTextField;
-    private static JLabel headerSizeLabel;
-
+    static ArrayList<SpriteDataAnimated> spriteDataAnimated;
     PowerMode3 settings;
 
     public final static int PREVIEW_SIZE = 120;
@@ -48,22 +47,24 @@ public class Mandala2Config extends JPanel{
         firstRow = new JPanel();
         firstRow.setMaximumSize(new Dimension(1000,500));
         firstRow.setLayout(new BoxLayout(firstRow, BoxLayout.Y_AXIS));
-        JPanel headerPanel = new JPanel();
-        JLabel headerLabel = new JLabel("Mandala Options");
-        headerLabel.setFont(new Font ("Arial", Font.BOLD, 20));
-        headerPanel.add(headerLabel);
 
-
-        headerSizeLabel = new JLabel();
-        this.calculateSize();
-        headerSizeLabel.setBackground(ZeranthiumColors.specialOption3);
-        headerSizeLabel.setOpaque(true);
-
-        headerPanel.add(headerSizeLabel);
-
-        headerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        headerPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        headerPanel.setMaximumSize(new Dimension(500,100));
+        this.setupHeaderPanel("Mandala Options", spriteDataAnimated);
+//        headerPanel = new JPanel();
+//        JLabel headerLabel = new JLabel("Mandala Options");
+//        headerLabel.setFont(new Font ("Arial", Font.BOLD, 20));
+//        headerPanel.add(headerLabel);
+//
+//
+//        headerSizeLabel = new JLabel();
+//        this.calculateSize();
+//        headerSizeLabel.setBackground(ZeranthiumColors.specialOption3);
+//        headerSizeLabel.setOpaque(true);
+//
+//        headerPanel.add(headerSizeLabel);
+//
+//        headerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+//        headerPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+//        headerPanel.setMaximumSize(new Dimension(500,100));
 
         this.add(firstRow);
 
@@ -90,13 +91,6 @@ public class Mandala2Config extends JPanel{
 
     }
 
-    public static void calculateSize(){
-        double totalSizeMB = 0;
-        for(SpriteDataAnimated d : spriteDataAnimated){
-            totalSizeMB += d.getAssetSizeMB();
-        }
-        headerSizeLabel.setText(String.format("Mem: %.2f MB", totalSizeMB));
-    }
 
     public JComponent createConfigTable(){
 
@@ -189,7 +183,7 @@ public class Mandala2Config extends JPanel{
     }
 
 
-    static ArrayList<SpriteDataAnimated> spriteDataAnimated;
+//    static ArrayList<SpriteDataAnimated> spriteDataAnimated;
 
     public static void setSpriteDataAnimated(ArrayList<SpriteDataAnimated> data){
         spriteDataAnimated = data;
@@ -443,7 +437,7 @@ class MandalaRingTableModel extends AbstractTableModel {
                         data.get(row).setImageAnimated(vfs[0].getPath(), false);
 
 
-                        Mandala2Config.calculateSize();
+                        Mandala2Config.calculateSize(data);
                         this.fireTableDataChanged();
                     }
 
@@ -462,7 +456,7 @@ class MandalaRingTableModel extends AbstractTableModel {
                     d.scale = 1.0f;
                     d.speedRate = 2;
 
-                    Mandala2Config.calculateSize();
+                    Mandala2Config.calculateSize(data);
                     this.fireTableDataChanged();
                 });
                 return resetButton;
