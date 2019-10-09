@@ -65,7 +65,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
 
     private JTextField shakeDistanceTextField;
     private JCheckBox enableVineCheckBox;
-    private JCheckBox enableMandalaCheckbox;
+    private JCheckBox enableMultilayerCheckbox;
     private JCheckBox enableLinkerCheckbox;
     private JCheckBox enableDrosteCheckbox;
     private JCheckBox enableCopyPasteVoid;
@@ -86,7 +86,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
     private LizardConfig lizardConfig;
     private VineConfig vineConfig;
     private MOMAConfig momaConfig;
-    private Mandala2Config mandala2Config;
+    private MultiLayerConfig multiLayerConfig;
     private LinkerConfig linkerConfig;
     private DrosteConfig drosteConfig;
     private CopyPasteVoidConfig copyPasteVoidConfig;
@@ -171,8 +171,8 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
         if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.VINE)){
             enableVineCheckBox.setSelected(true);
         }
-        if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.MANDALA)){
-            enableMandalaCheckbox.setSelected(true);
+        if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.MULTI_LAYER)){
+            enableMultilayerCheckbox.setSelected(true);
         }
         if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.LINKER)){
             enableLinkerCheckbox.setSelected(true);
@@ -232,7 +232,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
         this.lightningAltConfig.loadValues();
         this.vineConfig.loadValues();
         this.momaConfig.loadValues();
-        this.mandala2Config.loadValues();
+        this.multiLayerConfig.loadValues();
         this.lockedLayerConfig.loadValues();
         this.linkerConfig.loadValues();
         this.drosteConfig.loadValues();
@@ -285,7 +285,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
         settings.setSpriteTypeEnabled(enableLizardCheckBox.isSelected(), PowerMode3.ConfigType.LIZARD);
         settings.setSpriteTypeEnabled(enableMOMACheckBox.isSelected(), PowerMode3.ConfigType.MOMA);
         settings.setSpriteTypeEnabled(enableVineCheckBox.isSelected(), PowerMode3.ConfigType.VINE);
-        settings.setSpriteTypeEnabled(enableMandalaCheckbox.isSelected(), PowerMode3.ConfigType.MANDALA);
+        settings.setSpriteTypeEnabled(enableMultilayerCheckbox.isSelected(), PowerMode3.ConfigType.MULTI_LAYER);
         settings.setSpriteTypeEnabled(enableLinkerCheckbox.isSelected(), PowerMode3.ConfigType.LINKER);
         settings.setSpriteTypeEnabled(enableDrosteCheckbox.isSelected(), PowerMode3.ConfigType.DROSTE);
         settings.setSpriteTypeEnabled(enableCopyPasteVoid.isSelected(), PowerMode3.ConfigType.COPYPASTEVOID);
@@ -310,7 +310,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
         this.lightningConfig.saveValues();
         this.vineConfig.saveValues(maxPsiSearch);
         this.momaConfig.saveValues();
-        this.mandala2Config.saveValues(enableMandalaCheckbox.isSelected());
+        this.multiLayerConfig.saveValues(enableMultilayerCheckbox.isSelected());
         this.linkerConfig.saveValues(maxPsiSearch, enableLinkerCheckbox.isSelected());
         this.drosteConfig.saveValues();
         this.copyPasteVoidConfig.saveValues();
@@ -444,8 +444,8 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
         particleSettingsPanel.add(this.basicParticleConfig);
         particleSettingsPanel.add(this.createSpacer());
 
-        this.mandala2Config = new Mandala2Config(settings);
-        particleSettingsPanel.add(mandala2Config);
+        this.multiLayerConfig = new MultiLayerConfig(settings);
+        particleSettingsPanel.add(multiLayerConfig);
         particleSettingsPanel.add(this.createSpacer());
 
         this.linkerConfig = new LinkerConfig(settings);
@@ -676,9 +676,9 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
                 }
 
 
-                if(configKey.equals("MANDALA")){
-                    enableMandalaCheckbox.setSelected(true);
-                    Mandala2Config.loadJSONConfig(configKeyData, path.getParent());
+                if(configKey.equals("MULTI_LAYER")){
+                    enableMultilayerCheckbox.setSelected(true);
+                    MultiLayerConfig.loadJSONConfig(configKeyData, path.getParent());
                 }
 
 
@@ -712,7 +712,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
                 enableLizardCheckBox.setSelected(false);
                 enableMOMACheckBox.setSelected(false);
                 enableVineCheckBox.setSelected(false);
-                enableMandalaCheckbox.setSelected(false);
+                enableMultilayerCheckbox.setSelected(false);
                 enableLinkerCheckbox.setSelected(false);
                 enableDrosteCheckbox.setSelected(false);
                 enableCopyPasteVoid.setSelected(false);

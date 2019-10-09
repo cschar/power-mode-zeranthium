@@ -3,11 +3,7 @@
 TODO: 
 
 
- - reduce all asset sizes
- - fixup plugin decription in .xml
-- rename MANDLA --> MULTILAYER
-- memory status in settings page to show
-  how much assets are taking in RAM
+- fixup plugin decription in .xml
 
 
 
@@ -16,7 +12,7 @@ Done;
 - Vines
 - Lizards
 - Lightning sparks
-- Void / Mandala  (max 3-4 layers as typing increases)
+- MultiLayer  (max 3-4 layers as typing increases)
 - Mandala Chains based off Vine
 - hotkey to activate (bonus: configurable?)
 - Sound panel (Tabbed Panel)  (MP3)
@@ -25,7 +21,7 @@ Done;
 - CopyPasteVoid effect
 - Background Loading of Assets
 - Max 500 *.png or 1.0GB of data per Image Collection
-- "LOAD Custom Config packs" -- Support DROSTE/LIZARD/SOUND/MANDALA
+- "LOAD Custom Config packs" -- Support DROSTE/LIZARD/SOUND/MULTI_LAYER/LOCKED_LAYER
 - Action Key Sound Options (Copy/Paste/Backspace/Del/Enter) 
 - Locked layer that stretches or pins to corner
 - Supports multiple editors

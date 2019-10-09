@@ -111,7 +111,7 @@ public class PowerMode3 implements BaseComponent,
         LIZARD,
         MOMA,
         VINE,
-        MANDALA,
+        MULTI_LAYER,
         LINKER,
         SOUND,
         MUSIC_TRIGGER,
@@ -136,7 +136,7 @@ public class PowerMode3 implements BaseComponent,
                 put(ConfigType.LINKER, "LINKER.json");
                 put(ConfigType.LANTERN, "LANTERN.json");
                 put(ConfigType.LIZARD, "LIZARD.json");
-                put(ConfigType.MANDALA, "MANDALA.json");
+                put(ConfigType.MULTI_LAYER, "MULTI_LAYER.json");
                 put(ConfigType.TAP_ANIM, "TAP_ANIM.json");
 
 
@@ -198,7 +198,7 @@ public class PowerMode3 implements BaseComponent,
         put("sprite"+ ConfigType.MOMA+ "Enabled", "false");
 
         put("sprite"+ ConfigType.VINE + "Enabled", "false");
-        put("sprite"+ ConfigType.MANDALA + "Enabled", "false");
+        put("sprite"+ ConfigType.MULTI_LAYER + "Enabled", "false");
         put("sprite"+ ConfigType.LINKER + "Enabled", "false");
         put("sprite"+ ConfigType.DROSTE + "Enabled", "false");
         put("sprite"+ ConfigType.COPYPASTEVOID + "Enabled", "true");
@@ -405,8 +405,8 @@ public class PowerMode3 implements BaseComponent,
 
             LightningAltConfig.setSparkData(this.deserializeSpriteData(pathDataMap.get(ConfigType.LIGHTNING_ALT)));
 
-            setUpdateProgress(progressIndicator, "mandala", 0.2);
-            Mandala2Config.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MANDALA)));
+            setUpdateProgress(progressIndicator, "Multi Layer", 0.2);
+            MultiLayerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MULTI_LAYER)));
             setUpdateProgress(progressIndicator, "lizard", 0.3);
             LizardConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LIZARD)));
             setUpdateProgress(progressIndicator, "linker", 0.4);
@@ -455,7 +455,7 @@ public class PowerMode3 implements BaseComponent,
         if(!this.isConfigLoaded) {
             LightningAltConfig.setSparkData(this.deserializeSpriteData(pathDataMap.get(ConfigType.LIGHTNING_ALT)));
 
-            Mandala2Config.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MANDALA)));
+            MultiLayerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MULTI_LAYER)));
             LizardConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LIZARD)));
             LinkerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LINKER)));
             DrosteConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.DROSTE)));

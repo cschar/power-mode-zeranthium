@@ -18,7 +18,7 @@
 package com.cschar.pmode3;
 
 
-import com.cschar.pmode3.config.Mandala2Config;
+import com.cschar.pmode3.config.MultiLayerConfig;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.intellij.openapi.editor.Editor;
 
@@ -30,14 +30,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class ParticleSpriteMandala extends Particle{
+public class ParticleSpriteMultiLayer extends Particle{
 
 
     static {
 
     }
 
-    public static ArrayList<SpriteDataAnimated> mandalaRingData;
+    public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
     private BufferedImage sprite;
 
 
@@ -60,43 +60,43 @@ public class ParticleSpriteMandala extends Particle{
 
     private int frameSpeed = 2;
     private int frameLife;
-    private int ringIndex;
+    private int layerIndex;
     private String spritePath;
-    private ArrayList<BufferedImage> ringSprites;
+    private ArrayList<BufferedImage> layerSprites;
     private SpriteDataAnimated d;
-    public static int MAX_RINGS = 4;
+    public static int MAX_LAYERS = 4;
 
-    public ParticleSpriteMandala(int x, int y, int dx, int dy,
-                                 int size, int life, int ringIndex, Editor editor) {
+    public ParticleSpriteMultiLayer(int x, int y, int dx, int dy,
+                                    int size, int life, int layerIndex, Editor editor) {
         super(x,y,dx,dy,size,life,Color.GREEN);
         this.editor = editor;
 
         this.renderZIndex = 2;
 //        }
 
-        this.ringIndex = ringIndex;
+        this.layerIndex = layerIndex;
         this.frameLife = 10000;
 
         targetX = x;
         targetY = y;
 
         if(spawnMap.get(this.editor) == null){
-            int[] state = new int[MAX_RINGS];
+            int[] state = new int[MAX_LAYERS];
 
-            state[ringIndex] += 1;
+            state[layerIndex] += 1;
             spawnMap.put(this.editor, state);
 
         }else{
             int[] state = spawnMap.get(this.editor);
-            state[ringIndex] = state[ringIndex] + 1;
+            state[layerIndex] = state[layerIndex] + 1;
 //            spawnMap.put(this.editor, state);
         }
 
-        d = mandalaRingData.get(ringIndex);
+        d = spriteDataAnimated.get(layerIndex);
         this.spritePath = d.customPath;
 
-        ringSprites = mandalaRingData.get(ringIndex).images;
-        sprite = ringSprites.get(0);
+        layerSprites = spriteDataAnimated.get(layerIndex).images;
+        sprite = layerSprites.get(0);
 
 
     }
@@ -107,7 +107,7 @@ public class ParticleSpriteMandala extends Particle{
         //every X updates, increment frame, this controls how fast it animates
         if( this.frameLife % d.speedRate == 0){
             frame += 1;
-            if (frame >= ringSprites.size()){
+            if (frame >= layerSprites.size()){
                 frame = 0;
 
             }
@@ -162,13 +162,13 @@ public class ParticleSpriteMandala extends Particle{
 
 
                 //num particles changed?
-                if( spawnMap.get(this.editor)[ringIndex] > d.val2){
+                if( spawnMap.get(this.editor)[layerIndex] > d.val2){
                     cleanupSingle(this);
                     return true;
                 }
 
 
-                moveSpeed = Mandala2Config.CARET_MOVE_SPEED(settings);
+                moveSpeed = MultiLayerConfig.CARET_MOVE_SPEED(settings);
                 this.life = 99;
                 return false;
             } else {
@@ -179,18 +179,18 @@ public class ParticleSpriteMandala extends Particle{
     }
 
 
-    private static void cleanupSingle(ParticleSpriteMandala e){
+    private static void cleanupSingle(ParticleSpriteMultiLayer e){
         if(spawnMap.get(e.editor) != null){
             int[] state = spawnMap.get(e.editor);
-            if(state[e.ringIndex] >= 1){
-                state[e.ringIndex] = state[e.ringIndex] - 1;
+            if(state[e.layerIndex] >= 1){
+                state[e.layerIndex] = state[e.layerIndex] - 1;
 //                spawnMap.put(e.editor, state);
             }else{
 
                 boolean doDelete = true;
                 //scan other ring indexes and only remove if all others are empty
-                for(int i = 0; i < MAX_RINGS; i++){
-                    if( i == e.ringIndex) continue;
+                for(int i = 0; i < MAX_LAYERS; i++){
+                    if( i == e.layerIndex) continue;
                     if(state[i] > 1) doDelete = false;
                 }
                 if(doDelete) spawnMap.remove(e.editor);
@@ -229,7 +229,7 @@ public class ParticleSpriteMandala extends Particle{
 
 
 
-            g2d.drawImage(ringSprites.get(frame), at, null);
+            g2d.drawImage(layerSprites.get(frame), at, null);
 
 //            try {
 //                g2d.setColor(Color.ORANGE);

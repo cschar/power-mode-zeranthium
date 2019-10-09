@@ -1,7 +1,6 @@
 package com.cschar.pmode3.config;
 
 import com.cschar.pmode3.ParticleSpriteLockedLayer;
-import com.cschar.pmode3.ParticleSpriteMandala;
 import com.cschar.pmode3.PowerMode3;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.cschar.pmode3.config.common.ui.CustomPathCellHighlighterRenderer;
@@ -13,13 +12,11 @@ import com.intellij.openapi.fileChooser.FileChooserDialog;
 import com.intellij.openapi.fileChooser.FileChooserFactory;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.JBColor;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.kohsuke.rngom.parse.host.Base;
 
 import javax.swing.*;
 import javax.swing.table.*;

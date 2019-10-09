@@ -229,11 +229,15 @@ public class ParticleSpriteVineAnchor extends Particle{
             Graphics2D g2d = (Graphics2D) g.create();
 
             //set alpha based on lifetime
-            float PARTICLE_ALPHA_MAX = 0.8f;
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, PARTICLE_ALPHA_MAX *(life / (float) maxLife)));
+            float alpha = 0.9f;
+            alpha = Math.max(alpha*(life / (float) maxLife), 0.7f);
+
+
             if(anchorY > initialY) {
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.bottomVineColor.getAlpha()/255f * alpha));
                 g2d.setColor(this.bottomVineColor);
             }else{
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.topVineColor.getAlpha()/255f * alpha));
                 g2d.setColor(this.topVineColor);
             }
 

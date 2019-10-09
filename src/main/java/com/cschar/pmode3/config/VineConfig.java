@@ -107,7 +107,7 @@ public class VineConfig extends JPanel {
     public void loadValues(){
 
 
-        this.minPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.VINE,"minPsiSearchDistance", 100)));
+        this.minPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.VINE,"minPsiSearchDistance", 50)));
         this.maxPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.VINE,"maxPsiSearchDistance", 300)));
         this.chancePerKeyPressTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.VINE,"chancePerKeyPress", 100)));
 

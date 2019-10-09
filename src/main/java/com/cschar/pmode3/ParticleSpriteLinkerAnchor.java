@@ -18,12 +18,10 @@
 package com.cschar.pmode3;
 
 import com.cschar.pmode3.config.LinkerConfig;
-import com.cschar.pmode3.config.Mandala2Config;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.intellij.openapi.editor.Editor;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.HashMap;

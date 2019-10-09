@@ -122,8 +122,6 @@ public class ParticleSpriteLightning extends Particle{
         reloadSpritesWithColors(LightningConfig.INNER_BEAM_COLOR(settings), LightningConfig.OUTER_BEAM_COLOR(settings));
 
 
-        LOGGER.info("LightningSpritesTwo initialized");
-
 
     }
     private BufferedImage sprite;

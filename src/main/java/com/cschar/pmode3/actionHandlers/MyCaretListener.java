@@ -3,7 +3,7 @@ package com.cschar.pmode3.actionHandlers;
 import com.cschar.pmode3.*;
 import com.cschar.pmode3.config.LanternConfig;
 import com.cschar.pmode3.config.LinkerConfig;
-import com.cschar.pmode3.config.Mandala2Config;
+import com.cschar.pmode3.config.MultiLayerConfig;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollingModel;
 import com.intellij.openapi.editor.VisualPosition;
@@ -35,12 +35,12 @@ public class MyCaretListener implements CaretListener {
             ParticleSpriteDroste.cursorY = point.y;
 
             PowerMode3 settings = PowerMode3.getInstance();
-            if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.MANDALA) &&
-                    Mandala2Config.MOVE_WITH_CARET(settings)){
+            if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.MULTI_LAYER) &&
+                    MultiLayerConfig.MOVE_WITH_CARET(settings)){
 
-                ParticleSpriteMandala.targetX = point.x;
-                ParticleSpriteMandala.targetY = point.y;
-                ParticleSpriteMandala.moveSpeed = Mandala2Config.CARET_MOVE_SPEED(settings);
+                ParticleSpriteMultiLayer.targetX = point.x;
+                ParticleSpriteMultiLayer.targetY = point.y;
+                ParticleSpriteMultiLayer.moveSpeed = MultiLayerConfig.CARET_MOVE_SPEED(settings);
 
             }
 

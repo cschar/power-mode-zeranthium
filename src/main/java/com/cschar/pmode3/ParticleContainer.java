@@ -96,7 +96,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         ParticleSpriteLockedLayer.cleanup(this.editor);
         ParticleSpriteDroste.cleanup(this.editor);
         ParticleSpriteTapAnim.cleanup(this.editor);
-        ParticleSpriteMandala.cleanup(this.editor);
+        ParticleSpriteMultiLayer.cleanup(this.editor);
         ParticleSpriteLinkerAnchor.cleanup(this.editor);
 
     }
@@ -207,22 +207,22 @@ public class ParticleContainer extends JComponent implements ComponentListener {
             }
         }
 
-        if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.MANDALA)){
+        if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.MULTI_LAYER)){
             //update static value for all other rings still spawned.
 //            ParticleSpriteMandala.cursorX = x;
 //            ParticleSpriteMandala.cursorY = y;
-            for(int i = 0; i < ParticleSpriteMandala.mandalaRingData.size(); i++){
+            for(int i = 0; i < ParticleSpriteMultiLayer.spriteDataAnimated.size(); i++){
 
-                SpriteDataAnimated d = ParticleSpriteMandala.mandalaRingData.get(i);
-                if (ParticleSpriteMandala.spawnMap.get(this.editor) != null &&
-                        ParticleSpriteMandala.spawnMap.get(this.editor)[i] >= d.val2){
+                SpriteDataAnimated d = ParticleSpriteMultiLayer.spriteDataAnimated.get(i);
+                if (ParticleSpriteMultiLayer.spawnMap.get(this.editor) != null &&
+                        ParticleSpriteMultiLayer.spawnMap.get(this.editor)[i] >= d.val2){
                     continue;
                 }
 
                 if(!d.enabled) continue;
 
 
-                final ParticleSpriteMandala e = new ParticleSpriteMandala(x,y,dx,dy,size,lifeSetting, i, editor);
+                final ParticleSpriteMultiLayer e = new ParticleSpriteMultiLayer(x,y,dx,dy,size,lifeSetting, i, editor);
                 particles.add(e);
             }
         }

@@ -1,6 +1,6 @@
 package com.cschar.pmode3.config;
 
-import com.cschar.pmode3.ParticleSpriteMandala;
+import com.cschar.pmode3.ParticleSpriteMultiLayer;
 import com.cschar.pmode3.PowerMode3;
 import com.cschar.pmode3.config.common.ui.CustomPathCellHighlighterRenderer;
 import com.cschar.pmode3.config.common.ui.JTableButtonMouseListener;
@@ -25,11 +25,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.EventObject;
 
-public class Mandala2Config extends BaseConfigPanel{
+public class MultiLayerConfig extends BaseConfigPanel{
 
 
     JPanel firstRow;
-    JComponent mandalaRingConfigPanel;
+    JComponent spriteConfigPanel;
 
     private JCheckBox moveWithCaret;
     private JTextField moveSpeedTextField;
@@ -38,7 +38,7 @@ public class Mandala2Config extends BaseConfigPanel{
 
     public final static int PREVIEW_SIZE = 120;
 
-    public Mandala2Config(PowerMode3 settings){
+    public MultiLayerConfig(PowerMode3 settings){
         this.settings = settings;
 
         this.setMaximumSize(new Dimension(1000,300));
@@ -48,7 +48,7 @@ public class Mandala2Config extends BaseConfigPanel{
         firstRow.setMaximumSize(new Dimension(1000,500));
         firstRow.setLayout(new BoxLayout(firstRow, BoxLayout.Y_AXIS));
 
-        this.setupHeaderPanel("Mandala Options", spriteDataAnimated);
+        this.setupHeaderPanel("Multi Layer Options", spriteDataAnimated);
 //        headerPanel = new JPanel();
 //        JLabel headerLabel = new JLabel("Mandala Options");
 //        headerLabel.setFont(new Font ("Arial", Font.BOLD, 20));
@@ -68,7 +68,7 @@ public class Mandala2Config extends BaseConfigPanel{
 
         this.add(firstRow);
 
-        mandalaRingConfigPanel = createConfigTable();
+        spriteConfigPanel = createConfigTable();
         firstRow.add(headerPanel);
         JPanel caretMovementPanel = new JPanel();
         caretMovementPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -84,7 +84,7 @@ public class Mandala2Config extends BaseConfigPanel{
         firstRow.add(caretMovementPanel);
 
 
-        firstRow.add(mandalaRingConfigPanel);
+        firstRow.add(spriteConfigPanel);
 
 
         firstRow.setOpaque(true);
@@ -98,7 +98,7 @@ public class Mandala2Config extends BaseConfigPanel{
 
 
         table.setRowHeight(PREVIEW_SIZE);
-        table.setModel(new MandalaRingTableModel());
+        table.setModel(new MultiLayerTableModel());
 
         table.setCellSelectionEnabled(false);
         table.setColumnSelectionAllowed(false);
@@ -165,21 +165,21 @@ public class Mandala2Config extends BaseConfigPanel{
 
     public void loadValues(){
 
-        this.moveWithCaret.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.MANDALA,"moveWithCaretEnabled", true));
-        this.moveSpeedTextField.setText(String.valueOf(Config.getFloatProperty(settings, PowerMode3.ConfigType.MANDALA,"movespeed", 0.1f)));
+        this.moveWithCaret.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.MULTI_LAYER,"moveWithCaretEnabled", true));
+        this.moveSpeedTextField.setText(String.valueOf(Config.getFloatProperty(settings, PowerMode3.ConfigType.MULTI_LAYER,"movespeed", 0.1f)));
 
     }
 
     public void saveValues(boolean isSettingEnabled) throws ConfigurationException {
-        ParticleSpriteMandala.settingEnabled = isSettingEnabled; //to kill any lingering ones
+        ParticleSpriteMultiLayer.settingEnabled = isSettingEnabled; //to kill any lingering ones
 
-        settings.setSpriteTypeProperty(PowerMode3.ConfigType.MANDALA, "moveWithCaretEnabled", String.valueOf(moveWithCaret.isSelected()));
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.MULTI_LAYER, "moveWithCaretEnabled", String.valueOf(moveWithCaret.isSelected()));
 
-        settings.setSpriteTypeProperty(PowerMode3.ConfigType.MANDALA, "movespeed",
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.MULTI_LAYER, "movespeed",
                 String.valueOf(Config.getJTextFieldWithinBoundsFloat(this.moveSpeedTextField,
                         0.001f, 1.0f,"movespeed")));
 
-        settings.setSerializedSpriteDataAnimated(Mandala2Config.spriteDataAnimated, PowerMode3.ConfigType.MANDALA);
+        settings.setSerializedSpriteDataAnimated(MultiLayerConfig.spriteDataAnimated, PowerMode3.ConfigType.MULTI_LAYER);
     }
 
 
@@ -187,15 +187,15 @@ public class Mandala2Config extends BaseConfigPanel{
 
     public static void setSpriteDataAnimated(ArrayList<SpriteDataAnimated> data){
         spriteDataAnimated = data;
-        ParticleSpriteMandala.mandalaRingData = data;
+        ParticleSpriteMultiLayer.spriteDataAnimated = data;
     }
 
     public static boolean MOVE_WITH_CARET(PowerMode3 settings){
-        return Config.getBoolProperty(settings, PowerMode3.ConfigType.MANDALA, "moveWithCaretEnabled",true);
+        return Config.getBoolProperty(settings, PowerMode3.ConfigType.MULTI_LAYER, "moveWithCaretEnabled",true);
     }
 
     public static float CARET_MOVE_SPEED(PowerMode3 settings){
-        return Config.getFloatProperty(settings, PowerMode3.ConfigType.MANDALA, "movespeed", 0.1f);
+        return Config.getFloatProperty(settings, PowerMode3.ConfigType.MULTI_LAYER, "movespeed", 0.1f);
     }
 
     public static void loadJSONConfig(JSONObject configData, Path parentPath) throws JSONException {
@@ -235,19 +235,19 @@ public class Mandala2Config extends BaseConfigPanel{
 class OtherPanelCellEditorRenderer extends AbstractCellEditor implements TableCellRenderer, TableCellEditor {
 
     private static final long serialVersionUID = 1L;
-    private OtherColCellPanelMandala renderer = new OtherColCellPanelMandala();
-    private OtherColCellPanelMandala editor = new OtherColCellPanelMandala();
+    private OtherColCellPanelMultiLayer renderer = new OtherColCellPanelMultiLayer();
+    private OtherColCellPanelMultiLayer editor = new OtherColCellPanelMultiLayer();
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        renderer.setOtherCol((OtherColMandala) value);
+        renderer.setOtherCol((OtherColMultiLayer) value);
         return renderer;
     }
 
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
 
-        editor.setOtherCol((OtherColMandala) value);
+        editor.setOtherCol((OtherColMultiLayer) value);
         return editor;
     }
 
@@ -270,25 +270,25 @@ class OtherPanelCellEditorRenderer extends AbstractCellEditor implements TableCe
 //
 
 
-class OtherColMandala {
+class OtherColMultiLayer {
 
     public int numParticles;
     public boolean isCyclic;
 
-    public OtherColMandala(int numParticles, boolean isCyclic) {
+    public OtherColMultiLayer(int numParticles, boolean isCyclic) {
         this.isCyclic = isCyclic;
         this.numParticles = numParticles;
     }
 }
 
-class OtherColCellPanelMandala extends JPanel {
+class OtherColCellPanelMultiLayer extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
     private JCheckBox isCyclicCheckbox;
     private JTextField numParticles;
 
-    OtherColCellPanelMandala() {
+    OtherColCellPanelMultiLayer() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 
@@ -324,20 +324,20 @@ class OtherColCellPanelMandala extends JPanel {
     }
 
 
-    public void setOtherCol(OtherColMandala otherColMandala) {
-        this.isCyclicCheckbox.setSelected(otherColMandala.isCyclic);
-        this.numParticles.setText(String.valueOf(otherColMandala.numParticles));
+    public void setOtherCol(OtherColMultiLayer otherColMultiLayer) {
+        this.isCyclicCheckbox.setSelected(otherColMultiLayer.isCyclic);
+        this.numParticles.setText(String.valueOf(otherColMultiLayer.numParticles));
     }
 
-    public OtherColMandala getOtherCol() {
-        return new OtherColMandala(Integer.parseInt(this.numParticles.getText()), this.isCyclicCheckbox.isSelected());
+    public OtherColMultiLayer getOtherCol() {
+        return new OtherColMultiLayer(Integer.parseInt(this.numParticles.getText()), this.isCyclicCheckbox.isSelected());
     }
 }
 
 
-class MandalaRingTableModel extends AbstractTableModel {
+class MultiLayerTableModel extends AbstractTableModel {
 
-    static ArrayList<SpriteDataAnimated> data = Mandala2Config.spriteDataAnimated;
+    static ArrayList<SpriteDataAnimated> data = MultiLayerConfig.spriteDataAnimated;
 
 
 
@@ -365,7 +365,7 @@ class MandalaRingTableModel extends AbstractTableModel {
             JButton.class,
             String.class,
             JButton.class,
-            OtherColMandala.class,
+            OtherColMultiLayer.class,
 //            OtherPanel.class
 //            MandalaOtherCellData.class
     };
@@ -437,7 +437,7 @@ class MandalaRingTableModel extends AbstractTableModel {
                         data.get(row).setImageAnimated(vfs[0].getPath(), false);
 
 
-                        Mandala2Config.calculateSize(data);
+                        MultiLayerConfig.calculateSize(data);
                         this.fireTableDataChanged();
                     }
 
@@ -456,13 +456,13 @@ class MandalaRingTableModel extends AbstractTableModel {
                     d.scale = 1.0f;
                     d.speedRate = 2;
 
-                    Mandala2Config.calculateSize(data);
+                    MultiLayerConfig.calculateSize(data);
                     this.fireTableDataChanged();
                 });
                 return resetButton;
             case 7:
                 SpriteDataAnimated d = data.get(row);
-                return new OtherColMandala(d.val2, d.isCyclic);
+                return new OtherColMultiLayer(d.val2, d.isCyclic);
         }
 
         throw new IllegalArgumentException();
@@ -503,7 +503,7 @@ class MandalaRingTableModel extends AbstractTableModel {
                 return;
             case 7:    // other settings
 
-                OtherColMandala c = (OtherColMandala) value;
+                OtherColMultiLayer c = (OtherColMultiLayer) value;
                 data.get(row).isCyclic = c.isCyclic;
                 data.get(row).val2 = c.numParticles;
                 return;
