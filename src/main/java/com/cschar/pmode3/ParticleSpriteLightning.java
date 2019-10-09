@@ -137,11 +137,17 @@ public class ParticleSpriteLightning extends Particle{
     private boolean innerBeam = false;
     private boolean outerBeam = false;
 
-    public ParticleSpriteLightning(int x, int y, int dx, int dy, int size, int life, Color c,
+    private Color innerBeamColor;
+    private Color outerBeamColor;
+
+    public ParticleSpriteLightning(int x, int y, int dx, int dy, int size, int life,
                                    int lightningChance, boolean innerBeam, boolean outerBeam) {
-        super(x,y,dx,dy,size,life,c);
+        super(x,y,dx,dy,size,life,Color.ORANGE);
 
         sprite = spritesInner.get(0);
+
+        innerBeamColor = LightningConfig.INNER_BEAM_COLOR(settings);
+        outerBeamColor = LightningConfig.OUTER_BEAM_COLOR(settings);
 
         this.innerBeam = innerBeam;
         this.outerBeam = outerBeam;
@@ -175,12 +181,6 @@ public class ParticleSpriteLightning extends Particle{
 
 
 
-    private AlphaComposite makeComposite(float alpha) {
-        int type = AlphaComposite.SRC_OVER;
-
-        return(AlphaComposite.getInstance(type, alpha));
-    }
-
 
     @Override
     public void render(Graphics g) {
@@ -193,24 +193,31 @@ public class ParticleSpriteLightning extends Particle{
             if (makeLightningBeam) {
                 AffineTransform at = new AffineTransform();
 
-                at.translate((int)origX ,(int)origY );
+                double scale = origY/(double)sprite.getHeight();
+                if(scale < 1.0) scale = 1.0; //only scale if we need to stretch it
+                at.scale(1.0, scale);
+                at.translate((int)origX * (1/1.0) ,(int)origY *(1/scale));
                 at.translate(-sprite.getWidth()/2,
                                  -sprite.getHeight()); //move image 100% up so lightning lands at bottom
 
 
-                    //We could make it taller, the lower down on the editor it goes
-//                at.scale(1.0f,1.1f);
-//                at.translate(0.0f, -sprite.getHeight()*0.1f);
 
 
-                g2d.setComposite(makeComposite(0.7f));
-//                g2d.drawImage(ParticleSpriteLightningAlt.sprites.get(frame), at, null);
                 if(innerBeam && !outerBeam) {
+                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.innerBeamColor.getAlpha()/255f * 0.7f));
                     g2d.drawImage(ParticleSpriteLightning.spritesInner.get(frame), at, null);
                 }else if(outerBeam && !innerBeam){
+                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.outerBeamColor.getAlpha()/255f * 0.7f));
                     g2d.drawImage(ParticleSpriteLightning.spritesOuter.get(frame), at, null);
                 }
                 else if(innerBeam && outerBeam){
+//                    float alpha = this.outerBeamColor.getAlpha()/255f + this.innerBeamColor.getAlpha()/255f;
+//                    alpha *= 0.7f;
+//                    alpha = Math.min(alpha, 0.7f);
+                    float alpha = Math.max(this.outerBeamColor.getAlpha()/255f, this.innerBeamColor.getAlpha()/255f);
+                    alpha *= 0.7f;
+
+                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
                     g2d.drawImage(ParticleSpriteLightning.spritesBoth.get(frame), at, null);
                 }
             }
