@@ -21,17 +21,12 @@ Max plugin size : 200MB:
 https://intellij-support.jetbrains.com/hc/en-us/community/posts/206445729--Question-Limitation-of-Upload-Plugin-Size
 
 
-TODO:
-Figure out how to traverse
-PsiElement tree
-
 
 
 
 how to correctly scale/rotate/translate with
 AFFINE transformation:
 https://math.stackexchange.com/a/820632
-
 
 To RUn project:
 
@@ -40,17 +35,8 @@ To RUn project:
 
 Snags I ran into:
 
-- NO PSIMethod ?!!?
-Because in module_settings SDK needed to be switched
-from 1.8 to Intellij_Plugin_SDK
-
--  ./gradlew runIde -- doesnt work when JavaRecursiveElementVisitor is used
-   solution: had to add java-api.jar to gradle build path (see settings.gradle file)
-
 - If serialized options are messed up
 --- delete  build/idea-sandbox/config/options/power.mode3.xml
-
-
 
 
 Other styles:
@@ -132,3 +118,25 @@ Appearance & Behavior {@code groupId="appearance"}</dt>
    * change themes and font size, tune the keymap, and configure plugins and system settings,
    * such as password policies, HTTP proxy, updates and more.
 ```
+
+
+
+
+# DUMP OF CRASH:
+
+```
+java.lang.NoClassDefFoundError: org/json/JSONException
+    at com.cschar.pmode3.PowerMode3$JSONLoader.loadDefaultJSONTableConfigs(PowerMode3.java:164)
+    at com.cschar.pmode3.PowerMode3.loadState(PowerMode3.java:353)
+    at com.cschar.pmode3.PowerMode3.loadState(PowerMode3.java:66)
+    at com.intellij.configurationStore.ComponentStoreImpl.doInitComponent(ComponentStoreImpl.kt:405)
+    at com.intellij.configurationStore.ComponentStoreImpl.initComponent(ComponentStoreImpl.kt:355)
+    ....
+Caused by: java.lang.ClassNotFoundException: org.json.JSONException PluginClassLoader[com.cschar.powermode3zeranthium, 1.0] com.intellij.ide.plugins.cl.PluginClassLoader@67d484dc
+    at com.intellij.ide.plugins.cl.PluginClassLoader.loadClass(PluginClassLoader.java:75)
+    at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:521
+``` 
+    
+--Fixed by packaging a FAT JAR
+https://discuss.gradle.org/t/how-to-include-dependencies-in-jar/19571/5
+

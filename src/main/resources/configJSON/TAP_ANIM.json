@@ -3,14 +3,14 @@
     {
       "previewSize": 120,
       "customPath": "",
-      "defaultPath": "/blender/droste1",
+      "defaultPath": "/blender/tap_anim1",
       "val2": 0,
-      "isCyclic": false,
+      "isCyclic": true,
       "alpha": 0.3,
       "val1": 0,
       "scale": 1,
       "enabled": true,
-      "speedRate": 2
+      "speedRate": 1
     }
   ]
 }

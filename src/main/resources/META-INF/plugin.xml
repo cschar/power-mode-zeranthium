@@ -1,6 +1,6 @@
 <idea-plugin>
     <id>com.cschar.powermode3zeranthium</id>
-    <name>Powermode - Zeranthium</name>
+    <name>Power Mode - Zeranthium</name>
     <vendor email="codyscharfe@gmail.com">cody scharfe</vendor>
     <version>1.0.0</version>
 
@@ -21,6 +21,7 @@
 <li>- Vines </li>
 <li>- 'Lizards' (swarms to anchors)</li>
 <li>- Lightning</li>
+<li>- Editor Shake </li>
 <li>- Weird square effect (MOMA)</li>
 <li>- MultiLayer w/ caret tracking</li>
 <li>- Linker Chains w/ caret tracking</li>
@@ -90,7 +91,7 @@
                     class="com.cschar.pmode3.hotkeys.HotKeyMusicTriggerAAction"
                     text="Trigger Music A for Powermode Zeranthium"
                     description="Trigger music A for powermode Zeranthium">
-                <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl k"/>
+                <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl j"/>
             </action>
 
             <action id="com.cschar.pmode3.PowerModeZeranthiumTriggerSongB"

@@ -6,7 +6,6 @@ TODO:
 - Choose between Anchor type
   - LBRACE,RBRACE, COLON
 
-- fixup plugin decription in .xml
 
 
 

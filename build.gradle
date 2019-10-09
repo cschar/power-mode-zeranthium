@@ -17,6 +17,11 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    // configuration that holds jars to include in the jar
+    extraLibs
+}
+
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
@@ -29,7 +34,20 @@ dependencies {
     // https://mvnrepository.com/artifact/org.json/json
     compile group: 'org.json', name: 'json', version: '20090211'
 
+    extraLibs group: 'org.json', name: 'json', version: '20090211'
+    extraLibs group: 'javazoom', name: 'jlayer', version: '1.0.1'
+    extraLibs group: 'org.imgscalr', name: 'imgscalr-lib', version: '4.2'
 
+
+    configurations.compile.extendsFrom(configurations.extraLibs)
+
+
+}
+
+jar {
+    from {
+        configurations.extraLibs.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
 
 

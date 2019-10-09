@@ -3,9 +3,9 @@
   {
     "previewSize":120,
     "customPath":"",
-    "defaultPath":"/blender/droste1",
-    "val2":0,
-    "isCyclic":false,
+    "defaultPath":"/blender/locked1",
+    "val2":4,
+    "isCyclic":true,
     "alpha":1,
     "val1":60,
     "scale":1,
