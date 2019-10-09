@@ -12,7 +12,6 @@ import com.intellij.openapi.fileChooser.FileChooserDialog;
 import com.intellij.openapi.fileChooser.FileChooserFactory;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.JBColor;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
 import org.json.JSONArray;
@@ -34,6 +33,7 @@ public class Mandala2Config extends JPanel{
 
     private JCheckBox moveWithCaret;
     private JTextField moveSpeedTextField;
+    private static JLabel headerSizeLabel;
 
     PowerMode3 settings;
 
@@ -52,6 +52,15 @@ public class Mandala2Config extends JPanel{
         JLabel headerLabel = new JLabel("Mandala Options");
         headerLabel.setFont(new Font ("Arial", Font.BOLD, 20));
         headerPanel.add(headerLabel);
+
+
+        headerSizeLabel = new JLabel();
+        this.calculateSize();
+        headerSizeLabel.setBackground(ZeranthiumColors.specialOption3);
+        headerSizeLabel.setOpaque(true);
+
+        headerPanel.add(headerSizeLabel);
+
         headerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         headerPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
         headerPanel.setMaximumSize(new Dimension(500,100));
@@ -79,6 +88,14 @@ public class Mandala2Config extends JPanel{
 
         firstRow.setOpaque(true);
 
+    }
+
+    public static void calculateSize(){
+        double totalSizeMB = 0;
+        for(SpriteDataAnimated d : spriteDataAnimated){
+            totalSizeMB += d.getAssetSizeMB();
+        }
+        headerSizeLabel.setText(String.format("Mem: %.2f MB", totalSizeMB));
     }
 
     public JComponent createConfigTable(){
@@ -426,6 +443,7 @@ class MandalaRingTableModel extends AbstractTableModel {
                         data.get(row).setImageAnimated(vfs[0].getPath(), false);
 
 
+                        Mandala2Config.calculateSize();
                         this.fireTableDataChanged();
                     }
 
@@ -444,7 +462,7 @@ class MandalaRingTableModel extends AbstractTableModel {
                     d.scale = 1.0f;
                     d.speedRate = 2;
 
-
+                    Mandala2Config.calculateSize();
                     this.fireTableDataChanged();
                 });
                 return resetButton;

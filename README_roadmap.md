@@ -3,17 +3,11 @@
 TODO: 
 
 
-
-           "fontset"
-BELOW NEED "FONTSET" type datatype;      
-  
-- 36daysofType callout https://mantissa.xyz/resources
-- 36daysofType COMPLETE replacement of all characters LOL
-   - would require minimum fontsize?
-   - or 'master font set 100x100px' would 'generate' font
-   size set for current fontsize e.g. 14pt
-   would show a 'genereating font' after setting is set
-
+ - reduce all asset sizes
+ - fixup plugin decription in .xml
+- rename MANDLA --> MULTILAYER
+- memory status in settings page to show
+  how much assets are taking in RAM
 
 
 
@@ -48,11 +42,8 @@ future TODO:
      - then type Y characters more to achieve threshold 3
      - then resets back to threshold 1  
 
-- investigate Jackson with Config Objects...
-   - https://stackoverflow.com/questions/29550006/how-to-have-jackson-use-a-method-to-serialize-a-class-to-json
-
-
 - Add PackLoader support for all settings, provide template for how to write config file
+- Ability to 'export' all settings as saved package (pngs/mp3s/json)
 
 - code explorer (e.g. wave collapse for dungeon background)
 ---- when you type it lights up background, e.g. icnreasing alpha from 0->0.1
@@ -61,6 +52,17 @@ future TODO:
 ---- typing lights up dungeion PLUS sends out ai units to battle spiders etc.. LOL
  
 - plant growth using wave collapse function?
+
+
+           "fontset"
+BELOW NEED "FONTSET" type datatype;      
+  
+- 36daysofType callout https://mantissa.xyz/resources
+- 36daysofType COMPLETE replacement of all characters LOL
+   - would require minimum fontsize?
+   - or 'master font set 100x100px' would 'generate' font
+   size set for current fontsize e.g. 14pt
+   would show a 'genereating font' after setting is set
 
 - TOKEN callout with decoration above
   - can choose 'holder' animation/image

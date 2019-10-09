@@ -1,13 +1,10 @@
 package com.cschar.pmode3.config.common;
 
 import com.cschar.pmode3.ParticleSpriteLightning;
-import com.cschar.pmode3.ParticleUtils;
 import com.cschar.pmode3.PowerMode3;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.util.messages.impl.Message;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,12 +14,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
+import java.awt.image.DataBuffer;
+import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -43,6 +40,8 @@ public class SpriteDataAnimated  extends SpriteData {
 
     private int MAX_NUM_FILES = 500;
     private double MAX_TOTAL_GB_SIZE = 1.0;
+
+    private double totalLoadedAssetSizeMB =0;
 
     public SpriteDataAnimated(int previewSize, boolean enabled, float scale, int speedRate, String defaultPath, String customPath,
                               boolean isCyclic, int val2, float alpha, int val1) {
@@ -104,7 +103,9 @@ public class SpriteDataAnimated  extends SpriteData {
 
             // File representing the folder that you select using a FileChooser
             final File dir = new File(String.valueOf(this.getClass().getResource(path)));
-            LOGGER.info("Loading default resources: " + dir.getPath());
+//            LOGGER.info("Loading default resources: " + dir.getPath());
+
+            double totalSizeMBResources = 0;
 
             for(int i = 0; i<100; i++){
                 String tmpPath = path + String.format("/0%03d.png", i);
@@ -114,20 +115,48 @@ public class SpriteDataAnimated  extends SpriteData {
                         continue;
 //                        break;
                     }
-//                    imageIcon = new ImageIcon(imageURL);
-//
-//                    Image image = imageIcon.getImage(); // transform it
-//                    Image newimg = image.getScaledInstance(previewSize, previewSize, Image.SCALE_SMOOTH); // scale it the smooth way
-//                    previewIcon = new ImageIcon(newimg);
-//                    this.previewIcons.add(previewIcon);
-                    BufferedImage loadedImage = ParticleUtils.loadSprite(tmpPath);
+
+
+                    BufferedImage loadedImage = null;
+                    try {
+
+                        loadedImage  = ImageIO.read(imageURL);
+//                        DataBuffer dataBuffer = loadedImage.getRaster().getDataBuffer();
+////                        double sizeBytes = ((double) dataBuffer.getSize());
+//                        //getSize --> size in bits
+//                        int sizeBytes = dataBuffer.getSize() * DataBuffer.getDataTypeSize(dataBuffer.getDataType()) / 8;
+//                        double sizeMB = sizeBytes / (1024.0 * 1024.0);
+                        //files inside jar alway return length = 0 ! ! ! ! ! ! !
+//                        File f = new File(String.valueOf(imageURL));
+
+                        InputStream tmpStream = imageURL.openStream();
+                        int length = tmpStream.available();  //Not supposed to work in all VMs... https://stackoverflow.com/a/18237279/5198805
+                        tmpStream.close();
+                        double sizeMB = length / 1024.0 / 1024.0;
+
+
+
+                        totalSizeMBResources += sizeMB;
+//                        System.out.println(String.format("1 asset is size %.9f - %s", sizeMB, imageURL.toString()));
+
+                    } catch (IOException ex) {
+                        LOGGER.log(Level.SEVERE, ex.toString(), ex );
+                    }
+
+//                    BufferedImage loadedImage = ParticleUtils.loadSprite(tmpPath);
                     if(loadedImage != null) {
                         this.images.add(loadedImage);
                     }
+
+
             }
             this.image = this.images.get(this.images.size()-1);
             Image previewImage = image.getScaledInstance(previewSize, previewSize, Image.SCALE_SMOOTH);
             this.previewIcon = new ImageIcon(previewImage);
+
+            this.totalLoadedAssetSizeMB = totalSizeMBResources;
+//            LOGGER.info(String.format("Loaded assets with size MB: %.2f",this.totalLoadedAssetSizeMB));
+            LOGGER.info(String.format("Loaded default resource %s    size MB: %.2f", dir.getPath(), this.totalLoadedAssetSizeMB));
 
         }else{
             ArrayList<BufferedImage> newImages = new ArrayList<BufferedImage>();
@@ -141,15 +170,15 @@ public class SpriteDataAnimated  extends SpriteData {
                 File[] files = dir.listFiles(IMAGE_FILTER);
                 Arrays.sort(files);
 
-                double totalSize = 0;
+                double totalSizeGB = 0;
                 int fileCount = 0;
                 //Load Buffered Images
                 try {
                     for (final File f : files) {
-                        totalSize += getGBFileSize(f);
+                        totalSizeGB += getGBFileSize(f);
                         fileCount += 1;
 
-                        if(totalSize > MAX_TOTAL_GB_SIZE){
+                        if(totalSizeGB > MAX_TOTAL_GB_SIZE){
                             String msg = path + "\n Reached Max Size: " + MAX_TOTAL_GB_SIZE + " GB of files already loaded";
                             notifyError(msg);
                             break;
@@ -196,11 +225,20 @@ public class SpriteDataAnimated  extends SpriteData {
 //                    newPreviewIcons.add(new ImageIcon(newimg))
                     Image previewImage = image.getScaledInstance(previewSize, previewSize, Image.SCALE_SMOOTH); // scale it the smooth way
                     this.previewIcon = new ImageIcon(previewImage);
+
+                    this.totalLoadedAssetSizeMB = totalSizeGB * 1024;
                 }
 
 
             }
         }
+
+
+
+    }
+
+    public double getAssetSizeMB(){
+        return this.totalLoadedAssetSizeMB;
     }
 
     @Override
@@ -259,10 +297,17 @@ public class SpriteDataAnimated  extends SpriteData {
 
     private double getGBFileSize(File file){
         double bytes = file.length();
-        double kilobytes = (bytes / 1024);
-        double megabytes = (kilobytes / 1024);
-        double gigabytes = (megabytes / 1024);
+        double kilobytes = (bytes / 1024.0);
+        double megabytes = (kilobytes / 1024.0);
+        double gigabytes = (megabytes / 1024.0);
         return gigabytes;
+    }
+
+    private double getMBFileSize(File file){
+        double bytes = file.length();
+        double kilobytes = (bytes / 1024.0);
+        double megabytes = (kilobytes / 1024.0);
+        return megabytes;
     }
 
     private void notifyError(String msg){

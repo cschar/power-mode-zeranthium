@@ -1,5 +1,4 @@
 # LICENSING ... 
-Uugh!
 
 audio code is LGPL:
 https://stackoverflow.com/questions/6045384/playing-mp3-and-wav-in-java
@@ -17,7 +16,9 @@ of the library. `If you’re just using the official builds, you don’t have to
 special as the code is already available on GitHub.`
 
 
+Max plugin size : 200MB:
 
+https://intellij-support.jetbrains.com/hc/en-us/community/posts/206445729--Question-Limitation-of-Upload-Plugin-Size
 
 
 TODO:

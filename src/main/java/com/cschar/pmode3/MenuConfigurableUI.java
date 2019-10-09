@@ -1,9 +1,11 @@
 package com.cschar.pmode3;
 
 import com.cschar.pmode3.config.*;
+import com.cschar.pmode3.config.common.ui.ZeranthiumColors;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.Shortcut;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
@@ -12,6 +14,9 @@ import com.intellij.openapi.fileChooser.FileChooserFactory;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.options.ConfigurableUi;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBScrollPane;
@@ -32,11 +37,10 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
-import java.util.concurrent.locks.Lock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
+public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposable {
     private static final Logger LOGGER = Logger.getLogger( MenuConfigurableUI.class.getName() );
     private JPanel mainPanel;
     private JTextField lifetimeTextField;
@@ -73,6 +77,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     private JCheckBox enableLockedLayerCheckbox;
     private JCheckBox enableLantern;
     private JCheckBox enableTapAnim;
+    private JPanel memoryStatsPanel;
 
 
     private BasicParticleConfig basicParticleConfig;
@@ -96,8 +101,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
     // static variable single_instance of type Singleton
     private static MenuConfigurableUI single_instance = null;
 
-    // variable of type String
-    public String s;
+
 
 
     // static method to create instance of Singleton class
@@ -106,7 +110,24 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         return single_instance;
     }
 
+
     public MenuConfigurableUI() {};
+
+
+    private void initMemoryStatsPanel(){
+        this.memoryStatsPanel.removeAll();
+
+        this.memoryStatsPanel.setBackground(ZeranthiumColors.specialOption3);
+        memoryStatsPanel.setLayout(new BoxLayout(memoryStatsPanel, BoxLayout.PAGE_AXIS));
+
+        long allocatedMemory      = (Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/1024/1024;
+        JLabel freeMemoryLabel = new JLabel("allocated memory (MB): " + allocatedMemory);
+        JLabel maxMemoryLabel = new JLabel("MAX memory (MB): " + Runtime.getRuntime().maxMemory()/1024/1024);
+        this.memoryStatsPanel.add(freeMemoryLabel);
+        this.memoryStatsPanel.add(maxMemoryLabel);
+
+        this.memoryStatsPanel.revalidate();
+    }
 
     //Constructor is called _AFTER_ createUIComponents when using IntelliJ GUI designer
     public MenuConfigurableUI(PowerMode3 powerMode3) {
@@ -120,6 +141,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         setupHotkeyText();
 
         setupPackLoaderButton();
+
 
 
         shakeDistanceTextField.setText(Integer.toString(powerMode3.getShakeDistance()));
@@ -231,12 +253,15 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         isEnabledCheckBox.setSelected(settings.isEnabled());
     }
 
+    public boolean refreshMemoryWidget = true;
     @Override
     public boolean isModified(@NotNull PowerMode3 settings) {
 
+//        isOpen = false;
         //ideally check if checkbox is equal to settings boolean
         return true;
     }
+
 
 
     @Override
@@ -485,6 +510,27 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
         theCustomCreatePanel.setOpaque(false);
         theCustomCreatePanel.setLayout(new BoxLayout(theCustomCreatePanel, BoxLayout.PAGE_AXIS));
 
+        this.memoryStatsPanel = new JPanel();
+        initMemoryStatsPanel();
+
+        Task.Backgroundable bgTask = new Task.Backgroundable(null, "Zeranthium Config...",
+                false, null) {
+            @Override
+            public void run(@NotNull ProgressIndicator progressIndicator) {
+                while(MenuConfigurableUI.this.refreshMemoryWidget){
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    initMemoryStatsPanel();
+//                    System.out.println("updating");
+                }
+            }
+        };
+        ProgressManager.getInstance().run(bgTask);
+//
+
 
         if(!settings.isConfigLoaded){
             loadingLabel.setFont(new Font ("Arial", Font.BOLD, 30));
@@ -672,4 +718,8 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3> {
                 enableCopyPasteVoid.setSelected(false);
         }
 
+    @Override
+    public void dispose() {
+        this.refreshMemoryWidget = false; //stop bg thread from updating
+    }
 }

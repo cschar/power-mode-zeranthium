@@ -17,7 +17,7 @@ https://www.jetbrains.com/help/idea/increasing-memory-heap.html
 
 
 Open Source LIbraries Used: \
-https://github.com/rkalla/imgscalr  (APACHE 2.0) \ 
-https://mvnrepository.com/artifact/javazoom/jlayer/1.0.1 (LGPL) \
+https://github.com/rkalla/imgscalr  (APACHE 2.0)\
+https://mvnrepository.com/artifact/javazoom/jlayer/1.0.1 (LGPL)
 
 
