@@ -4,6 +4,7 @@ import com.cschar.pmode3.PowerMode3;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.cschar.pmode3.config.common.ui.ZeranthiumColors;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.util.ui.JBUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,6 +29,7 @@ public abstract class BaseConfigPanel extends JPanel {
         calculateSize(spriteDataAnimated);
         headerSizeLabel.setBackground(ZeranthiumColors.specialOption3);
         headerSizeLabel.setOpaque(true);
+        headerSizeLabel.setBorder(JBUI.Borders.empty(5));
 
         headerPanel.add(headerSizeLabel);
         headerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));

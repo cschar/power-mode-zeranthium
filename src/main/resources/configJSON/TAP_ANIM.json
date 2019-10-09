@@ -6,7 +6,7 @@
       "defaultPath": "/blender/tap_anim1",
       "val2": 0,
       "isCyclic": true,
-      "alpha": 0.3,
+      "alpha": 1,
       "val1": 0,
       "scale": 1,
       "enabled": true,

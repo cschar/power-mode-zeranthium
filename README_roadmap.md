@@ -3,11 +3,6 @@
 TODO: 
 
 
-- Choose between Anchor type
-  - LBRACE,RBRACE, COLON
-
-
-
 
 
 Done;
@@ -16,6 +11,8 @@ Done;
 - Lizards (swarms to anchors)
 - Lightning 
 - Weird square effect (MOMA)
+- Anchor type effects where your code structure influences particle behaviour
+- Customizable Anchor Types (Bracket/Brace/Parenthesis/Colon)
 - MultiLayer w/ caret tracking
 - Linker Chains w/ caret tracking
 - hotkey to activate (bonus: configurable?)

@@ -23,6 +23,8 @@
 <li>- Lightning</li>
 <li>- Editor Shake </li>
 <li>- Weird square effect (MOMA)</li>
+<li>- Anchor type effects where your code structure influences particle behaviour</li>
+<li>- Customizable Anchor Types (Bracket/Brace/Parenthesis/Colon)</li>
 <li>- MultiLayer w/ caret tracking</li>
 <li>- Linker Chains w/ caret tracking</li>
 <li>- hotkey to activate (bonus: configurable?)</li>

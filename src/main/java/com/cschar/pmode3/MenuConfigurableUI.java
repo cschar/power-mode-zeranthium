@@ -17,18 +17,29 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
+import com.intellij.openapi.ui.DialogBuilder;
+import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.ui.popup.ComponentPopupBuilder;
+import com.intellij.openapi.ui.popup.JBPopup;
+import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.util.ui.JBUI;
+import kotlin.Pair;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.io.FileInputStream;
@@ -36,9 +47,10 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Scanner;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposable {
     private static final Logger LOGGER = Logger.getLogger( MenuConfigurableUI.class.getName() );
@@ -78,6 +90,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
     private JCheckBox enableLantern;
     private JCheckBox enableTapAnim;
     private JPanel memoryStatsPanel;
+    private JButton anchorConfigButton;
 
 
     private BasicParticleConfig basicParticleConfig;
@@ -103,7 +116,6 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
 
 
 
-
     // static method to create instance of Singleton class
     public static MenuConfigurableUI getInstance()
     {
@@ -114,20 +126,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
     public MenuConfigurableUI() {};
 
 
-    private void initMemoryStatsPanel(){
-        this.memoryStatsPanel.removeAll();
 
-        this.memoryStatsPanel.setBackground(ZeranthiumColors.specialOption3);
-        memoryStatsPanel.setLayout(new BoxLayout(memoryStatsPanel, BoxLayout.PAGE_AXIS));
-
-        long allocatedMemory      = (Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/1024/1024;
-        JLabel freeMemoryLabel = new JLabel("allocated memory (MB): " + allocatedMemory);
-        JLabel maxMemoryLabel = new JLabel("MAX memory (MB): " + Runtime.getRuntime().maxMemory()/1024/1024);
-        this.memoryStatsPanel.add(freeMemoryLabel);
-        this.memoryStatsPanel.add(maxMemoryLabel);
-
-        this.memoryStatsPanel.revalidate();
-    }
 
     //Constructor is called _AFTER_ createUIComponents when using IntelliJ GUI designer
     public MenuConfigurableUI(PowerMode3 powerMode3) {
@@ -138,8 +137,10 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
         isEnabledCheckBox.setSelected(powerMode3.isEnabled());
 
 
-        setupHotkeyText();
 
+
+        setupHotkeyText();
+        setupAnchorConfigButton();
         setupPackLoaderButton();
 
 
@@ -501,6 +502,22 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
 
     }
 
+    private void initMemoryStatsPanel(){
+        this.memoryStatsPanel.removeAll();
+
+        this.memoryStatsPanel.setBackground(ZeranthiumColors.specialOption3);
+        memoryStatsPanel.setLayout(new BoxLayout(memoryStatsPanel, BoxLayout.PAGE_AXIS));
+        memoryStatsPanel.setBorder(JBUI.Borders.empty(10));
+
+        long allocatedMemory      = (Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/1024/1024;
+        JLabel freeMemoryLabel = new JLabel("allocated memory (MB): " + allocatedMemory);
+        JLabel maxMemoryLabel = new JLabel("MAX memory (MB): " + Runtime.getRuntime().maxMemory()/1024/1024);
+        this.memoryStatsPanel.add(freeMemoryLabel);
+        this.memoryStatsPanel.add(maxMemoryLabel);
+
+        this.memoryStatsPanel.revalidate();
+    }
+
     //Constructor is called _AFTER_ createUIComponents when using IntelliJ GUI designer
     //https://www.jetbrains.com/help/idea/creating-form-initialization-code.html
     private void createUIComponents() {
@@ -589,10 +606,46 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
         toggleHotkeyLabel.setText(labelText);
     }
 
-    public void setupPackLoaderButton(){
+    private void setupAnchorConfigButton(){
+
+        java.util.Map<PowerMode3.AnchorTypes, String> choices = new HashMap<PowerMode3.AnchorTypes, String>(){{
+            put(PowerMode3.AnchorTypes.BRACE, "BRACE {}");
+            put(PowerMode3.AnchorTypes.PARENTHESIS, "PARENTHESIS ()");
+            put(PowerMode3.AnchorTypes.BRACKET, "BRACKET []");
+            put(PowerMode3.AnchorTypes.COLON, "COLON :");
+        }};
+
+        anchorConfigButton.setText("<html> anchor config: <br/>" +
+                choices.get(settings.anchorType) + "  </html>");
+
+        anchorConfigButton.addActionListener(new ActionListener() {
+            private Object Map;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                String[] options = new String[PowerMode3.AnchorTypes.values().length];
+                for(int i = 0; i < options.length; i++){
+                    options[i] = choices.get(PowerMode3.AnchorTypes.values()[i]);
+                }
+
+                ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/bar_small.png"));
+                int result = Messages.showDialog("Choose Anchor Type:", "Choose Anchor Type",
+                        options,
+                        settings.anchorType.ordinal(), settings.anchorType.ordinal(), sliderIcon, null);
+
+                settings.anchorType = PowerMode3.AnchorTypes.values()[result];
+
+                anchorConfigButton.setText("<html> anchor config: <br/>" + choices.get(settings.anchorType) + "  </html>");
+            }
+        });
+    }
+
+    private void setupPackLoaderButton(){
         loadPackButton.addActionListener((event) -> {
 
             ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/bar_small.png"));
+
             int result = Messages.showYesNoDialog(null,
                     "<html> <h1> Load config pack? </h1>" +
                             " \n Config <b>packs</b> can be found on the " +

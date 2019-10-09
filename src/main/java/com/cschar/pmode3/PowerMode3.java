@@ -99,7 +99,13 @@ public class PowerMode3 implements BaseComponent,
     private int lifetime = 200;
     private int maxPsiSearchDistance = 400;  //amount of total characters searched around caret for anchors
 
-
+    public enum AnchorTypes {
+        BRACE,
+        PARENTHESIS,
+        BRACKET,
+        COLON
+    }
+    public AnchorTypes anchorType = AnchorTypes.BRACE;
 
 
 
@@ -192,7 +198,7 @@ public class PowerMode3 implements BaseComponent,
         put("sprite"+ ConfigType.BASIC_PARTICLE + "Enabled", "true");
         put("sprite"+ ConfigType.LIGHTNING + "Enabled", "false");
         put("sprite"+ ConfigType.LIGHTNING_ALT + "Enabled", "false");
-        put("sprite"+ ConfigType.LIZARD + "Enabled", "false");
+        put("sprite"+ ConfigType.LIZARD + "Enabled", "true");
 
 
         put("sprite"+ ConfigType.MOMA+ "Enabled", "false");
@@ -202,9 +208,9 @@ public class PowerMode3 implements BaseComponent,
         put("sprite"+ ConfigType.LINKER + "Enabled", "false");
         put("sprite"+ ConfigType.DROSTE + "Enabled", "false");
         put("sprite"+ ConfigType.COPYPASTEVOID + "Enabled", "true");
-        put("sprite"+ ConfigType.LOCKED_LAYER + "Enabled", "false");
+        put("sprite"+ ConfigType.LOCKED_LAYER + "Enabled", "true");
         put("sprite"+ ConfigType.LANTERN + "Enabled", "false");
-        put("sprite"+ ConfigType.TAP_ANIM + "Enabled", "false");
+        put("sprite"+ ConfigType.TAP_ANIM + "Enabled", "true");
 
         put("sprite"+ ConfigType.SOUND + "Enabled", "true");
         put("sprite"+ ConfigType.SPECIAL_ACTION_SOUND + "Enabled", "false");
@@ -255,7 +261,7 @@ public class PowerMode3 implements BaseComponent,
 
         final EditorActionManager editorActionManager = EditorActionManager.getInstance();
         final EditorFactory editorFactory = EditorFactory.getInstance();
-        particleContainerManager = new ParticleContainerManager();
+        particleContainerManager = new ParticleContainerManager(this);
         editorFactory.addEditorFactoryListener(particleContainerManager, new Disposable() {
             @Override
             public void dispose() {
@@ -366,8 +372,8 @@ public class PowerMode3 implements BaseComponent,
 //    public boolean isLoading = false;
 
     public void loadConfigData(){
-        boolean DO_BACKGROUND_LOAD = false;
 //        boolean DO_BACKGROUND_LOAD = false;
+        boolean DO_BACKGROUND_LOAD = true;
 
         if(DO_BACKGROUND_LOAD) {
             Task.Backgroundable bgTask = new Task.Backgroundable(null, "Zeranthium Setup...",

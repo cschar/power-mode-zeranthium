@@ -56,8 +56,8 @@ public class ParticleContainerManager extends EditorFactoryAdapter {
 
     private PowerMode3 settings;
 
-    public ParticleContainerManager() {
-        //this.settings = PowerMode3.getInstance();
+    public ParticleContainerManager(PowerMode3 settings) {
+        this.settings = settings;
 
         thread = new Thread(new Runnable() {
 
@@ -176,8 +176,34 @@ public class ParticleContainerManager extends EditorFactoryAdapter {
                 continue;
             }
 
-            if(e.toString().contains("PsiJavaToken:RBRACE") || e.toString().contains("PsiJavaToken:LBRACE")){
-//                System.out.print(String.format(" %d - ", i));
+
+
+            boolean addPoint = false;
+            if(settings.anchorType == PowerMode3.AnchorTypes.BRACE
+                    && (e.toString().contains("PsiJavaToken:RBRACE") || e.toString().contains("PsiJavaToken:LBRACE"))){
+                addPoint = true;
+            }
+
+            if(settings.anchorType == PowerMode3.AnchorTypes.PARENTHESIS
+                    && (e.toString().contains("PsiJavaToken:RPARENTH") || e.toString().contains("PsiJavaToken:LPARENTH"))){
+                addPoint = true;
+            }
+
+            if(settings.anchorType == PowerMode3.AnchorTypes.BRACKET
+                    && (e.toString().contains("PsiJavaToken:RBRACKET") || e.toString().contains("PsiJavaToken:LBRACKET"))){
+                addPoint = true;
+            }
+            if(settings.anchorType == PowerMode3.AnchorTypes.COLON
+                    && (e.toString().contains("PsiJavaToken:COLON"))) {
+                addPoint = true;
+            }
+
+//            if(addPoint){
+//                System.out.println("anchorType: " + settings.anchorType + " - " + anchorOffset + "FOUND: " + e.toString());
+//            }
+
+
+            if(addPoint){
                 Point offsetPoint = editor.offsetToXY(anchorOffset);
                 offsetPoint.x = offsetPoint.x - scrollingModel.getHorizontalScrollOffset();
                 offsetPoint.y = offsetPoint.y - scrollingModel.getVerticalScrollOffset();
@@ -186,10 +212,6 @@ public class ParticleContainerManager extends EditorFactoryAdapter {
                 points.add(anchor);
             }
 
-
-//            PsiJavaToken:SEMICOLON
-            //PsiJavaToken:RBRACE
-            //PsiJavaToken:LBRACE
         }
 
 
