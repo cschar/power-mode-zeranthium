@@ -6,6 +6,7 @@ import com.cschar.pmode3.config.common.ui.CustomPathCellHighlighterRenderer;
 import com.cschar.pmode3.config.common.ui.JTableButtonMouseListener;
 import com.cschar.pmode3.config.common.ui.JTableButtonRenderer;
 import com.cschar.pmode3.config.common.SpriteData;
+import com.cschar.pmode3.config.common.ui.ZeranthiumColors;
 import com.intellij.openapi.fileChooser.*;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -20,14 +21,69 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class LightningAltConfig extends BaseConfig {
+public class LightningAltConfig extends JPanel{
 
 
     JCheckBox sparksEnabled;
     JComponent sparkConfigPanel;
 
+    PowerMode3 settings;
+
+    JTextField maxAlphaTextField;
+    JTextField chancePerKeyPressTextField;
+
+    JPanel firstCol;
+    JPanel secondCol;
+
     public LightningAltConfig(PowerMode3 settings){
-        super(settings, PowerMode3.ConfigType.LIGHTNING_ALT, "Lightning Alt Options");
+
+
+
+        this.settings = settings;
+
+        this.setMaximumSize(new Dimension(1000,300));
+        this.setLayout(new GridLayout(0,2)); //as many rows as necessary
+        firstCol = new JPanel();
+        firstCol.setLayout(new BoxLayout(firstCol, BoxLayout.PAGE_AXIS));
+        this.add(firstCol);
+
+        secondCol = new JPanel();
+        secondCol.setLayout(new BoxLayout(secondCol, BoxLayout.Y_AXIS));
+        JPanel headerPanel = new JPanel();
+        JLabel headerLabel = new JLabel("Lightning Alt Options");
+        headerLabel.setFont(new Font ("Arial", Font.BOLD, 20));
+        headerPanel.add(headerLabel);
+        headerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        headerPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        headerPanel.setMaximumSize(new Dimension(300,100));
+
+        secondCol.add(headerPanel);
+        this.add(secondCol);
+
+
+        JPanel maxAlpha = new JPanel();
+        maxAlpha.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        maxAlpha.add(new JLabel("Max Alpha: (0.1 - 1.0)"));
+        this.maxAlphaTextField = new JTextField("");
+        this.maxAlphaTextField.setMinimumSize(new Dimension(50,20));
+        maxAlpha.add(maxAlphaTextField);
+        maxAlpha.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+        maxAlpha.setMaximumSize(new Dimension(500, 50));
+        maxAlpha.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        secondCol.add(maxAlpha);
+
+
+        this.chancePerKeyPressTextField = new JTextField();
+        JLabel chancePerKeyPressLabel = new JLabel("Chance per keypress (0-100)");
+        JPanel chancePerKeyPressPanel = new JPanel();
+        chancePerKeyPressPanel.add(chancePerKeyPressLabel);
+        chancePerKeyPressPanel.add(chancePerKeyPressTextField);
+        chancePerKeyPressPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        chancePerKeyPressPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+        chancePerKeyPressPanel.setMaximumSize(new Dimension(400, 50));
+        chancePerKeyPressPanel.setBackground(ZeranthiumColors.specialOption2);
+        secondCol.add(chancePerKeyPressPanel);
+
 
 
         JPanel sparksEnabledPanel = new JPanel();
@@ -102,7 +158,7 @@ public class LightningAltConfig extends BaseConfig {
 
 
         TableCellRenderer buttonRenderer = new JTableButtonRenderer();
-        table.getColumn("set path").setCellRenderer(buttonRenderer);
+        table.getColumn("set path (Single PNG)").setCellRenderer(buttonRenderer);
         table.getColumn("reset").setCellRenderer(buttonRenderer);
         table.addMouseListener(new JTableButtonMouseListener(table));
 
@@ -123,15 +179,24 @@ public class LightningAltConfig extends BaseConfig {
 
 
     public void loadValues(){
-        super.loadValues();
-        this.maxAlphaTextField.setText(String.valueOf(Config.getFloatProperty(settings, configType,"maxAlpha", 0.5f)));
+
+
+        this.chancePerKeyPressTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LIGHTNING_ALT,"chancePerKeyPress", 10)));
+        this.maxAlphaTextField.setText(String.valueOf(Config.getFloatProperty(settings, PowerMode3.ConfigType.LIGHTNING_ALT,"maxAlpha", 0.5f)));
         this.sparksEnabled.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.LIGHTNING_ALT,"sparksEnabled", true));
 
         //sparkData is loaded on settings instantiation
     }
 
     public void saveValues() throws ConfigurationException {
-        super.saveValues();
+
+
+        int chancePerKeyPress = Config.getJTextFieldWithinBoundsInt(this.chancePerKeyPressTextField,
+                0, 100,
+                "chance particle spawns per keypress");
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.LIGHTNING_ALT, "chancePerKeyPress",
+                String.valueOf(chancePerKeyPress));
+
 
         settings.setSpriteTypeProperty(PowerMode3.ConfigType.LIGHTNING_ALT, "sparksEnabled", String.valueOf(sparksEnabled.isSelected()));
 
@@ -181,7 +246,7 @@ class SparksTableModel extends AbstractTableModel {
             "weight",
 //            "weighted amount (1-100)",
 
-            "set path",
+            "set path (Single PNG)",
             "path",
             "reset"
 

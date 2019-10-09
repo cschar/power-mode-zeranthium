@@ -66,11 +66,15 @@ public class ParticleSpriteLightningAlt extends Particle{
     private float spriteScale = 1.0f;
 
     private BufferedImage sparkSprite;
+//    private Editor editor;
+    private int editorHeight;
 
     public ParticleSpriteLightningAlt(int x, int y, int dx, int dy,
-                                      int size, int life, Color c, int chanceOfSpawn, float maxAlpha, boolean sparksEnabled) {
+                                      int size, int life, Color c, int chanceOfSpawn, float maxAlpha, boolean sparksEnabled,
+                                      int editorHeight) {
         super(x,y,dx,dy,size,life,c);
         sprite = sprites.get(0);
+        this.editorHeight = editorHeight;
 
 
         //arhghrgh my eyes!!!
@@ -180,8 +184,14 @@ public class ParticleSpriteLightningAlt extends Particle{
 
 
             if (makeLightningBeam) {
+                //stretch to editor height
+//                double scale = this.editorHeight/(double)sprite.getHeight();
+                double scale = origY/(double)sprite.getHeight();
+                if(scale < 1.0) scale = 1.0; //only scale if we need to stretch it
+
                 AffineTransform at = new AffineTransform();
-                at.translate((int)origX ,(int)origY );
+                at.scale(1.0, scale);
+                at.translate((int)origX * (1/1.0) ,(int)origY *(1/scale));
                 at.translate(-sprite.getWidth()/2,
                                  -sprite.getHeight()); //move image 100% up so lightning lands at bottom
 

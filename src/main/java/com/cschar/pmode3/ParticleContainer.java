@@ -232,7 +232,8 @@ public class ParticleContainer extends JComponent implements ComponentListener {
                     Color.ORANGE,
                     LightningAltConfig.CHANCE_PER_KEY_PRESS(settings),
                     LightningAltConfig.MAX_ALPHA(settings),
-                    LightningAltConfig.SPARKS_ENABLED(settings));
+                    LightningAltConfig.SPARKS_ENABLED(settings),
+                    this.editor.getContentComponent().getHeight());
             particles.add(e);
 
         }
