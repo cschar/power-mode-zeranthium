@@ -6,8 +6,8 @@ theme: minima
 #fancier
 # https://github.com/mmistakes/minimal-mistakes
 
-title: Powermode - Zeranthium
-description: IntelliJ Plugin to keep it weird
+title: Power Mode - Zeranthium
+description: IntelliJ Plugin to Get Into The Zone
 
 pages:
   - about.md
@@ -21,7 +21,7 @@ disqus:
     shortname: disqus_FCVoWPUQuI
 
 #
-#google_analytics: UA-NNNNNNNN-N
+#google_analytics: UA-96436087-3
 
 show_excerpts: true           
 

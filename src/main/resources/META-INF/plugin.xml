@@ -27,7 +27,6 @@
 <li>- Customizable Anchor Types (Bracket/Brace/Parenthesis/Colon)</li>
 <li>- MultiLayer w/ caret tracking</li>
 <li>- Linker Chains w/ caret tracking</li>
-<li>- hotkey to activate (bonus: configurable?)</li>
 <li>- Sound panel (Tabbed Panel)  (MP3)</li>
 <li>- Play 2x Song w/ 2 Hotkeys to trigger each one (MP3)</li>
 <li>- Droste effect</li>
@@ -52,6 +51,10 @@
             <li> To install pre-configured themes clone the
                 <a href="https://github.com/cschar/zeranthium-extras"> zeranthium-extras </a> repo.
                 For now there is a chicken theme...
+            </li>
+            <li> You may need to
+         <a href="https://www.jetbrains.com/help/idea/increasing-memory-heap.html"> increase memory heap size </a>
+             if your custom assets are large in size.
             </li>
         </ol>
 
