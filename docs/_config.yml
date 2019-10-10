@@ -21,7 +21,7 @@ disqus:
     shortname: disqus_FCVoWPUQuI
 
 #
-#google_analytics: UA-96436087-3
+google_analytics: UA-96436087-3
 
 show_excerpts: true           
 
