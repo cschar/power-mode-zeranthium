@@ -207,7 +207,7 @@ public class LanternConfig extends BaseConfigPanel {
 
     public void loadValues(){
 
-        this.tracerEnabledCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.LANTERN,"tracerEnabled", false));
+        this.tracerEnabledCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.LANTERN,"tracerEnabled", true));
 
         this.moveWithCaret.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.LANTERN,"moveWithCaretEnabled", true));
         this.moveSpeedTextField.setText(String.valueOf(Config.getFloatProperty(settings, PowerMode3.ConfigType.LANTERN,"movespeed", 1.0f)));

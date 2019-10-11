@@ -302,7 +302,7 @@ public class LinkerConfig extends BaseConfigPanel {
 
         this.maxAnchorsToUse.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER,"maxAnchorsToUse", 10)));
 
-        this.tracerEnabledCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.LINKER,"tracerEnabled", false));
+        this.tracerEnabledCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.LINKER,"tracerEnabled", true));
 
         this.moveWithCaret.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.LINKER,"moveWithCaretEnabled", true));
         this.moveSpeedTextField.setText(String.valueOf(Config.getFloatProperty(settings, PowerMode3.ConfigType.LINKER,"movespeed", 1.0f)));

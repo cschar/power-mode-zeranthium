@@ -125,7 +125,7 @@ public class BasicParticleConfig extends JPanel{
         this.numParticlesField.setText(String.valueOf(Config.getIntProperty(settings,
                 PowerMode3.ConfigType.BASIC_PARTICLE, K.NUM_PARTICLES.toString(), 7)));
 
-        this.emitTopCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.BASIC_PARTICLE, K.EMIT_TOP.name(), true));
+        this.emitTopCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.BASIC_PARTICLE, K.EMIT_TOP.name(), false));
         this.emitBottomCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.BASIC_PARTICLE, K.EMIT_BOT.name(), true));
     }
 

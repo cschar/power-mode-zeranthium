@@ -99,6 +99,7 @@ public class TapAnimConfig extends BaseConfigPanel {
 
         colModel.getColumn(0).setWidth(PREVIEW_SIZE); //preview
         colModel.getColumn(1).setWidth(40);  //enabled
+        colModel.getColumn(1).setPreferredWidth(40);  //enabled
 
         colModel.getColumn(2).setWidth(50);  //scale
         colModel.getColumn(3).setWidth(120);  //speed rate
@@ -182,6 +183,7 @@ class TapAnimTableModel extends AbstractConfigTableModel {
 
     static ArrayList<SpriteDataAnimated> data = TapAnimConfig.spriteDataAnimated;
 
+    private static int maxOffset = 1000;
 
 
     public static final String[] columnNames = new String[]{
@@ -195,8 +197,8 @@ class TapAnimTableModel extends AbstractConfigTableModel {
             "path",
             "reset",
             "alpha",
-            "y offset (+/- 400)",
-            "x offset (+/- 400)",
+            String.format("y offset (+/- %d )", TapAnimTableModel.maxOffset),
+            String.format("x offset (+/- %d )", TapAnimTableModel.maxOffset),
             "is cyclic"
 
     };
@@ -344,14 +346,14 @@ class TapAnimTableModel extends AbstractConfigTableModel {
                 return;
             case 8:    // expandOffset
                 int v0 = (Integer) value;
-                v0 = Math.max(-400, v0);
-                v0 = Math.min(v0,400);
+                v0 = Math.max(-TapAnimTableModel.maxOffset, v0);
+                v0 = Math.min(v0,TapAnimTableModel.maxOffset);
                 d.val1 = v0;
                 return;
             case 9:    // expandOffset
                 v0 = (Integer) value;
-                v0 = Math.max(-400, v0);
-                v0 = Math.min(v0,400);
+                v0 = Math.max(-TapAnimTableModel.maxOffset, v0);
+                v0 = Math.min(v0,TapAnimTableModel.maxOffset);
                 d.val2 = v0;
                 return;
             case 10:
