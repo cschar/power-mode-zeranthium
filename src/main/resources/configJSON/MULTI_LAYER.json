@@ -39,12 +39,12 @@
   {
     "previewSize":120,
     "customPath":"",
-    "defaultPath":"/blender/mandala9/",
+    "defaultPath":"/blender/mandala3/",
     "val2":5,
     "isCyclic":false,
     "alpha":1,
     "val1":1,
-    "scale":1,
+    "scale":2,
     "enabled":true,
     "speedRate":4
   }
