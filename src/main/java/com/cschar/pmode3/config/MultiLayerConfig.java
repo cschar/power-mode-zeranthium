@@ -114,7 +114,8 @@ public class MultiLayerConfig extends BaseConfigPanel{
         sp.setOpaque(true);
 //        sp.setAlignmentX(Component.RIGHT_ALIGNMENT);
 //        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-//        table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
         TableColumnModel colModel=table.getColumnModel();
 
         colModel.getColumn(0).setWidth(PREVIEW_SIZE); //preview
@@ -125,9 +126,8 @@ public class MultiLayerConfig extends BaseConfigPanel{
         colModel.getColumn(3).setPreferredWidth(80);  //speed rate
         colModel.getColumn(4).setPreferredWidth(100);  //set path
         colModel.getColumn(5).setPreferredWidth(50);  // path
-        colModel.getColumn(6).setPreferredWidth(70);  //reset
-        colModel.getColumn(6).setMaxWidth(70);  //reset
-        colModel.getColumn(7).setPreferredWidth(400);  //other options
+        colModel.getColumn(6).setWidth(70);  //reset
+        colModel.getColumn(7).setPreferredWidth(350);  //other options
         colModel.getColumn(7).setMinWidth(300);
 
 

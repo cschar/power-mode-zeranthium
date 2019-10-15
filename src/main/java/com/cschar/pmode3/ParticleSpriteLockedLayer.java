@@ -33,13 +33,13 @@ import java.util.Map;
 
 public class ParticleSpriteLockedLayer extends Particle{
 
-    private static ArrayList<BufferedImage> sprites = new ArrayList<BufferedImage>();
+
 
     public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
 
+    private BufferedImage sprite;
+    private ArrayList<BufferedImage> sprites = new ArrayList<BufferedImage>();
 
-
-    private static BufferedImage sprite;
     private int frame = 0;
     public static int cursorX;
     public static int cursorY;
@@ -54,14 +54,29 @@ public class ParticleSpriteLockedLayer extends Particle{
 
     private Editor editor;
 
-    public static Map<Editor, Integer> spawnMap = new HashMap<>();
+    //each spot is a SpriteDataAnimated instance counter
+    public static Map<Editor, int[]> spawnMap = new HashMap<>();
+
+    public static int MAX_PARTICLES = 2;
+
+    private int spriteIndex = 0;
 
     public ParticleSpriteLockedLayer(int x, int y, int dx, int dy,
-                                     int size, int life, int spriteDataIndex, Color c,
+                                     int size, int life, int spriteDataIndex,
                                      Editor editor) {
-        super(x,y,dx,dy,size,life,c);
+        super(x,y,dx,dy,size,life,Color.GREEN);
+        this.spriteIndex = spriteDataIndex;
 
-        spawnMap.put(editor, 1);
+        if(spawnMap.get(editor) == null){
+            int[] state = new int[]{0,0};
+            state[spriteDataIndex] = 1;
+            spawnMap.put(editor, state);
+        }else{
+            int[] state = spawnMap.get(editor);
+            state[spriteDataIndex] = 1;
+            spawnMap.put(editor, state);
+        }
+
 
         this.editor = editor;
         this.frameLife = 10000;
@@ -89,12 +104,12 @@ public class ParticleSpriteLockedLayer extends Particle{
 //        If entire plugin is turned off
 
         if(!settings.isEnabled()){
-            ParticleSpriteLockedLayer.spawnMap.remove(this.editor);
+            cleanup(this.editor);
             return true;
         }
 
         if(!settings.getSpriteTypeEnabled(PowerMode3.ConfigType.LOCKED_LAYER)){
-            ParticleSpriteLockedLayer.spawnMap.remove(this.editor);
+            cleanup(this.editor);
             return true;
         }
 
@@ -103,7 +118,7 @@ public class ParticleSpriteLockedLayer extends Particle{
 
         if( this.frameLife % d.speedRate == 0){
             frame += 1;
-            if (frame >= ParticleSpriteLockedLayer.sprites.size()){
+            if (frame >= sprites.size()){
                 frame = 0;
             }
             if(frameLife < 100){ //TODO can use greatest common denominator to sync up here
@@ -116,13 +131,13 @@ public class ParticleSpriteLockedLayer extends Particle{
         if(lifeOver) { //ready to reset?
             if (d.isCyclic) {
                 if(!d.enabled){
-                    ParticleSpriteLockedLayer.spawnMap.remove(this.editor);
+                    cleanupSingle(this.editor);
                     return true;
                 }
 
                 if(!d.customPath.equals(this.spritePath)){
                     //we've changed the sprites being cycled, so kill this particle
-                    ParticleSpriteLockedLayer.spawnMap.remove(this.editor);
+                    cleanupSingle(this.editor);
                     return true;
                 }
 
@@ -133,13 +148,22 @@ public class ParticleSpriteLockedLayer extends Particle{
                 this.life = 99;
                 return false;
             } else {
-                ParticleSpriteLockedLayer.spawnMap.remove(this.editor);
+                cleanupSingle(this.editor);
             }
         }
 
         return lifeOver;
     }
 
+    private void cleanupSingle(Editor editor){
+        if(spawnMap.get(editor) != null){
+            int[] state = spawnMap.get(editor);
+            if(state[this.spriteIndex] >= 1){
+                state[this.spriteIndex] = 0;
+                spawnMap.put(editor, state);
+            }
+        }
+    }
 
     public static void cleanup(Editor e){
         if(spawnMap.get(e) != null){

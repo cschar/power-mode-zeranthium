@@ -72,15 +72,15 @@ public class LockedLayerConfig extends BaseConfigPanel {
         table.setRowSelectionAllowed(false);
 
         table.setPreferredScrollableViewportSize(new Dimension(400,
-                table.getRowHeight()));
+                table.getRowHeight() * 2));
         table.getTableHeader().setReorderingAllowed(false);
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
 
         JScrollPane sp = ScrollPaneFactory.createScrollPane(table);
-
-
         sp.setOpaque(true);
 
+
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
         TableColumnModel colModel=table.getColumnModel();
 
         colModel.getColumn(0).setWidth(PREVIEW_SIZE); //preview

@@ -68,6 +68,6 @@ intellij {
 }
 patchPluginXml {
     changeNotes """
-      Add change notes here.<br>
-      <em>most HTML tags may be used Test</em>"""
+      First Version.<br>
+      <em> Docs and Exporters coming in future version</em>"""
 }

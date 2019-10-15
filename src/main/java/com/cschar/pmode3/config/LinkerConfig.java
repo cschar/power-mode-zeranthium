@@ -50,7 +50,7 @@ public class LinkerConfig extends BaseConfigPanel {
 
 
 
-    private static Color originalTracerColor = Color.WHITE;
+    private static Color originalTracerColor = ZeranthiumColors.originalTracerColor;
 
 
     private JComponent linkerSpriteConfigPanel;

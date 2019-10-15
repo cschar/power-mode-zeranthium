@@ -164,14 +164,17 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
         if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.LOCKED_LAYER)) {
 
-            //Only spawn 1 particle per editor
-            if(ParticleSpriteLockedLayer.spawnMap.get(this.editor) == null) {
-                final ParticleSpriteLockedLayer p = new ParticleSpriteLockedLayer(x, y, dx, dy, size, lifeSetting,
-                        0, Color.GREEN, editor);
+                for(int i = 0; i < ParticleSpriteLockedLayer.spriteDataAnimated.size(); i++){
+                    SpriteDataAnimated d = ParticleSpriteLockedLayer.spriteDataAnimated.get(i);
+                    if(!d.enabled) continue;
+                    if(ParticleSpriteLockedLayer.spawnMap.get(this.editor) == null
+                            || ParticleSpriteLockedLayer.spawnMap.get(this.editor)[i] == 0) {
 
-                particles.add(p);
-            }
-
+                        final ParticleSpriteLockedLayer p = new ParticleSpriteLockedLayer(x, y, dx, dy, size, lifeSetting,
+                                i, editor);
+                        particles.add(p);
+                    }
+                }
         }
 
 
