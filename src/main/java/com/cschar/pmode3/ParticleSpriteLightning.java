@@ -163,7 +163,7 @@ public class ParticleSpriteLightning extends Particle{
     public boolean update() {
 
         //every X updates, increment frame, this controls how fast it animates
-        if( this.life % 2 == 0){
+        if( this.life % 3 == 0){
             frame += 1;
             if (frame >= ParticleSpriteLightning.spritesInner.size()){
                 frame = 0;

@@ -133,11 +133,13 @@ public class ParticleContainerManager extends EditorFactoryAdapter {
 //        int searchLength = PowerMode3.getInstance().getMaxPsiSearchDistance();
         int searchLength = settings.getMaxPsiSearchDistance();
 
+        String documentText = editor.getDocument().getText();
         for(int i =0; i < searchLength*2; i++){
             int anchorOffset = caretOffset - (searchLength) + i;
             if(anchorOffset <= 0){ continue; }
+            if(anchorOffset >= documentText.length()){ break; }
 
-            char c = editor.getDocument().getText().charAt(anchorOffset);
+            char c = documentText.charAt(anchorOffset);
 
 
             boolean addPoint = false;

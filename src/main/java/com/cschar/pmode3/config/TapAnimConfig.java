@@ -91,8 +91,6 @@ public class TapAnimConfig extends BaseConfigPanel {
 //        sp.setMaximumSize(new Dimension(470,350));
 
         sp.setOpaque(true);
-//        sp.setAlignmentX(Component.RIGHT_ALIGNMENT);
-//        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
         table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
         TableColumnModel colModel=table.getColumnModel();
