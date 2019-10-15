@@ -63,6 +63,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
     }
 
     public void updateParticles() {
+        //todo clear all?
 //        if(!PowerMode3.getInstance().isEnabled()){
 //            particles.clear();
 //            return;
@@ -78,14 +79,13 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 //            }
 //            particles = tempParticles;
 
-//            ConcurrentLinkedQueue <Particle> tempParticles = new ConcurrentLinkedQueue<>(particles);
+
             final Iterator<Particle> particleIterator = particles.iterator();
             while (particleIterator.hasNext()) {
                 if (particleIterator.next().update()) {
                     particleIterator.remove();
                 }
             }
-//            particles = tempParticles;
             this.repaint();
         }
 
@@ -445,28 +445,6 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
 
         }
-
-//        if(settings.getSpriteTypeEnabled(PowerMode3.SpriteType.LINKER) && (r <= linkerI_chance)){
-//            int minPsiSearch = LinkerConfig.MIN_PSI_SEARCH(settings);
-//            int maxPsiSearch = LinkerConfig.MAX_PSI_SEARCH(settings);
-//            for(Anchor a: anchors) {
-//                if (Math.abs(a.anchorOffset - a.cursorOffset) > (maxPsiSearch)) {
-//                    continue;
-//                }
-//                if (Math.abs(a.anchorOffset - a.cursorOffset) < (minPsiSearch)) {
-//                    continue;
-//                }
-//
-//                System.out.println("spawn");
-//
-//
-//                final ParticleSpriteLinkerAnchor e = new ParticleSpriteLinkerAnchor(x, y, dx, dy,
-//                        size, life, Color.GREEN, a);
-//                particles.add(e);
-//            }
-//
-//        }
-
 
     }
 

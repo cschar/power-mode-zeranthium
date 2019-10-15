@@ -24,6 +24,7 @@ https://intellij-support.jetbrains.com/hc/en-us/community/posts/206445729--Quest
 
 
 
+
 how to correctly scale/rotate/translate with
 AFFINE transformation:
 https://math.stackexchange.com/a/820632
@@ -37,6 +38,10 @@ Snags I ran into:
 
 - If serialized options are messed up
 --- delete  build/idea-sandbox/config/options/power.mode3.xml
+
+- If gradle forces you to download new IDE for sandbox
+ -- download separately and place e.g.
+ '/Users/USERNAME/.gradle/caches/modules-2/files-2.1/com.jetbrains/jbre/jbr-11_0_3-osx-x64-b304.10.tar.gz'
 
 
 Other styles:
@@ -140,3 +145,16 @@ Caused by: java.lang.ClassNotFoundException: org.json.JSONException PluginClassL
 --Fixed by packaging a FAT JAR
 https://discuss.gradle.org/t/how-to-include-dependencies-in-jar/19571/5
 
+-- SVG editor for logo here:
+https://editor.method.ac/
+
+--Try to install python support...
+
+tried installing Pycharm ce plugin, didnt work..
+still red.
+
+suspect that GRADLE needs to somehow install this
+
+https://github.com/JetBrains/gradle-intellij-plugin
+https://plugins.jetbrains.com/plugin/631-python/update/70233
+https://intellij-support.jetbrains.com/hc/en-us/community/posts/360000058630-Allow-my-plugin-to-install-on-IDEA?page=1#community_comment_360000519719

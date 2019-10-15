@@ -1,4 +1,4 @@
-<idea-plugin>
+<idea-plugin url="https://github.com/cschar/power-mode-zeranthium">
     <id>com.cschar.powermode3zeranthium</id>
     <name>Power Mode - Zeranthium</name>
     <vendor email="codyscharfe@gmail.com">cody scharfe</vendor>
@@ -9,10 +9,6 @@
 
         <img src="https://user-images.githubusercontent.com/296551/63473991-68b52400-c445-11e9-84dc-e2e5269729d8.png" />
         <h2> Get Into your Zone... </h2>
-
-        <span>Based on Power Mode from Baptiste Mesta on Github.</span>
-        <span>Inspired by Power Mode II by axaluss.</span>
-
 
         <h2>Featuring:</h2>
         <ul>
@@ -58,10 +54,25 @@
             </li>
         </ol>
 
+
+        <p>Based on Power Mode from Baptiste Mesta on Github.</p>
+        <p>Inspired by Power Mode II by axaluss.</p>
+
+
         ]]>
     </description>
 
 
+    <idea-version since-build="192.4205"/>
+
+    <!--    http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html#modules-available-in-all-products-->
+    <!-- 	Messaging, UI Themes, UI Components, Files, Documents, Actions, Components, Services, Extensions, Editors -->
+    <depends>com.intellij.modules.platform</depends>
+
+
+<!--    <depends>com.intellij.modules.java</depends>-->
+<!--    <depends>com.intellij.modules.python</depends>-->
+<!--    <depends>com.intellij.modules.go</depends>-->
 
     <!--    see config options here-->
     <!--    https://www.jetbrains.org/intellij/sdk/docs/basics/plugin_structure/plugin_configuration_file.html -->
@@ -106,23 +117,6 @@
                 <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl l"/>
             </action>
         </group>
-
-<!--        <action id="PowerModeZeranthiumTriggerSongA"-->
-<!--                class="com.cschar.pmode3.hotkeys.HotKeyMusicTriggerAAction"-->
-<!--                text="Trigger Music A for Powermode Zeranthium"-->
-<!--                description="Trigger music A for powermode Zeranthium">-->
-<!--            <add-to-group group-id="ToolsMenu" anchor="last"/>-->
-<!--            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl k"/>-->
-<!--        </action>-->
-
-<!--        <action id="PowerModeZeranthiumTriggerSongB"-->
-<!--                class="com.cschar.pmode3.hotkeys.HotKeyMusicTriggerBAction"-->
-<!--                text="Trigger Music B for Powermode Zeranthium"-->
-<!--                description="Trigger music B for powermode Zeranthium">-->
-<!--            <add-to-group group-id="ToolsMenu" anchor="last"/>-->
-<!--            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl l"/>-->
-<!--        </action>-->
-
 
     </actions>
 </idea-plugin>

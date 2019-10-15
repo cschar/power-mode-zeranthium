@@ -36,7 +36,7 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.*;
 import com.intellij.openapi.progress.*;
-import com.intellij.psi.PsiFile;
+
 import com.intellij.ui.JBColor;
 import com.intellij.util.SmartList;
 import com.intellij.util.xmlb.XmlSerializerUtil;
@@ -274,22 +274,16 @@ public class PowerMode3 implements BaseComponent,
             @Override
             public void execute(@NotNull final Editor editor, final char c, @NotNull final DataContext dataContext) {
 
-
-                PsiFile psiFile = dataContext.getData(CommonDataKeys.PSI_FILE);
-
-                updateEditor(editor, psiFile);
+                updateEditor(editor);
                 rawHandler.execute(editor, c, dataContext);
             }
         });
     }
 
-    private void updateEditor(@NotNull final Editor editor, final PsiFile psiFile) {
-        //TODO configurable
-        if(psiFile == null){
+    private void updateEditor(@NotNull final Editor editor) {
 
-        }else {
-            particleContainerManager.update(editor, psiFile);
-        }
+        particleContainerManager.update(editor);
+
     }
 
 

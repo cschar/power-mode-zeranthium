@@ -55,7 +55,16 @@ jar {
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
     version '2019.2'
+    //grab python version from
+
     plugins 'java'
+
+    //If we're using <dependency> com.intellij.modules.python </dependency> in plugin.xml ....
+    // https://plugins.jetbrains.com/plugin/631-python/update/65720
+//            'Pythonid:2019.2.192.5728.74',
+
+            //https://plugins.jetbrains.com/plugin/9568-go/update/66084
+//            'org.jetbrains.plugins.go:192.5728.86.268'
 }
 patchPluginXml {
     changeNotes """
