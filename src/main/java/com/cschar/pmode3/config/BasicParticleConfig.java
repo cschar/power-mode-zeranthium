@@ -17,7 +17,7 @@ public class BasicParticleConfig extends JPanel{
     PowerMode3 settings;
 
 
-    private static Color originalBasicColor = Color.CYAN;
+    private static Color originalBasicColor = new Color(204, 0,0);
 
     JPanel firstCol;
     JPanel secondCol;

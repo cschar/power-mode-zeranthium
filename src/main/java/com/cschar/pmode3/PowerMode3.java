@@ -95,7 +95,7 @@ public class PowerMode3 implements BaseComponent,
 //    public String scrollBarPosition2 = "0";
 
     private boolean enabled = true;
-    private int shakeDistance = 0;
+    private int shakeDistance = 5;
     private int lifetime = 200;
     private int maxPsiSearchDistance = 400;  //amount of total characters searched around caret for anchors
 
@@ -105,7 +105,7 @@ public class PowerMode3 implements BaseComponent,
         BRACKET,
         COLON
     }
-    public AnchorTypes anchorType = AnchorTypes.BRACE;
+    public AnchorTypes anchorType = AnchorTypes.PARENTHESIS;
 
 
 
