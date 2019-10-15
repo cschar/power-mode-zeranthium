@@ -306,8 +306,8 @@ public class LinkerConfig extends BaseConfigPanel {
 
         this.moveWithCaret.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.LINKER,"moveWithCaretEnabled", true));
         this.moveSpeedTextField.setText(String.valueOf(Config.getFloatProperty(settings, PowerMode3.ConfigType.LINKER,"movespeed", 1.0f)));
-        this.maxLinksTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER,"maxLinks", 20)));
-        this.distanceFromCenterTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER,"distanceFromCenter", 100)));
+        this.maxLinksTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER,"maxLinks", 50)));
+        this.distanceFromCenterTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER,"distanceFromCenter", 150)));
 
         this.wobbleAmountTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER,"wobbleAmount", 20)));
         this.curve1AmountTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LINKER,"curve1Amount", 0)));

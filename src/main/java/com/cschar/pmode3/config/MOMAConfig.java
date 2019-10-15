@@ -20,8 +20,8 @@ public class MOMAConfig extends JPanel {
 
 
     private JTextField chanceOfLightningTextField;
-    private static Color colorOne = Color.yellow;
-    private static Color colorTwo = Color.red;
+    private static Color colorOne = new Color(102,255,153);
+    private static Color colorTwo = new Color(153,255,153);
     private static Color colorThree = Color.WHITE;
 
     public MOMAConfig(PowerMode3 settings){
@@ -131,7 +131,7 @@ public class MOMAConfig extends JPanel {
         this.twoSquareEnabledCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.MOMA,"twoSquareEnabled", true));
         this.threeSquareEnabledCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.MOMA,"threeSquareEnabled", true));
 
-        this.emitTopCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.MOMA,"emitTopEnabled", true));
+        this.emitTopCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.MOMA,"emitTopEnabled", false));
         this.emitBottomCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.MOMA,"emitBottomEnabled", true));
 
     }

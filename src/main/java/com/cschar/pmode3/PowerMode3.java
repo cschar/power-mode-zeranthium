@@ -64,11 +64,10 @@ import java.util.logging.Logger;
 //This will save this object as state
 //https://www.jetbrains.org/intellij/sdk/docs/basics/persisting_state_of_components.html#defining-the-storage-location
 @State(
-        name = "PowerMode3",
+        name = "PowerMode3Zeranthium",
 
-        //./build/idea-sandbox/config/options/power.mode3.xml
-        storages = {@Storage(value = "$APP_CONFIG$/power.mode3.xml")}
-        //storages = {@Storage("com.cschar.com.cschar.pmode3.xml")}
+        //./build/idea-sandbox/config/options/power.mode.3.Zeranthium.xml
+        storages = {@Storage(value = "$APP_CONFIG$/power.mode.3.Zeranthium.xml")}
 )
 public class PowerMode3 implements BaseComponent,
         PersistentStateComponent<PowerMode3> {

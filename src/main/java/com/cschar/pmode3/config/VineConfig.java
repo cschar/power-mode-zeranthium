@@ -111,7 +111,7 @@ public class VineConfig extends JPanel {
         this.maxPsiAnchorDistanceTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.VINE,"maxPsiSearchDistance", 300)));
         this.chancePerKeyPressTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.VINE,"chancePerKeyPress", 100)));
 
-        this.spriteEnabled.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.VINE,"spriteEnabled"));
+        this.spriteEnabled.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.VINE,"spriteEnabled", true));
         this.growFromRight.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.VINE,"growFromRight"));
 
 
