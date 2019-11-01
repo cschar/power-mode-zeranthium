@@ -2,13 +2,6 @@
 
 TODO: 
 
-//add plugin logo
-https://www.jetbrains.org/intellij/sdk/docs/basics/plugin_structure/plugin_icon_file.html
-
-//figure out how to enable for PyCharm etc.. not just INtellij
-
-//Ugh, Remove PSI so its compatible with all languages
-(PyCharm, GOland, RubyMine etc..)
 
 
 Done;

@@ -121,6 +121,10 @@ public class ParticleContainerManager extends EditorFactoryAdapter {
 
     }
 
+    public void resetAllEditors(){
+
+    }
+
     public Anchor[] getAnchors(Editor editor, ParticleContainer particleContainer){
 
         ScrollingModel scrollingModel = editor.getScrollingModel();
@@ -181,8 +185,15 @@ public class ParticleContainerManager extends EditorFactoryAdapter {
 
     public void dispose() {
         thread.interrupt();
+        resetAllContainers();
         particleContainers.clear();
 
 
+    }
+
+    public static void resetAllContainers(){
+        for(ParticleContainer pc: particleContainers.values()){
+            pc.resetParticles();
+        }
     }
 }

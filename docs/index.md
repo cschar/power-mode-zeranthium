@@ -5,10 +5,235 @@
 get more stuff here:
 
 
+
+<h1> zeranthium-extras -----> PreConfigured Themes </h1>
+
+Assets can be found in the zeranthium-extras repo.
+You can download the assets using this command:
 ```bash
-
 git clone --depth=1 git@github.com:cschar/zeranthium-extras.git
+```
 
+
+<h2> zeranthium-extras ---> chicken Theme </h2>
+<img width="500" src="https://user-images.githubusercontent.com/296551/67953118-e6737980-fbc4-11e9-8bd8-57e9349a5500.png">
+
+<h2> zeranthium-extras ---> fire1 Theme </h2>
+<img width="400" src="https://user-images.githubusercontent.com/296551/67990855-8c4ad680-fc0d-11e9-9ac1-66bcc0f959c9.png">
+
+
+<h2> zeranthium-extras ---> ceramic1 Theme </h2>
+<img width="485" src="https://user-images.githubusercontent.com/296551/67993251-5b22d400-fc16-11e9-9212-7ffcd39608a9.png">
+
+
+
+
+<h1> Customizing your own theme</h1>
+basically you need a folder with a manifest.json file,
+with sibling folders containing the assets the manifest.json file will point to:
+
+```bash
+   my_theme_folder
+    ----manifest.json
+    ----SOUND
+         ----sound1.mp3
+         ----sound2.mp3
+         ----sound2.mp3
+    ----LOCKED_LAYER
+         ----layer_foo
+              ----- 000.png
+              ----- 001.png
+                    ...
+              ----- 099.png
+    ----MULTI_LAYER
+         ----layer_bar
+              ----- 000.png
+              ----- 001.png
+                    ...
+              ----- 099.png
 
 ```
+
+Here is an example manifest.json file for a theme
+that provides settings for SOUND, MULTI_LAYER, and LOCKED_LAYER options.
+See <a href="#settings"> individual settings </a> section for Option specific details.
+
+```json
+{
+  "configsToLoad": ["SOUND","MULTI_LAYER", "LOCKED_LAYER"],
+  "configSettings": {
+    "SOUND": {
+      "tableData": [
+        {"weight": 20, "customPath": "./SOUND/sound1.mp3"},
+        {"weight": 20, "customPath": "./SOUND/sound2.mp3"},
+        {"weight": 20, "customPath": "./SOUND/sound3.mp3"},
+        {"weight": 20, "customPath": "./SOUND/sound4.mp3"}
+      ]
+    },
+    "LOCKED_LAYER": {
+      "tableData": [
+        {"customPath":"./LOCKED_LAYER/layer_foo", "alpha":1, "offset":20,
+          "scale":1.0, "val2": 3,  "enabled":true,
+          "speedRate":2, "isCyclic": true}
+      ]
+    },
+    "MULTI_LAYER": {
+      "tableData": [
+        {"customPath":"./MULTI_LAYER/layer_bar", "alpha":1, "offset":20,
+         "scale":1.0, "enabled":false,"speedRate":2, "isCyclic": true}
+      ]
+    }
+  }
+}
+```
+
+
+
+<h1 id="settings"> Option Settings</h1>
+
+
+<h3> Lizard </h3>
+
+```json
+"LIZARD": {
+      "tableData": [
+        {"customPath":"./lizard",
+          "val2":1,   
+          "alpha":1,
+          "val1":2,
+          "scale":0.4,
+          "enabled":true,
+          "speedRate":3},
+        {"customPath":"./lizard2", ...},
+        {"customPath":"./lizard3", ...}
+      ]
+    }
+```
+
+<h3> Multi Layer </h3>
+
+```json
+val2: max particles 1-10
+```
+
+```json
+"MULTI_LAYER": {
+      "tableData": [
+        {"customPath":"./MULTI_LAYER/layer1", "alpha":1,
+         "val2":10, "scale":1.0, "enabled":false,
+         "speedRate":2, "isCyclic": true},
+        {"customPath":"./MULTI_LAYER/layer2", ... }
+        {"customPath":"./MULTI_LAYER/layer3", ... }
+      ]
+    }
+```
+<h3> Linker </h3>
+
+```
+val2: Repeat every N links
+val1: Offset to start on links
+```
+
+```json
+"LINKER":{
+      "tableData":[
+        {
+          "defaultPath": "./linker1/",
+          "val2": 100,
+          "isCyclic": false,
+          "alpha": 1,
+          "val1": 1,
+          "scale": 0.3,
+          "enabled": true,
+          "speedRate": 2
+        }
+      ]
+    }
+```
+<h3> Droste </h3>
+
+```
+val1: Offset for each new expanding layer (10-400)
+```
+
+```json
+
+"DROSTE": {
+      "tableData": [
+        {"customPath":"./DROSTE/layer1",
+         "alpha":1, "scale":1.0,
+         "val1":20,
+          "enabled":true,"speedRate":2, "isCyclic": true},
+        {"customPath":"./DROSTE/layer2", ...}
+      ]
+    },
+
+```
+
+
+<h3> copyPasteVOID </h3>
+TODO
+<h3> Locked layer </h3>
+
+```json
+val2: Screen position 
+Stretch -> 0
+Top/Right -> 1 
+Top/Left -> 2
+Bot/Right -> 3
+Bot/Left -> 4
+```
+
+```json
+"LOCKED_LAYER": {
+      "tableData": [
+        {"customPath":"./lockedlayer1",
+          "alpha":1, "scale":1.0,
+          "val2": 3,
+          "enabled":true,"speedRate":2, "isCyclic": true},
+        {"customPath":"./lockedlayer2", ...}
+      ]
+    }
+```
+
+<h3> Lantern </h3>
+
+See Linker
+
+<h3> Tap Anim </h3>
+
+```
+val1: yoffset  from caret
+val2: xoffset  from caret
+```
+
+```json
+
+"TAP_ANIM": {
+      "tableData": [
+        {"customPath":"./TAP_ANIM/layer1", "alpha":1,
+           "val1":15,
+           "val2":-30,
+           "scale":0.8,
+          "enabled":true,"speedRate":4, "isCyclic": true}
+      ]
+    }
+
+```
+
+
+<h3> Sound </h3>
+
+```json
+ "SOUND": {
+      "tableData": [
+        {"weight": 20, "customPath": "./SOUND/sound1.mp3"},
+        {"weight": 20, "customPath": "./SOUND/sound2.mp3"},
+        {"weight": 20, "customPath": "./SOUND/sound3.mp3"},
+        {"weight": 20, "customPath": "./SOUND/sound4.mp3"}
+      ]
+    }
+```
+<h3> Action Sound </h3>
+Todo
 

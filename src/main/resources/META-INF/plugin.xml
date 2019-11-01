@@ -2,7 +2,7 @@
     <id>com.cschar.power.mode3.zeranthium</id>
     <name>Power Mode - Zeranthium</name>
     <vendor email="codyscharfe@gmail.com">cody scharfe</vendor>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
 
     <description><![CDATA[
         <h1>Power Mode - Zeranthium </h1>
@@ -46,7 +46,7 @@
              and eventually build up a nice visual package with multiple effects/layering. </li>
             <li> To install pre-configured themes clone the
                 <a href="https://github.com/cschar/zeranthium-extras"> zeranthium-extras </a> repo.
-                For now there is a chicken theme...
+                You can also make your own (see docs site)
             </li>
             <li> You may need to
          <a href="https://www.jetbrains.com/help/idea/increasing-memory-heap.html"> increase memory heap size </a>

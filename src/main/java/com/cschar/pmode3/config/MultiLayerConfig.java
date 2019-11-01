@@ -211,8 +211,7 @@ public class MultiLayerConfig extends BaseConfigPanel{
                     spriteDataAnimated.get(i).defaultPath,
                     parentPath.resolve(jo.getString("customPath")).toString(),
                     jo.getBoolean("isCyclic"),
-                    1,
-//                    jo.getInt("val2"),
+                    Math.max(1, Math.min(jo.getInt("val2"),10)),
                     (float) jo.getDouble("alpha"),
                     1);
 

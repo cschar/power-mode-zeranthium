@@ -171,7 +171,7 @@ public class DrosteConfig extends BaseConfigPanel {
                     1,
 //                    jo.getInt("val2"),
                     (float) jo.getDouble("alpha"),
-                    jo.getInt("offset")); //val1
+                    Math.max(10, Math.min(jo.getInt("val1"),400))); //val1 10->400
 
         //TODO take care of droste Only 1 at a time layer rule
             spriteDataAnimated.set(i, sd);

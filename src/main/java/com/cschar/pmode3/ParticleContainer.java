@@ -36,7 +36,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
     private final JComponent parent;
     private final Editor editor;
     private boolean shakeDir;
-    public ConcurrentLinkedQueue<Particle> particles = new ConcurrentLinkedQueue<Particle>();
+    private ConcurrentLinkedQueue<Particle> particles = new ConcurrentLinkedQueue<Particle>();
 
 //    private ArrayList<Particle> particles = new ArrayList<>(50);
 
@@ -49,6 +49,9 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         parent.addComponentListener(this);
     }
 
+    public void addExternalParticle(Particle p){
+        this.particles.add(p);
+    }
 
 
     private void shakeEditor(JComponent parent, int dx, int dy, boolean dir) {
@@ -91,7 +94,12 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
     }
 
-    public void cleanupParticles(){
+    void resetParticles(){
+        this.particles.clear();
+        this.cleanupParticles();
+    }
+
+    void cleanupParticles(){
 
         ParticleSpriteLockedLayer.cleanup(this.editor);
         ParticleSpriteDroste.cleanup(this.editor);

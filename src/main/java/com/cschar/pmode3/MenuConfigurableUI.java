@@ -689,7 +689,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
 //    static class PackLoader {
 
         private void loadConfigPack(String manifestPath) throws FileNotFoundException, JSONException {
-            PowerMode3 settings = PowerMode3.getInstance();
+
             Path path = Paths.get(manifestPath);
     
     
@@ -701,7 +701,10 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
             while(s.hasNextLine()){
                 sb.append(s.nextLine());
             }
-    
+
+            //turn off previous settings
+            disableAllParticleSettings();
+            ParticleContainerManager.resetAllContainers();
     
     
             JSONObject jo = new JSONObject(sb.toString());
@@ -715,6 +718,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
                 if(configKey.equals("LIZARD")){
                     LizardConfig.loadJSONConfig(configKeyData, path.getParent());
                     enableLizardCheckBox.setSelected(true);
+
 //                    settings.setSpriteTypeEnabled(enableLizardCheckBox.isSelected(), PowerMode3.ConfigType.LIZARD);
                 }
     
@@ -747,6 +751,11 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
                     TapAnimConfig.loadJSONConfig(configKeyData, path.getParent());
                 }
 
+                if(configKey.equals("LINKER")){
+                    enableLinkerCheckbox.setSelected(true);
+                    LinkerConfig.loadJSONConfig(configKeyData, path.getParent());
+                }
+
 
                 LOGGER.info("Loaded pack for " + configKey);
             }
@@ -760,16 +769,27 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
         }
         
         private void disableAllParticleSettings(){
-                enableBasicParticleCheckBox.setSelected(false);
-                enableLightningCheckBox.setSelected(false);
-                lightningAltCheckBox.setSelected(false);
-                enableLizardCheckBox.setSelected(false);
-                enableMOMACheckBox.setSelected(false);
-                enableVineCheckBox.setSelected(false);
-                enableMultilayerCheckbox.setSelected(false);
-                enableLinkerCheckbox.setSelected(false);
-                enableDrosteCheckbox.setSelected(false);
-                enableCopyPasteVoid.setSelected(false);
+
+            enableBasicParticleCheckBox.setSelected(false);
+            enableLightningCheckBox.setSelected(false);
+            lightningAltCheckBox.setSelected(false);
+            enableLizardCheckBox.setSelected(false);
+            enableMOMACheckBox.setSelected(false);
+            enableVineCheckBox.setSelected(false);
+            enableMultilayerCheckbox.setSelected(false);
+            enableLinkerCheckbox.setSelected(false);
+            enableDrosteCheckbox.setSelected(false);
+            enableCopyPasteVoid.setSelected(false);
+            enableLockedLayerCheckbox.setSelected(false);
+            enableLantern.setSelected(false);
+            enableTapAnim.setSelected(false);
+            
+
+            //Sound
+            
+            enableBasicSound.setSelected(false);
+            enableActionSound.setSelected(false);
+        
         }
 
     @Override

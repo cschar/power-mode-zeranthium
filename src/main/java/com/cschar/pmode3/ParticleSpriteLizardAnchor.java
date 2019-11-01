@@ -87,7 +87,7 @@ public class ParticleSpriteLizardAnchor extends Particle{
             this.scale = spriteDataAnimated.get(winnerIndex).scale;
             this.alpha = spriteDataAnimated.get(winnerIndex).alpha;
             lizardSprites = spriteDataAnimated.get(winnerIndex).images;
-            sprite = lizardSprites.get(winnerIndex);
+            sprite = lizardSprites.get(0);
         }
 
     }

@@ -12,6 +12,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jvnet.ws.wadl.Link;
 
 
@@ -21,12 +24,14 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 public class LinkerConfig extends BaseConfigPanel {
 
     JPanel mainPanel;
     PowerMode3 settings;
+    static int PREVIEW_SIZE = 60;
 
     public JTextField maxPsiAnchorDistanceTextField;
     public JTextField minPsiAnchorDistanceTextField;
@@ -227,7 +232,7 @@ public class LinkerConfig extends BaseConfigPanel {
         JBTable table = new JBTable();
 
 
-        table.setRowHeight(60);
+        table.setRowHeight(PREVIEW_SIZE);
         LinkerTableModel tableModel = new LinkerTableModel(this);
         table.setModel(tableModel);
 
@@ -252,7 +257,7 @@ public class LinkerConfig extends BaseConfigPanel {
 //        table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
         TableColumnModel colModel=table.getColumnModel();
 
-        colModel.getColumn(0).setPreferredWidth(60); //preview
+        colModel.getColumn(0).setPreferredWidth(PREVIEW_SIZE); //preview
         colModel.getColumn(1).setPreferredWidth(70);  //enabled
         colModel.getColumn(1).setWidth(50);  //enabled
 
@@ -468,6 +473,30 @@ public class LinkerConfig extends BaseConfigPanel {
     public static void setSpriteDataAnimated(ArrayList<SpriteDataAnimated> data){
         spriteDataAnimated = data;
         ParticleSpriteLinkerAnchor.spriteDataAnimated = data;
+    }
+
+    public static void loadJSONConfig(JSONObject configData, Path parentPath) throws JSONException {
+
+        JSONArray tableData = configData.getJSONArray("tableData");
+
+        for(int i =0; i<tableData.length(); i++){
+            JSONObject jo = tableData.getJSONObject(i);
+
+            SpriteDataAnimated sd =  new SpriteDataAnimated(
+                    PREVIEW_SIZE,
+                    jo.getBoolean("enabled"),
+                    (float) jo.getDouble("scale"),
+                    jo.getInt("speedRate"),
+                    spriteDataAnimated.get(i).defaultPath,
+                    parentPath.resolve(jo.getString("customPath")).toString(),
+                    jo.getBoolean("isCyclic"),
+                    jo.getInt("val2"), //val2 //repeat every n links
+                    (float) jo.getDouble("alpha"),
+                    jo.getInt("val1")); //val1  //offset to start on links
+
+
+            spriteDataAnimated.set(i, sd);
+        }
     }
 }
 

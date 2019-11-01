@@ -9,7 +9,13 @@ runIde {
 }
 
 group 'com.cschar'
-version '1.0'
+version '1.1.0'
+patchPluginXml {
+    changeNotes """
+      Added Screenshots and github page for reference <br>
+      """
+}
+
 
 sourceCompatibility = 1.8
 
@@ -65,9 +71,4 @@ intellij {
 
             //https://plugins.jetbrains.com/plugin/9568-go/update/66084
 //            'org.jetbrains.plugins.go:192.5728.86.268'
-}
-patchPluginXml {
-    changeNotes """
-      First Version.<br>
-      <em> Docs and Exporters coming in future version</em>"""
 }

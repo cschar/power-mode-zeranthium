@@ -150,6 +150,9 @@ public class TapAnimConfig extends BaseConfigPanel {
         ParticleSpriteTapAnim.spriteDataAnimated = data;
     }
 
+
+
+
     public static void loadJSONConfig(JSONObject configData, Path parentPath) throws JSONException {
 
         JSONArray tableData = configData.getJSONArray("tableData");
@@ -166,9 +169,9 @@ public class TapAnimConfig extends BaseConfigPanel {
                     parentPath.resolve(jo.getString("customPath")).toString(),
                     jo.getBoolean("isCyclic"),
 //                    1,
-                    jo.getInt("xoffset"), //val2
+                    jo.getInt("val2"), //val2  xoffset
                     (float) jo.getDouble("alpha"),
-                    jo.getInt("yoffset")); //val1
+                    jo.getInt("val1")); //val1  yoffset
 
 
             spriteDataAnimated.set(i, sd);

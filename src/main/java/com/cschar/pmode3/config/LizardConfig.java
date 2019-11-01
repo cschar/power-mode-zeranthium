@@ -292,9 +292,6 @@ public class LizardConfig extends BaseConfigPanel{
      */
     private static SpriteDataAnimated consumeJSONConfig(JSONObject jo, int indexToReplace, Path parentPath) throws JSONException {
 
-//        ;  //./LIZARD/chicken1
-
-
         SpriteDataAnimated sd =  new SpriteDataAnimated(
                 PREVIEW_SIZE,
                 jo.getBoolean("enabled"),
