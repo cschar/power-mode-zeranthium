@@ -3,6 +3,7 @@
 <img src="https://user-images.githubusercontent.com/296551/63473991-68b52400-c445-11e9-84dc-e2e5269729d8.png" />
 <h2> Get Into your Zone... </h2>
 
+<p> See the <a href="https://cschar.github.io/power-mode-zeranthium/"> Docs page </a> for more info </p>
 
 <h2>Featuring:</h2>
 <ul>
@@ -40,7 +41,6 @@
      and eventually build up a nice visual package with multiple effects/layering. </li>
     <li> To install pre-configured themes clone the
         <a href="https://github.com/cschar/zeranthium-extras"> zeranthium-extras </a> repo.
-        For now there is a chicken theme...
     </li>
     <li> You may need to 
          <a href="https://www.jetbrains.com/help/idea/increasing-memory-heap.html"> increase memory heap size </a> 

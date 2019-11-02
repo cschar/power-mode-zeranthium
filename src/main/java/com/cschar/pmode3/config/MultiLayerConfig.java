@@ -163,7 +163,7 @@ public class MultiLayerConfig extends BaseConfigPanel{
     public void loadValues(){
 
         this.moveWithCaret.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.MULTI_LAYER,"moveWithCaretEnabled", true));
-        this.moveSpeedTextField.setText(String.valueOf(Config.getFloatProperty(settings, PowerMode3.ConfigType.MULTI_LAYER,"movespeed", 0.1f)));
+        this.moveSpeedTextField.setText(String.valueOf(Config.getFloatProperty(settings, PowerMode3.ConfigType.MULTI_LAYER,"moveSpeed", 0.1f)));
 
     }
 
@@ -172,9 +172,9 @@ public class MultiLayerConfig extends BaseConfigPanel{
 
         settings.setSpriteTypeProperty(PowerMode3.ConfigType.MULTI_LAYER, "moveWithCaretEnabled", String.valueOf(moveWithCaret.isSelected()));
 
-        settings.setSpriteTypeProperty(PowerMode3.ConfigType.MULTI_LAYER, "movespeed",
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.MULTI_LAYER, "moveSpeed",
                 String.valueOf(Config.getJTextFieldWithinBoundsFloat(this.moveSpeedTextField,
-                        0.001f, 1.0f,"movespeed")));
+                        0.001f, 1.0f,"moveSpeed")));
 
         settings.setSerializedSpriteDataAnimated(MultiLayerConfig.spriteDataAnimated, PowerMode3.ConfigType.MULTI_LAYER);
     }
@@ -192,10 +192,29 @@ public class MultiLayerConfig extends BaseConfigPanel{
     }
 
     public static float CARET_MOVE_SPEED(PowerMode3 settings){
-        return Config.getFloatProperty(settings, PowerMode3.ConfigType.MULTI_LAYER, "movespeed", 0.1f);
+        return Config.getFloatProperty(settings, PowerMode3.ConfigType.MULTI_LAYER, "moveSpeed", 0.1f);
     }
 
-    public static void loadJSONConfig(JSONObject configData, Path parentPath) throws JSONException {
+    public void loadJSONConfig(JSONObject configData, Path parentPath) throws JSONException {
+
+        if(configData.has("moveWithCaretEnabled")) {
+            boolean moveWithCaretEnabled = configData.getBoolean("moveWithCaretEnabled");
+            this.moveWithCaret.setSelected(moveWithCaretEnabled);
+            settings.setSpriteTypeProperty(PowerMode3.ConfigType.MULTI_LAYER, "moveWithCaretEnabled",
+                    String.valueOf(moveWithCaretEnabled));
+        }
+
+
+        if(configData.has("moveSpeed")) {
+            double moveSpeed = configData.getDouble("moveSpeed");
+            moveSpeed = Math.min(1.00, Math.max(moveSpeed, 0.001));
+            this.moveSpeedTextField.setText(String.valueOf(moveSpeed));
+            settings.setSpriteTypeProperty(PowerMode3.ConfigType.MULTI_LAYER, "moveSpeed",
+                    String.valueOf(moveSpeed));
+        }
+
+
+
 
         JSONArray tableData = configData.getJSONArray("tableData");
 
@@ -203,6 +222,9 @@ public class MultiLayerConfig extends BaseConfigPanel{
         for(int i =0; i<tableData.length(); i++){
             JSONObject jo = tableData.getJSONObject(i);
 
+
+            //TODO make method more robust for all missing key values
+            // put jo.has (x ) in a part loadJSONConfig method in parent class or something
             SpriteDataAnimated sd =  new SpriteDataAnimated(
                     PREVIEW_SIZE,
                     jo.getBoolean("enabled"),
@@ -211,7 +233,7 @@ public class MultiLayerConfig extends BaseConfigPanel{
                     spriteDataAnimated.get(i).defaultPath,
                     parentPath.resolve(jo.getString("customPath")).toString(),
                     jo.getBoolean("isCyclic"),
-                    Math.max(1, Math.min(jo.getInt("val2"),10)),
+                    jo.has("val2") ? Math.max(1, Math.min(jo.getInt("val2"),10)) : 1,
                     (float) jo.getDouble("alpha"),
                     1);
 

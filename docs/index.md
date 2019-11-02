@@ -1,7 +1,42 @@
 
---/--
+-/=
 
-## Downloads:
+<!--
+<div class="header">
+<div class="header__bg"></div>
+<h1>Basics</h1>
+</div>
+-->
+
+<!--
+# Basics
+
+
+You enter a dark cave.
+
+To your left is a crate of ore, to your right, a cold stone wall.
+Infront of you appears a terminal. You open up an IntelliJ IDE session.
+
+You install Powermode Zeranthium and use its basic settings for a while.
+
+You then grow hungry.... for something more.
+
+
+You open up Blender 2.8 and pop open some youtube tutorials.
+
+In a couple hours you have down the basics, a cube doing some tricks
+with a transparent background.
+
+You render out the PNG files to a folder called "myCube".
+
+You then open up Power Mode Zeranthium's settings and load in
+your folder of renders.
+
+It's beautiful.
+-->
+
+
+# Downloads:
 get more stuff here:
 
 
@@ -28,7 +63,7 @@ git clone --depth=1 git@github.com:cschar/zeranthium-extras.git
 
 
 
-<h1> Customizing your own theme</h1>
+<h1> Customizing your own theme pack</h1>
 basically you need a folder with a manifest.json file,
 with sibling folders containing the assets the manifest.json file will point to:
 
@@ -38,7 +73,7 @@ with sibling folders containing the assets the manifest.json file will point to:
     ----SOUND
          ----sound1.mp3
          ----sound2.mp3
-         ----sound2.mp3
+         ----sound3.mp3
     ----LOCKED_LAYER
          ----layer_foo
               ----- 000.png
@@ -94,11 +129,14 @@ See <a href="#settings"> individual settings </a> section for Option specific de
 
 <h3> Lizard </h3>
 
+```
+val1: weight for spawn chance (1-1000)
+```
+
 ```json
 "LIZARD": {
       "tableData": [
         {"customPath":"./lizard",
-          "val2":1,   
           "alpha":1,
           "val1":2,
           "scale":0.4,
@@ -112,16 +150,19 @@ See <a href="#settings"> individual settings </a> section for Option specific de
 
 <h3> Multi Layer </h3>
 
-```json
+```
 val2: max particles 1-10
 ```
 
 ```json
 "MULTI_LAYER": {
+      "moveWithCaretEnabled": true,
+      "moveSpeed": 0.1,
       "tableData": [
-        {"customPath":"./MULTI_LAYER/layer1", "alpha":1,
-         "val2":10, "scale":1.0, "enabled":false,
-         "speedRate":2, "isCyclic": true},
+        {"customPath":"./MULTI_LAYER/layer1",
+         "alpha":1,"scale":1.0,
+         "val2":10, 
+         "enabled":false, "speedRate":2, "isCyclic": true},
         {"customPath":"./MULTI_LAYER/layer2", ... }
         {"customPath":"./MULTI_LAYER/layer3", ... }
       ]
@@ -136,6 +177,8 @@ val1: Offset to start on links
 
 ```json
 "LINKER":{
+      "tracerEnabled": false,
+      "distanceToCenter": 290,
       "tableData":[
         {
           "defaultPath": "./linker1/",
@@ -175,7 +218,7 @@ val1: Offset for each new expanding layer (10-400)
 TODO
 <h3> Locked layer </h3>
 
-```json
+```
 val2: Screen position 
 Stretch -> 0
 Top/Right -> 1 

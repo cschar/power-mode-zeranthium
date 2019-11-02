@@ -10,6 +10,7 @@
         <img src="https://user-images.githubusercontent.com/296551/63473991-68b52400-c445-11e9-84dc-e2e5269729d8.png" />
         <h2> Get Into your Zone... </h2>
 
+        <p> See the <a href="https://cschar.github.io/power-mode-zeranthium/"> Docs page </a> for more info </p>
         <h2>Featuring:</h2>
         <ul>
 
@@ -100,7 +101,7 @@
             <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl z"/>
         </action>
 
-        <group id="com.cschar.pmode3.GroupedActions" text="PowerMode Zerathium Actions" popup="true">
+        <group id="com.cschar.pmode3.GroupedActions" text="Power Mode Zeranthium Actions" popup="true">
             <add-to-group group-id="ToolsMenu" anchor="after" relative-to-action="com.cschar.pmode3.PowerModeZeranthiumToggleEnabled"/>
 
             <action id="com.cschar.pmode3.PowerModeZeranthiumTriggerSongA"

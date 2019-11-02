@@ -475,10 +475,27 @@ public class LinkerConfig extends BaseConfigPanel {
         ParticleSpriteLinkerAnchor.spriteDataAnimated = data;
     }
 
-    public static void loadJSONConfig(JSONObject configData, Path parentPath) throws JSONException {
+    public void loadJSONConfig(JSONObject configData, Path parentPath) throws JSONException {
+        PowerMode3 settings = PowerMode3.getInstance();
+
+        if(configData.has("tracerEnabled")) {
+            boolean tracerEnabled = configData.getBoolean("tracerEnabled");
+            this.tracerEnabledCheckBox.setSelected(tracerEnabled);
+            settings.setSpriteTypeProperty(PowerMode3.ConfigType.LINKER, "tracerEnabled",
+                    String.valueOf(tracerEnabled));
+        }
+
+
+        if(configData.has("distanceToCenter")) {
+            int distanceFromCenter = configData.getInt("distanceToCenter");
+            distanceFromCenter = Math.min(500, Math.max(distanceFromCenter, 1));
+            this.distanceFromCenterTextField.setText(String.valueOf(distanceFromCenter));
+            settings.setSpriteTypeProperty(PowerMode3.ConfigType.LINKER, "distanceFromCenter",
+                    String.valueOf(distanceFromCenter));
+        }
+
 
         JSONArray tableData = configData.getJSONArray("tableData");
-
         for(int i =0; i<tableData.length(); i++){
             JSONObject jo = tableData.getJSONObject(i);
 

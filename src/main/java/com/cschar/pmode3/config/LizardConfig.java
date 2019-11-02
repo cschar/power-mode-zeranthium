@@ -278,7 +278,8 @@ public class LizardConfig extends BaseConfigPanel{
 
         JSONArray tableData = configData.getJSONArray("tableData");
 
-        for(int i =0; i<tableData.length(); i++){
+        //TODO Resizable config tables
+        for(int i =0; i<3; i++){ //LOAD 3 MAX
             JSONObject spriteDataRow = tableData.getJSONObject(i);
 
             LizardConfig.spriteDataAnimated.set(i, consumeJSONConfig(spriteDataRow, i, parentPath));
@@ -300,9 +301,9 @@ public class LizardConfig extends BaseConfigPanel{
                 LizardConfig.spriteDataAnimated.get(indexToReplace).defaultPath,
                 parentPath.resolve(jo.getString("customPath")).toString(),
                 false,
-                jo.getInt("val2"),
+                1, //no use
                 (float) jo.getDouble("alpha"),
-                jo.getInt("val1"));
+                jo.has("val1") ? Math.max(1, Math.min(1000, jo.getInt("val1"))): 10); //weight
 
         return sd;
     }

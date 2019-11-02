@@ -736,7 +736,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
 
                 if(configKey.equals("MULTI_LAYER")){
                     enableMultilayerCheckbox.setSelected(true);
-                    MultiLayerConfig.loadJSONConfig(configKeyData, path.getParent());
+                    multiLayerConfig.loadJSONConfig(configKeyData, path.getParent());
                 }
 
 
@@ -753,7 +753,8 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
 
                 if(configKey.equals("LINKER")){
                     enableLinkerCheckbox.setSelected(true);
-                    LinkerConfig.loadJSONConfig(configKeyData, path.getParent());
+                    //TODO updateUI method called on object instance
+                    linkerConfig.loadJSONConfig(configKeyData, path.getParent());
                 }
 
 

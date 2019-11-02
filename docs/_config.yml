@@ -9,13 +9,12 @@ theme: minima
 title: Power Mode - Zeranthium
 description: IntelliJ Plugin to Get Into The Zone
 
-pages:
-  - about.md
-
+#pages:
+#  - about.md
 
 header_pages:
-  - about.md
-  - entho.html
+  - test.hml
+#  - about.md
 
 disqus:
     shortname: disqus_FCVoWPUQuI
