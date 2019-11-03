@@ -176,7 +176,7 @@ public class MultiLayerConfig extends BaseConfigPanel{
                 String.valueOf(Config.getJTextFieldWithinBoundsFloat(this.moveSpeedTextField,
                         0.001f, 1.0f,"moveSpeed")));
 
-        settings.setSerializedSpriteDataAnimated(MultiLayerConfig.spriteDataAnimated, PowerMode3.ConfigType.MULTI_LAYER);
+        settings.setSerializedSpriteDataAnimated(spriteDataAnimated, PowerMode3.ConfigType.MULTI_LAYER);
     }
 
 

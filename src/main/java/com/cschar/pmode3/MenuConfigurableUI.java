@@ -91,6 +91,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
     private JCheckBox enableTapAnim;
     private JPanel memoryStatsPanel;
     private JButton anchorConfigButton;
+    private JCheckBox enableMultiLayerChance;
 
 
     private BasicParticleConfig basicParticleConfig;
@@ -100,6 +101,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
     private VineConfig vineConfig;
     private MOMAConfig momaConfig;
     private MultiLayerConfig multiLayerConfig;
+    private MultiLayerChanceConfig multiLayerChanceConfig;
     private LinkerConfig linkerConfig;
     private DrosteConfig drosteConfig;
     private CopyPasteVoidConfig copyPasteVoidConfig;
@@ -193,6 +195,9 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
         if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.TAP_ANIM)){
             enableTapAnim.setSelected(true);
         }
+        if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.MULTI_LAYER_CHANCE)){
+            enableMultiLayerChance.setSelected(true);
+        }
 
         //Sound
         if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.SOUND)){
@@ -240,6 +245,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
         this.copyPasteVoidConfig.loadValues();
         this.lanternConfig.loadValues();
         this.tapAnimConfig.loadValues();
+        this.multiLayerChanceConfig.loadValues();
 
 
         //sound panel
@@ -293,6 +299,8 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
         settings.setSpriteTypeEnabled(enableLockedLayerCheckbox.isSelected(), PowerMode3.ConfigType.LOCKED_LAYER);
         settings.setSpriteTypeEnabled(enableLantern.isSelected(), PowerMode3.ConfigType.LANTERN);
         settings.setSpriteTypeEnabled(enableTapAnim.isSelected(), PowerMode3.ConfigType.TAP_ANIM);
+        settings.setSpriteTypeEnabled(enableMultiLayerChance.isSelected(), PowerMode3.ConfigType.MULTI_LAYER_CHANCE);
+
 
         //Sound
         settings.setSpriteTypeEnabled(enableBasicSound.isSelected(), PowerMode3.ConfigType.SOUND);
@@ -318,6 +326,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
         this.lockedLayerConfig.saveValues();
         this.lanternConfig.saveValues();
         this.tapAnimConfig.saveValues();
+        this.multiLayerChanceConfig.saveValues();
 
         //sound panel
         this.soundConfig.saveValues();
@@ -455,6 +464,10 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
 
         this.lanternConfig = new LanternConfig(settings);
         particleSettingsPanel.add(lanternConfig);
+        particleSettingsPanel.add(this.createSpacer());
+
+        this.multiLayerChanceConfig = new MultiLayerChanceConfig(settings);
+        particleSettingsPanel.add(multiLayerChanceConfig);
         particleSettingsPanel.add(this.createSpacer());
 
         this.lightningConfig = new LightningConfig(settings);

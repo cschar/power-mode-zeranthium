@@ -125,7 +125,8 @@ public class PowerMode3 implements BaseComponent,
         SPECIAL_ACTION_SOUND,
         LOCKED_LAYER,
         LANTERN,
-        TAP_ANIM
+        TAP_ANIM,
+        MULTI_LAYER_CHANCE,
     }
 
     static class JSONLoader {
@@ -142,6 +143,7 @@ public class PowerMode3 implements BaseComponent,
                 put(ConfigType.LANTERN, "LANTERN.json");
                 put(ConfigType.LIZARD, "LIZARD.json");
                 put(ConfigType.MULTI_LAYER, "MULTI_LAYER.json");
+                put(ConfigType.MULTI_LAYER_CHANCE, "MULTI_LAYER_CHANCE.json");
                 put(ConfigType.TAP_ANIM, "TAP_ANIM.json");
 
 
@@ -210,6 +212,7 @@ public class PowerMode3 implements BaseComponent,
         put("sprite"+ ConfigType.LOCKED_LAYER + "Enabled", "true");
         put("sprite"+ ConfigType.LANTERN + "Enabled", "false");
         put("sprite"+ ConfigType.TAP_ANIM + "Enabled", "true");
+        put("sprite"+ ConfigType.MULTI_LAYER_CHANCE + "Enabled", "false");
 
         put("sprite"+ ConfigType.SOUND + "Enabled", "true");
         put("sprite"+ ConfigType.SPECIAL_ACTION_SOUND + "Enabled", "false");
@@ -406,6 +409,9 @@ public class PowerMode3 implements BaseComponent,
 
             setUpdateProgress(progressIndicator, "Multi Layer", 0.2);
             MultiLayerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MULTI_LAYER)));
+            setUpdateProgress(progressIndicator, "Multi Layer Chance", 0.2);
+            MultiLayerChanceConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MULTI_LAYER_CHANCE)));
+
             setUpdateProgress(progressIndicator, "lizard", 0.3);
             LizardConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LIZARD)));
             setUpdateProgress(progressIndicator, "linker", 0.4);
@@ -455,6 +461,7 @@ public class PowerMode3 implements BaseComponent,
             LightningAltConfig.setSparkData(this.deserializeSpriteData(pathDataMap.get(ConfigType.LIGHTNING_ALT)));
 
             MultiLayerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MULTI_LAYER)));
+            MultiLayerChanceConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MULTI_LAYER_CHANCE)));
             LizardConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LIZARD)));
             LinkerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LINKER)));
             DrosteConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.DROSTE)));
