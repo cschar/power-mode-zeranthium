@@ -13,7 +13,7 @@ public class ParticleUtils {
     public static BufferedImage loadSprite(String name){
 
         try {
-            return ImageIO.read(ParticleSpriteLightning.class.getResource(name));
+            return ImageIO.read(ParticleUtils.class.getResource(name));
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, ex.toString(), ex );
         }

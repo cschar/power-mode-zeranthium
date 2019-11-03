@@ -67,12 +67,11 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
     private MusicTriggerConfig musicTriggerConfig;
     private SpecialActionSoundConfig specialActionSoundConfig;
 
-    private JCheckBox enableLightningCheckBox;
+
     private JCheckBox enableLizardCheckBox;
     private JCheckBox enableMOMACheckBox;
     private JPanel theCustomCreatePanel;
     private JCheckBox enableBasicParticleCheckBox;
-    private JCheckBox lightningAltCheckBox;
     private JTextField maxPsiSearchDistanceTextField;
 
     private JTextField shakeDistanceTextField;
@@ -95,8 +94,6 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
 
 
     private BasicParticleConfig basicParticleConfig;
-    private LightningConfig lightningConfig;
-    private LightningAltConfig lightningAltConfig;
     private LizardConfig lizardConfig;
     private VineConfig vineConfig;
     private MOMAConfig momaConfig;
@@ -159,12 +156,6 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
             enableBasicParticleCheckBox.setSelected(true);
         }
 
-        if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.LIGHTNING)){
-            enableLightningCheckBox.setSelected(true);
-        }
-        if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.LIGHTNING_ALT)){
-            lightningAltCheckBox.setSelected(true);
-        }
         if(powerMode3.getSpriteTypeEnabled(PowerMode3.ConfigType.LIZARD)){
             enableLizardCheckBox.setSelected(true);
         }
@@ -234,8 +225,6 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
         //already initialized from createUIComponents below
         this.basicParticleConfig.loadValues();
         this.lizardConfig.loadValues();
-        this.lightningConfig.loadValues();
-        this.lightningAltConfig.loadValues();
         this.vineConfig.loadValues();
         this.momaConfig.loadValues();
         this.multiLayerConfig.loadValues();
@@ -287,8 +276,6 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
 //        settings.setBasicParticleEnabled(enableBasicParticleCheckBox.isSelected());
         settings.setSpriteTypeEnabled(enableBasicParticleCheckBox.isSelected(), PowerMode3.ConfigType.BASIC_PARTICLE);
 
-        settings.setSpriteTypeEnabled(enableLightningCheckBox.isSelected(), PowerMode3.ConfigType.LIGHTNING);
-        settings.setSpriteTypeEnabled(lightningAltCheckBox.isSelected(), PowerMode3.ConfigType.LIGHTNING_ALT);
         settings.setSpriteTypeEnabled(enableLizardCheckBox.isSelected(), PowerMode3.ConfigType.LIZARD);
         settings.setSpriteTypeEnabled(enableMOMACheckBox.isSelected(), PowerMode3.ConfigType.MOMA);
         settings.setSpriteTypeEnabled(enableVineCheckBox.isSelected(), PowerMode3.ConfigType.VINE);
@@ -315,8 +302,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
         int maxPsiSearch = Integer.parseInt(maxPsiSearchDistanceTextField.getText());
         this.basicParticleConfig.saveValues();
         this.lizardConfig.saveValues(maxPsiSearch);
-        this.lightningAltConfig.saveValues();
-        this.lightningConfig.saveValues();
+
         this.vineConfig.saveValues(maxPsiSearch);
         this.momaConfig.saveValues();
         this.multiLayerConfig.saveValues(enableMultilayerCheckbox.isSelected());
@@ -468,14 +454,6 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
 
         this.multiLayerChanceConfig = new MultiLayerChanceConfig(settings);
         particleSettingsPanel.add(multiLayerChanceConfig);
-        particleSettingsPanel.add(this.createSpacer());
-
-        this.lightningConfig = new LightningConfig(settings);
-        particleSettingsPanel.add(lightningConfig);
-        particleSettingsPanel.add(this.createSpacer());
-
-        this.lightningAltConfig = new LightningAltConfig(settings);
-        particleSettingsPanel.add(lightningAltConfig);
         particleSettingsPanel.add(this.createSpacer());
 
 
@@ -752,6 +730,11 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
                     multiLayerConfig.loadJSONConfig(configKeyData, path.getParent());
                 }
 
+                if(configKey.equals("MULTI_LAYER_CHANCE")){
+                    enableMultiLayerChance.setSelected(true);
+                    multiLayerChanceConfig.loadJSONConfig(configKeyData, path.getParent());
+                }
+
 
                 if(configKey.equals("LOCKED_LAYER")){
                     enableLockedLayerCheckbox.setSelected(true);
@@ -785,8 +768,6 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
         private void disableAllParticleSettings(){
 
             enableBasicParticleCheckBox.setSelected(false);
-            enableLightningCheckBox.setSelected(false);
-            lightningAltCheckBox.setSelected(false);
             enableLizardCheckBox.setSelected(false);
             enableMOMACheckBox.setSelected(false);
             enableVineCheckBox.setSelected(false);

@@ -168,6 +168,27 @@ val2: max particles 1-10
       ]
     }
 ```
+
+<h3> Multi Layer Chance</h3>
+
+```
+val1: chance of spawn 1-1000
+fromBottom: used as a flag to spawn from bottom or top
+```
+
+```json
+"MULTI_LAYER_CHANCE": {
+      "tableData": [
+        {"customPath":"./MULTI_LAYER/layer1",
+         "alpha":1,"scale":1.0,
+         "val1":1000, 
+         "enabled":false, "speedRate":2, "fromBottom": true},
+        {"customPath":"./MULTI_LAYER/layer2", ... }
+        {"customPath":"./MULTI_LAYER/layer3", ... }
+      ]
+    }
+```
+
 <h3> Linker </h3>
 
 ```

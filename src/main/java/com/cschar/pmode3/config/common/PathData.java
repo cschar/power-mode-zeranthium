@@ -1,19 +1,9 @@
 package com.cschar.pmode3.config.common;
 
-import com.cschar.pmode3.ParticleSpriteLightning;
-import com.cschar.pmode3.ParticleUtils;
-import gherkin.lexer.Pa;
 import org.json.JSONObject;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.logging.Logger;
 
 public abstract class PathData {
 

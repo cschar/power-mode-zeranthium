@@ -1,6 +1,5 @@
 package com.cschar.pmode3.config.common;
 
-import com.cschar.pmode3.ParticleSpriteLightning;
 import com.cschar.pmode3.PowerMode3;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
@@ -14,12 +13,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBuffer;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

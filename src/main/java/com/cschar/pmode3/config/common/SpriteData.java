@@ -1,6 +1,5 @@
 package com.cschar.pmode3.config.common;
 
-import com.cschar.pmode3.ParticleSpriteLightning;
 import com.cschar.pmode3.ParticleUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,8 +10,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -74,7 +71,7 @@ public class SpriteData extends PathData{
                 previewIcon = new ImageIcon(newimg);
 
             } catch (IOException e) {
-                Logger logger  = Logger.getLogger(ParticleSpriteLightning.class.getName());
+                Logger logger  = Logger.getLogger(SpriteData.class.getName());
                 logger.severe("error loading image file: " + path);
                 logger.severe(e.toString());
 

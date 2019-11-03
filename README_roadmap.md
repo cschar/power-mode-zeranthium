@@ -2,15 +2,6 @@
 
 TODO: 
 
-- Merge Lightning, Lightning Alt  ---> MultiLayer
- (OR new Basic Anim w/ stretch to Top checkbox)
-  - since we currenlty have maybe l1,l2 follow cursor
-  - but then want l3,l4 to stay put,
-  - would have to track 4 different positions etc..
-  - Simpler if just another setting for now?
-  
-  - x offset, y offset
-  - 
 - default values in all loadJSONConfig methods
 - make them not static
 - 
@@ -20,7 +11,6 @@ Done;
 - Basic Particle Effects
 - Vines
 - Lizards (swarms to anchors)
-- Lightning 
 - Weird square effect (MOMA)
 - Anchor type effects where your code structure influences particle behaviour
 - Customizable Anchor Types (Bracket/Brace/Parenthesis/Colon)

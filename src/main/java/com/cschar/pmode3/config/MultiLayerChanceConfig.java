@@ -167,7 +167,7 @@ public class MultiLayerChanceConfig extends BaseConfigPanel{
                     jo.getBoolean("fromBottom"),
                     1,
                     (float) jo.getDouble("alpha"),
-                    jo.has("val1") ? Math.max(1, Math.min(jo.getInt("val1"),MAX_SPAWN_CHANCE)) : 1
+                    jo.has("val1") ? Math.max(1, Math.min(jo.getInt("val1"), MAX_SPAWN_CHANCE)) : 1
             );
 
             spriteDataAnimated.set(i, sd);

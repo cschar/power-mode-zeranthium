@@ -111,8 +111,8 @@ public class PowerMode3 implements BaseComponent,
 
     public enum ConfigType {
         BASIC_PARTICLE,
-        LIGHTNING,
-        LIGHTNING_ALT,
+        LIGHTNING,     //cant remove unless we shift num values of others
+        LIGHTNING_ALT, //cant remove unless we shift num values of others
         LIZARD,
         MOMA,
         VINE,
@@ -138,7 +138,6 @@ public class PowerMode3 implements BaseComponent,
                 put(ConfigType.LOCKED_LAYER, "LOCKED_LAYER.json");
                 put(ConfigType.COPYPASTEVOID, "COPYPASTEVOID.json");
                 put(ConfigType.DROSTE, "DROSTE.json");
-                put(ConfigType.LIGHTNING_ALT, "LIGHTNING_ALT2.json");
                 put(ConfigType.LINKER, "LINKER.json");
                 put(ConfigType.LANTERN, "LANTERN.json");
                 put(ConfigType.LIZARD, "LIZARD.json");
@@ -197,8 +196,6 @@ public class PowerMode3 implements BaseComponent,
     private Map<String,String> configMap = new HashMap<String,String>(){{
 
         put("sprite"+ ConfigType.BASIC_PARTICLE + "Enabled", "true");
-        put("sprite"+ ConfigType.LIGHTNING + "Enabled", "false");
-        put("sprite"+ ConfigType.LIGHTNING_ALT + "Enabled", "false");
         put("sprite"+ ConfigType.LIZARD + "Enabled", "true");
 
 
@@ -325,7 +322,7 @@ public class PowerMode3 implements BaseComponent,
     private List<ConfigType> getMissingPathConfigs(){
         List<ConfigType> missing = new ArrayList<>();
         for(ConfigType c: ConfigType.values()){
-            if(c == ConfigType.BASIC_PARTICLE || c == ConfigType.LIGHTNING || c == ConfigType.MOMA || c == ConfigType.VINE){
+            if(c == ConfigType.BASIC_PARTICLE || c == ConfigType.MOMA || c == ConfigType.VINE){
                 continue;
             }
             Object val =  pathDataMap.get(c);
@@ -401,13 +398,7 @@ public class PowerMode3 implements BaseComponent,
 //            for(ConfigType)
 
 
-            setUpdateProgress(progressIndicator, "lightning", 0.1);
-
-//            pathData = new ArrayList<String>(s);
-
-            LightningAltConfig.setSparkData(this.deserializeSpriteData(pathDataMap.get(ConfigType.LIGHTNING_ALT)));
-
-            setUpdateProgress(progressIndicator, "Multi Layer", 0.2);
+            setUpdateProgress(progressIndicator, "Multi Layer", 0.1);
             MultiLayerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MULTI_LAYER)));
             setUpdateProgress(progressIndicator, "Multi Layer Chance", 0.2);
             MultiLayerChanceConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MULTI_LAYER_CHANCE)));
@@ -458,7 +449,6 @@ public class PowerMode3 implements BaseComponent,
 
     private void loadConfigDataAtSplash(){
         if(!this.isConfigLoaded) {
-            LightningAltConfig.setSparkData(this.deserializeSpriteData(pathDataMap.get(ConfigType.LIGHTNING_ALT)));
 
             MultiLayerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MULTI_LAYER)));
             MultiLayerChanceConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MULTI_LAYER_CHANCE)));

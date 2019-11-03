@@ -244,33 +244,13 @@ public class ParticleContainer extends JComponent implements ComponentListener {
                 SpriteDataAnimated d = ParticleSpriteMultiLayerChance.spriteDataAnimated.get(i);
                 if(!d.enabled) continue;
 
-                
+
                 int r = ThreadLocalRandom.current().nextInt(1, MultiLayerChanceConfig.MAX_SPAWN_CHANCE +1);
                 if(d.val1 >= r){
                     final ParticleSpriteMultiLayerChance e = new ParticleSpriteMultiLayerChance(x,y,dx,dy,size,lifeSetting, i, editor);
                     particles.add(e);
                 }
             }
-        }
-
-        if (settings.getSpriteTypeEnabled(PowerMode3.ConfigType.LIGHTNING_ALT)){
-            final ParticleSpriteLightningAlt e = new ParticleSpriteLightningAlt(x, y, dx, dy, size, lifeSetting,
-                    Color.ORANGE,
-                    LightningAltConfig.CHANCE_PER_KEY_PRESS(settings),
-                    LightningAltConfig.MAX_ALPHA(settings),
-                    LightningAltConfig.SPARKS_ENABLED(settings),
-                    this.editor.getContentComponent().getHeight());
-            particles.add(e);
-
-        }
-
-        if (settings.getSpriteTypeEnabled(PowerMode3.ConfigType.LIGHTNING)){
-            final ParticleSpriteLightning e = new ParticleSpriteLightning(x, y, dx, dy, size, lifeSetting,
-                    LightningConfig.CHANCE_OF_LIGHTNING(settings),
-                    LightningConfig.INNER_BEAM_ENABLED(settings),
-                    LightningConfig.OUTER_BEAM_ENABLED(settings));
-            particles.add(e);
-
         }
 
 

@@ -124,14 +124,6 @@
         </properties>
         <border type="none"/>
         <children>
-          <component id="1a6d7" class="javax.swing.JCheckBox" binding="enableLightningCheckBox">
-            <constraints>
-              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Enable Lightning"/>
-            </properties>
-          </component>
           <component id="8a608" class="javax.swing.JLabel">
             <constraints>
               <grid row="5" column="2" row-span="1" col-span="3" vsize-policy="6" hsize-policy="2" anchor="8" fill="0" indent="0" use-parent-layout="false">
@@ -154,14 +146,6 @@
             <border type="none"/>
             <children/>
           </grid>
-          <component id="1c489" class="javax.swing.JCheckBox" binding="enableMOMACheckBox" default-binding="true">
-            <constraints>
-              <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Enable MOMA"/>
-            </properties>
-          </component>
           <component id="bc202" class="javax.swing.JCheckBox" binding="enableBasicParticleCheckBox" default-binding="true">
             <constraints>
               <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -169,30 +153,6 @@
             <properties>
               <selected value="false"/>
               <text value="Enable Basic Particle"/>
-            </properties>
-          </component>
-          <component id="2e265" class="javax.swing.JCheckBox" binding="lightningAltCheckBox" default-binding="true">
-            <constraints>
-              <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Lightning Alt"/>
-            </properties>
-          </component>
-          <component id="7e3a6" class="javax.swing.JCheckBox" binding="enableMultilayerCheckbox">
-            <constraints>
-              <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Enable MultiLayer"/>
-            </properties>
-          </component>
-          <component id="29c2d" class="javax.swing.JCheckBox" binding="enableLinkerCheckbox">
-            <constraints>
-              <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Enable Linker"/>
             </properties>
           </component>
           <component id="98d18" class="javax.swing.JCheckBox" binding="enableDrosteCheckbox">
@@ -219,14 +179,6 @@
               <text value="Load Pack"/>
             </properties>
           </component>
-          <component id="7f2a2" class="javax.swing.JCheckBox" binding="enableLizardCheckBox" default-binding="true">
-            <constraints>
-              <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Enable Lizard"/>
-            </properties>
-          </component>
           <component id="1aec2" class="javax.swing.JCheckBox" binding="enableActionSound">
             <constraints>
               <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -251,22 +203,6 @@
               <text value="Enable Locked Layer"/>
             </properties>
           </component>
-          <component id="5d4c0" class="javax.swing.JCheckBox" binding="enableLantern">
-            <constraints>
-              <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Enable Lantern"/>
-            </properties>
-          </component>
-          <component id="1d3b0" class="javax.swing.JCheckBox" binding="enableVineCheckBox" default-binding="true">
-            <constraints>
-              <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Enable Vine"/>
-            </properties>
-          </component>
           <component id="17730" class="javax.swing.JCheckBox" binding="enableTapAnim">
             <constraints>
               <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -275,12 +211,60 @@
               <text value="Enable Tap Anim"/>
             </properties>
           </component>
-          <component id="8002" class="javax.swing.JCheckBox" binding="enableMultiLayerChance">
+          <component id="7f2a2" class="javax.swing.JCheckBox" binding="enableLizardCheckBox" default-binding="true">
             <constraints>
-              <grid row="3" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="MultiLayer Chance"/>
+              <text value="Enable Lizard"/>
+            </properties>
+          </component>
+          <component id="1c489" class="javax.swing.JCheckBox" binding="enableMOMACheckBox" default-binding="true">
+            <constraints>
+              <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Enable MOMA"/>
+            </properties>
+          </component>
+          <component id="7e3a6" class="javax.swing.JCheckBox" binding="enableMultilayerCheckbox">
+            <constraints>
+              <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Enable MultiLayer"/>
+            </properties>
+          </component>
+          <component id="8002" class="javax.swing.JCheckBox" binding="enableMultiLayerChance">
+            <constraints>
+              <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Enable MultiLayer Chance"/>
+            </properties>
+          </component>
+          <component id="5d4c0" class="javax.swing.JCheckBox" binding="enableLantern">
+            <constraints>
+              <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Enable Lantern"/>
+            </properties>
+          </component>
+          <component id="29c2d" class="javax.swing.JCheckBox" binding="enableLinkerCheckbox">
+            <constraints>
+              <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Enable Linker"/>
+            </properties>
+          </component>
+          <component id="1d3b0" class="javax.swing.JCheckBox" binding="enableVineCheckBox" default-binding="true">
+            <constraints>
+              <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Enable Vine"/>
             </properties>
           </component>
         </children>
