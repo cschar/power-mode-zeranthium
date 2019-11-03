@@ -169,10 +169,17 @@ public class ParticleSpriteMultiLayerChance extends Particle{
 //            at.translate(-sprite.getWidth()/2,
 //                    -sprite.getHeight()/2);
 
-            at.translate(-sprite.getWidth()/2,
-                    -sprite.getHeight()); //move image 100% up so end lands at caret
+            //from bottom
+            if(d.isCyclic){
+                at.translate(-sprite.getWidth()/2,
+                        editor.getLineHeight() + 10); //move image below caret
+            }else{
+                at.translate(-sprite.getWidth()/2,
+                        -sprite.getHeight()); //move image 100% up so end lands at caret
+            }
 
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, d.alpha));
 
 
 

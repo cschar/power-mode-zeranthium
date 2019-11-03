@@ -241,18 +241,15 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.MULTI_LAYER_CHANCE)){
 
             for(int i = 0; i < ParticleSpriteMultiLayerChance.spriteDataAnimated.size(); i++){
-
                 SpriteDataAnimated d = ParticleSpriteMultiLayerChance.spriteDataAnimated.get(i);
-//                if (ParticleSpriteMultiLayerChance.spawnMap.get(this.editor) != null &&
-//                        ParticleSpriteMultiLayer.spawnMap.get(this.editor)[i] >= d.val2){
-//                    continue;
-//                }
-
                 if(!d.enabled) continue;
 
-
-                final ParticleSpriteMultiLayerChance e = new ParticleSpriteMultiLayerChance(x,y,dx,dy,size,lifeSetting, i, editor);
-                particles.add(e);
+                
+                int r = ThreadLocalRandom.current().nextInt(1, MultiLayerChanceConfig.MAX_SPAWN_CHANCE +1);
+                if(d.val1 >= r){
+                    final ParticleSpriteMultiLayerChance e = new ParticleSpriteMultiLayerChance(x,y,dx,dy,size,lifeSetting, i, editor);
+                    particles.add(e);
+                }
             }
         }
 
@@ -516,11 +513,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
     public void updateWithAnchors(Point point, Anchor[] anchors){
         PowerMode3 settings = PowerMode3.getInstance();
 
-        //TODO call once, then have each spriteType use its own specified # of particles
-//        for (int i = 0; i < settings.getNumOfParticles(); i++) {
-            addParticle(point.x, point.y, settings);
-//        }
-
+        addParticle(point.x, point.y, settings);
         addParticleUsingAnchors(point.x, point.y, anchors, settings);
 
         shakeEditor(parent, settings.getShakeDistance(), settings.getShakeDistance(), shakeDir);

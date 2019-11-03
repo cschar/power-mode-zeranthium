@@ -33,6 +33,8 @@ public class MultiLayerChanceConfig extends BaseConfigPanel{
 
     public final static int PREVIEW_SIZE = 80;
 
+    public static int MAX_SPAWN_CHANCE = 1000;
+
     public MultiLayerChanceConfig(PowerMode3 settings){
         this.settings = settings;
 
@@ -81,14 +83,17 @@ public class MultiLayerChanceConfig extends BaseConfigPanel{
         TableColumnModel colModel=table.getColumnModel();
 
         colModel.getColumn(0).setWidth(PREVIEW_SIZE); //preview
-        colModel.getColumn(1).setPreferredWidth(70);  //enabled
-        colModel.getColumn(1).setWidth(50);  //enabled
+        colModel.getColumn(1).setPreferredWidth(60);  //enabled
+        colModel.getColumn(1).setWidth(60);  //enabled
 
         colModel.getColumn(2).setPreferredWidth(50);  //scale
-        colModel.getColumn(3).setPreferredWidth(80);  //speed rate
+        colModel.getColumn(3).setPreferredWidth(70);  //speed rate
         colModel.getColumn(4).setPreferredWidth(100);  //set path
         colModel.getColumn(5).setPreferredWidth(50);  // path
         colModel.getColumn(6).setWidth(70);  //reset
+        colModel.getColumn(7).setPreferredWidth(50);  //alpha
+        colModel.getColumn(8).setPreferredWidth(80);  //chance
+        colModel.getColumn(9).setPreferredWidth(80);  //isClycic --> spawn from bottom
 
 
 
@@ -159,10 +164,11 @@ public class MultiLayerChanceConfig extends BaseConfigPanel{
                     jo.getInt("speedRate"),
                     spriteDataAnimated.get(i).defaultPath,
                     parentPath.resolve(jo.getString("customPath")).toString(),
-                    jo.getBoolean("isCyclic"),
-                    jo.has("val2") ? Math.max(1, Math.min(jo.getInt("val2"),10)) : 1,
+                    jo.getBoolean("fromBottom"),
+                    1,
                     (float) jo.getDouble("alpha"),
-                    1);
+                    jo.has("val1") ? Math.max(1, Math.min(jo.getInt("val1"),MAX_SPAWN_CHANCE)) : 1
+            );
 
             spriteDataAnimated.set(i, sd);
             count += 1;
@@ -191,7 +197,10 @@ class MultiLayerChanceTableModel extends AbstractConfigTableModel {
             "speed rate",
             "set path",
             "path",
-            "reset"
+            "reset",
+            "alpha",
+            String.format("chance (1-%d)", MultiLayerChanceConfig.MAX_SPAWN_CHANCE),
+            "from bottom"
 
     };
 
@@ -207,6 +216,9 @@ class MultiLayerChanceTableModel extends AbstractConfigTableModel {
             JButton.class,
             String.class,
             JButton.class,
+            Float.class,
+            Integer.class,
+            Boolean.class
     };
 
     public MultiLayerChanceTableModel(BaseConfigPanel config) {
@@ -269,9 +281,13 @@ class MultiLayerChanceTableModel extends AbstractConfigTableModel {
                 return data.get(row).customPath;
             case 6:
                 return this.getResetButton(data.get(row), data);
-//            case 7:
-//                SpriteDataAnimated d = data.get(row);
-//                return new OtherColMultiLayer(d.val2, d.isCyclic);
+            case 7:
+                return data.get(row).alpha;
+            case 8:
+                return data.get(row).val1;
+            case 9:
+                return data.get(row).isCyclic; //from bottom
+
         }
 
         throw new IllegalArgumentException();
@@ -310,12 +326,21 @@ class MultiLayerChanceTableModel extends AbstractConfigTableModel {
                 return;
             case 6:    //reset button clicked
                 return;
-//            case 7:    // other settings
-//
-//                OtherColMultiLayer c = (OtherColMultiLayer) value;
-//                data.get(row).isCyclic = c.isCyclic;
-//                data.get(row).val2 = c.numParticles;
-//                return;
+            case 7:    // alpha
+                float alpha = (Float) value;
+                alpha = Math.max(0.0f, alpha);
+                alpha = Math.min(alpha,1.0f);
+                data.get(row).alpha = alpha;
+                return;
+            case 8:
+                int chance = (int) value;
+                chance = Math.min(MultiLayerChanceConfig.MAX_SPAWN_CHANCE, Math.max(1, chance));
+                data.get(row).val1 = (int) chance;
+                return;
+            case 9:
+                data.get(row).isCyclic = (Boolean) value; // from bottom
+                return;
+
 
 
         }

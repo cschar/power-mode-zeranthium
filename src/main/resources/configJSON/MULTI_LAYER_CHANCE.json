@@ -7,7 +7,7 @@
     "val2":5,
     "isCyclic":false,
     "alpha":1,
-    "val1":1,
+    "val1":1000,
     "scale":1,
     "enabled":true,
     "speedRate":3
@@ -17,21 +17,9 @@
     "customPath":"",
     "defaultPath":"/blender/mandala2/",
     "val2":5,
-    "isCyclic":true,
+    "isCyclic":false,
     "alpha":1,
-    "val1":1,
-    "scale":1,
-    "enabled":true,
-    "speedRate":2
-  },
-  {
-    "previewSize":80,
-    "customPath":"",
-    "defaultPath":"/blender/mandala3/",
-    "val2":5,
-    "isCyclic":true,
-    "alpha":1,
-    "val1":1,
+    "val1":1000,
     "scale":1,
     "enabled":true,
     "speedRate":2
@@ -43,7 +31,19 @@
     "val2":5,
     "isCyclic":false,
     "alpha":1,
-    "val1":1,
+    "val1":1000,
+    "scale":1,
+    "enabled":true,
+    "speedRate":2
+  },
+  {
+    "previewSize":80,
+    "customPath":"",
+    "defaultPath":"/blender/mandala3/",
+    "val2":5,
+    "isCyclic":false,
+    "alpha":1,
+    "val1":1000,
     "scale":2,
     "enabled":true,
     "speedRate":4
