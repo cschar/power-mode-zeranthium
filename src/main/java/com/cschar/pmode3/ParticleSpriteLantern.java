@@ -155,7 +155,6 @@ public class ParticleSpriteLantern extends Particle{
         path.moveTo(x, y - 20);
         pathPoints.add(new Point(x, y-20));
 
-        //TODO do path calculations ONCE in constructor, wont need to return the 'next' variable
         int offsetX0 = (int) (50 + 250*(randomNum100/100.0));
         int offsetY0 = (int) (100 + 300*(randomNum200/200.0));
         if(offsetY0 > 300) offsetX0 = Math.min(offsetX0 / 2, 100);

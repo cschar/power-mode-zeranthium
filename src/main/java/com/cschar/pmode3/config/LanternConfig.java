@@ -12,6 +12,9 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -19,6 +22,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 public class LanternConfig extends BaseConfigPanel {
@@ -217,6 +221,52 @@ public class LanternConfig extends BaseConfigPanel {
         this.isCyclicEnabled.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.LANTERN,"isCyclicEnabled", false));
 
 
+    }
+
+    public void loadJSONConfig(JSONObject configData, Path parentPath) throws JSONException {
+        PowerMode3 settings = PowerMode3.getInstance();
+
+        if(configData.has("maxLinks")) {
+            int maxLinks = configData.getInt("maxLinks");
+            this.maxLinksTextField.setText(String.valueOf(maxLinks));
+            settings.setSpriteTypeProperty(PowerMode3.ConfigType.LANTERN, "maxLinks",
+                    String.valueOf(maxLinks));
+        }
+
+        if(configData.has("tracerEnabled")) {
+            boolean tracerEnabled = configData.getBoolean("tracerEnabled");
+            this.tracerEnabledCheckBox.setSelected(tracerEnabled);
+            settings.setSpriteTypeProperty(PowerMode3.ConfigType.LANTERN, "tracerEnabled",
+                    String.valueOf(tracerEnabled));
+        }
+
+        if(configData.has("isCyclicEnabled")) {
+            boolean cyclicEnabled = configData.getBoolean("isCyclicEnabled");
+            this.isCyclicEnabled.setSelected(cyclicEnabled);
+            settings.setSpriteTypeProperty(PowerMode3.ConfigType.LANTERN, "isCyclicEnabled",
+                    String.valueOf(cyclicEnabled));
+        }
+
+
+        JSONArray tableData = configData.getJSONArray("tableData");
+        for(int i =0; i<tableData.length(); i++){
+            JSONObject jo = tableData.getJSONObject(i);
+
+            SpriteDataAnimated sd =  new SpriteDataAnimated(
+                    PREVIEW_SIZE,
+                    jo.getBoolean("enabled"),
+                    (float) jo.getDouble("scale"),
+                    jo.getInt("speedRate"),
+                    spriteDataAnimated.get(i).defaultPath,
+                    parentPath.resolve(jo.getString("customPath")).toString(),
+                    jo.getBoolean("isCyclic"),
+                    jo.getInt("val2"), //val2 //repeat every n links
+                    (float) jo.getDouble("alpha"),
+                    jo.getInt("val1")); //val1  //offset to start on links
+
+
+            spriteDataAnimated.set(i, sd);
+        }
     }
 
     public void saveValues() throws ConfigurationException {

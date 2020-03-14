@@ -755,9 +755,9 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
                 }
 
                 else if(configKey.equals("LANTERN")){
-                    enableLinkerCheckbox.setSelected(true);
+                    enableLantern.setSelected(true);
                     //TODO updateUI method called on object instance
-                    linkerConfig.loadJSONConfig(configKeyData, path.getParent());
+                    lanternConfig.loadJSONConfig(configKeyData, path.getParent());
                 }else{
                     found = false;
                     LOGGER.warning("No loader found for key: " + configKey);

@@ -4,10 +4,7 @@ package com.cschar.pmode3.hotkeys;
 import com.cschar.pmode3.PowerMode3;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.pom.Navigatable;
-import javafx.scene.input.KeyCode;
-import org.apache.commons.lang.ArrayUtils;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

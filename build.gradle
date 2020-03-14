@@ -9,12 +9,12 @@ runIde {
 }
 
 group 'com.cschar'
-version '2.1.0'
+version '2.2.0'
 patchPluginXml {
     changeNotes """
-      - Added basic Docs site + screenshots for reference <br>
-      - MULTI_LAYER_CHANCE effect added <br>
-      - Removed Lightning effects as they can be reconstructed using above effect.
+      - maxLinks and isCyclic settings added on LINKER and LANTERN <br>
+      - Docs update for LANTERN json <br>
+      - user is notified when custom manifest.json has unkown key <br>
       """
 }
 

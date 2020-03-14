@@ -1,3 +1,16 @@
+# Deploying new version
+
+ 1.  Change version in plugin.xml
+ 2. Update change notes in build.gradle
+ 3. Build the jar ex: ```./gradlew :jar```
+ 4. upload new .jar file to site
+
+# logo design
+
+-- SVG editor for logo here:
+https://editor.method.ac/
+
+
 # LICENSING ... 
 
 audio code is LGPL:
@@ -133,7 +146,7 @@ Appearance & Behavior {@code groupId="appearance"}</dt>
 
 
 
-# DUMP OF CRASH:
+# CRASH notes:
 
 ```
 java.lang.NoClassDefFoundError: org/json/JSONException
@@ -150,17 +163,3 @@ Caused by: java.lang.ClassNotFoundException: org.json.JSONException PluginClassL
     
 --Fixed by packaging a FAT JAR
 https://discuss.gradle.org/t/how-to-include-dependencies-in-jar/19571/5
-
--- SVG editor for logo here:
-https://editor.method.ac/
-
---Try to install python support...
-
-tried installing Pycharm ce plugin, didnt work..
-still red.
-
-suspect that GRADLE needs to somehow install this
-
-https://github.com/JetBrains/gradle-intellij-plugin
-https://plugins.jetbrains.com/plugin/631-python/update/70233
-https://intellij-support.jetbrains.com/hc/en-us/community/posts/360000058630-Allow-my-plugin-to-install-on-IDEA?page=1#community_comment_360000519719

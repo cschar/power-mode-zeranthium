@@ -478,6 +478,13 @@ public class LinkerConfig extends BaseConfigPanel {
     public void loadJSONConfig(JSONObject configData, Path parentPath) throws JSONException {
         PowerMode3 settings = PowerMode3.getInstance();
 
+        if(configData.has("maxLinks")) {
+            int maxLinks = configData.getInt("maxLinks");
+            this.maxLinksTextField.setText(String.valueOf(maxLinks));
+            settings.setSpriteTypeProperty(PowerMode3.ConfigType.LINKER, "maxLinks",
+                    String.valueOf(maxLinks));
+        }
+
         if(configData.has("tracerEnabled")) {
             boolean tracerEnabled = configData.getBoolean("tracerEnabled");
             this.tracerEnabledCheckBox.setSelected(tracerEnabled);
@@ -492,6 +499,13 @@ public class LinkerConfig extends BaseConfigPanel {
             this.distanceFromCenterTextField.setText(String.valueOf(distanceFromCenter));
             settings.setSpriteTypeProperty(PowerMode3.ConfigType.LINKER, "distanceFromCenter",
                     String.valueOf(distanceFromCenter));
+        }
+
+        if(configData.has("isCyclicEnabled")) {
+            boolean cyclicEnabled = configData.getBoolean("isCyclicEnabled");
+            this.isCyclicEnabled.setSelected(cyclicEnabled);
+            settings.setSpriteTypeProperty(PowerMode3.ConfigType.LINKER, "isCyclicEnabled",
+                    String.valueOf(cyclicEnabled));
         }
 
 

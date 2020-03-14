@@ -17,13 +17,11 @@
 
 package com.cschar.pmode3;
 
-import javafx.geometry.Point3D;
 import org.imgscalr.Scalr;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ThreadLocalRandom;

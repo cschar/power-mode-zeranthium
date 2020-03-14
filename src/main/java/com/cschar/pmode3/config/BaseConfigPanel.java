@@ -15,6 +15,7 @@ public abstract class BaseConfigPanel extends JPanel {
 
     public JPanel headerPanel;
     public JLabel headerSizeLabel;
+    static int PREVIEW_SIZE = 60;
 
 
 

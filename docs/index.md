@@ -199,6 +199,7 @@ val1: Offset to start on links
 ```json
 "LINKER":{
       "tracerEnabled": false,
+      "isCyclicEnabled" false,
       "distanceToCenter": 290,
       "tableData":[
         {
@@ -262,7 +263,29 @@ Bot/Left -> 4
 
 <h3> Lantern </h3>
 
-See Linker
+```
+val2: Repeat every N links
+val1: Offset to start on links
+```
+
+```json
+"LANTERN":{
+      "tracerEnabled": false,
+      "isCyclicEnabled" false,
+      "tableData":[
+        {
+          "defaultPath": "./lantern1/",
+          "val2": 100,
+          "isCyclic": false,
+          "alpha": 1,
+          "val1": 1,
+          "scale": 0.3,
+          "enabled": true,
+          "speedRate": 2
+        }
+      ]
+    }
+```
 
 <h3> Tap Anim </h3>
 
