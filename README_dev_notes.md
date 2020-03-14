@@ -43,6 +43,12 @@ Snags I ran into:
  -- download separately and place e.g.
  '/Users/USERNAME/.gradle/caches/modules-2/files-2.1/com.jetbrains/jbre/jbr-11_0_3-osx-x64-b304.10.tar.gz'
 
+.e.g.
+```
+cd ~/.gradle/caches/modules-2/files-2.1/com.jetbrains/jbre
+rm -rf *.*
+cp ~/Downloads/jbr-11_0_3-osx-x64-b304.10.tar.gz ~/.gradle/caches/modules-2/files-2.1/com.jetbrains/jbre
+```
 
 Other styles:
 https://github.com/codeinthedark/awesome-power-mode

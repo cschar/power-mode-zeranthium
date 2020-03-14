@@ -2,6 +2,9 @@
 
 TODO: 
 
+- Linker Config for Color (RGBA) 
+- Add Linker setting for min height
+
 - default values in all loadJSONConfig methods
 - make them not static
 - 

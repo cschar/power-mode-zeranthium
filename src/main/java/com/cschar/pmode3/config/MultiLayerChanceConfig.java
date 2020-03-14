@@ -32,7 +32,6 @@ public class MultiLayerChanceConfig extends BaseConfigPanel{
     PowerMode3 settings;
 
     public final static int PREVIEW_SIZE = 80;
-
     public static int MAX_SPAWN_CHANCE = 1000;
 
     public MultiLayerChanceConfig(PowerMode3 settings){
@@ -159,14 +158,14 @@ public class MultiLayerChanceConfig extends BaseConfigPanel{
             // put jo.has (x ) in a part loadJSONConfig method in parent class or something
             SpriteDataAnimated sd =  new SpriteDataAnimated(
                     PREVIEW_SIZE,
-                    jo.getBoolean("enabled"),
-                    (float) jo.getDouble("scale"),
-                    jo.getInt("speedRate"),
+                    jo.has("enabled") && jo.getBoolean("enabled"),
+                    jo.has("scale") ? (float) jo.getDouble("scale") : 1.0f,
+                    jo.has("speedRate") ? jo.getInt("speedRate") : 2,
                     spriteDataAnimated.get(i).defaultPath,
                     parentPath.resolve(jo.getString("customPath")).toString(),
-                    jo.getBoolean("fromBottom"),
+                    jo.has("fromBottom") && jo.getBoolean("fromBottom"),
                     1,
-                    (float) jo.getDouble("alpha"),
+                    jo.has("alpha") ? (float) jo.getDouble("alpha") : 1.0f,
                     jo.has("val1") ? Math.max(1, Math.min(jo.getInt("val1"), MAX_SPAWN_CHANCE)) : 1
             );
 

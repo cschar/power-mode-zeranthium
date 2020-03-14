@@ -9,10 +9,12 @@ runIde {
 }
 
 group 'com.cschar'
-version '1.1.0'
+version '2.1.0'
 patchPluginXml {
     changeNotes """
-      Added basic Docs site + screenshots for reference <br>
+      - Added basic Docs site + screenshots for reference <br>
+      - MULTI_LAYER_CHANCE effect added <br>
+      - Removed Lightning effects as they can be reconstructed using above effect.
       """
 }
 
@@ -40,6 +42,7 @@ dependencies {
     // https://mvnrepository.com/artifact/org.json/json
     compile group: 'org.json', name: 'json', version: '20090211'
 
+    // This adds the following libraries into the .jar file produced by the build
     extraLibs group: 'org.json', name: 'json', version: '20090211'
     extraLibs group: 'javazoom', name: 'jlayer', version: '1.0.1'
     extraLibs group: 'org.imgscalr', name: 'imgscalr-lib', version: '4.2'

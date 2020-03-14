@@ -703,6 +703,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
             JSONArray configsToLoad = jo.getJSONArray("configsToLoad");
             JSONObject configSettings = jo.getJSONObject("configSettings");
             for(int i=0; i < configsToLoad.length(); i++){
+                boolean found = true;
                 String configKey = configsToLoad.getString(i);
     
                 JSONObject configKeyData = configSettings.getJSONObject(configKey);
@@ -713,48 +714,58 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
 //                    settings.setSpriteTypeEnabled(enableLizardCheckBox.isSelected(), PowerMode3.ConfigType.LIZARD);
                 }
     
-                if(configKey.equals("SOUND")){
+                else if(configKey.equals("SOUND")){
                     enableBasicSound.setSelected(true);
                     soundConfig.loadJSONConfig(configKeyData, path.getParent());
                 }
 
 
-                if(configKey.equals("DROSTE")){
+                else if(configKey.equals("DROSTE")){
                     enableDrosteCheckbox.setSelected(true);
                     DrosteConfig.loadJSONConfig(configKeyData, path.getParent());
                 }
 
 
-                if(configKey.equals("MULTI_LAYER")){
+                else if(configKey.equals("MULTI_LAYER")){
                     enableMultilayerCheckbox.setSelected(true);
                     multiLayerConfig.loadJSONConfig(configKeyData, path.getParent());
                 }
 
-                if(configKey.equals("MULTI_LAYER_CHANCE")){
+                else if(configKey.equals("MULTI_LAYER_CHANCE")){
                     enableMultiLayerChance.setSelected(true);
                     multiLayerChanceConfig.loadJSONConfig(configKeyData, path.getParent());
                 }
 
 
-                if(configKey.equals("LOCKED_LAYER")){
+                else if(configKey.equals("LOCKED_LAYER")){
                     enableLockedLayerCheckbox.setSelected(true);
                     LockedLayerConfig.loadJSONConfig(configKeyData, path.getParent());
                 }
 
 
-                if(configKey.equals("TAP_ANIM")){
+                else if(configKey.equals("TAP_ANIM")){
                     enableTapAnim.setSelected(true);
                     TapAnimConfig.loadJSONConfig(configKeyData, path.getParent());
                 }
 
-                if(configKey.equals("LINKER")){
+                else if(configKey.equals("LINKER")){
                     enableLinkerCheckbox.setSelected(true);
                     //TODO updateUI method called on object instance
                     linkerConfig.loadJSONConfig(configKeyData, path.getParent());
                 }
 
+                else if(configKey.equals("LANTERN")){
+                    enableLinkerCheckbox.setSelected(true);
+                    //TODO updateUI method called on object instance
+                    linkerConfig.loadJSONConfig(configKeyData, path.getParent());
+                }else{
+                    found = false;
+                    LOGGER.warning("No loader found for key: " + configKey);
+                }
 
-                LOGGER.info("Loaded pack for " + configKey);
+                if(found) {
+                    LOGGER.info("Loaded pack for key: " + configKey);
+                }
             }
 
             Notification n = new Notification(PowerMode3.NOTIFICATION_GROUP_DISPLAY_ID,
