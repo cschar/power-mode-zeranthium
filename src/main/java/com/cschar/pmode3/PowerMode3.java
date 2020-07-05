@@ -94,7 +94,7 @@ public class PowerMode3 implements BaseComponent,
 //    public String scrollBarPosition2 = "0";
 
     private boolean enabled = true;
-    private int shakeDistance = 5;
+    private int shakeDistance = 0;
     private int lifetime = 200;
     private int maxPsiSearchDistance = 400;  //amount of total characters searched around caret for anchors
 
@@ -510,20 +510,11 @@ public class PowerMode3 implements BaseComponent,
     }
 
     public void setSerializedSpriteDataAnimated(ArrayList<SpriteDataAnimated> spriteData, ConfigType configType){
-//        try {
             SmartList<String> serialized = new SmartList<>();
             for (SpriteDataAnimated d : spriteData) {
                 serialized.add(d.toJSONObject().toString());
-
-//                serialized.add(String.join(",",
-//                        new String[]{String.valueOf(d.enabled), String.valueOf(d.scale), String.valueOf(d.speedRate),
-//                        String.valueOf(d.defaultPath), String.valueOf(d.customPath),
-//                        String.valueOf(d.isCyclic), String.valueOf(d.val2),
-//                        String.valueOf(d.alpha), String.valueOf(d.val1)}));
             }
-
             this.pathDataMap.put(configType, serialized);
-
     }
 
     public void setSerializedSoundData(ArrayList<SoundData> soundData, ConfigType configType){

@@ -2,7 +2,7 @@
     <id>com.cschar.power.mode3.zeranthium</id>
     <name>Power Mode - Zeranthium</name>
     <vendor email="codyscharfe@gmail.com">cody scharfe</vendor>
-    <version>2.2.0</version>
+    <version>2.3.0</version>
 
     <description><![CDATA[
         <h1>Power Mode - Zeranthium </h1>
@@ -64,7 +64,7 @@
     </description>
 
 
-    <idea-version since-build="192.4205"/>
+    <idea-version since-build="201"/>
 
     <!--    http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html#modules-available-in-all-products-->
     <!-- 	Messaging, UI Themes, UI Components, Files, Documents, Actions, Components, Services, Extensions, Editors -->

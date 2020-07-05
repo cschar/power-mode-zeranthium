@@ -9,12 +9,10 @@ runIde {
 }
 
 group 'com.cschar'
-version '2.2.0'
+version '2.3.0'
 patchPluginXml {
     changeNotes """
-      - maxLinks and isCyclic settings added on LINKER and LANTERN <br>
-      - Docs update for LANTERN json <br>
-      - user is notified when custom manifest.json has unkown key <br>
+      - Update for 2020 <br>
       """
 }
 
@@ -62,10 +60,9 @@ jar {
 
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
+// "This plugin allows you to build plugins for IntelliJ Platform using specified IntelliJ SDK and bundled/3rd-party plugins."
 intellij {
-    version '2019.2'
-    //grab python version from
-
+    version '2020.1'
     plugins 'java'
 
     //If we're using <dependency> com.intellij.modules.python </dependency> in plugin.xml ....

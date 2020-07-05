@@ -15,7 +15,6 @@ import com.intellij.ui.table.JBTable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.jvnet.ws.wadl.Link;
 
 
 import javax.swing.*;
