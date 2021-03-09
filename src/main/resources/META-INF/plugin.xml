@@ -2,11 +2,12 @@
     <id>com.cschar.power.mode3.zeranthium</id>
     <name>Power Mode - Zeranthium</name>
     <vendor email="codyscharfe@gmail.com">cody scharfe</vendor>
-    <version>2.3.0</version>
+    <version>2.3.1</version>
 
     <description><![CDATA[
         <h1>Power Mode - Zeranthium </h1>
 
+        <img src="https://user-images.githubusercontent.com/296551/86540558-4ea4f880-bed4-11ea-830b-5e3bf25e0cb1.gif" />
         <img src="https://user-images.githubusercontent.com/296551/63473991-68b52400-c445-11e9-84dc-e2e5269729d8.png" />
         <h2> Get Into your Zone... </h2>
 

@@ -9,10 +9,11 @@ runIde {
 }
 
 group 'com.cschar'
-version '2.3.0'
+version '2.3.1'
 patchPluginXml {
     changeNotes """
-      - Update for 2020 <br>
+      - Update for IntelliJ 2020 <br>
+      - Add a link to github demo gif on plugin page to see basic functionality <br>
       """
 }
 
