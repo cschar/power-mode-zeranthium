@@ -69,8 +69,8 @@ import java.util.logging.Logger;
         //./build/idea-sandbox/config/options/power.mode.3.Zeranthium.xml
         storages = {@Storage(value = "$APP_CONFIG$/power.mode.3.Zeranthium.xml")}
 )
-public class PowerMode3 implements BaseComponent,
-        PersistentStateComponent<PowerMode3> {
+public class PowerMode3 implements
+        PersistentStateComponent<PowerMode3>, Disposable {
 
     //https://www.jetbrains.org/intellij/sdk/docs/basics/persisting_state_of_components.html#implementing-the-persistentstatecomponent-interface
     private static final Logger LOGGER = Logger.getLogger( PowerMode3.class.getName() );
@@ -85,9 +85,6 @@ public class PowerMode3 implements BaseComponent,
     private int particleRGB;
 
 
-
-
-
     private int lastTabIndex = 0;
     private int scrollBarPosition = 0;
 
@@ -97,6 +94,7 @@ public class PowerMode3 implements BaseComponent,
     private int shakeDistance = 0;
     private int lifetime = 200;
     private int maxPsiSearchDistance = 400;  //amount of total characters searched around caret for anchors
+
 
     public enum AnchorTypes {
         BRACE,
@@ -230,7 +228,7 @@ public class PowerMode3 implements BaseComponent,
         //Setup SOUND handler
         final EditorActionManager actionManager = EditorActionManager.getInstance();
 
-        final TypedAction typedAction2 = actionManager.getTypedAction();
+        final TypedAction typedAction2 = TypedAction.getInstance();
         TypedActionHandler rawHandler2 = typedAction2.getRawHandler();
         typedAction2.setupRawHandler(new TypedActionHandler() {
                                       @Override
@@ -267,7 +265,7 @@ public class PowerMode3 implements BaseComponent,
 
             }
         });
-        final TypedAction typedAction = editorActionManager.getTypedAction();
+        final TypedAction typedAction = TypedAction.getInstance();
         final TypedActionHandler rawHandler = typedAction.getRawHandler();
         typedAction.setupRawHandler(new TypedActionHandler() {
             @Override
@@ -288,18 +286,10 @@ public class PowerMode3 implements BaseComponent,
 
 
     @Override
-    public void disposeComponent() {
+    public void dispose() {
         particleContainerManager.dispose();
         particleContainerManager = null;
     }
-
-    @NotNull
-    @Override
-    public String getComponentName() {
-        return "PowerMode3";
-    }
-
-
 
 
 

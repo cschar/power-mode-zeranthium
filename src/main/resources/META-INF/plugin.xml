@@ -2,7 +2,8 @@
     <id>com.cschar.power.mode3.zeranthium</id>
     <name>Power Mode - Zeranthium</name>
     <vendor email="codyscharfe@gmail.com">cody scharfe</vendor>
-    <version>2.4.0</version>
+    <!-- this is defined in the build.gradle file -->
+    <!--    <version>2.4.0</version>-->
 
     <description><![CDATA[
         <h1>Power Mode - Zeranthium </h1>
@@ -64,10 +65,10 @@
         ]]>
     </description>
 
+    <!-- this is defined in the build.gradle file -->
 <!--    example of spanning multiple version-->
 <!--    <idea-version since-build="202" until-build="203.*"/>-->
-
-    <idea-version since-build="202" until-build="202.*"/>
+<!--    <idea-version since-build="202" until-build="202.*"/>-->
 <!--    <idea-version since-build="203" until-build="203.*"/>-->
 
     <!--    http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html#modules-available-in-all-products-->

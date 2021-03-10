@@ -17,9 +17,10 @@ import com.cschar.pmode3.actionHandlers.MyCaretListener;
 
 import com.intellij.openapi.editor.*;
 
-import com.intellij.openapi.editor.event.EditorFactoryAdapter;
+
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
 
+import com.intellij.openapi.editor.event.EditorFactoryListener;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -28,10 +29,10 @@ import java.util.*;
 
 /**
  * @author Baptiste Mesta
- *
+ * <p>
  * modified by cschar
  */
-public class ParticleContainerManager extends EditorFactoryAdapter {
+public class ParticleContainerManager implements EditorFactoryListener {
 
     private Thread thread;
     public static Map<Editor, ParticleContainer> particleContainers = new HashMap<>();
@@ -51,10 +52,11 @@ public class ParticleContainerManager extends EditorFactoryAdapter {
                         particleContainer.updateParticles();
                     }
                     try {
-                        Thread.sleep(1000 / 60);
+                        // 1000ms/60 = 16.6666666667      60 fps
+                        Thread.sleep(17);
                     } catch (InterruptedException ignored) {
                         //thread interrupted, shutdown
-                    } catch (ConcurrentModificationException modified){
+                    } catch (ConcurrentModificationException modified) {
                         // ignore it
                     }
                 }
@@ -79,8 +81,7 @@ public class ParticleContainerManager extends EditorFactoryAdapter {
     }
 
     @Override
-    public void editorReleased(@NotNull EditorFactoryEvent event)
-    {
+    public void editorReleased(@NotNull EditorFactoryEvent event) {
         ParticleContainer pc = particleContainers.get(event.getEditor());
 
         pc.cleanupParticles();
@@ -114,18 +115,18 @@ public class ParticleContainerManager extends EditorFactoryAdapter {
         if (particleContainer != null) {
 //            particleContainer.update(point);
 
-            Anchor[] anchors = getAnchors(editor,particleContainer);
+            Anchor[] anchors = getAnchors(editor, particleContainer);
             particleContainer.updateWithAnchors(point, anchors);
         }
 
 
     }
 
-    public void resetAllEditors(){
+    public void resetAllEditors() {
 
     }
 
-    public Anchor[] getAnchors(Editor editor, ParticleContainer particleContainer){
+    public Anchor[] getAnchors(Editor editor, ParticleContainer particleContainer) {
 
         ScrollingModel scrollingModel = editor.getScrollingModel();
 
@@ -138,42 +139,45 @@ public class ParticleContainerManager extends EditorFactoryAdapter {
         int searchLength = settings.getMaxPsiSearchDistance();
 
         String documentText = editor.getDocument().getText();
-        for(int i =0; i < searchLength*2; i++){
+        for (int i = 0; i < searchLength * 2; i++) {
             int anchorOffset = caretOffset - (searchLength) + i;
-            if(anchorOffset <= 0){ continue; }
-            if(anchorOffset >= documentText.length()){ break; }
+            if (anchorOffset <= 0) {
+                continue;
+            }
+            if (anchorOffset >= documentText.length()) {
+                break;
+            }
 
             char c = documentText.charAt(anchorOffset);
 
 
             boolean addPoint = false;
-            if(settings.anchorType == PowerMode3.AnchorTypes.BRACE
-                    && (c == '{' || c == '}')){
+            if (settings.anchorType == PowerMode3.AnchorTypes.BRACE
+                    && (c == '{' || c == '}')) {
                 addPoint = true;
             }
 
-            if(settings.anchorType == PowerMode3.AnchorTypes.PARENTHESIS
-                    && (c == '(' || c == ')')){
+            if (settings.anchorType == PowerMode3.AnchorTypes.PARENTHESIS
+                    && (c == '(' || c == ')')) {
                 addPoint = true;
             }
 
-            if(settings.anchorType == PowerMode3.AnchorTypes.BRACKET
-                    && (c == '[' || c == ']')){
+            if (settings.anchorType == PowerMode3.AnchorTypes.BRACKET
+                    && (c == '[' || c == ']')) {
                 addPoint = true;
             }
-            if(settings.anchorType == PowerMode3.AnchorTypes.COLON
+            if (settings.anchorType == PowerMode3.AnchorTypes.COLON
                     && (c == ':')) {
                 addPoint = true;
             }
 
 
-
-            if(addPoint){
+            if (addPoint) {
                 Point offsetPoint = editor.offsetToXY(anchorOffset);
                 offsetPoint.x = offsetPoint.x - scrollingModel.getHorizontalScrollOffset();
                 offsetPoint.y = offsetPoint.y - scrollingModel.getVerticalScrollOffset();
 
-                Anchor anchor = new Anchor(offsetPoint,anchorOffset, caretOffset);
+                Anchor anchor = new Anchor(offsetPoint, anchorOffset, caretOffset);
                 points.add(anchor);
             }
 
@@ -191,8 +195,8 @@ public class ParticleContainerManager extends EditorFactoryAdapter {
 
     }
 
-    public static void resetAllContainers(){
-        for(ParticleContainer pc: particleContainers.values()){
+    public static void resetAllContainers() {
+        for (ParticleContainer pc : particleContainers.values()) {
             pc.resetParticles();
         }
     }

@@ -7,7 +7,7 @@ plugins {
 sourceCompatibility = 11
 
 group 'com.cschar'
-version '2.4.0'
+version '2.4.2'
 
 
 
@@ -20,7 +20,7 @@ intellij {
     // The version of the IntelliJ Platform IDE that will be used to build the plugin.
     version '2020.2'
     plugins 'java'
-    //this toggles whether patchPluginXml below overrides until-build/sinece-build in plugin.xml
+    //this toggles whether patchPluginXml below overrides until-build/since-build in plugin.xml
     updateSinceUntilBuild false
 }
 
