@@ -1,6 +1,37 @@
+
+
 plugins {
     id 'java'
     id 'org.jetbrains.intellij' version '0.7.2'
+}
+sourceCompatibility = 11
+
+group 'com.cschar'
+version '2.4.0'
+
+
+
+// See https://github.com/JetBrains/gradle-intellij-plugin/
+// "This plugin allows you to build plugins for IntelliJ Platform using specified IntelliJ SDK and bundled/3rd-party plugins."
+
+//https://plugins.jetbrains.com/docs/intellij/plugin-dependencies.html#project-setup
+intellij {
+    //https://github.com/JetBrains/gradle-intellij-plugin/#intellij-platform-properties
+    // The version of the IntelliJ Platform IDE that will be used to build the plugin.
+    version '2020.2'
+    plugins 'java'
+    //this toggles whether patchPluginXml below overrides until-build/sinece-build in plugin.xml
+    updateSinceUntilBuild false
+}
+
+
+//https://github.com/JetBrains/gradle-intellij-plugin/#patching-dsl
+patchPluginXml {
+    sinceBuild '202'
+    untilBuild '211.*'
+    changeNotes """
+      - Update for 2020/2021 <br>
+      """
 }
 
 //give sandbox IDE 2 Gigs
@@ -8,17 +39,13 @@ runIde {
     jvmArgs '-Xmx2G'
 }
 
-group 'com.cschar'
-version '2.3.1'
-patchPluginXml {
-    changeNotes """
-      - Update for IntelliJ 2020 <br>
-      - Add a link to github demo gif on plugin page to see basic functionality <br>
-      """
-}
 
 
-sourceCompatibility = 11
+
+
+
+
+
 
 repositories {
     mavenCentral()
@@ -58,18 +85,3 @@ jar {
     }
 }
 
-
-
-// See https://github.com/JetBrains/gradle-intellij-plugin/
-// "This plugin allows you to build plugins for IntelliJ Platform using specified IntelliJ SDK and bundled/3rd-party plugins."
-intellij {
-    version '2020.1'
-    plugins 'java'
-
-    //If we're using <dependency> com.intellij.modules.python </dependency> in plugin.xml ....
-    // https://plugins.jetbrains.com/plugin/631-python/update/65720
-//            'Pythonid:2019.2.192.5728.74',
-
-            //https://plugins.jetbrains.com/plugin/9568-go/update/66084
-//            'org.jetbrains.plugins.go:192.5728.86.268'
-}

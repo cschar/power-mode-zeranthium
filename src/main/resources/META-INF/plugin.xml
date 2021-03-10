@@ -2,7 +2,7 @@
     <id>com.cschar.power.mode3.zeranthium</id>
     <name>Power Mode - Zeranthium</name>
     <vendor email="codyscharfe@gmail.com">cody scharfe</vendor>
-    <version>2.3.1</version>
+    <version>2.4.0</version>
 
     <description><![CDATA[
         <h1>Power Mode - Zeranthium </h1>
@@ -64,17 +64,15 @@
         ]]>
     </description>
 
+<!--    example of spanning multiple version-->
+<!--    <idea-version since-build="202" until-build="203.*"/>-->
 
-    <idea-version since-build="201"/>
+    <idea-version since-build="202" until-build="202.*"/>
+<!--    <idea-version since-build="203" until-build="203.*"/>-->
 
     <!--    http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html#modules-available-in-all-products-->
     <!-- 	Messaging, UI Themes, UI Components, Files, Documents, Actions, Components, Services, Extensions, Editors -->
     <depends>com.intellij.modules.platform</depends>
-
-
-<!--    <depends>com.intellij.modules.java</depends>-->
-<!--    <depends>com.intellij.modules.python</depends>-->
-<!--    <depends>com.intellij.modules.go</depends>-->
 
     <!--    see config options here-->
     <!--    https://www.jetbrains.org/intellij/sdk/docs/basics/plugin_structure/plugin_configuration_file.html -->
