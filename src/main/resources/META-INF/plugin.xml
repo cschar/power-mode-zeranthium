@@ -2,7 +2,7 @@
     <id>com.cschar.power.mode3.zeranthium</id>
     <name>Power Mode - Zeranthium</name>
     <vendor email="codyscharfe@gmail.com">cody scharfe</vendor>
-    <!-- this is defined in the build.gradle file -->
+    <!-- this is now defined in the build.gradle file -->
     <!--    <version>2.4.0</version>-->
 
     <description><![CDATA[
@@ -84,11 +84,14 @@
     </application-components>
 
     <extensions defaultExtensionNs="com.intellij">
+        <!-- inserts the a GUI into the settings menu under "appearance -> Power Mode - Zeranthium" -->
         <applicationConfigurable groupId="appearance"
                                  groupWeight="20"
                                  id="power.mode3.zeranthium"
                                  displayName="Power Mode - Zeranthium"
                                  instance="com.cschar.pmode3.PowerMode3Configurable" />
+
+        <postStartupActivity implementation="com.cschar.pmode3.PowerMode3StartupActivity"/>
     </extensions>
 
     <actions>

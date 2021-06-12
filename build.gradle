@@ -7,7 +7,7 @@ plugins {
 sourceCompatibility = 11
 
 group 'com.cschar'
-version '2.4.2'
+version '2.5.0'
 
 
 
@@ -25,12 +25,13 @@ intellij {
 }
 
 
-//https://github.com/JetBrains/gradle-intellij-plugin/#patching-dsl
+// https://plugins.jetbrains.com/docs/intellij/build-number-ranges.html#intellij-platform-based-products-of-recent-ide-versions
+// https://github.com/JetBrains/gradle-intellij-plugin/#patching-dsl
 patchPluginXml {
     sinceBuild '202'
     untilBuild '211.*'
     changeNotes """
-      - Update for 2020/2021 <br>
+      - Bug fix when pasting into ctrl+f search when COPYPASTEVOID enabled (thx J!) <br>
       """
 }
 
@@ -38,13 +39,6 @@ patchPluginXml {
 runIde {
     jvmArgs '-Xmx2G'
 }
-
-
-
-
-
-
-
 
 
 repositories {

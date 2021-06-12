@@ -1,6 +1,6 @@
 # Deploying new version
 
- 1. Change version in plugin.xml
+ 1. Change version in build.gradle 
  2. Update change notes in build.gradle
  3. Build the jar ex: ```./gradlew :jar```
  4. upload new .jar file to site
@@ -129,3 +129,12 @@ Caused by: java.lang.ClassNotFoundException: org.json.JSONException PluginClassL
     
 --Fixed by packaging a FAT JAR
 https://discuss.gradle.org/t/how-to-include-dependencies-in-jar/19571/5
+
+
+#launch bug:
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.intellij.util.ReflectionUtil to method sun.java2d.SunGraphicsEnvironment.isUIScaleEnabled()
+WARNING: Please consider reporting this to the maintainers of com.intellij.util.ReflectionUtil
+WARNING: Use --illegal-access=warn to enable warnings of further illeg
+
+this is being tracked here: https://youtrack.jetbrains.com/issue/IDEA-210683

@@ -55,7 +55,7 @@ import java.util.logging.Logger;
 
 /**
  * @author Baptiste Mesta
- *
+ * <p>
  * modified by cschar
  */
 
@@ -73,7 +73,7 @@ public class PowerMode3 implements
         PersistentStateComponent<PowerMode3>, Disposable {
 
     //https://www.jetbrains.org/intellij/sdk/docs/basics/persisting_state_of_components.html#implementing-the-persistentstatecomponent-interface
-    private static final Logger LOGGER = Logger.getLogger( PowerMode3.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger(PowerMode3.class.getName());
 
     public static String NOTIFICATION_GROUP_DISPLAY_ID = "PowerMode - Zeranthium";
 
@@ -102,9 +102,8 @@ public class PowerMode3 implements
         BRACKET,
         COLON
     }
+
     public AnchorTypes anchorType = AnchorTypes.PARENTHESIS;
-
-
 
 
     public enum ConfigType {
@@ -129,7 +128,7 @@ public class PowerMode3 implements
 
     static class JSONLoader {
 
-        public static HashMap<ConfigType,SmartList<String>> loadDefaultJSONTableConfigs(){
+        public static HashMap<ConfigType, SmartList<String>> loadDefaultJSONTableConfigs() {
 
             HashMap<ConfigType, String> defaultJSONTables = new HashMap<ConfigType, String>() {{
 
@@ -149,17 +148,17 @@ public class PowerMode3 implements
                 put(ConfigType.SPECIAL_ACTION_SOUND, "SPECIAL_ACTION_SOUND.json");
 
             }};
-            HashMap<ConfigType,SmartList<String>> pathDataMap = new HashMap<ConfigType,SmartList<String>>();
+            HashMap<ConfigType, SmartList<String>> pathDataMap = new HashMap<ConfigType, SmartList<String>>();
 
 
-            for(ConfigType t: defaultJSONTables.keySet()){
+            for (ConfigType t : defaultJSONTables.keySet()) {
                 String jsonFile = defaultJSONTables.get(t);
-                InputStream inputStream = JSONLoader.class.getResourceAsStream("/configJSON/"+jsonFile);
+                InputStream inputStream = JSONLoader.class.getResourceAsStream("/configJSON/" + jsonFile);
 
 
                 StringBuilder sb = new StringBuilder();
                 Scanner s = new Scanner(inputStream);
-                while(s.hasNextLine()){
+                while (s.hasNextLine()) {
                     sb.append(s.nextLine());
                 }
 
@@ -169,7 +168,7 @@ public class PowerMode3 implements
 
                     //TODO this is extra work, we go .json --> JSONObject --> string ( ..later --> JSONObject ---> pathData)
                     JSONArray tableData = jo.getJSONArray("data");
-                    for(int i=0; i < tableData.length(); i++){
+                    for (int i = 0; i < tableData.length(); i++) {
                         smartList.add(tableData.getJSONObject(i).toString());
                     }
                 } catch (JSONException e) {
@@ -185,34 +184,34 @@ public class PowerMode3 implements
 
 
     @com.intellij.util.xmlb.annotations.MapAnnotation
-    private Map<ConfigType,SmartList<String>> pathDataMap = new HashMap<ConfigType,SmartList<String>>(){{
+    private Map<ConfigType, SmartList<String>> pathDataMap = new HashMap<ConfigType, SmartList<String>>() {{
         //populated by loading in .json files in resources folder.
     }};
 
     //consider JSON https://stackabuse.com/reading-and-writing-json-in-java/ ??
-    @com.intellij.util.xmlb.annotations.MapAnnotation  //this tells it to copy its inner values, wont serialize without it
-    private Map<String,String> configMap = new HashMap<String,String>(){{
+    @com.intellij.util.xmlb.annotations.MapAnnotation
+    //this tells it to copy its inner values, wont serialize without it
+    private Map<String, String> configMap = new HashMap<String, String>() {{
 
-        put("sprite"+ ConfigType.BASIC_PARTICLE + "Enabled", "true");
-        put("sprite"+ ConfigType.LIZARD + "Enabled", "true");
+        put("sprite" + ConfigType.BASIC_PARTICLE + "Enabled", "true");
+        put("sprite" + ConfigType.LIZARD + "Enabled", "true");
 
 
-        put("sprite"+ ConfigType.MOMA+ "Enabled", "false");
+        put("sprite" + ConfigType.MOMA + "Enabled", "false");
 
-        put("sprite"+ ConfigType.VINE + "Enabled", "false");
-        put("sprite"+ ConfigType.MULTI_LAYER + "Enabled", "false");
-        put("sprite"+ ConfigType.LINKER + "Enabled", "false");
-        put("sprite"+ ConfigType.DROSTE + "Enabled", "false");
-        put("sprite"+ ConfigType.COPYPASTEVOID + "Enabled", "true");
-        put("sprite"+ ConfigType.LOCKED_LAYER + "Enabled", "true");
-        put("sprite"+ ConfigType.LANTERN + "Enabled", "false");
-        put("sprite"+ ConfigType.TAP_ANIM + "Enabled", "true");
-        put("sprite"+ ConfigType.MULTI_LAYER_CHANCE + "Enabled", "false");
+        put("sprite" + ConfigType.VINE + "Enabled", "false");
+        put("sprite" + ConfigType.MULTI_LAYER + "Enabled", "false");
+        put("sprite" + ConfigType.LINKER + "Enabled", "false");
+        put("sprite" + ConfigType.DROSTE + "Enabled", "false");
+        put("sprite" + ConfigType.COPYPASTEVOID + "Enabled", "true");
+        put("sprite" + ConfigType.LOCKED_LAYER + "Enabled", "true");
+        put("sprite" + ConfigType.LANTERN + "Enabled", "false");
+        put("sprite" + ConfigType.TAP_ANIM + "Enabled", "true");
+        put("sprite" + ConfigType.MULTI_LAYER_CHANCE + "Enabled", "false");
 
-        put("sprite"+ ConfigType.SOUND + "Enabled", "true");
-        put("sprite"+ ConfigType.SPECIAL_ACTION_SOUND + "Enabled", "false");
+        put("sprite" + ConfigType.SOUND + "Enabled", "true");
+        put("sprite" + ConfigType.SPECIAL_ACTION_SOUND + "Enabled", "false");
     }};
-
 
 
     public static PowerMode3 getInstance() {
@@ -221,41 +220,39 @@ public class PowerMode3 implements
 
     @Override
     public void initializeComponent() {
+        this.particleColor = new JBColor(new Color(this.getParticleRGB()), new Color(this.getParticleRGB()));
 
         //Load JSON
         JSONLoader.loadDefaultJSONTableConfigs();
 
         //Setup SOUND handler
         final EditorActionManager actionManager = EditorActionManager.getInstance();
-
         final TypedAction typedAction2 = TypedAction.getInstance();
         TypedActionHandler rawHandler2 = typedAction2.getRawHandler();
-        typedAction2.setupRawHandler(new TypedActionHandler() {
-                                      @Override
-                                      public void execute(@NotNull Editor editor, char c, @NotNull DataContext dataContext) {
+        typedAction2.setupRawHandler(
+                new TypedActionHandler() {
+                    @Override
+                    public void execute(@NotNull Editor editor, char c, @NotNull DataContext dataContext) {
 //                                          PowerMode3 settings = PowerMode3.getInstance();
-                                          if(PowerMode3.this.isEnabled() && PowerMode3.this.getSpriteTypeEnabled(ConfigType.SOUND)) {
+                        if (PowerMode3.this.isEnabled() && PowerMode3.this.getSpriteTypeEnabled(ConfigType.SOUND)) {
 
-                                              int winner = SoundData.getWeightedAmountWinningIndex(SoundConfig.soundData);
-                                              if( winner != -1){
-                                                  //TODO refactor to just return object or null
-                                                  SoundData d = SoundConfig.soundData.get(winner);
-                                                  Sound s = new Sound(d.getPath(), !d.customPathValid);
-                                                  s.play();
-                                              }
+                            int winner = SoundData.getWeightedAmountWinningIndex(SoundConfig.soundData);
+                            if (winner != -1) {
+                                //TODO refactor to just return object or null
+                                SoundData d = SoundConfig.soundData.get(winner);
+                                Sound s = new Sound(d.getPath(), !d.customPathValid);
+                                s.play();
+                            }
 
-                                          }
-                                          rawHandler2.execute(editor,c,dataContext);
-                                      }
-                                  });
-
-
-
-        this.setupActionEditorKeys();
+                        }
+                        rawHandler2.execute(editor, c, dataContext);
+                    }
+                });
 
 
-        this.particleColor = new JBColor(new Color(this.getParticleRGB()), new Color(this.getParticleRGB()));
 
+        //Setup Main particle stuff
+        //Ensure when a new editor is created,  a particleContainerManager is attached to it
         final EditorActionManager editorActionManager = EditorActionManager.getInstance();
         final EditorFactory editorFactory = EditorFactory.getInstance();
         particleContainerManager = new ParticleContainerManager(this);
@@ -265,32 +262,29 @@ public class PowerMode3 implements
 
             }
         });
+
+        //Setup the handler to listen when typing... e.x. for anchor style particles
         final TypedAction typedAction = TypedAction.getInstance();
         final TypedActionHandler rawHandler = typedAction.getRawHandler();
         typedAction.setupRawHandler(new TypedActionHandler() {
             @Override
             public void execute(@NotNull final Editor editor, final char c, @NotNull final DataContext dataContext) {
-
                 updateEditor(editor);
                 rawHandler.execute(editor, c, dataContext);
             }
         });
+
     }
 
     private void updateEditor(@NotNull final Editor editor) {
-
         particleContainerManager.update(editor);
-
     }
-
-
 
     @Override
     public void dispose() {
         particleContainerManager.dispose();
         particleContainerManager = null;
     }
-
 
 
     @Nullable
@@ -302,40 +296,35 @@ public class PowerMode3 implements
 
     @Override
     public void noStateLoaded() {
-        LOGGER.info("NO State loaded previously");
+        LOGGER.info("No State loaded previously");
         this.setParticleRGB(JBColor.darkGray.getRGB());
         pathDataMap = JSONLoader.loadDefaultJSONTableConfigs();
 
         loadConfigData();
     }
 
-    private List<ConfigType> getMissingPathConfigs(){
-        List<ConfigType> missing = new ArrayList<>();
-        for(ConfigType c: ConfigType.values()){
-            if(c == ConfigType.BASIC_PARTICLE || c == ConfigType.MOMA || c == ConfigType.VINE){
-                continue;
-            }
-            Object val =  pathDataMap.get(c);
-            if(val == null){
-                missing.add(c);
-            }
-        }
-        return missing;
-    }
 
     @Override
     public void loadState(@NotNull PowerMode3 state) {
         LOGGER.info("previous state found -- setting up...");
 //        pathDataMap = ConfigLoader.loadDefaultJSONTableConfigs();
-
         XmlSerializerUtil.copyBean(state, this);
 
-
         //check for missing config data e.g. new setting has been added
-        List<ConfigType> missingConfigs = getMissingPathConfigs();
+        List<ConfigType> missingConfigs = new ArrayList<>();
+        for (ConfigType c : ConfigType.values()) {
+            if (c == ConfigType.BASIC_PARTICLE || c == ConfigType.MOMA || c == ConfigType.VINE) {
+                continue;
+            }
+            Object val = pathDataMap.get(c);
+            if (val == null) {
+                missingConfigs.add(c);
+            }
+        }
+
         if (missingConfigs.size() != 0) {
             LOGGER.info("Missing configs found: " + missingConfigs.size() + " -- loading defaults");
-            for(ConfigType c: missingConfigs){
+            for (ConfigType c : missingConfigs) {
                 LOGGER.info(c.name());
             }
             //TODO only load missingConfigs default setting , not all of them
@@ -347,6 +336,7 @@ public class PowerMode3 implements
 
     }
 
+
     @com.intellij.util.xmlb.annotations.Transient
     public boolean isConfigLoaded = false;
 
@@ -354,14 +344,14 @@ public class PowerMode3 implements
 //    @com.intellij.util.xmlb.annotations.Transient
 //    public boolean isLoading = false;
 
-    public void loadConfigData(){
+    public void loadConfigData() {
 //        boolean DO_BACKGROUND_LOAD = false;
         boolean DO_BACKGROUND_LOAD = true;
 
-        if(DO_BACKGROUND_LOAD) {
+        if (DO_BACKGROUND_LOAD) {
             Task.Backgroundable bgTask = new Task.Backgroundable(null, "Zeranthium Setup...",
                     false, null) {
-//            Task.Modal bgTask = new Task.Modal(null, "Zeranthium Setup...",
+                //            Task.Modal bgTask = new Task.Modal(null, "Zeranthium Setup...",
 //                    false) {
                 @Override
                 public void run(@NotNull ProgressIndicator progressIndicator) {
@@ -369,21 +359,20 @@ public class PowerMode3 implements
                 }
             };
             ProgressManager.getInstance().run(bgTask);
-        }else {
+        } else {
             loadConfigDataAtSplash();
         }
     }
 
 
-
-    private void loadConfigDataAsync(ProgressIndicator progressIndicator){
+    private void loadConfigDataAsync(ProgressIndicator progressIndicator) {
         progressIndicator.setIndeterminate(false);
         progressIndicator.setText("loading assets.. ");
 
         boolean wasEnabled = this.enabled;
         this.enabled = false;
 
-        if(!this.isConfigLoaded) {
+        if (!this.isConfigLoaded) {
             LOGGER.info("Loading assets");
 //            for(ConfigType)
 
@@ -418,16 +407,14 @@ public class PowerMode3 implements
             this.isConfigLoaded = true;
 
             MenuConfigurableUI ui = MenuConfigurableUI.getInstance();
-            if(ui != null) {
+            if (ui != null) {
                 ui.updateConfigUIAfterAssetsAreLoaded(wasEnabled);
             }
         }
     }
 
-    private void setUpdateProgress(ProgressIndicator progressIndicator, String info, double amt){
-
+    private void setUpdateProgress(ProgressIndicator progressIndicator, String info, double amt) {
         String s = "Loading - " + info + " " + amt;
-
 //        progressIndicator.setText(s);
         progressIndicator.setText2(s);
         progressIndicator.setFraction(amt);
@@ -437,8 +424,8 @@ public class PowerMode3 implements
     }
 
 
-    private void loadConfigDataAtSplash(){
-        if(!this.isConfigLoaded) {
+    private void loadConfigDataAtSplash() {
+        if (!this.isConfigLoaded) {
 
             MultiLayerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MULTI_LAYER)));
             MultiLayerChanceConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MULTI_LAYER_CHANCE)));
@@ -459,39 +446,37 @@ public class PowerMode3 implements
     }
 
 
-
-    public ArrayList<SoundData> deserializeSoundData(SmartList<String> target){
+    public ArrayList<SoundData> deserializeSoundData(SmartList<String> target) {
         ArrayList<SoundData> sd = new ArrayList<>();
-        for(String s1: target){
-            sd.add( SoundData.fromJsonObjectString(s1));
+        for (String s1 : target) {
+            sd.add(SoundData.fromJsonObjectString(s1));
         }
         return sd;
     }
 
-    public ArrayList<SpriteData> deserializeSpriteData(SmartList<String> target){
+    public ArrayList<SpriteData> deserializeSpriteData(SmartList<String> target) {
         ArrayList<SpriteData> sd = new ArrayList<SpriteData>();
-        for(String s1: target){
+        for (String s1 : target) {
 
-            sd.add( SpriteData.fromJsonObjectString(s1));
+            sd.add(SpriteData.fromJsonObjectString(s1));
 
         }
         return sd;
     }
 
-    public ArrayList<SpriteDataAnimated> deserializeSpriteDataAnimated(SmartList<String> target){
+    public ArrayList<SpriteDataAnimated> deserializeSpriteDataAnimated(SmartList<String> target) {
         LOGGER.info("deserializing sprite data animated");
         ArrayList<SpriteDataAnimated> sd = new ArrayList<SpriteDataAnimated>();
-        for(String s1: target){
-            sd.add( SpriteDataAnimated.fromJsonObjectString(s1));
+        for (String s1 : target) {
+            sd.add(SpriteDataAnimated.fromJsonObjectString(s1));
         }
         return sd;
     }
 
 
-
-    public void setSerializedSpriteData(ArrayList<SpriteData> spriteData, ConfigType configType){
+    public void setSerializedSpriteData(ArrayList<SpriteData> spriteData, ConfigType configType) {
         SmartList<String> serialized = new SmartList<>();
-        for( SpriteData d: spriteData){
+        for (SpriteData d : spriteData) {
             serialized.add(d.toJSONObject().toString());
 //            serialized.add(new String[]{String.valueOf(d.enabled), String.valueOf(d.scale), String.valueOf(d.val1),
 //                    String.valueOf(d.defaultPath), String.valueOf(d.customPath)});
@@ -499,15 +484,15 @@ public class PowerMode3 implements
         this.pathDataMap.put(configType, serialized);
     }
 
-    public void setSerializedSpriteDataAnimated(ArrayList<SpriteDataAnimated> spriteData, ConfigType configType){
-            SmartList<String> serialized = new SmartList<>();
-            for (SpriteDataAnimated d : spriteData) {
-                serialized.add(d.toJSONObject().toString());
-            }
-            this.pathDataMap.put(configType, serialized);
+    public void setSerializedSpriteDataAnimated(ArrayList<SpriteDataAnimated> spriteData, ConfigType configType) {
+        SmartList<String> serialized = new SmartList<>();
+        for (SpriteDataAnimated d : spriteData) {
+            serialized.add(d.toJSONObject().toString());
+        }
+        this.pathDataMap.put(configType, serialized);
     }
 
-    public void setSerializedSoundData(ArrayList<SoundData> soundData, ConfigType configType){
+    public void setSerializedSoundData(ArrayList<SoundData> soundData, ConfigType configType) {
         SmartList<String> serialized = new SmartList<>();
         for (SoundData d : soundData) {
             serialized.add(d.toJSONObject().toString());
@@ -518,96 +503,85 @@ public class PowerMode3 implements
     }
 
 
-
-
-
     public boolean isEnabled() {
         return enabled;
     }
+
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
 
-    void setSpriteTypeEnabled(Boolean enabled, ConfigType type){
+    void setSpriteTypeEnabled(Boolean enabled, ConfigType type) {
         configMap.put("sprite" + type + "Enabled", enabled.toString());
     }
-    public boolean getSpriteTypeEnabled(ConfigType type){
-        return Boolean.parseBoolean(configMap.get("sprite"+type+"Enabled"));
+
+    public boolean getSpriteTypeEnabled(ConfigType type) {
+        return Boolean.parseBoolean(configMap.get("sprite" + type + "Enabled"));
     }
 
-    public void setSpriteTypeProperty(ConfigType type, String property, String value){
+    public void setSpriteTypeProperty(ConfigType type, String property, String value) {
         configMap.put(String.format("sprite%s_%s", type, property), value);
     }
 
-    public String getSpriteTypeProperty(ConfigType type, String property){
+    public String getSpriteTypeProperty(ConfigType type, String property) {
         return configMap.get(String.format("sprite%s_%s", type, property));
     }
 
 
+    public int getLifetime() {
+        return lifetime;
+    }
 
-    public int getLifetime() { return lifetime; }
-    public void setLifetime(int l) { lifetime=l;}
+    public void setLifetime(int l) {
+        lifetime = l;
+    }
 
 
-    public int getParticleRGB() {     return particleRGB; }
+    public int getParticleRGB() {
+        return particleRGB;
+    }
+
     public void setParticleRGB(int particleRGB) {
         this.particleRGB = particleRGB;
         this.particleColor = new JBColor(new Color(particleRGB), new Color(particleRGB));
     }
 
-    public int getMaxPsiSearchDistance() {  return maxPsiSearchDistance; }
-    public void setMaxPsiSearchDistance(int maxPsiSearchDistance) {this.maxPsiSearchDistance = maxPsiSearchDistance;}
+    public int getMaxPsiSearchDistance() {
+        return maxPsiSearchDistance;
+    }
+
+    public void setMaxPsiSearchDistance(int maxPsiSearchDistance) {
+        this.maxPsiSearchDistance = maxPsiSearchDistance;
+    }
 
 
-    public int getShakeDistance() {  return shakeDistance;  }
-    public void setShakeDistance(int shakeDistance) {   this.shakeDistance = shakeDistance;  }
+    public int getShakeDistance() {
+        return shakeDistance;
+    }
+
+    public void setShakeDistance(int shakeDistance) {
+        this.shakeDistance = shakeDistance;
+    }
 
 
     // Save/load config panel view when exit/enter
-    public int getScrollBarPosition() {   return scrollBarPosition;  }
-    public void setScrollBarPosition(int scrollBarPosition) {  this.scrollBarPosition = scrollBarPosition; }
-    public int getLastTabIndex() {    return lastTabIndex;  }
-    public void setLastTabIndex(int lastTabIndex) {    this.lastTabIndex = lastTabIndex;   }
-
-
-
-
-    private void setupActionEditorKeys(){
-        final EditorActionManager actionManager = EditorActionManager.getInstance();
-
-
-        MySpecialActionHandler h1;
-        EditorActionHandler origHandler;
-
-        //COPYPASTEVOID
-        origHandler = actionManager.getActionHandler(IdeActions.ACTION_EDITOR_PASTE);
-        MyPasteHandler myPasteHandler = new MyPasteHandler(origHandler);
-        actionManager.setActionHandler(IdeActions.ACTION_EDITOR_PASTE, myPasteHandler);
-
-        //SPECIAL_ACTION_SOUND
-        origHandler = actionManager.getActionHandler(IdeActions.ACTION_EDITOR_COPY);
-        h1 = new MySpecialActionHandler(origHandler, SpecialActionSoundConfig.KEYS.COPY);
-        actionManager.setActionHandler(IdeActions.ACTION_EDITOR_COPY, h1);
-
-        origHandler = actionManager.getActionHandler(IdeActions.ACTION_EDITOR_PASTE);
-        h1 = new MySpecialActionHandler(origHandler, SpecialActionSoundConfig.KEYS.PASTE);
-        actionManager.setActionHandler(IdeActions.ACTION_EDITOR_PASTE, h1);
-
-        origHandler = actionManager.getActionHandler(IdeActions.ACTION_EDITOR_DELETE);
-        h1 = new MySpecialActionHandler(origHandler, SpecialActionSoundConfig.KEYS.DELETE);
-        actionManager.setActionHandler(IdeActions.ACTION_EDITOR_DELETE, h1);
-
-        origHandler = actionManager.getActionHandler(IdeActions.ACTION_EDITOR_BACKSPACE);
-        h1 = new MySpecialActionHandler(origHandler, SpecialActionSoundConfig.KEYS.BACKSPACE);
-        actionManager.setActionHandler(IdeActions.ACTION_EDITOR_BACKSPACE, h1);
-
-        origHandler = actionManager.getActionHandler(IdeActions.ACTION_EDITOR_ENTER);
-        h1 = new MySpecialActionHandler(origHandler, SpecialActionSoundConfig.KEYS.ENTER);
-        actionManager.setActionHandler(IdeActions.ACTION_EDITOR_ENTER, h1);
-
-
+    public int getScrollBarPosition() {
+        return scrollBarPosition;
     }
+
+    public void setScrollBarPosition(int scrollBarPosition) {
+        this.scrollBarPosition = scrollBarPosition;
+    }
+
+    public int getLastTabIndex() {
+        return lastTabIndex;
+    }
+
+    public void setLastTabIndex(int lastTabIndex) {
+        this.lastTabIndex = lastTabIndex;
+    }
+
 
 
 

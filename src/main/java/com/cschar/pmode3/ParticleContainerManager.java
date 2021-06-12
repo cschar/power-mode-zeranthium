@@ -97,7 +97,8 @@ public class ParticleContainerManager implements EditorFactoryListener {
             SwingUtilities.invokeLater(new Runnable() {
 
                 @Override
-                public void run() {
+                public void run()
+                {
                     updateInUI(editor);
                 }
             });

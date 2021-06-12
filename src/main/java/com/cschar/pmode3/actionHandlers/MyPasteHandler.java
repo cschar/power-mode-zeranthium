@@ -19,9 +19,12 @@ import org.jetbrains.annotations.Nullable;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.geom.Path2D;
+import java.util.logging.Logger;
 
 
 public class MyPasteHandler extends EditorActionHandler implements EditorTextInsertHandler {
+    private static final java.util.logging.Logger LOGGER = Logger.getLogger(MyPasteHandler.class.getName());
+
     private EditorActionHandler origEditorActionHandler;
 
     public MyPasteHandler(@NotNull EditorActionHandler origEditorActionHandler) {
@@ -48,7 +51,17 @@ public class MyPasteHandler extends EditorActionHandler implements EditorTextIns
 
                 //disable so sprites render at correct spot and arent slowed down by visual scroll
                 scrollingModel.disableAnimation();
-                int beforePasteOffset = scrollingModel.getVerticalScrollOffset();
+                try {
+                    int beforePasteOffset = scrollingModel.getVerticalScrollOffset();
+                }catch(UnsupportedOperationException e){
+                    LOGGER.fine("paste unsupported, exiting early");
+                    //if we are pasting into a search box via ctrl+f, etc.. (not a real editor),
+                    // e.g. com.intellij.openapi.editor.textarea.TextComponentScrollingModel
+                    // don't draw to GUI, just paste and exit
+                    EditorCopyPasteHelper.getInstance().pasteFromClipboard(editor);
+                    return;
+                }
+
                 TextRange[] pasted = EditorCopyPasteHelper.getInstance().pasteFromClipboard(editor);
                 if(pasted.length != 1) return;
                 TextRange t = pasted[0];
@@ -56,12 +69,7 @@ public class MyPasteHandler extends EditorActionHandler implements EditorTextIns
                 int afterPasteOffset = scrollingModel.getVerticalScrollOffset();
                 scrollingModel.enableAnimation();
 
-
 //                System.out.println("scroll before after " + beforePasteOffset + " " + afterPasteOffset);
-
-
-
-
                 int dx, dy;
                 int lineHeight = editor.getLineHeight();
                 int charWidth = EditorUtil.getPlainSpaceWidth(editor);
@@ -157,6 +165,7 @@ public class MyPasteHandler extends EditorActionHandler implements EditorTextIns
 
                 MyCaretListener.enabled = true;
                 curCaret.moveToOffset(start+offset);
+                scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE);
 
             }
         };
@@ -166,7 +175,7 @@ public class MyPasteHandler extends EditorActionHandler implements EditorTextIns
 
     }
 
- //   deprecated
+    //   deprecated
     @Override
     public void execute(Editor editor, DataContext dataContext, Producer<Transferable> producer) {
         if (origEditorActionHandler != null && origEditorActionHandler instanceof EditorTextInsertHandler) {
