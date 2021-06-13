@@ -36,6 +36,14 @@ public class MySpecialActionHandler extends EditorActionHandler implements Edito
         this.key  = key;
     }
 
+
+    @Override
+    public void execute(Editor editor, DataContext dataContext, @Nullable Producer<? extends Transferable> producer) {
+        if (origEditorActionHandler != null && origEditorActionHandler instanceof EditorTextInsertHandler) {
+            ((EditorTextInsertHandler) origEditorActionHandler).execute(editor, dataContext, producer);
+        }
+    }
+
     @Override
     protected void doExecute(@NotNull Editor editor,  @Nullable Caret caret, DataContext dataContext) {
 
@@ -57,12 +65,6 @@ public class MySpecialActionHandler extends EditorActionHandler implements Edito
 
     }
 
- //   deprecated
-    @Override
-    public void execute(Editor editor, DataContext dataContext, Producer<Transferable> producer) {
-        if (origEditorActionHandler != null && origEditorActionHandler instanceof EditorTextInsertHandler) {
-            ((EditorTextInsertHandler) origEditorActionHandler).execute(editor, dataContext, producer);
-        }
-    }
+
 
 }

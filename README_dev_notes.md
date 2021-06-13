@@ -1,3 +1,9 @@
+# TODO:
+ - move over to kotlin based templates
+ https://github.com/JetBrains/intellij-platform-plugin-template
+ - upgrade to gradle intellij-plugin 1.0 
+ https://github.com/JetBrains/gradle-intellij-plugin/
+
 # Deploying new version
 
  1. Change version in build.gradle 
@@ -138,3 +144,33 @@ WARNING: Please consider reporting this to the maintainers of com.intellij.util.
 WARNING: Use --illegal-access=warn to enable warnings of further illeg
 
 this is being tracked here: https://youtrack.jetbrains.com/issue/IDEA-210683
+
+
+
+When upgrading gradle... (to make ./gradlew use a diff version on commadnline...)
+go into gradle/wrapper/gradle-wrapper.properties, and change the URL from which it downloads the version
+
+
+## when setting up on a new computer...
+
+step 1. in File -> project structure -> SDKs ... '+' icon ---> add the IntelliJP Platform Plugin SDK
+step 2. set that SDK as the project SDK to have the external library defined to access all intellij.openapi stuff
+
+.... But the template project doesnt need this... why?
+
+
+./gradlew :classes          build classes
+./gradlew :testClasses      build test classes
+
+
+# testing
+
+./gradlew :clean :runIdeForUiTests
+
+
+# yuck, compile the intellij-ui-test-robot project..
+then add its build/xyz.jars to this projects project-structure in
+global libraries
+
+# to get commandline working, added libs folder in build.gradle...
+https://stackoverflow.com/a/20700183/5198805

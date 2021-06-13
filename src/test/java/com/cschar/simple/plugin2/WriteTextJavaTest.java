@@ -1,0 +1,105 @@
+// Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+
+package com.cschar.simple.plugin2;
+
+import com.cschar.simple.plugin2.steps.JavaExampleSteps;
+import com.cschar.simple.plugin2.utils.RemoteRobotExtension;
+import com.cschar.simple.plugin2.utils.StepsLogger;
+import com.intellij.remoterobot.RemoteRobot;
+import com.intellij.remoterobot.fixtures.ComponentFixture;
+import com.intellij.remoterobot.fixtures.ContainerFixture;
+import com.intellij.remoterobot.search.locators.Locator;
+import com.intellij.remoterobot.utils.Keyboard;
+import org.assertj.swing.core.MouseButton;
+import com.cschar.simple.plugin2.pages.IdeaFrame;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import java.util.concurrent.ThreadLocalRandom;
+
+import static com.intellij.remoterobot.search.locators.Locators.byXpath;
+import static com.intellij.remoterobot.stepsProcessing.StepWorkerKt.step;
+import static com.intellij.remoterobot.utils.RepeatUtilsKt.waitFor;
+import static java.awt.event.KeyEvent.*;
+import static java.time.Duration.ofMinutes;
+import static com.cschar.simple.plugin2.pages.ActionMenuFixtureKt.actionMenu;
+import static com.cschar.simple.plugin2.pages.ActionMenuFixtureKt.actionMenuItem;
+import static com.cschar.simple.plugin2.pages.EditorKt.editor;
+
+@ExtendWith(RemoteRobotExtension.class)
+public class WriteTextJavaTest {
+
+    private final RemoteRobot remoteRobot = new RemoteRobot("http://127.0.0.1:8082");
+    private final JavaExampleSteps sharedSteps = new JavaExampleSteps(remoteRobot);
+    private final Keyboard keyboard = new Keyboard(remoteRobot);
+
+    @BeforeAll
+    public static void initLogging() {
+        StepsLogger.init();
+    }
+
+    @AfterEach
+    public void closeProject(final RemoteRobot remoteRobot) {
+//        step("Close the project", () -> {
+//            if (remoteRobot.isMac()) {
+//                keyboard.hotKey(VK_SHIFT, VK_META, VK_A);
+//                keyboard.enterText("Close Project");
+//                keyboard.enter();
+//            } else {
+//                actionMenu(remoteRobot, "File").click();
+//                actionMenuItem(remoteRobot, "Close Project").click();
+//            }
+//        });
+    }
+
+    @Test
+    void writeSomeText(final RemoteRobot remoteRobot) {
+//        sharedSteps.createNewCommandLineProject();
+//        sharedSteps.closeTipOfTheDay();
+
+        final IdeaFrame idea = remoteRobot.find(IdeaFrame.class);
+        waitFor(ofMinutes(5), () -> !idea.isDumbMode());
+
+        int r = ThreadLocalRandom.current().nextInt(1,100000);
+        String appName = "App" + r;
+
+        step("Create New Kotlin file", () -> {
+            final ContainerFixture projectView = idea.getProjectViewTree();
+            if (!projectView.hasText("src")) {
+                projectView.findText(idea.getProjectName()).doubleClick();
+                waitFor(() -> projectView.hasText("src"));
+            }
+            projectView.findText("src").click(MouseButton.RIGHT_BUTTON);
+            actionMenu(remoteRobot, "New").click();
+            actionMenuItem(remoteRobot, "Kotlin Class/File").click();
+
+
+            keyboard.enterText(appName);
+            keyboard.down();
+            keyboard.enter();
+        });
+
+        final ContainerFixture editor = editor(idea, appName+".kt");
+
+        step("Write a code", () -> {
+            //sharedSteps.autocomplete("main");
+            keyboard.enterText("println(\"");
+            keyboard.enterText("Hello from UI test");
+        });
+
+//        step("Launch the application", () -> {
+//            editor.findText("main").click(MouseButton.RIGHT_BUTTON);
+//            idea.find(ComponentFixture.class,
+//                    byXpath("//div[@class='ActionMenuItem' and @disabledicon='execute.svg']")
+//            ).click();
+//        });
+//        step("Check console output", () -> {
+//            final Locator locator = byXpath("//div[@class='ConsoleViewImpl']");
+//            waitFor(ofMinutes(1), () -> idea.findAll(ContainerFixture.class, locator).size() > 0);
+//            waitFor(ofMinutes(1), () -> idea.find(ComponentFixture.class, locator)
+//                    .hasText("Hello from UI test"));
+//        });
+    }
+}
