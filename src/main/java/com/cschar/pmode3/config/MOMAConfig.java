@@ -49,11 +49,11 @@ public class MOMAConfig extends JPanel {
 
 
         //save values so we can check if we need to reload sprites
-        String colorRGBInner = settings.getSpriteTypeProperty(PowerMode3.ConfigType.LIGHTNING, "one Square Color");
+        String colorRGBInner = settings.getSpriteTypeProperty(PowerMode3.ConfigType.MOMA, "one Square Color");
         if(colorRGBInner != null){
             this.colorOne =  new Color(Integer.parseInt(colorRGBInner));
         }
-        String colorRGBOuter = settings.getSpriteTypeProperty(PowerMode3.ConfigType.LIGHTNING, "two Square Color");
+        String colorRGBOuter = settings.getSpriteTypeProperty(PowerMode3.ConfigType.MOMA, "two Square Color");
         if(colorRGBOuter != null){
             this.colorTwo =  new Color(Integer.parseInt(colorRGBOuter));
         }

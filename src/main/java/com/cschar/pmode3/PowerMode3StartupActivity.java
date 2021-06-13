@@ -38,6 +38,9 @@ public class PowerMode3StartupActivity implements StartupActivity {
 
     @Override
     public void runActivity(@NotNull Project project) {
+        //force lazy loading of service
+        PowerMode3.getInstance();
+
         setupActionEditorKeys();
     }
 

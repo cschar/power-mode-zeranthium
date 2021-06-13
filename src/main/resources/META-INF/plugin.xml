@@ -1,101 +1,54 @@
+<!--https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html-->
 <idea-plugin url="https://github.com/cschar/power-mode-zeranthium">
     <id>com.cschar.power.mode3.zeranthium</id>
     <name>Power Mode - Zeranthium</name>
     <vendor email="codyscharfe@gmail.com">cody scharfe</vendor>
-    <!-- this is now defined in the build.gradle file -->
-    <!--    <version>2.4.0</version>-->
 
-    <description><![CDATA[
-        <h1>Power Mode - Zeranthium </h1>
-
-        <img src="https://user-images.githubusercontent.com/296551/86540558-4ea4f880-bed4-11ea-830b-5e3bf25e0cb1.gif" />
-        <img src="https://user-images.githubusercontent.com/296551/63473991-68b52400-c445-11e9-84dc-e2e5269729d8.png" />
-        <h2> Get Into your Zone... </h2>
-
-        <p> See the <a href="https://cschar.github.io/power-mode-zeranthium/"> Docs page </a> for more info </p>
-        <h2>Featuring:</h2>
-        <ul>
-
-<li>- Basic Particle Effects </li>
-<li>- Vines </li>
-<li>- 'Lizards' (swarms to anchors)</li>
-<li>- MultiLayer w/ spawn chance</li>
-<li>- Editor Shake </li>
-<li>- Weird square effect (MOMA)</li>
-<li>- Anchor type effects where your code structure influences particle behaviour</li>
-<li>- Customizable Anchor Types (Bracket/Brace/Parenthesis/Colon)</li>
-<li>- MultiLayer w/ caret tracking</li>
-<li>- Linker Chains w/ caret tracking</li>
-<li>- Sound panel (Tabbed Panel)  (MP3)</li>
-<li>- Play 2x Song w/ 2 Hotkeys to trigger each one (MP3)</li>
-<li>- Droste effect</li>
-<li>- CopyPasteVoid effect (pasting in displays a customizable image & color fade behind the paste shape)</li>
-<li>- Background Loading of Assets</li>
-<li>- Max 500 *.png or 1.0GB of data per Image Collection</li>
-<li>- LOAD Custom Config packs -- Support DROSTE/LIZARD/SOUND/MULTI_LAYER/LOCKED_LAYER</li>
-<li>- clone zeranthium-extras repo and select config pack to load</li>
-<li>- Action Key Sound Options (Copy/Paste/Backspace/Del/Enter)</li>
-<li>- Locked layer that stretches or pins to corner</li>
-<li>- Supports multiple editors</li>
-<li>- 'Lantern' Particles</li>
-<li>- 'Tap Animation' -- keypress controls how fast it animates</li>
-<li>- ON/OFF hotkey to quickly toggle Zeranthium</li>
-
-        </ul>
-        <h2>Getting Started: </h2>
-        <ol>
-            <li> Settings can be found in Preferences > Appearance > Power Mode - Zeranthium </li>
-            <li> Everything is pretty much customizable -- just point your table paths to your own custom images/sounds (PNG/MP3)
-             and eventually build up a nice visual package with multiple effects/layering. </li>
-            <li> To install pre-configured themes clone the
-                <a href="https://github.com/cschar/zeranthium-extras"> zeranthium-extras </a> repo.
-                You can also make your own (see docs site)
-            </li>
-            <li> You may need to
-         <a href="https://www.jetbrains.com/help/idea/increasing-memory-heap.html"> increase memory heap size </a>
-             if your custom assets are large in size.
-            </li>
-        </ol>
-
-
-        <p>Based on Power Mode from Baptiste Mesta on Github.</p>
-        <p>Inspired by Power Mode II by axaluss.</p>
-
-
-        ]]>
-    </description>
-
-    <!-- this is defined in the build.gradle file -->
-<!--    example of spanning multiple version-->
-<!--    <idea-version since-build="202" until-build="203.*"/>-->
-<!--    <idea-version since-build="202" until-build="202.*"/>-->
-<!--    <idea-version since-build="203" until-build="203.*"/>-->
-
-    <!--    http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html#modules-available-in-all-products-->
-    <!-- 	Messaging, UI Themes, UI Components, Files, Documents, Actions, Components, Services, Extensions, Editors -->
+    <!-- Product and plugin compatibility requirements -->
+    <!-- https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
+    <!-- http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html#modules-available-in-all-products-->
+    <!-- Messaging, UI Themes, UI Components, Files, Documents, Actions, Components, Services, Extensions, Editors -->
     <depends>com.intellij.modules.platform</depends>
 
     <!--    see config options here-->
     <!--    https://www.jetbrains.org/intellij/sdk/docs/basics/plugin_structure/plugin_configuration_file.html -->
-    <application-components>
-        <component>
-            <implementation-class>com.cschar.pmode3.PowerMode3</implementation-class>
-        </component>
-    </application-components>
-
+    
     <extensions defaultExtensionNs="com.intellij">
         <!-- inserts the a GUI into the settings menu under "appearance -> Power Mode - Zeranthium" -->
+
         <applicationConfigurable groupId="appearance"
                                  groupWeight="20"
                                  id="power.mode3.zeranthium"
                                  displayName="Power Mode - Zeranthium"
                                  instance="com.cschar.pmode3.PowerMode3Configurable" />
 
+
+
+        <applicationService serviceImplementation="com.cschar.pmode3.PowerMode3"/>
+
+        <applicationService serviceInterface="com.cschar.pmode3.services.MemoryMonitorService"
+                            serviceImplementation="com.cschar.pmode3.services.MemoryMonitorServiceImpl"
+                            headlessImplementation="com.cschar.pmode3.services.MemoryMonitorServiceHeadless"
+        />
+
+        <!-- https://plugins.jetbrains.com/docs/intellij/plugin-components.html#application-startup -->
+        <!-- "Plugin code should only be executed when projects are opened" -->
         <postStartupActivity implementation="com.cschar.pmode3.PowerMode3StartupActivity"/>
+
+<!--        <applicationService serviceImplementation="com.github.cschar.pmode3.services.MyApplicationService"/>-->
+<!--        <projectService serviceImplementation="com.github.cschar.pmode3.services.MyProjectService"/>-->
     </extensions>
 
-    <actions>
 
+<!--    <applicationListeners>-->
+<!--        <listener class="com.github.cschar.pmode3.listeners.MyProjectManagerListener"-->
+<!--                  topic="com.intellij.openapi.project.ProjectManagerListener"/>-->
+<!--    </applicationListeners>-->
+
+
+
+
+    <actions>
         <action id="com.cschar.pmode3.PowerModeZeranthiumToggleEnabled"
                 class="com.cschar.pmode3.hotkeys.HotKeyEnabledAction"
                 text="Power Mode Zeranthium Toggle"
@@ -123,4 +76,5 @@
         </group>
 
     </actions>
+
 </idea-plugin>

@@ -11,6 +11,9 @@ import java.awt.*;
 import java.util.ArrayList;
 
 
+/**
+ * base config panel used to build out other particle effect configs
+ */
 public abstract class BaseConfigPanel extends JPanel {
 
     public JPanel headerPanel;

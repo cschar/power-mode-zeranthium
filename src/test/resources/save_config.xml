@@ -1,0 +1,187 @@
+<application>
+    <component name="PowerMode3Zeranthium">
+        <option name="particleRGB" value="-12566465" />
+        <option name="pathDataMap">
+            <map>
+                <entry key="LIZARD">
+                    <value>
+                        <list>
+                            <option value="{&quot;previewSize&quot;:60,&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/blender/lizard&quot;,&quot;val2&quot;:1,&quot;isCyclic&quot;:false,&quot;alpha&quot;:1,&quot;val1&quot;:2,&quot;scale&quot;:0.45,&quot;enabled&quot;:true,&quot;speedRate&quot;:3}" />
+                            <option value="{&quot;previewSize&quot;:60,&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/blender/lizard2&quot;,&quot;val2&quot;:1,&quot;isCyclic&quot;:false,&quot;alpha&quot;:0.6,&quot;val1&quot;:2,&quot;scale&quot;:0.65,&quot;enabled&quot;:true,&quot;speedRate&quot;:3}" />
+                            <option value="{&quot;previewSize&quot;:60,&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/blender/lizard&quot;,&quot;val2&quot;:1,&quot;isCyclic&quot;:false,&quot;alpha&quot;:1,&quot;val1&quot;:10,&quot;scale&quot;:0.25,&quot;enabled&quot;:true,&quot;speedRate&quot;:3}" />
+                        </list>
+                    </value>
+                </entry>
+                <entry key="MULTI_LAYER">
+                    <value>
+                        <list>
+                            <option value="{&quot;previewSize&quot;:120,&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/blender/mandala1/&quot;,&quot;val2&quot;:5,&quot;isCyclic&quot;:false,&quot;alpha&quot;:1,&quot;val1&quot;:1,&quot;scale&quot;:1,&quot;enabled&quot;:true,&quot;speedRate&quot;:3}" />
+                            <option value="{&quot;previewSize&quot;:120,&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/blender/mandala2/&quot;,&quot;val2&quot;:5,&quot;isCyclic&quot;:true,&quot;alpha&quot;:1,&quot;val1&quot;:1,&quot;scale&quot;:1,&quot;enabled&quot;:true,&quot;speedRate&quot;:2}" />
+                            <option value="{&quot;previewSize&quot;:120,&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/blender/mandala3/&quot;,&quot;val2&quot;:5,&quot;isCyclic&quot;:true,&quot;alpha&quot;:1,&quot;val1&quot;:1,&quot;scale&quot;:1,&quot;enabled&quot;:true,&quot;speedRate&quot;:2}" />
+                            <option value="{&quot;previewSize&quot;:120,&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/blender/mandala3/&quot;,&quot;val2&quot;:5,&quot;isCyclic&quot;:false,&quot;alpha&quot;:1,&quot;val1&quot;:1,&quot;scale&quot;:2,&quot;enabled&quot;:true,&quot;speedRate&quot;:4}" />
+                        </list>
+                    </value>
+                </entry>
+                <entry key="LINKER">
+                    <value>
+                        <list>
+                            <option value="{&quot;previewSize&quot;:60,&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/blender/linkerI/chain1&quot;,&quot;val2&quot;:100,&quot;isCyclic&quot;:false,&quot;alpha&quot;:1,&quot;val1&quot;:1,&quot;scale&quot;:0.3,&quot;enabled&quot;:true,&quot;speedRate&quot;:2}" />
+                            <option value="{&quot;previewSize&quot;:60,&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/blender/linkerI/chain5&quot;,&quot;val2&quot;:6,&quot;isCyclic&quot;:false,&quot;alpha&quot;:0.6,&quot;val1&quot;:2,&quot;scale&quot;:0.3,&quot;enabled&quot;:true,&quot;speedRate&quot;:2}" />
+                            <option value="{&quot;previewSize&quot;:60,&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/blender/linkerI/chain4&quot;,&quot;val2&quot;:20,&quot;isCyclic&quot;:false,&quot;alpha&quot;:1,&quot;val1&quot;:10,&quot;scale&quot;:0.2,&quot;enabled&quot;:true,&quot;speedRate&quot;:2}" />
+                        </list>
+                    </value>
+                </entry>
+                <entry key="SOUND">
+                    <value>
+                        <list>
+                            <option value="{&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/sounds/h1.mp3&quot;,&quot;val1&quot;:20,&quot;enabled&quot;:true}" />
+                            <option value="{&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/sounds/h2.mp3&quot;,&quot;val1&quot;:20,&quot;enabled&quot;:true}" />
+                            <option value="{&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/sounds/h3.mp3&quot;,&quot;val1&quot;:20,&quot;enabled&quot;:true}" />
+                            <option value="{&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/sounds/h4.mp3&quot;,&quot;val1&quot;:20,&quot;enabled&quot;:true}" />
+                        </list>
+                    </value>
+                </entry>
+                <entry key="MUSIC_TRIGGER">
+                    <value>
+                        <list>
+                            <option value="{&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/sounds/music_triggers/trigger1.mp3&quot;,&quot;val1&quot;:0,&quot;enabled&quot;:true}" />
+                            <option value="{&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/sounds/music_triggers/trigger2.mp3&quot;,&quot;val1&quot;:1,&quot;enabled&quot;:true}" />
+                        </list>
+                    </value>
+                </entry>
+                <entry key="DROSTE">
+                    <value>
+                        <list>
+                            <option value="{&quot;previewSize&quot;:120,&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/blender/droste1&quot;,&quot;val2&quot;:20,&quot;isCyclic&quot;:false,&quot;alpha&quot;:0.3,&quot;val1&quot;:20,&quot;scale&quot;:2,&quot;enabled&quot;:true,&quot;speedRate&quot;:2}" />
+                            <option value="{&quot;previewSize&quot;:120,&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/blender/droste2&quot;,&quot;val2&quot;:20,&quot;isCyclic&quot;:false,&quot;alpha&quot;:1,&quot;val1&quot;:80,&quot;scale&quot;:0.6,&quot;enabled&quot;:false,&quot;speedRate&quot;:2}" />
+                        </list>
+                    </value>
+                </entry>
+                <entry key="COPYPASTEVOID">
+                    <value>
+                        <list>
+                            <option value="{&quot;previewSize&quot;:60,&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/blender/copypastevoid1&quot;,&quot;val2&quot;:1,&quot;isCyclic&quot;:false,&quot;alpha&quot;:1,&quot;val1&quot;:2,&quot;scale&quot;:0.4,&quot;enabled&quot;:true,&quot;speedRate&quot;:2}" />
+                            <option value="{&quot;previewSize&quot;:60,&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/blender/copypastevoid2&quot;,&quot;val2&quot;:1,&quot;isCyclic&quot;:false,&quot;alpha&quot;:0.6,&quot;val1&quot;:2,&quot;scale&quot;:0.6,&quot;enabled&quot;:true,&quot;speedRate&quot;:2}" />
+                        </list>
+                    </value>
+                </entry>
+                <entry key="SPECIAL_ACTION_SOUND">
+                    <value>
+                        <list>
+                            <option value="{&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/sounds/h1.mp3&quot;,&quot;val1&quot;:20,&quot;enabled&quot;:false}" />
+                            <option value="{&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/sounds/h2.mp3&quot;,&quot;val1&quot;:20,&quot;enabled&quot;:true}" />
+                            <option value="{&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/sounds/h3.mp3&quot;,&quot;val1&quot;:20,&quot;enabled&quot;:false}" />
+                            <option value="{&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/sounds/h4.mp3&quot;,&quot;val1&quot;:20,&quot;enabled&quot;:false}" />
+                            <option value="{&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/sounds/h4.mp3&quot;,&quot;val1&quot;:20,&quot;enabled&quot;:false}" />
+                        </list>
+                    </value>
+                </entry>
+                <entry key="LOCKED_LAYER">
+                    <value>
+                        <list>
+                            <option value="{&quot;previewSize&quot;:120,&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/blender/locked1&quot;,&quot;val2&quot;:4,&quot;isCyclic&quot;:true,&quot;alpha&quot;:1,&quot;val1&quot;:60,&quot;scale&quot;:1,&quot;enabled&quot;:true,&quot;speedRate&quot;:3}" />
+                            <option value="{&quot;previewSize&quot;:120,&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/blender/locked2&quot;,&quot;val2&quot;:0,&quot;isCyclic&quot;:true,&quot;alpha&quot;:1,&quot;val1&quot;:60,&quot;scale&quot;:1,&quot;enabled&quot;:false,&quot;speedRate&quot;:3}" />
+                        </list>
+                    </value>
+                </entry>
+                <entry key="LANTERN">
+                    <value>
+                        <list>
+                            <option value="{&quot;previewSize&quot;:60,&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/blender/linkerI/chain1&quot;,&quot;val2&quot;:58,&quot;isCyclic&quot;:false,&quot;alpha&quot;:1,&quot;val1&quot;:2,&quot;scale&quot;:0.3,&quot;enabled&quot;:true,&quot;speedRate&quot;:4}" />
+                            <option value="{&quot;previewSize&quot;:60,&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/blender/linkerI/chain5&quot;,&quot;val2&quot;:1,&quot;isCyclic&quot;:false,&quot;alpha&quot;:0.6,&quot;val1&quot;:2,&quot;scale&quot;:0.3,&quot;enabled&quot;:true,&quot;speedRate&quot;:6}" />
+                            <option value="{&quot;previewSize&quot;:60,&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/blender/linkerI/chain4&quot;,&quot;val2&quot;:22,&quot;isCyclic&quot;:false,&quot;alpha&quot;:1,&quot;val1&quot;:10,&quot;scale&quot;:0.2,&quot;enabled&quot;:true,&quot;speedRate&quot;:7}" />
+                        </list>
+                    </value>
+                </entry>
+                <entry key="TAP_ANIM">
+                    <value>
+                        <list>
+                            <option value="{&quot;previewSize&quot;:120,&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/blender/tap_anim1&quot;,&quot;val2&quot;:0,&quot;isCyclic&quot;:true,&quot;alpha&quot;:1,&quot;val1&quot;:0,&quot;scale&quot;:1,&quot;enabled&quot;:true,&quot;speedRate&quot;:1}" />
+                        </list>
+                    </value>
+                </entry>
+                <entry key="MULTI_LAYER_CHANCE">
+                    <value>
+                        <list>
+                            <option value="{&quot;previewSize&quot;:80,&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/blender/mandala1/&quot;,&quot;val2&quot;:5,&quot;isCyclic&quot;:false,&quot;alpha&quot;:1,&quot;val1&quot;:1000,&quot;scale&quot;:1,&quot;enabled&quot;:true,&quot;speedRate&quot;:3}" />
+                            <option value="{&quot;previewSize&quot;:80,&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/blender/mandala2/&quot;,&quot;val2&quot;:5,&quot;isCyclic&quot;:false,&quot;alpha&quot;:1,&quot;val1&quot;:1000,&quot;scale&quot;:1,&quot;enabled&quot;:true,&quot;speedRate&quot;:2}" />
+                            <option value="{&quot;previewSize&quot;:80,&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/blender/mandala3/&quot;,&quot;val2&quot;:5,&quot;isCyclic&quot;:false,&quot;alpha&quot;:1,&quot;val1&quot;:1000,&quot;scale&quot;:1,&quot;enabled&quot;:true,&quot;speedRate&quot;:2}" />
+                            <option value="{&quot;previewSize&quot;:80,&quot;customPath&quot;:&quot;&quot;,&quot;defaultPath&quot;:&quot;/blender/mandala3/&quot;,&quot;val2&quot;:5,&quot;isCyclic&quot;:false,&quot;alpha&quot;:1,&quot;val1&quot;:1000,&quot;scale&quot;:2,&quot;enabled&quot;:true,&quot;speedRate&quot;:4}" />
+                        </list>
+                    </value>
+                </entry>
+            </map>
+        </option>
+        <option name="configMap">
+            <map>
+                <entry key="spriteBASIC_PARTICLEEnabled" value="true" />
+                <entry key="spriteBASIC_PARTICLE_EMIT_BOT" value="true" />
+                <entry key="spriteBASIC_PARTICLE_EMIT_TOP" value="false" />
+                <entry key="spriteBASIC_PARTICLE_MAX_PARTICLE_SIZE" value="5" />
+                <entry key="spriteBASIC_PARTICLE_NUM_PARTICLES" value="7" />
+                <entry key="spriteBASIC_PARTICLE_basic particle Color" value="-3407872" />
+                <entry key="spriteCOPYPASTEVOIDEnabled" value="true" />
+                <entry key="spriteCOPYPASTEVOID_fade Color" value="-16711936" />
+                <entry key="spriteCOPYPASTEVOID_fadeAmount" value="0.05" />
+                <entry key="spriteCOPYPASTEVOID_fadeColorEnabled" value="true" />
+                <entry key="spriteDROSTEEnabled" value="false" />
+                <entry key="spriteLANTERNEnabled" value="false" />
+                <entry key="spriteLANTERN_isCyclicEnabled" value="false" />
+                <entry key="spriteLANTERN_maxLinks" value="20" />
+                <entry key="spriteLANTERN_maxParticles" value="10" />
+                <entry key="spriteLANTERN_moveWithCaretEnabled" value="true" />
+                <entry key="spriteLANTERN_movespeed" value="1.0" />
+                <entry key="spriteLANTERN_tracer Color" value="-1660878951" />
+                <entry key="spriteLANTERN_tracerEnabled" value="true" />
+                <entry key="spriteLINKEREnabled" value="false" />
+                <entry key="spriteLINKER_chanceOfSpawn" value="100" />
+                <entry key="spriteLINKER_chancePerKeyPress" value="100" />
+                <entry key="spriteLINKER_curve1Amount" value="0" />
+                <entry key="spriteLINKER_distanceFromCenter" value="150" />
+                <entry key="spriteLINKER_isCyclicEnabled" value="false" />
+                <entry key="spriteLINKER_maxAnchorsToUse" value="10" />
+                <entry key="spriteLINKER_maxCycleParticles" value="3" />
+                <entry key="spriteLINKER_maxLinks" value="50" />
+                <entry key="spriteLINKER_maxPsiSearchDistance" value="400" />
+                <entry key="spriteLINKER_minPsiSearchDistance" value="50" />
+                <entry key="spriteLINKER_moveWithCaretEnabled" value="true" />
+                <entry key="spriteLINKER_movespeed" value="1.0" />
+                <entry key="spriteLINKER_tracer Color" value="-1660878951" />
+                <entry key="spriteLINKER_tracerEnabled" value="true" />
+                <entry key="spriteLINKER_wobbleAmount" value="20" />
+                <entry key="spriteLIZARDEnabled" value="false" />
+                <entry key="spriteLIZARD_chanceOfSpawn" value="100" />
+                <entry key="spriteLIZARD_chancePerKeyPress" value="100" />
+                <entry key="spriteLIZARD_maxAnchorsToUse" value="10" />
+                <entry key="spriteLIZARD_maxPsiSearchDistance" value="400" />
+                <entry key="spriteLIZARD_minPsiSearchDistance" value="50" />
+                <entry key="spriteLOCKED_LAYEREnabled" value="true" />
+                <entry key="spriteLOCKED_LAYER_gutterWidth" value="50" />
+                <entry key="spriteMOMAEnabled" value="false" />
+                <entry key="spriteMOMA_emitBottomEnabled" value="true" />
+                <entry key="spriteMOMA_emitTopEnabled" value="false" />
+                <entry key="spriteMOMA_one Square Color" value="-10027111" />
+                <entry key="spriteMOMA_oneSquareEnabled" value="true" />
+                <entry key="spriteMOMA_three Square Color" value="-1" />
+                <entry key="spriteMOMA_threeSquareEnabled" value="true" />
+                <entry key="spriteMOMA_two Square Color" value="-6684775" />
+                <entry key="spriteMOMA_twoSquareEnabled" value="true" />
+                <entry key="spriteMULTI_LAYEREnabled" value="false" />
+                <entry key="spriteMULTI_LAYER_CHANCEEnabled" value="false" />
+                <entry key="spriteMULTI_LAYER_moveSpeed" value="0.1" />
+                <entry key="spriteMULTI_LAYER_moveWithCaretEnabled" value="true" />
+                <entry key="spriteSOUNDEnabled" value="true" />
+                <entry key="spriteSPECIAL_ACTION_SOUNDEnabled" value="false" />
+                <entry key="spriteTAP_ANIMEnabled" value="false" />
+                <entry key="spriteVINEEnabled" value="false" />
+                <entry key="spriteVINE_Vine Bottom Color" value="-16711681" />
+                <entry key="spriteVINE_Vine Top Color" value="-16711936" />
+                <entry key="spriteVINE_chancePerKeyPress" value="100" />
+                <entry key="spriteVINE_growFromRight" value="false" />
+                <entry key="spriteVINE_maxPsiSearchDistance" value="300" />
+                <entry key="spriteVINE_minPsiSearchDistance" value="50" />
+                <entry key="spriteVINE_spriteEnabled" value="true" />
+            </map>
+        </option>
+    </component>
+</application>
