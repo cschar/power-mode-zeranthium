@@ -11,7 +11,7 @@ import com.intellij.remoterobot.fixtures.FixtureName;
 import org.jetbrains.annotations.NotNull;
 
 import static com.intellij.remoterobot.search.locators.Locators.byXpath;
-import static com.intellij.remoterobot.utils.UtilsKt.hasAnyComponent;
+//import static com.intellij.remoterobot.utils.UtilsKt.hasAnyComponent;
 
 
 @DefaultXpath(by = "FlatWelcomeFrame type", xpath = "//div[@class='FlatWelcomeFrame']")
@@ -52,12 +52,22 @@ public class WelcomeFrameFixture extends CommonContainerFixture {
     }
 
     private ComponentFixture welcomeFrameLink(String text) {
-        if (hasAnyComponent(this, byXpath("//div[@class='NewRecentProjectPanel']"))) {
+
+        try{
             return find(ComponentFixture.class, byXpath("//div[@class='JBOptionButton' and @text='" + text + "']"));
+        }catch(Exception e){
+            return find(
+                    ComponentFixture.class,
+                    byXpath("//div[@class='NonOpaquePanel'][./div[@text='" + text + "']]//div[@class='JButton']")
+            );
         }
-        return find(
-                ComponentFixture.class,
-                byXpath("//div[@class='NonOpaquePanel'][./div[@text='" + text + "']]//div[@class='JButton']")
-        );
+
+//        if (hasAnyComponent(this, byXpath("//div[@class='NewRecentProjectPanel']"))) {
+//            return find(ComponentFixture.class, byXpath("//div[@class='JBOptionButton' and @text='" + text + "']"));
+//        }
+//        return find(
+//                ComponentFixture.class,
+//                byXpath("//div[@class='NonOpaquePanel'][./div[@text='" + text + "']]//div[@class='JButton']")
+//        );
     }
 }

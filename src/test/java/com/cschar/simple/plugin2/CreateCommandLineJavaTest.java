@@ -40,16 +40,16 @@ public class CreateCommandLineJavaTest {
 
     @AfterEach
     public void closeProject(final RemoteRobot remoteRobot) {
-        step("Close the project", () -> {
-            if (remoteRobot.isMac()) {
-                keyboard.hotKey(VK_SHIFT, VK_META, VK_A);
-                keyboard.enterText("Close Project");
-                keyboard.enter();
-            } else {
-                actionMenu(remoteRobot, "File").click();
-                actionMenuItem(remoteRobot, "Close Project").click();
-            }
-        });
+//        step("Close the project", () -> {
+//            if (remoteRobot.isMac()) {
+//                keyboard.hotKey(VK_SHIFT, VK_META, VK_A);
+//                keyboard.enterText("Close Project");
+//                keyboard.enter();
+//            } else {
+//                actionMenu(remoteRobot, "File").click();
+//                actionMenuItem(remoteRobot, "Close Project").click();
+//            }
+//        });
     }
 
     @Test
@@ -77,22 +77,35 @@ public class CreateCommandLineJavaTest {
         final ContainerFixture editor = editor(idea, "App.kt");
 
         step("Write a code", () -> {
-            sharedSteps.autocomplete("main");
+         //   sharedSteps.autocomplete("main");
             keyboard.enterText("println(\"");
             keyboard.enterText("Hello from UI test");
+            String msg = "" +
+                    "Hello how are you doing" +
+                    "for(int i =0; i< 10; i++){" +
+                    "   System.out.println(i);" +
+                    "}";
+
+            keyboard.enterText(msg);
+
+            try {
+                Thread.sleep(4000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         });
 
-        step("Launch the application", () -> {
-            editor.findText("main").click(MouseButton.RIGHT_BUTTON);
-            idea.find(ComponentFixture.class,
-                    byXpath("//div[@class='ActionMenuItem' and @disabledicon='execute.svg']")
-            ).click();
-        });
-        step("Check console output", () -> {
-            final Locator locator = byXpath("//div[@class='ConsoleViewImpl']");
-            waitFor(ofMinutes(1), () -> idea.findAll(ContainerFixture.class, locator).size() > 0);
-            waitFor(ofMinutes(1), () -> idea.find(ComponentFixture.class, locator)
-                    .hasText("Hello from UI test"));
-        });
+//        step("Launch the application", () -> {
+//            editor.findText("main").click(MouseButton.RIGHT_BUTTON);
+//            idea.find(ComponentFixture.class,
+//                    byXpath("//div[@class='ActionMenuItem' and @disabledicon='execute.svg']")
+//            ).click();
+//        });
+//        step("Check console output", () -> {
+//            final Locator locator = byXpath("//div[@class='ConsoleViewImpl']");
+//            waitFor(ofMinutes(1), () -> idea.findAll(ContainerFixture.class, locator).size() > 0);
+//            waitFor(ofMinutes(1), () -> idea.find(ComponentFixture.class, locator)
+//                    .hasText("Hello from UI test"));
+//        });
     }
 }

@@ -19,7 +19,7 @@ import static com.intellij.remoterobot.fixtures.dataExtractor.TextDataPredicates
 import static com.intellij.remoterobot.search.locators.Locators.byXpath;
 import static com.intellij.remoterobot.stepsProcessing.StepWorkerKt.step;
 import static com.intellij.remoterobot.utils.RepeatUtilsKt.waitFor;
-import static com.intellij.remoterobot.utils.UtilsKt.hasSingleComponent;
+//import static com.intellij.remoterobot.utils.UtilsKt.hasSingleComponent;
 import static java.time.Duration.ofSeconds;
 import static com.cschar.simple.plugin2.pages.DialogFixture.byTitle;
 
@@ -63,16 +63,16 @@ public class JavaExampleSteps {
         });
     }
 
-    public void autocomplete(String text) {
-        step("Autocomplete '" + text + "'", () -> {
-            final Locator completionMenu = byXpath("//div[@class='HeavyWeightWindow']");
-            final Keyboard keyboard = new Keyboard(remoteRobot);
-            keyboard.enterText(text);
-            waitFor(ofSeconds(5), () -> hasSingleComponent(remoteRobot, completionMenu));
-            remoteRobot.find(ComponentFixture.class, completionMenu)
-                    .findText(contains(text))
-                    .click();
-            keyboard.enter();
-        });
-    }
+//    public void autocomplete(String text) {
+//        step("Autocomplete '" + text + "'", () -> {
+//            final Locator completionMenu = byXpath("//div[@class='HeavyWeightWindow']");
+//            final Keyboard keyboard = new Keyboard(remoteRobot);
+//            keyboard.enterText(text);
+//            waitFor(ofSeconds(5), () -> hasSingleComponent(remoteRobot, completionMenu));
+//            remoteRobot.find(ComponentFixture.class, completionMenu)
+//                    .findText(contains(text))
+//                    .click();
+//            keyboard.enter();
+//        });
+//    }
 }

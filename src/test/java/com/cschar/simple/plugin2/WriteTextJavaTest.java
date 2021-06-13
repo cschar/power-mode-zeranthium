@@ -5,6 +5,7 @@ package com.cschar.simple.plugin2;
 import com.cschar.simple.plugin2.steps.JavaExampleSteps;
 import com.cschar.simple.plugin2.utils.RemoteRobotExtension;
 import com.cschar.simple.plugin2.utils.StepsLogger;
+import com.intellij.openapi.ui.playback.commands.KeyCodeTypeCommand;
 import com.intellij.remoterobot.RemoteRobot;
 import com.intellij.remoterobot.fixtures.ComponentFixture;
 import com.intellij.remoterobot.fixtures.ContainerFixture;
@@ -84,9 +85,25 @@ public class WriteTextJavaTest {
         final ContainerFixture editor = editor(idea, appName+".kt");
 
         step("Write a code", () -> {
+            //simulate autocomplete step
+            keyboard.enterText("main");
+            keyboard.enter();
+
             //sharedSteps.autocomplete("main");
-            keyboard.enterText("println(\"");
-            keyboard.enterText("Hello from UI test");
+            keyboard.enterText("println(\"Hello from UI test\");");
+            keyboard.enter();
+
+
+            for(int i =0; i<10; i++) {
+                keyboard.enter();
+            }
+
+            keyboard.enterText("for(i in 1..5){", 200);
+            keyboard.enter();
+            keyboard.enterText("println(i)");
+            keyboard.enter();
+
+
         });
 
 //        step("Launch the application", () -> {

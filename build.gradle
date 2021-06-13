@@ -27,9 +27,9 @@ repositories {
     //https://stackoverflow.com/a/20700183/5198805
     //adding this to get commandline gradle to work
     // since adding libs inside IntelliJ wont be visible on commandline
-    flatDir {
-        dirs 'libs'
-    }
+//    flatDir {
+//        dirs 'libs'
+//    }
 }
 
 compileKotlin {
@@ -41,11 +41,11 @@ compileTestKotlin {
 
 
 
-def remoteRobotVersion = "0.11.4"
+//def remoteRobotVersion = "0.11.4"
 //def remoteRobotVersion = "0.11.3"
 // to check their latest available version:
 //https://packages.jetbrains.team/maven/p/ij/intellij-dependencies/org/jetbrains/test/robot-server-plugin/
-//def remoteRobotVersion = "0.10.0"
+def remoteRobotVersion = "0.10.0"
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 // "This plugin allows you to build plugins for IntelliJ Platform using specified IntelliJ SDK and bundled/3rd-party plugins."
@@ -68,9 +68,9 @@ patchPluginXml {
       """
 }
 
-//give sandbox IDE 2 Gigs
+//give sandbox IDE 4 Gigs
 runIde {
-    jvmArgs '-Xmx2G'
+    jvmArgs '-Xmx4G'
 }
 
 
@@ -103,12 +103,12 @@ dependencies {
 
 
     //robot-ui testing stuff
-    testImplementation 'com.intellij.remoterobot:remote-robot:' + remoteRobotVersion
-    testImplementation 'com.intellij.remoterobot:remote-fixtures:' + remoteRobotVersion
+//    testImplementation 'com.intellij.remoterobot:remote-robot:' + remoteRobotVersion
+//    testImplementation 'com.intellij.remoterobot:remote-fixtures:' + remoteRobotVersion
     //for some reason this version is on maven
     // https://mvnrepository.com/artifact/com.intellij.remoterobot/remote-fixtures/1.1.18
-//    testImplementation 'com.intellij.remoterobot:remote-robot:' + '0.10.0'
-//    testImplementation 'com.intellij.remoterobot:remote-fixtures:' + '1.1.18'
+    testImplementation 'com.intellij.remoterobot:remote-robot:' + '0.10.0'
+    testImplementation 'com.intellij.remoterobot:remote-fixtures:' + '1.1.18'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
 
@@ -129,6 +129,9 @@ jar {
 
 //overrides for  :runIdeForUiTests task ...
 runIdeForUiTests {
+
+    maxHeapSize = "4g"
+
 //    In case your Idea is launched on remote machine you can enable public port and enable encryption of JS calls
 //    systemProperty "robot-server.host.public", "true"
 //    systemProperty "robot.encryption.enabled", "true"
