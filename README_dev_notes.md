@@ -174,3 +174,11 @@ global libraries
 
 # to get commandline working, added libs folder in build.gradle...
 https://stackoverflow.com/a/20700183/5198805
+
+
+## ok finally got it working using web available stuff @ v0.10.0, but missing fancy 0.14.0 api...
+had to comment out some code.
+to run: in 1 terminal:
+./gradlew :clean :runIdeForUiTests
+
+then inside this IDE, launch the "writeTextJavaTest"
