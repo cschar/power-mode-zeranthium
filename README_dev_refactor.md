@@ -35,3 +35,4 @@ java.lang.RuntimeException: Memory leak detected: 'com.cschar.pmode3.PowerMode3$
 Register it with a proper parentDisposable or ensure that it's always disposed by direct Disposer.dispose call.
 See https://jetbrains.org/intellij/sdk/docs/basics/disposers.html for more details.
 The corresponding Disposer.register() stacktrace is shown as the cause:
+

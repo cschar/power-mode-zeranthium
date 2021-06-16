@@ -27,15 +27,15 @@
 
         <postStartupActivity implementation="com.cschar.pmode3.PowerMode3StartupActivity"/>
 
-        <applicationService serviceImplementation="com.github.cschar.pmode3.services.MyApplicationService"/>
-        <projectService serviceImplementation="com.github.cschar.pmode3.services.MyProjectService"/>
+<!--        <applicationService serviceImplementation="com.github.cschar.pmode3.services.MyApplicationService"/>-->
+<!--        <projectService serviceImplementation="com.github.cschar.pmode3.services.MyProjectService"/>-->
     </extensions>
 
 
-    <applicationListeners>
-        <listener class="com.github.cschar.pmode3.listeners.MyProjectManagerListener"
-                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
-    </applicationListeners>
+<!--    <applicationListeners>-->
+<!--        <listener class="com.github.cschar.pmode3.listeners.MyProjectManagerListener"-->
+<!--                  topic="com.intellij.openapi.project.ProjectManagerListener"/>-->
+<!--    </applicationListeners>-->
 
 
 
