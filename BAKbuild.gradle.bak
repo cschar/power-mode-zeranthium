@@ -7,69 +7,66 @@ buildscript {
     }
 }
 
-
-
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij'
-    id 'org.jetbrains.kotlin.jvm'
+    //upgrade path here https://lp.jetbrains.com/gradle-intellij-plugin/
+    //id 'org.jetbrains.intellij' version '1.0'
+    id 'org.jetbrains.intellij' version '0.7.2'
+    id 'org.jetbrains.kotlin.jvm' version '1.5.10'
 }
 
-repositories {
-    mavenCentral()
-    maven { url = "https://packages.jetbrains.team/maven/p/ij/intellij-dependencies" }
-}
-
-
-//sourceCompatibility = 11
-
-
+sourceCompatibility = JavaVersion.VERSION_11
 
 group 'com.cschar'
 version '2.5.0'
 
+repositories {
+    mavenCentral()
+    maven { url = "https://packages.jetbrains.team/maven/p/ij/intellij-dependencies" }
 
-//compileKotlin {
-//    kotlinOptions.jvmTarget = "1.8"
-//}
-//compileTestKotlin {
-//    kotlinOptions.jvmTarget = "1.8"
-//}
+    //https://stackoverflow.com/a/20700183/5198805
+    //adding this to get commandline gradle to work
+    // since adding libs inside IntelliJ wont be visible on commandline
+//    flatDir {
+//        dirs 'libs'
+//    }
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "11"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "11"
+}
+
+
+
+//def remoteRobotVersion = "0.11.4"
+//def remoteRobotVersion = "0.11.3"
+// to check their latest available version:
+//https://packages.jetbrains.team/maven/p/ij/intellij-dependencies/org/jetbrains/test/robot-server-plugin/
+def remoteRobotVersion = "0.10.0"
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 // "This plugin allows you to build plugins for IntelliJ Platform using specified IntelliJ SDK and bundled/3rd-party plugins."
-
-//https://plugins.jetbrains.com/docs/intellij/plugin-dependencies.html#project-setup
 intellij {
-    //https://github.com/JetBrains/gradle-intellij-plugin/#intellij-platform-properties
-    // The version of the IntelliJ Platform IDE that will be used to build the plugin.
-    // this plugin's repo has many examples of intellIJ plugins to use...
-//    version '2021.1'
-    version '2020.2'
-    plugins 'java'
-    //this toggles whether patchPluginXml below overrides until-build/since-build in plugin.xml
-    updateSinceUntilBuild false
-
-    //for ui-robot-test
+    //    //https://github.com/JetBrains/gradle-intellij-plugin/#intellij-platform-properties
+    version '2021.1'
     downloadRobotServerPlugin.version = remoteRobotVersion
-}
 
+    plugins 'java'
+    updateSinceUntilBuild false
+}
 
 // https://plugins.jetbrains.com/docs/intellij/build-number-ranges.html#intellij-platform-based-products-of-recent-ide-versions
 // https://github.com/JetBrains/gradle-intellij-plugin/#patching-dsl
 patchPluginXml {
-    sinceBuild '202'
+    sinceBuild '211'
     untilBuild '211.*'
     changeNotes """
       - Bug fix when pasting into ctrl+f search when COPYPASTEVOID enabled (thx J!) <br>
       """
 }
-
-//give sandbox IDE 2 Gigs
-runIde {
-    jvmArgs '-Xmx2G'
-}
-
 
 
 configurations {
@@ -77,12 +74,9 @@ configurations {
     extraLibs
 }
 
-//def remoteRobotVersion = "0.11.3"
-// to check their latest available version:
-//https://packages.jetbrains.team/maven/p/ij/intellij-dependencies/org/jetbrains/test/robot-server-plugin/
-def remoteRobotVersion = "0.10.0"
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    implementation 'org.junit.jupiter:junit-jupiter:5.7.0'
+    //testCompile group: 'junit', name: 'junit', version: '4.12'
 
     // https://mvnrepository.com/artifact/org.imgscalr/imgscalr-lib
   //  implementation files('/Applications/IntelliJ IDEA CE.app/Contents/plugins/java/lib/java-api.jar')
@@ -101,14 +95,21 @@ dependencies {
 
     configurations.compile.extendsFrom(configurations.extraLibs)
 
+
     //robot-ui testing stuff
-    testImplementation 'com.intellij.remoterobot:remote-robot:' + remoteRobotVersion
-    testImplementation 'com.intellij.remoterobot:remote-fixtures:' + remoteRobotVersion
+//    testImplementation 'com.intellij.remoterobot:remote-robot:' + remoteRobotVersion
+//    testImplementation 'com.intellij.remoterobot:remote-fixtures:' + remoteRobotVersion
+    //for some reason this version is on maven
+    // https://mvnrepository.com/artifact/com.intellij.remoterobot/remote-fixtures/1.1.18
+    testImplementation 'com.intellij.remoterobot:remote-robot:' + '0.10.0'
+    testImplementation 'com.intellij.remoterobot:remote-fixtures:' + '1.1.18'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
 
     // Logging Network Calls
     testImplementation 'com.squareup.okhttp3:logging-interceptor:4.9.1'
+
+
 
 }
 
@@ -118,10 +119,13 @@ jar {
     }
 }
 
-////////////////////
+////////
 
 //overrides for  :runIdeForUiTests task ...
 runIdeForUiTests {
+
+    maxHeapSize = "4g"
+
 //    In case your Idea is launched on remote machine you can enable public port and enable encryption of JS calls
 //    systemProperty "robot-server.host.public", "true"
 //    systemProperty "robot.encryption.enabled", "true"
