@@ -27,11 +27,16 @@ public class MyPasteHandler extends EditorActionHandler implements EditorTextIns
     private static final java.util.logging.Logger LOGGER = Logger.getLogger(MyPasteHandler.class.getName());
 
     //   deprecated
+    @Override
+    public void execute(Editor editor, DataContext dataContext, Producer<Transferable> producer) {
+        if (origEditorActionHandler != null && origEditorActionHandler instanceof EditorTextInsertHandler) {
+            ((EditorTextInsertHandler) origEditorActionHandler).execute(editor, dataContext, producer);
+        }
+    }
+
 //    @Override
-//    public void execute(Editor editor, DataContext dataContext, Producer<Transferable> producer) {
-//        if (origEditorActionHandler != null && origEditorActionHandler instanceof EditorTextInsertHandler) {
-//            ((EditorTextInsertHandler) origEditorActionHandler).execute(editor, dataContext, producer);
-//        }
+//    public void execute(Editor editor, DataContext dataContext, @Nullable Producer<? extends Transferable> producer) {
+//
 //    }
 
 
@@ -187,8 +192,5 @@ public class MyPasteHandler extends EditorActionHandler implements EditorTextIns
     }
 
 
-    @Override
-    public void execute(Editor editor, DataContext dataContext, @Nullable Producer<? extends Transferable> producer) {
 
-    }
 }
