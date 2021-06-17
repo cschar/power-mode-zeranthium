@@ -35,6 +35,7 @@ repositories {
     //for remoterobot
     //https://docs.gradle.org/current/userguide/declaring_repositories.html#sec:declaring_multiple_repositories
     maven {
+        //https://packages.jetbrains.team/maven/p/ij/intellij-dependencies/com/intellij/remoterobot/robot-server-plugin/
         url = uri("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies")
     }
 }
@@ -50,7 +51,7 @@ val extraLibs by configurations.creating {
     extendsFrom(configurations["implementation"])
 }
 
-var remoteRobotVersion = "0.10.0"
+var remoteRobotVersion = "0.11.4"
 
 dependencies {
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.17.1")
@@ -102,8 +103,9 @@ dependencies {
 //    testImplementation 'com.intellij.remoterobot:remote-fixtures:' + remoteRobotVersion
     //for some reason this version is on maven
     // https://mvnrepository.com/artifact/com.intellij.remoterobot/remote-fixtures/1.1.18
-    testImplementation("com.intellij.remoterobot:remote-robot:" + "0.10.0")
-    testImplementation("com.intellij.remoterobot:remote-fixtures:" + "1.1.18")
+    //https://packages.jetbrains.team/maven/p/ij/intellij-dependencies/com/intellij/remoterobot/
+    testImplementation("com.intellij.remoterobot:remote-robot:" + "0.11.4")
+    testImplementation("com.intellij.remoterobot:remote-fixtures:" + "0.11.4")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.2")
 
