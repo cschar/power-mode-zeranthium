@@ -32,6 +32,11 @@ version = properties("pluginVersion")
 // Configure project's dependencies
 repositories {
     mavenCentral()
+    //for remoterobot
+    //https://docs.gradle.org/current/userguide/declaring_repositories.html#sec:declaring_multiple_repositories
+    maven {
+        url = uri("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies")
+    }
 }
 
 //https://docs.gradle.org/current/userguide/migrating_from_groovy_to_kotlin_dsl.html#custom_configurations_and_dependencies
@@ -44,6 +49,8 @@ val extraLibs by configurations.creating {
     //extendsFrom(configurations["compileOnly"])
     extendsFrom(configurations["implementation"])
 }
+
+var remoteRobotVersion = "0.10.0"
 
 dependencies {
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.17.1")
@@ -89,6 +96,19 @@ dependencies {
     implementation(group="org.imgscalr", name="imgscalr-lib", version="4.2")
 
     //configurations.compile.extendsFrom(configurations.extraLibs)
+
+    //robot-ui testing stuff
+//    testImplementation 'com.intellij.remoterobot:remote-robot:' + remoteRobotVersion
+//    testImplementation 'com.intellij.remoterobot:remote-fixtures:' + remoteRobotVersion
+    //for some reason this version is on maven
+    // https://mvnrepository.com/artifact/com.intellij.remoterobot/remote-fixtures/1.1.18
+    testImplementation("com.intellij.remoterobot:remote-robot:" + "0.10.0")
+    testImplementation("com.intellij.remoterobot:remote-fixtures:" + "1.1.18")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.2")
+
+    // Logging Network Calls
+    testImplementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
 }
 
 
@@ -96,6 +116,7 @@ dependencies {
 // Configure gradle-intellij-plugin plugin.
 // Read more: https://github.com/JetBrains/gradle-intellij-plugin
 intellij {
+
     pluginName.set(properties("pluginName"))
     version.set(properties("platformVersion"))
     type.set(properties("platformType"))
@@ -140,6 +161,25 @@ tasks {
 //            configurations.extraLibs.collect { it.isDirectory() ? it : zipTree(it) }
 //        }
 //    }
+    test {
+        useJUnitPlatform()
+    }
+
+    runIdeForUiTests {
+        jvmArgs = listOf("-Xmx4G")
+
+       // maxHeapSize = "4g"
+
+//    In case your Idea is launched on remote machine you can enable public port and enable encryption of JS calls
+//    systemProperty "robot-server.host.public", "true"
+//    systemProperty "robot.encryption.enabled", "true"
+//    systemProperty "robot.encryption.password", "my super secret"
+
+        systemProperty("robot-server.port", "8082")
+        systemProperty("ide.mac.message.dialogs.as.sheets", "false")
+        systemProperty("jb.privacy.policy.text", "<!--999.999-->")
+        systemProperty("jb.consents.confirmation.enabled", "false")
+    }
     runIde {
         //maxHeapSize = "4g"
         jvmArgs = listOf("-Xmx4G")
@@ -181,6 +221,10 @@ tasks {
 
     runPluginVerifier {
         ideVersions.set(properties("pluginVerifierIdeVersions").split(',').map(String::trim).filter(String::isNotEmpty))
+    }
+
+    downloadRobotServerPlugin {
+        version.set(remoteRobotVersion)
     }
 
     publishPlugin {
