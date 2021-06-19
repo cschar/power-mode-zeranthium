@@ -12,12 +12,14 @@
 
     <!--    see config options here-->
     <!--    https://www.jetbrains.org/intellij/sdk/docs/basics/plugin_structure/plugin_configuration_file.html -->
-    <application-components>
-        <component>
-            <!--demo code https://github.com/JetBrains/intellij-sdk-code-samples/blob/127d86e45039f055c7669ee512efae1748018802/settings/src/main/java/org/intellij/sdk/settings/AppSettingsState.java-->
-            <implementation-class>com.cschar.pmode3.PowerMode3</implementation-class>
-        </component>
-    </application-components>
+<!--    <application-components>-->
+<!--        <component>-->
+<!--            &lt;!&ndash;demo code https://github.com/JetBrains/intellij-sdk-code-samples/blob/127d86e45039f055c7669ee512efae1748018802/settings/src/main/java/org/intellij/sdk/settings/AppSettingsState.java&ndash;&gt;-->
+<!--            &lt;!&ndash; and wheres its used in a plugin.xml... https://github.com/JetBrains/intellij-sdk-code-samples/blob/127d86e45039f055c7669ee512efae1748018802/settings/src/main/resources/META-INF/plugin.xml &ndash;&gt;-->
+<!--            <implementation-class>com.cschar.pmode3.PowerMode3</implementation-class>-->
+
+<!--        </component>-->
+<!--    </application-components>-->
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- inserts the a GUI into the settings menu under "appearance -> Power Mode - Zeranthium" -->
@@ -26,6 +28,9 @@
                                  id="power.mode3.zeranthium"
                                  displayName="Power Mode - Zeranthium"
                                  instance="com.cschar.pmode3.PowerMode3Configurable" />
+
+        <applicationService serviceImplementation="com.cschar.pmode3.PowerMode3"/>
+
 
         <!-- https://plugins.jetbrains.com/docs/intellij/plugin-components.html#application-startup -->
         <!-- "Plugin code should only be executed when projects are opened" -->

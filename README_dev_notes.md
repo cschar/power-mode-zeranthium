@@ -182,3 +182,9 @@ to run: in 1 terminal:
 ./gradlew :clean :runIdeForUiTests
 
 then inside this IDE, launch the "writeTextJavaTest"
+
+
+## for example reference of test code
+https://github.com/JetBrains/gradle-intellij-plugin/tree/master/examples/simple-plugin/src/test/java/org/intellij/examples/simple/plugin
+and maybe..
+https://github.com/JetBrains/intellij-sdk-code-samples/

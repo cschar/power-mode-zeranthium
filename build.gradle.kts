@@ -168,8 +168,12 @@ tasks {
     }
 
     runIde {
-        //extra arg is for IDE perf plugin to be allowed to attach a trace agent
-        jvmArgs = listOf("-Xmx4G","-Djdk.attach.allowAttachSelf=true")
+
+        jvmArgs = listOf("-Xmx4G",
+                         "-Djdk.attach.allowAttachSelf=true", //for IDE perf plugin to be allowed to attach a trace agent
+                         //"--add-exports", "java.base/jdk.internal.vm=ALL-UNNAMED" //j.internal.DebugAttachDetector
+                        "--add-exports=java.base/jdk.internal.vm=ALL-UNNAMED" //j.internal.DebugAttachDetector
+        )
     }
 
     runIdeForUiTests {

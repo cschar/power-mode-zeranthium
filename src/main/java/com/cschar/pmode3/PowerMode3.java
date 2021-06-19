@@ -37,6 +37,8 @@ import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.*;
 import com.intellij.openapi.progress.*;
 
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.ui.JBColor;
 import com.intellij.util.SmartList;
 import com.intellij.util.xmlb.XmlSerializerUtil;
@@ -46,6 +48,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.swing.tree.DefaultTreeCellEditor;
 import java.awt.*;
 import java.io.InputStream;
 import java.util.*;
@@ -215,11 +218,14 @@ public class PowerMode3 implements
 
 
     public static PowerMode3 getInstance() {
-        return ApplicationManager.getApplication().getComponent(PowerMode3.class);
+        //return ApplicationManager.getApplication().getComponent(PowerMode3.class);
+        return ApplicationManager.getApplication().getService(PowerMode3.class);
     }
 
     @Override
     public void initializeComponent() {
+        LOGGER.info("Initializing Powermode Zeranthium...");
+
         this.particleColor = new JBColor(new Color(this.getParticleRGB()), new Color(this.getParticleRGB()));
 
         //Load JSON
@@ -255,6 +261,12 @@ public class PowerMode3 implements
         //Ensure when a new editor is created,  a particleContainerManager is attached to it
         final EditorActionManager editorActionManager = EditorActionManager.getInstance();
         final EditorFactory editorFactory = EditorFactory.getInstance();
+
+        Editor[] allEditors = EditorFactory.getInstance().getAllEditors();
+        for(Editor e : allEditors){
+            LOGGER.info("Editor " + e.toString() + " is open");
+            ParticleContainerManager.bootstrapEditor(e);
+        }
         particleContainerManager = new ParticleContainerManager(this);
         editorFactory.addEditorFactoryListener(particleContainerManager, new Disposable() {
             @Override
@@ -262,6 +274,7 @@ public class PowerMode3 implements
 
             }
         });
+        EditorFactory.getInstance().refreshAllEditors();
 
         //Setup the handler to listen when typing... e.x. for anchor style particles
         final TypedAction typedAction = TypedAction.getInstance();
@@ -334,36 +347,31 @@ public class PowerMode3 implements
 
         loadConfigData();
 
-    }
+        LOGGER.info("state loaded.....=-=-=-=-=");
 
+        Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
 
-    @com.intellij.util.xmlb.annotations.Transient
-    public boolean isConfigLoaded = false;
-
-    // for use with experimental editor onCreated in particleManager
-//    @com.intellij.util.xmlb.annotations.Transient
-//    public boolean isLoading = false;
-
-    public void loadConfigData() {
-//        boolean DO_BACKGROUND_LOAD = false;
-        boolean DO_BACKGROUND_LOAD = true;
-
-        if (DO_BACKGROUND_LOAD) {
-            Task.Backgroundable bgTask = new Task.Backgroundable(null, "Zeranthium Setup...",
-                    false, null) {
-                //            Task.Modal bgTask = new Task.Modal(null, "Zeranthium Setup...",
-//                    false) {
-                @Override
-                public void run(@NotNull ProgressIndicator progressIndicator) {
-                    loadConfigDataAsync(progressIndicator);
-                }
-            };
-            ProgressManager.getInstance().run(bgTask);
-        } else {
-            loadConfigDataAtSplash();
+        for(Project p : openProjects){
+            LOGGER.info("project is open" + p.getName());
         }
     }
 
+
+
+    public void loadConfigData() {
+        Task.Backgroundable bgTask = new Task.Backgroundable(null, "Zeranthium Setup...",
+                false, null) {
+            @Override
+            public void run(@NotNull ProgressIndicator progressIndicator) {
+                loadConfigDataAsync(progressIndicator);
+            }
+        };
+        ProgressManager.getInstance().run(bgTask);
+
+    }
+
+    @com.intellij.util.xmlb.annotations.Transient
+    public boolean isConfigLoaded = false;
 
     private void loadConfigDataAsync(ProgressIndicator progressIndicator) {
         progressIndicator.setIndeterminate(false);
@@ -419,29 +427,7 @@ public class PowerMode3 implements
         progressIndicator.setText2(s);
         progressIndicator.setFraction(amt);
         MenuConfigurableUI.loadingLabel.setText(s);
-//        try {              Thread.sleep(3000);          } catch (InterruptedException e) {          }
-
-    }
-
-
-    private void loadConfigDataAtSplash() {
-        if (!this.isConfigLoaded) {
-
-            MultiLayerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MULTI_LAYER)));
-            MultiLayerChanceConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MULTI_LAYER_CHANCE)));
-            LizardConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LIZARD)));
-            LinkerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LINKER)));
-            DrosteConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.DROSTE)));
-            CopyPasteVoidConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.COPYPASTEVOID)));
-            LockedLayerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LOCKED_LAYER)));
-            LanternConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LANTERN)));
-            TapAnimConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.TAP_ANIM)));
-
-            SoundConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.SOUND)));
-            MusicTriggerConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.MUSIC_TRIGGER)));
-            SpecialActionSoundConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.SPECIAL_ACTION_SOUND)));
-        }
-        this.isConfigLoaded = true;
+        try {              Thread.sleep(3000);          } catch (InterruptedException e) {          }
 
     }
 

@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * @author Baptiste Mesta
@@ -33,6 +34,7 @@ import java.util.*;
  * modified by cschar
  */
 public class ParticleContainerManager implements EditorFactoryListener {
+    private static final Logger LOGGER = Logger.getLogger(ParticleContainerManager.class.getName());
 
     private Thread thread;
     public static Map<Editor, ParticleContainer> particleContainers = new HashMap<>();
@@ -66,9 +68,21 @@ public class ParticleContainerManager implements EditorFactoryListener {
         thread.start();
     }
 
+    public static void bootstrapEditor(Editor e){
+        EditorFactoryEvent ev = new EditorFactoryEvent(EditorFactory.getInstance(), e);
+
+        final Editor editor = ev.getEditor();
+        LOGGER.warning("BOOSTRAP=====Editor Created with name:" + editor.toString());
+        particleContainers.put(editor, new ParticleContainer(editor));
+        MyCaretListener cl = new MyCaretListener();
+        MyCaretListener.enabled = true;
+        editor.getCaretModel().addCaretListener(cl);
+    }
+
     @Override
     public void editorCreated(@NotNull EditorFactoryEvent event) {
         final Editor editor = event.getEditor();
+        LOGGER.info("=====Editor Created with name:" + editor.toString());
 
 
         particleContainers.put(editor, new ParticleContainer(editor));
