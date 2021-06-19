@@ -1,4 +1,16 @@
 
+Optimizing :
+https://plugins.jetbrains.com/docs/intellij/performance.html
+uses this plugin:
+https://plugins.jetbrains.com/plugin/15104-ide-perf
+
+Plugin components are... deprecated?
+https://plugins.jetbrains.com/docs/intellij/plugin-components.html
+"Any existing Components should be migrated to services, extensions, or listeners (see below)"
+
+right now pmode3 class is defined as application-component.... this should be stuck in the <applicationService...> tag
+like MyApplicatioNService kotlin class.
+
 we are using PersistentStateComponent
 https://plugins.jetbrains.com/docs/intellij/persisting-state-of-components.html#using-persistentstatecomponent
 In the new guide, they want us to use a service impelemtating that...
@@ -24,7 +36,13 @@ links to
 https://www.plugin-dev.com/intellij/general/plugin-initial-load/
 
 
-## BUG
+## CURRENT BUGS
+
+- The PostStartupActivity is called each time a project is opened.. instad of when application is loaded.
+------ Not a bug... seems to still only be called once... each EditorActionHandler is unique to each project.
+  
+
+## BUG when uprading to v2021
 
 ered in Disposer but wasn't disposed.
 Register it with a proper parentDisposable or ensure that it's always disposed by direct Disposer.dispose call.

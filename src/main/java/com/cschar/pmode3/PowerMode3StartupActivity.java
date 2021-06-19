@@ -41,9 +41,14 @@ public class PowerMode3StartupActivity implements StartupActivity {
         setupActionEditorKeys();
     }
 
+    public static boolean isInitialized = false;
+
     public void setupActionEditorKeys() {
         LOGGER.info("setting actionEditorKeys...");
-
+//        if(isInitialized){
+//            LOGGER.info("already initalized... quitting");
+//            return;
+//        }
         final EditorActionManager actionManager = EditorActionManager.getInstance();
         MySpecialActionHandler h1;
         EditorActionHandler origHandler;

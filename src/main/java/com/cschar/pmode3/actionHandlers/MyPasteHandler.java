@@ -29,6 +29,8 @@ public class MyPasteHandler extends EditorActionHandler implements EditorTextIns
     //   deprecated
     @Override
     public void execute(Editor editor, DataContext dataContext, Producer<Transferable> producer) {
+        System.out.println("PasteHandler executed");
+        LOGGER.info("Psting...in project.." + editor.getProject().getName());
         if (origEditorActionHandler != null && origEditorActionHandler instanceof EditorTextInsertHandler) {
             ((EditorTextInsertHandler) origEditorActionHandler).execute(editor, dataContext, producer);
         }
@@ -43,13 +45,14 @@ public class MyPasteHandler extends EditorActionHandler implements EditorTextIns
     private EditorActionHandler origEditorActionHandler;
 
     public MyPasteHandler(@NotNull EditorActionHandler origEditorActionHandler) {
+        LOGGER.info("creating MyPasteHandler");
         this.origEditorActionHandler = origEditorActionHandler;
     }
 
     @Override
     protected void doExecute(@NotNull Editor editor,  @Nullable Caret caret, DataContext dataContext) {
 
-
+        LOGGER.info("Pasting doExectue..in project.." + editor.getProject().getName());
         PowerMode3 settings = PowerMode3.getInstance();
 
         if(!settings.isEnabled() || !settings.getSpriteTypeEnabled(PowerMode3.ConfigType.COPYPASTEVOID)){

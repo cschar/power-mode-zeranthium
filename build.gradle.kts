@@ -11,11 +11,11 @@ buildscript {
 }
 
 plugins {
-    // Java support
-    // https://docs.gradle.org/current/userguide/java_plugin.html#java_plugin
+    // Java support - https://docs.gradle.org/current/userguide/java_plugin.html#java_plugin
     id("java")
     // Kotlin support
-    id("org.jetbrains.kotlin.jvm") version "1.5.10"
+    // id("org.jetbrains.kotlin.jvm") version "1.5.10"
+    id("org.jetbrains.kotlin.jvm") version "1.4.10"
     // gradle-intellij-plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
     id("org.jetbrains.intellij") version "1.0"
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
@@ -25,8 +25,8 @@ plugins {
     // ktlint linter - read more: https://github.com/JLLeitschuh/ktlint-gradle
     id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
 }
-
-group = properties("pluginGroup")
+group = project.findProperty("pluginGroup").toString()
+//group = properties("pluginGroup")
 version = properties("pluginVersion")
 
 // Configure project's dependencies
@@ -167,6 +167,11 @@ tasks {
         useJUnitPlatform()
     }
 
+    runIde {
+        //extra arg is for IDE perf plugin to be allowed to attach a trace agent
+        jvmArgs = listOf("-Xmx4G","-Djdk.attach.allowAttachSelf=true")
+    }
+
     runIdeForUiTests {
         jvmArgs = listOf("-Xmx4G")
 
@@ -182,10 +187,7 @@ tasks {
         systemProperty("jb.privacy.policy.text", "<!--999.999-->")
         systemProperty("jb.consents.confirmation.enabled", "false")
     }
-    runIde {
-        //maxHeapSize = "4g"
-        jvmArgs = listOf("-Xmx4G")
-    }
+
     // Set the compatibility versions to 1.8
     withType<JavaCompile> {
         sourceCompatibility = "1.8"
