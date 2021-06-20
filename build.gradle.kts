@@ -175,7 +175,7 @@ tasks {
     test {
 
         //used for uitests, but breaks normal tests...
-        //useJUnitPlatform()
+        useJUnitPlatform()
 
         //we can specify to use Junit5... above
         // but still have normal Junit4 tests working

@@ -3,10 +3,17 @@ package com.cschar.pmode3;
 
 import com.intellij.configurationStore.XmlSerializer;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.testFramework.LightPlatform4TestCase;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-import org.junit.jupiter.api.Test;
+//import org.junit.jupiter.api.Test;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
-public class PowerMode3Test extends BasePlatformTestCase {
+//The BasePlatformTestcase seems to be from Junit3... so gradle's test task, using Junit4 Vintage enigne can't pick it up...
+//public class PowerMode3Test extends BasePlatformTestCase {
+
+//for now... replace with LightPlatform4TestCase
+public class PowerMode3Test extends LightPlatform4TestCase {
 
     @Test
     public void testPowerMode3_initializes() {

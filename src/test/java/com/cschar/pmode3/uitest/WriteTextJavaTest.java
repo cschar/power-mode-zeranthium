@@ -94,7 +94,7 @@ public class WriteTextJavaTest {
                 keyboard.enter();
             }
 
-            keyboard.enterText("for(i in 1..5){", 200);
+            keyboard.enterText("for(i in 1..5){");
             keyboard.enter();
             keyboard.enterText("println(i)");
             keyboard.enter();
