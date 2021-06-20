@@ -111,6 +111,11 @@ dependencies {
 
     // Logging Network Calls
     testImplementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
+
+
+    // https://www.baeldung.com/junit-5-gradle#enabling-support-for-old-versions
+    testCompileOnly("junit:junit:4.12")
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.3.1")
 }
 
 
@@ -155,6 +160,8 @@ tasks.register("hello") {
     }
 }
 
+
+
 // https://docs.gradle.org/current/userguide/tutorial_using_tasks.html
 tasks {
     //https://github.com/johnrengelman/shadow
@@ -163,9 +170,21 @@ tasks {
 //            configurations.extraLibs.collect { it.isDirectory() ? it : zipTree(it) }
 //        }
 //    }
+
+    //https://docs.gradle.org/current/dsl/org.gradle.api.tasks.testing.Test.html
     test {
-        useJUnitPlatform()
+
+        //used for uitests, but breaks normal tests...
+        //useJUnitPlatform()
+
+        //we can specify to use Junit5... above
+        // but still have normal Junit4 tests working
+        // https://www.baeldung.com/junit-5-gradle#enabling-support-for-old-versions
+
+
     }
+
+
 
     runIde {
 
@@ -244,3 +263,6 @@ tasks {
         channels.set(listOf(properties("pluginVersion").split('-').getOrElse(1) { "default" }.split('.').first()))
     }
 }
+
+
+

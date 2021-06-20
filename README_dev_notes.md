@@ -145,6 +145,9 @@ WARNING: Use --illegal-access=warn to enable warnings of further illeg
 
 this is being tracked here: https://youtrack.jetbrains.com/issue/IDEA-210683
 
+##runIdeForUiTest gotcha
+make sure no file is open inside the ./build folder, :clean and :runIdeForUiTest will break
+
 
 
 When upgrading gradle... (to make ./gradlew use a diff version on commadnline...)

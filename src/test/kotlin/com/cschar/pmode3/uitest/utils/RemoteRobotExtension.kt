@@ -1,4 +1,4 @@
-package com.cschar.simple.plugin2.utils
+package com.cschar.pmode3.uitest.utils
 
 import com.intellij.remoterobot.RemoteRobot
 import com.intellij.remoterobot.fixtures.ContainerFixture

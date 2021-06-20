@@ -41,6 +41,9 @@ https://www.plugin-dev.com/intellij/general/plugin-initial-load/
 - The PostStartupActivity is called each time a project is opened.. instad of when application is loaded.
 ------ Not a bug... seems to still only be called once... each EditorActionHandler is unique to each project.
   
+-- Run the "plugin" task, then close the project wihtout hitting red 'stop' icon in launcher IDE...
+console shows a Memory leak error....
+  
 #### Tests
 
 - Load .xml file from a fixture, assert the settings configured, are whats in the file

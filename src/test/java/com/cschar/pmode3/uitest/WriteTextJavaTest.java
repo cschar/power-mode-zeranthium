@@ -1,33 +1,32 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package com.cschar.simple.plugin2;
+package com.cschar.pmode3.uitest;
 
-import com.cschar.simple.plugin2.steps.JavaExampleSteps;
-import com.cschar.simple.plugin2.utils.RemoteRobotExtension;
-import com.cschar.simple.plugin2.utils.StepsLogger;
+import com.cschar.pmode3.uitest.pages.IdeaFrame;
+import com.cschar.pmode3.uitest.steps.JavaExampleSteps;
+import com.cschar.pmode3.uitest.utils.RemoteRobotExtension;
+import com.cschar.pmode3.uitest.utils.StepsLogger;
 import com.intellij.remoterobot.RemoteRobot;
-import com.intellij.remoterobot.fixtures.ComponentFixture;
 import com.intellij.remoterobot.fixtures.ContainerFixture;
-import com.intellij.remoterobot.search.locators.Locator;
 import com.intellij.remoterobot.utils.Keyboard;
 import org.assertj.swing.core.MouseButton;
-import com.cschar.simple.plugin2.pages.IdeaFrame;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import static com.intellij.remoterobot.search.locators.Locators.byXpath;
 import static com.intellij.remoterobot.stepsProcessing.StepWorkerKt.step;
 import static com.intellij.remoterobot.utils.RepeatUtilsKt.waitFor;
-import static java.awt.event.KeyEvent.*;
 import static java.time.Duration.ofMinutes;
-import static com.cschar.simple.plugin2.pages.ActionMenuFixtureKt.actionMenu;
-import static com.cschar.simple.plugin2.pages.ActionMenuFixtureKt.actionMenuItem;
-import static com.cschar.simple.plugin2.pages.EditorKt.editor;
+import static com.cschar.pmode3.uitest.pages.ActionMenuFixtureKt.actionMenu;
+import static com.cschar.pmode3.uitest.pages.ActionMenuFixtureKt.actionMenuItem;
+import static com.cschar.pmode3.uitest.pages.EditorKt.editor;
 
 @ExtendWith(RemoteRobotExtension.class)
-public class CreateCommandLineJavaTest {
+public class WriteTextJavaTest {
 
     private final RemoteRobot remoteRobot = new RemoteRobot("http://127.0.0.1:8082");
     private final JavaExampleSteps sharedSteps = new JavaExampleSteps(remoteRobot);
@@ -53,12 +52,15 @@ public class CreateCommandLineJavaTest {
     }
 
     @Test
-    void createCommandLineProject(final RemoteRobot remoteRobot) {
-        sharedSteps.createNewCommandLineProject();
-        sharedSteps.closeTipOfTheDay();
+    void writeSomeText(final RemoteRobot remoteRobot) {
+//        sharedSteps.createNewCommandLineProject();
+//        sharedSteps.closeTipOfTheDay();
 
         final IdeaFrame idea = remoteRobot.find(IdeaFrame.class);
         waitFor(ofMinutes(5), () -> !idea.isDumbMode());
+
+        int r = ThreadLocalRandom.current().nextInt(1,100000);
+        String appName = "App" + r;
 
         step("Create New Kotlin file", () -> {
             final ContainerFixture projectView = idea.getProjectViewTree();
@@ -69,30 +71,35 @@ public class CreateCommandLineJavaTest {
             projectView.findText("src").click(MouseButton.RIGHT_BUTTON);
             actionMenu(remoteRobot, "New").click();
             actionMenuItem(remoteRobot, "Kotlin Class/File").click();
-            keyboard.enterText("App");
+
+
+            keyboard.enterText(appName);
             keyboard.down();
             keyboard.enter();
         });
 
-        final ContainerFixture editor = editor(idea, "App.kt");
+        final ContainerFixture editor = editor(idea, appName+".kt");
 
         step("Write a code", () -> {
-         //   sharedSteps.autocomplete("main");
-            keyboard.enterText("println(\"");
-            keyboard.enterText("Hello from UI test");
-            String msg = "" +
-                    "Hello how are you doing" +
-                    "for(int i =0; i< 10; i++){" +
-                    "   System.out.println(i);" +
-                    "}";
+            //simulate autocomplete step
+//            keyboard.enterText("main");
+//            keyboard.enter();
 
-            keyboard.enterText(msg);
+            sharedSteps.autocomplete("main");
+            keyboard.enterText("println(\"Hello from UI test\");");
+            keyboard.enter();
 
-            try {
-                Thread.sleep(4000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+
+            for(int i =0; i<4; i++) {
+                keyboard.enter();
             }
+
+            keyboard.enterText("for(i in 1..5){", 200);
+            keyboard.enter();
+            keyboard.enterText("println(i)");
+            keyboard.enter();
+
+
         });
 
 //        step("Launch the application", () -> {

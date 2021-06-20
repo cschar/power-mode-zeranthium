@@ -239,7 +239,6 @@ public class PowerMode3 implements
                 new TypedActionHandler() {
                     @Override
                     public void execute(@NotNull Editor editor, char c, @NotNull DataContext dataContext) {
-//                                          PowerMode3 settings = PowerMode3.getInstance();
                         if (PowerMode3.this.isEnabled() && PowerMode3.this.getSpriteTypeEnabled(ConfigType.SOUND)) {
 
                             int winner = SoundData.getWeightedAmountWinningIndex(SoundConfig.soundData);
@@ -381,9 +380,7 @@ public class PowerMode3 implements
         this.enabled = false;
 
         if (!this.isConfigLoaded) {
-            LOGGER.info("Loading assets");
-//            for(ConfigType)
-
+            LOGGER.info("Loading assets...");
 
             setUpdateProgress(progressIndicator, "Multi Layer", 0.1);
             MultiLayerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MULTI_LAYER)));
@@ -427,7 +424,7 @@ public class PowerMode3 implements
         progressIndicator.setText2(s);
         progressIndicator.setFraction(amt);
         MenuConfigurableUI.loadingLabel.setText(s);
-        try {              Thread.sleep(3000);          } catch (InterruptedException e) {          }
+//        try {              Thread.sleep(3000);          } catch (InterruptedException e) {          }
 
     }
 
@@ -451,7 +448,7 @@ public class PowerMode3 implements
     }
 
     public ArrayList<SpriteDataAnimated> deserializeSpriteDataAnimated(SmartList<String> target) {
-        LOGGER.info("deserializing sprite data animated");
+        LOGGER.info("deserializing sprite data animated" + target);
         ArrayList<SpriteDataAnimated> sd = new ArrayList<SpriteDataAnimated>();
         for (String s1 : target) {
             sd.add(SpriteDataAnimated.fromJsonObjectString(s1));

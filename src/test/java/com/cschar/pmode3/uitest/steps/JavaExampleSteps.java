@@ -1,15 +1,15 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package com.cschar.simple.plugin2.steps;
+package com.cschar.pmode3.uitest.steps;
 
-import com.cschar.simple.plugin2.pages.WelcomeFrameFixture;
+import com.cschar.pmode3.uitest.pages.DialogFixture;
+import com.cschar.pmode3.uitest.pages.IdeaFrame;
+import com.cschar.pmode3.uitest.pages.WelcomeFrameFixture;
 import com.intellij.remoterobot.RemoteRobot;
 import com.intellij.remoterobot.fixtures.ComponentFixture;
 import com.intellij.remoterobot.search.locators.Locator;
 import com.intellij.remoterobot.utils.Keyboard;
 import kotlin.Unit;
-import com.cschar.simple.plugin2.pages.DialogFixture;
-import com.cschar.simple.plugin2.pages.IdeaFrame;
 
 
 import java.awt.event.KeyEvent;
@@ -20,8 +20,8 @@ import static com.intellij.remoterobot.search.locators.Locators.byXpath;
 import static com.intellij.remoterobot.stepsProcessing.StepWorkerKt.step;
 import static com.intellij.remoterobot.utils.RepeatUtilsKt.waitFor;
 //import static com.intellij.remoterobot.utils.UtilsKt.hasSingleComponent;
+import static com.intellij.remoterobot.utils.UtilsKt.hasSingleComponent;
 import static java.time.Duration.ofSeconds;
-import static com.cschar.simple.plugin2.pages.DialogFixture.byTitle;
 
 public class JavaExampleSteps {
     final private RemoteRobot remoteRobot;
@@ -55,7 +55,7 @@ public class JavaExampleSteps {
             final IdeaFrame idea = remoteRobot.find(IdeaFrame.class);
             idea.dumbAware(() -> {
                 try {
-                    idea.find(DialogFixture.class, byTitle("Tip of the Day")).button("Close").click();
+                    idea.find(DialogFixture.class, DialogFixture.byTitle("Tip of the Day")).button("Close").click();
                 } catch (Throwable ignore) {
                 }
                 return Unit.INSTANCE;
@@ -63,16 +63,16 @@ public class JavaExampleSteps {
         });
     }
 
-//    public void autocomplete(String text) {
-//        step("Autocomplete '" + text + "'", () -> {
-//            final Locator completionMenu = byXpath("//div[@class='HeavyWeightWindow']");
-//            final Keyboard keyboard = new Keyboard(remoteRobot);
-//            keyboard.enterText(text);
-//            waitFor(ofSeconds(5), () -> hasSingleComponent(remoteRobot, completionMenu));
-//            remoteRobot.find(ComponentFixture.class, completionMenu)
-//                    .findText(contains(text))
-//                    .click();
-//            keyboard.enter();
-//        });
-//    }
+    public void autocomplete(String text) {
+        step("Autocomplete '" + text + "'", () -> {
+            final Locator completionMenu = byXpath("//div[@class='HeavyWeightWindow']");
+            final Keyboard keyboard = new Keyboard(remoteRobot);
+            keyboard.enterText(text);
+            waitFor(ofSeconds(5), () -> hasSingleComponent(remoteRobot, completionMenu));
+            remoteRobot.find(ComponentFixture.class, completionMenu)
+                    .findText(contains(text))
+                    .click();
+            keyboard.enter();
+        });
+    }
 }
