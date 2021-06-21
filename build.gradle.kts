@@ -23,7 +23,7 @@ plugins {
     // detekt linter - read more: https://detekt.github.io/detekt/gradle.html
     id("io.gitlab.arturbosch.detekt") version "1.17.1"
     // ktlint linter - read more: https://github.com/JLLeitschuh/ktlint-gradle
-    id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
+  //  id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
 }
 group = project.findProperty("pluginGroup").toString()
 //group = properties("pluginGroup")
@@ -65,6 +65,11 @@ dependencies {
     testImplementation("com.intellij.remoterobot:remote-fixtures:" + "0.11.4")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.2")
+
+//    testImplementation(group="org.apache.logging.log4j", name="log4j-slf4j-impl", version= "2.14.1")
+//    testImplementation(group="org.slf4j", name="slf4j-api", version="1.7")
+//    testImplementation(group="ch.qos.logback", name="logback-classic", version="1.0.9")
+//    testImplementation(group="ch.qos.logback", name="logback-core", version="1.0.9")
 
     // Logging Network Calls
     testImplementation("com.squareup.okhttp3:logging-interceptor:4.9.1")

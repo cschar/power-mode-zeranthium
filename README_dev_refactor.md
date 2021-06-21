@@ -4,19 +4,11 @@ https://plugins.jetbrains.com/docs/intellij/performance.html
 uses this plugin:
 https://plugins.jetbrains.com/plugin/15104-ide-perf
 
-Plugin components are... deprecated?
-https://plugins.jetbrains.com/docs/intellij/plugin-components.html
-"Any existing Components should be migrated to services, extensions, or listeners (see below)"
 
-right now pmode3 class is defined as application-component.... this should be stuck in the <applicationService...> tag
-like MyApplicatioNService kotlin class.
 
-we are using PersistentStateComponent
-https://plugins.jetbrains.com/docs/intellij/persisting-state-of-components.html#using-persistentstatecomponent
-In the new guide, they want us to use a service impelemtating that...
-
-I dont think current PowerMode3 class is a service?
-
+Try USING THIS FOR TESTS:
+https://stackoverflow.com/a/46533151/5198805
+https://github.com/radarsh/gradle-test-logger-plugin
 
 
 

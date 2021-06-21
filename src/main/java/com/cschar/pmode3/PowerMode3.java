@@ -18,18 +18,13 @@ package com.cschar.pmode3;
  */
 
 
-import com.cschar.pmode3.actionHandlers.MyPasteHandler;
-import com.cschar.pmode3.actionHandlers.MySpecialActionHandler;
 import com.cschar.pmode3.config.*;
 import com.cschar.pmode3.config.common.SoundData;
 import com.cschar.pmode3.config.common.SpriteData;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.BaseComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
@@ -37,8 +32,6 @@ import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.*;
 import com.intellij.openapi.progress.*;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
 import com.intellij.ui.JBColor;
 import com.intellij.util.SmartList;
 import com.intellij.util.xmlb.XmlSerializerUtil;
@@ -48,7 +41,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import javax.swing.tree.DefaultTreeCellEditor;
 import java.awt.*;
 import java.io.InputStream;
 import java.util.*;
@@ -112,8 +104,7 @@ public class PowerMode3 implements
 
     public enum ConfigType {
         BASIC_PARTICLE,
-        LIGHTNING,     //cant remove unless we shift num values of others
-        LIGHTNING_ALT, //cant remove unless we shift num values of others
+
         LIZARD,
         MOMA,
         VINE,
@@ -131,11 +122,10 @@ public class PowerMode3 implements
     }
 
     static class JSONLoader {
+        private static HashMap<ConfigType, String> defaultJSONTables;
 
-        public static HashMap<ConfigType, SmartList<String>> loadDefaultJSONTableConfigs() {
-
-            HashMap<ConfigType, String> defaultJSONTables = new HashMap<ConfigType, String>() {{
-
+        static {
+            JSONLoader.defaultJSONTables = new HashMap<ConfigType, String>() {{
                 put(ConfigType.LOCKED_LAYER, "LOCKED_LAYER.json");
                 put(ConfigType.COPYPASTEVOID, "COPYPASTEVOID.json");
                 put(ConfigType.DROSTE, "DROSTE.json");
@@ -146,41 +136,45 @@ public class PowerMode3 implements
                 put(ConfigType.MULTI_LAYER_CHANCE, "MULTI_LAYER_CHANCE.json");
                 put(ConfigType.TAP_ANIM, "TAP_ANIM.json");
 
-
                 put(ConfigType.MUSIC_TRIGGER, "MUSIC_TRIGGERS.json");
                 put(ConfigType.SOUND, "SOUND.json");
                 put(ConfigType.SPECIAL_ACTION_SOUND, "SPECIAL_ACTION_SOUND.json");
 
             }};
-            HashMap<ConfigType, SmartList<String>> pathDataMap = new HashMap<ConfigType, SmartList<String>>();
+        }
 
+        public static void loadSingleJSONTableConfig(Map<ConfigType, SmartList<String>> pathDataMap, ConfigType t) {
 
-            for (ConfigType t : defaultJSONTables.keySet()) {
-                String jsonFile = defaultJSONTables.get(t);
-                InputStream inputStream = JSONLoader.class.getResourceAsStream("/configJSON/" + jsonFile);
+            String jsonFile = defaultJSONTables.get(t);
+            InputStream inputStream = JSONLoader.class.getResourceAsStream("/configJSON/" + jsonFile);
 
-
-                StringBuilder sb = new StringBuilder();
-                Scanner s = new Scanner(inputStream);
-                while (s.hasNextLine()) {
-                    sb.append(s.nextLine());
-                }
-
-                SmartList<String> smartList = new SmartList<>();
-                try {
-                    JSONObject jo = new JSONObject(sb.toString());
-
-                    //TODO this is extra work, we go .json --> JSONObject --> string ( ..later --> JSONObject ---> pathData)
-                    JSONArray tableData = jo.getJSONArray("data");
-                    for (int i = 0; i < tableData.length(); i++) {
-                        smartList.add(tableData.getJSONObject(i).toString());
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                pathDataMap.put(t, smartList);
+            StringBuilder sb = new StringBuilder();
+            Scanner s = new Scanner(inputStream);
+            while (s.hasNextLine()) {
+                sb.append(s.nextLine());
             }
 
+            SmartList<String> smartList = new SmartList<>();
+            try {
+                JSONObject jo = new JSONObject(sb.toString());
+
+                //TODO this is extra work, we go .json --> JSONObject --> string ( ..later --> JSONObject ---> pathData)
+                JSONArray tableData = jo.getJSONArray("data");
+                for (int i = 0; i < tableData.length(); i++) {
+                    smartList.add(tableData.getJSONObject(i).toString());
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            pathDataMap.put(t, smartList);
+        }
+
+
+        public static HashMap<ConfigType, SmartList<String>> getDefaultJSONTableConfigs() {
+            HashMap<ConfigType, SmartList<String>> pathDataMap = new HashMap<ConfigType, SmartList<String>>();
+            for (ConfigType t : defaultJSONTables.keySet()) {
+                loadSingleJSONTableConfig(pathDataMap, t);
+            }
             return pathDataMap;
         }
 
@@ -230,7 +224,7 @@ public class PowerMode3 implements
         this.particleColor = new JBColor(new Color(this.getParticleRGB()), new Color(this.getParticleRGB()));
 
         //Load JSON
-        JSONLoader.loadDefaultJSONTableConfigs();
+//        JSONLoader.loadDefaultJSONTableConfigs();
 
         //Setup SOUND handler
         final EditorActionManager actionManager = EditorActionManager.getInstance();
@@ -310,7 +304,7 @@ public class PowerMode3 implements
     public void noStateLoaded() {
         LOGGER.info("No State loaded previously");
         this.setParticleRGB(JBColor.darkGray.getRGB());
-        pathDataMap = JSONLoader.loadDefaultJSONTableConfigs();
+        pathDataMap = JSONLoader.getDefaultJSONTableConfigs();
 
         loadConfigData();
     }
@@ -342,9 +336,8 @@ public class PowerMode3 implements
             LOGGER.info("Missing configs found: " + missingConfigs.size() + " -- loading defaults");
             for (ConfigType c : missingConfigs) {
                 LOGGER.info(c.name());
+                JSONLoader.loadSingleJSONTableConfig(pathDataMap, c);
             }
-            //TODO only load missingConfigs default setting , not all of them
-            pathDataMap = JSONLoader.loadDefaultJSONTableConfigs();
         }
 
 
@@ -564,7 +557,7 @@ public class PowerMode3 implements
 
 
 
-//    public void getOPenProjects(){
+//    public void getOpenProjects(){
 //        Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
 //        for(Project p : openProjects){
 //            LOGGER.info("project is open" + p.getName());
