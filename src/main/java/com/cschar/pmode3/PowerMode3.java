@@ -85,6 +85,7 @@ public class PowerMode3 implements
 
     @com.intellij.util.xmlb.annotations.Transient
     Color particleColor;
+
     private int particleRGB;
 
 
@@ -187,7 +188,7 @@ public class PowerMode3 implements
 
 
     @com.intellij.util.xmlb.annotations.MapAnnotation
-    private Map<ConfigType, SmartList<String>> pathDataMap = new HashMap<ConfigType, SmartList<String>>() {{
+    protected Map<ConfigType, SmartList<String>> pathDataMap = new HashMap<ConfigType, SmartList<String>>() {{
         //populated by loading in .json files in resources folder.
     }};
 
@@ -224,7 +225,7 @@ public class PowerMode3 implements
 
     @Override
     public void initializeComponent() {
-        LOGGER.info("Initializing Powermode Zeranthium...");
+        LOGGER.info("Initializing pmode3 component...");
 
         this.particleColor = new JBColor(new Color(this.getParticleRGB()), new Color(this.getParticleRGB()));
 
@@ -258,7 +259,6 @@ public class PowerMode3 implements
 
         //Setup Main particle stuff
         //Ensure when a new editor is created,  a particleContainerManager is attached to it
-        final EditorActionManager editorActionManager = EditorActionManager.getInstance();
         final EditorFactory editorFactory = EditorFactory.getInstance();
 
         Editor[] allEditors = EditorFactory.getInstance().getAllEditors();
@@ -319,8 +319,12 @@ public class PowerMode3 implements
     @Override
     public void loadState(@NotNull PowerMode3 state) {
         LOGGER.info("previous state found -- setting up...");
-//        pathDataMap = ConfigLoader.loadDefaultJSONTableConfigs();
+//        pathDataMap = ConfigLoader.loadDefaultJSONTableConfigs();\
+        LOGGER.info("pathDaaSizebefore: -- setting up..." + pathDataMap.size());
+        LOGGER.info("PRE COPY incoming state size..." + state.pathDataMap.size());
         XmlSerializerUtil.copyBean(state, this);
+        LOGGER.info("pathDaaSizeAfter: -- setting up..." + pathDataMap.size());
+        LOGGER.info("POST COPY incoming state size..." + state.pathDataMap.size());
 
         //check for missing config data e.g. new setting has been added
         List<ConfigType> missingConfigs = new ArrayList<>();
@@ -345,14 +349,7 @@ public class PowerMode3 implements
 
 
         loadConfigData();
-
         LOGGER.info("state loaded.....=-=-=-=-=");
-
-        Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-
-        for(Project p : openProjects){
-            LOGGER.info("project is open" + p.getName());
-        }
     }
 
 
@@ -567,7 +564,12 @@ public class PowerMode3 implements
 
 
 
-
+//    public void getOPenProjects(){
+//        Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+//        for(Project p : openProjects){
+//            LOGGER.info("project is open" + p.getName());
+//        }
+//    }
 }
 
 

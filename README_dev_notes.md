@@ -36,7 +36,6 @@ special as the code is already available on GitHub.`
 
 
 Max plugin size : 200MB:
-
 https://intellij-support.jetbrains.com/hc/en-us/community/posts/206445729--Question-Limitation-of-Upload-Plugin-Size
 
 
@@ -70,52 +69,8 @@ cp ~/Downloads/jbr-XX_X_X-osx-x64-bXXX.XX.tar.gz ~/.gradle/caches/modules-2/file
  
 - If serialized options are messed up
 --- delete  build/idea-sandbox/config/options/power.mode3.xml
-
--------
-
-Other styles:
-https://github.com/codeinthedark/awesome-power-mode
-
-
-
-Notes on plugin Dev:
-
-So To tell your plugin to use all these classes...
-
-We put our ONE, Component in this section:
-```xml
-    <application-components>
-        <component>
-            <implementation-class>com.cschar.myPlugin.MyPlugin</implementation-class>
-        </component>
-    </application-components>
-```
-
-we put TWO, our ConfigurableBase in this section:
-
-```xml
- <extensions defaultExtensionNs="com.intellij">
- 
-        <applicationConfigurable
-         groupId="appearance"
-         groupWeight="20"
-         id="com.your.long.unique.id"
-         displayName="menu item name for users 3 3 3"
-         instance="path.to.your.Class.using.ConfigurableBase" />
-  </extensions>
-```
-
-by adding this in your .xml you are using the file com.intellij.openapi.options.ConfigurableEP
-
-we put groupId as "appearance" since in that file, it has been set up that:
-```
-Appearance & Behavior {@code groupId="appearance"}</dt>
-   * <dd>This group contains settings to personalize IDE appearance and behavior:
-   * change themes and font size, tune the keymap, and configure plugins and system settings,
-   * such as password policies, HTTP proxy, updates and more.
-```
-
-
+  
+  
 
 
 # CRASH notes:
@@ -159,32 +114,11 @@ go into gradle/wrapper/gradle-wrapper.properties, and change the URL from which 
 step 1. in File -> project structure -> SDKs ... '+' icon ---> add the IntelliJP Platform Plugin SDK
 step 2. set that SDK as the project SDK to have the external library defined to access all intellij.openapi stuff
 
-.... But the template project doesnt need this... why?
-
-
-./gradlew :classes          build classes
-./gradlew :testClasses      build test classes
 
 
 # testing
 
 ./gradlew :clean :runIdeForUiTests
-
-
-# yuck, compile the intellij-ui-test-robot project..
-then add its build/xyz.jars to this projects project-structure in
-global libraries
-
-# to get commandline working, added libs folder in build.gradle...
-https://stackoverflow.com/a/20700183/5198805
-
-
-## ok finally got it working using web available stuff @ v0.10.0, but missing fancy 0.14.0 api...
-had to comment out some code.
-to run: in 1 terminal:
-./gradlew :clean :runIdeForUiTests
-
-then inside this IDE, launch the "writeTextJavaTest"
 
 
 ## for example reference of test code

@@ -40,16 +40,6 @@ repositories {
     }
 }
 
-//https://docs.gradle.org/current/userguide/migrating_from_groovy_to_kotlin_dsl.html#custom_configurations_and_dependencies
-//configurations {
-//    // configuration that holds jars to include in the jar
-//    extraLibs
-//}
-//val extraLibs by configurations.creating
-val extraLibs by configurations.creating {
-    //extendsFrom(configurations["compileOnly"])
-    extendsFrom(configurations["implementation"])
-}
 
 var remoteRobotVersion = "0.11.4"
 
@@ -57,40 +47,7 @@ dependencies {
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.17.1")
 
     implementation("org.junit.jupiter:junit-jupiter:5.7.0")
-    //testCompile group: 'junit', name: 'junit', version: '4.12'
 
-    // https://mvnrepository.com/artifact/org.imgscalr/imgscalr-lib
-    //  implementation files('/Applications/IntelliJ IDEA CE.app/Contents/plugins/java/lib/java-api.jar')
-    //implementation(group: 'org.imgscalr', name: 'imgscalr-lib', version: '4.2')
-    //implementation("org.imgscalr.imgscalr-lib:4.2")
-
-    //
-    //https://docs.gradle.org/current/userguide/java_library_plugin.html#sec:java_library_configurations_graph
-
-    // https://mvnrepository.com/artifact/javazoom/jlayer
-    //compile group: 'javazoom', name: 'jlayer', version: '1.0.1'
-    //compileOnly("javazoom.jlayer:1.0.1")
-    // https://mvnrepository.com/artifact/org.json/json
-    //compile group: 'org.json', name: 'json', version: '20090211'
-    //compileOnly("org.json:20090211")
-
-    // This adds the following libraries into the .jar file produced by the build
-//    extraLibs group: 'org.json', name: 'json', version: '20090211'
-//    extraLibs group: 'javazoom', name: 'jlayer', version: '1.0.1'
-//    extraLibs group: 'org.imgscalr', name: 'imgscalr-lib', version: '4.2'
-//    extraLibs("org.json.json:20090211")
-//    extraLibs("javazoom.jlayer:1.0.1")
-//    extraLibs("org.imgscalr.imgscalr-lib:4.2")
-
-    //https://docs.gradle.org/current/userguide/declaring_dependencies.html#sub:module_dependencies
-    //compileOnly("org.json.json:20090211")
-    //compileOnly(group = "org.json", name = "json", version = "20090211")
-
-    //compileOnly("javazoom.jlayer:1.0.1")
-    //compileOnly(group="javazoom", name="jlayer", version="1.0.1")
-
-    //compileOnly("org.imgscalr.imgscalr-lib:4.2")
-    //compileOnly(group="org.imgscalr", name="imgscalr-lib", version="4.2")
 
     implementation(group = "org.json", name = "json", version = "20090211")
     implementation(group="javazoom", name="jlayer", version="1.0.1")
@@ -171,16 +128,16 @@ tasks {
 //        }
 //    }
 
+    // tag example: https://www.baeldung.com/junit-5-gradle#configuring-junit-5-tests-with-gradle
+    // from CLI: // gradle clean test -DincludeTags='regression' -DexcludeTags='accessibility'
+    // custom gradle test config: https://stackoverflow.com/a/59022129/5198805
     //https://docs.gradle.org/current/dsl/org.gradle.api.tasks.testing.Test.html
     test {
 
-        //used for uitests, but breaks normal tests...
-        useJUnitPlatform()
-
         //we can specify to use Junit5... above
         // but still have normal Junit4 tests working
-        // https://www.baeldung.com/junit-5-gradle#enabling-support-for-old-versions
-
+        // https://www.baeldung.com/junit-5-gradle#enabling-support-for-old-versions.
+        useJUnitPlatform()
 
     }
 
