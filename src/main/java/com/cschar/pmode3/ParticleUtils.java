@@ -20,8 +20,5 @@ public class ParticleUtils {
         return null;
     }
 
-//    BufferedImage resized_image =  Scalr.resize(tmp, Scalr.Method.BALANCED,
-//                    tmp.getWidth()/2, tmp.getHeight()/2);
-//
 
 }

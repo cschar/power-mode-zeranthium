@@ -28,6 +28,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.*;
 import com.intellij.openapi.progress.*;
@@ -171,7 +172,7 @@ public class PowerMode3 implements
 
 
         public static HashMap<ConfigType, SmartList<String>> getDefaultJSONTableConfigs() {
-            HashMap<ConfigType, SmartList<String>> pathDataMap = new HashMap<ConfigType, SmartList<String>>();
+            HashMap<ConfigType, SmartList<String>> pathDataMap = new HashMap<>();
             for (ConfigType t : defaultJSONTables.keySet()) {
                 loadSingleJSONTableConfig(pathDataMap, t);
             }
@@ -213,7 +214,8 @@ public class PowerMode3 implements
 
 
     public static PowerMode3 getInstance() {
-        //return ApplicationManager.getApplication().getComponent(PowerMode3.class);
+
+
         return ApplicationManager.getApplication().getService(PowerMode3.class);
     }
 
@@ -222,9 +224,6 @@ public class PowerMode3 implements
         LOGGER.info("Initializing pmode3 component...");
 
         this.particleColor = new JBColor(new Color(this.getParticleRGB()), new Color(this.getParticleRGB()));
-
-        //Load JSON
-//        JSONLoader.loadDefaultJSONTableConfigs();
 
         //Setup SOUND handler
         final EditorActionManager actionManager = EditorActionManager.getInstance();
@@ -451,8 +450,6 @@ public class PowerMode3 implements
         SmartList<String> serialized = new SmartList<>();
         for (SpriteData d : spriteData) {
             serialized.add(d.toJSONObject().toString());
-//            serialized.add(new String[]{String.valueOf(d.enabled), String.valueOf(d.scale), String.valueOf(d.val1),
-//                    String.valueOf(d.defaultPath), String.valueOf(d.customPath)});
         }
         this.pathDataMap.put(configType, serialized);
     }
@@ -469,8 +466,6 @@ public class PowerMode3 implements
         SmartList<String> serialized = new SmartList<>();
         for (SoundData d : soundData) {
             serialized.add(d.toJSONObject().toString());
-//            serialized.add(String.join(",",new String[]{String.valueOf(d.enabled), String.valueOf(d.val1),
-//                    String.valueOf(d.defaultPath), String.valueOf(d.customPath)}));
         }
         this.pathDataMap.put(configType, serialized);
     }

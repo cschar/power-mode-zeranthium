@@ -94,12 +94,10 @@ public class PowerMode3Test extends LightPlatform4TestCase {  //This boots up th
         System.out.println("verifying state was loaded in......==================================");
         assertEquals(-12566465, pmode3Service.getParticleRGB());
 
-        //This fails due to bug that we load ALL defaultJSONConfigs when missing configs are found
         deserializedLizardOpts = pmode3Service.pathDataMap.get(PowerMode3.ConfigType.LIZARD);
         assertEquals(3, deserializedLizardOpts.size());
         spa = SpriteDataAnimated.fromJsonObjectString(deserializedLizardOpts.get(0));
         assertEquals(0.45f, spa.scale);
-
 
     }
 
@@ -146,15 +144,12 @@ public class PowerMode3Test extends LightPlatform4TestCase {  //This boots up th
     @Test
     public void testCopy(){
         PowerMode3 pmode3Service = ApplicationManager.getApplication().getService(PowerMode3.class);
-
         PowerMode3 p1 = new PowerMode3();
-
 
         assertEquals(12, pmode3Service.pathDataMap.size());
         assertEquals(0, p1.pathDataMap.size());
         XmlSerializerUtil.copyBean(pmode3Service, p1);
 
-        assertEquals(-12566464, pmode3Service.getParticleRGB());
         assertEquals(pmode3Service.getParticleRGB(), p1.getParticleRGB());
         assertEquals(12, p1.pathDataMap.size());
 

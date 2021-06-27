@@ -127,11 +127,6 @@ tasks.register("hello") {
 // https://docs.gradle.org/current/userguide/tutorial_using_tasks.html
 tasks {
     //https://github.com/johnrengelman/shadow
-//    jar {
-//        from {
-//            configurations.extraLibs.collect { it.isDirectory() ? it : zipTree(it) }
-//        }
-//    }
 
     // tag example: https://www.baeldung.com/junit-5-gradle#configuring-junit-5-tests-with-gradle
     // from CLI: // gradle clean test -DincludeTags='regression' -DexcludeTags='accessibility'

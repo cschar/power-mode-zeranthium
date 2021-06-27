@@ -34,7 +34,7 @@ public class SpriteDataAnimated  extends SpriteData {
 //    public ArrayList<ImageIcon> previewIcons = new ArrayList<>();
 
     public float alpha =1.0f;
-
+    private int MAX_NUM_DEFAULT_FILES = 100;
     private int MAX_NUM_FILES = 500;
     private double MAX_TOTAL_GB_SIZE = 1.0;
 
@@ -104,7 +104,8 @@ public class SpriteDataAnimated  extends SpriteData {
 
             double totalSizeMBResources = 0;
 
-            for(int i = 0; i<100; i++){
+            //load in images, then determine each ones filesize
+            for(int i = 0; i<MAX_NUM_DEFAULT_FILES; i++){
                 String tmpPath = path + String.format("/0%03d.png", i);
 
                     URL imageURL = this.getClass().getResource(tmpPath);
@@ -118,6 +119,8 @@ public class SpriteDataAnimated  extends SpriteData {
                     try {
 
                         loadedImage  = ImageIO.read(imageURL);
+
+                        // this method is not working..
 //                        DataBuffer dataBuffer = loadedImage.getRaster().getDataBuffer();
 ////                        double sizeBytes = ((double) dataBuffer.getSize());
 //                        //getSize --> size in bits
