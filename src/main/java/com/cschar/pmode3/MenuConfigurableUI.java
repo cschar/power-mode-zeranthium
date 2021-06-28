@@ -638,6 +638,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
 
             ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/bar_small.png"));
 
+
             int result = Messages.showYesNoDialog(null,
                     "<html> <h1> Load config pack? </h1>" +
                             " \n Config <b>packs</b> can be found on the " +

@@ -116,9 +116,11 @@ detekt {
     }
 }
 
+val commandLineProjectProp: String by project
+
 tasks.register("hello") {
     doLast {
-        println("Hello world!")
+        println(commandLineProjectProp)
     }
 }
 
@@ -144,6 +146,9 @@ tasks {
 
 
     runIde {
+
+        //  ./gradlew runIde --args="C:\\path\\to\\project\\file.java"
+//          args=listOf()
 
         jvmArgs = listOf("-Xmx4G",
                          "-Djdk.attach.allowAttachSelf=true", //for IDE perf plugin to be allowed to attach a trace agent

@@ -104,6 +104,9 @@ this is being tracked here: https://youtrack.jetbrains.com/issue/IDEA-210683
 make sure no file is open inside the ./build folder, :clean and :runIdeForUiTest will break
 
 
+#Gradle dev env
+in intellij run configurations make an empty gradle config with these args to intended project file
+runIde --args="C:\\path\\to\\my\\project\\file\\App22336.kt"
 
 When upgrading gradle... (to make ./gradlew use a diff version on commadnline...)
 go into gradle/wrapper/gradle-wrapper.properties, and change the URL from which it downloads the version

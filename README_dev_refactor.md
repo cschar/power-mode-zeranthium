@@ -5,6 +5,8 @@ uses this plugin:
 https://plugins.jetbrains.com/plugin/15104-ide-perf
 
 
+Try using this for UI building:
+https://plugins.jetbrains.com/docs/intellij/kotlin-ui-dsl.html#example
 
 Try USING THIS FOR TESTS:
 https://stackoverflow.com/a/46533151/5198805
