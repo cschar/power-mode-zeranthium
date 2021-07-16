@@ -3,8 +3,8 @@
 # demo-proj Changelog
 
 ## [Unreleased]
-## [2.5.2]
-- added something
+- add background loading at startup
+- move to intellij-plugin-template
 
 ## [2.5.1]
 ### Added
