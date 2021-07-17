@@ -110,7 +110,7 @@ public class ParticleContainerManager implements EditorFactoryListener, Disposab
 
     public void update(final Editor editor) {
 
-        if (PowerMode3.getInstance().isEnabled()) {
+        if (settings.isEnabled()) {
             SwingUtilities.invokeLater(new Runnable() {
 
                 @Override
@@ -150,7 +150,6 @@ public class ParticleContainerManager implements EditorFactoryListener, Disposab
         int caretOffset = editor.getCaretModel().getOffset();
 
         ArrayList<Anchor> points = new ArrayList<Anchor>();
-//        int searchLength = PowerMode3.getInstance().getMaxPsiSearchDistance();
         int searchLength = settings.getMaxPsiSearchDistance();
 
         String documentText = editor.getDocument().getText();

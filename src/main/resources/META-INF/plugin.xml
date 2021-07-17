@@ -47,7 +47,7 @@
 
 
 
-
+<!--    https://plugins.jetbrains.com/docs/intellij/basic-action-system.html#action-declaration-reference-->
     <actions>
         <action id="com.cschar.pmode3.PowerModeZeranthiumToggleEnabled"
                 class="com.cschar.pmode3.hotkeys.HotKeyEnabledAction"
@@ -55,6 +55,8 @@
                 description="Toggle power mode Zeranthium">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
             <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl z"/>
+
+            <override-text place="ToolsMenu" text="Toggle _Zeranthium"/>
         </action>
 
         <group id="com.cschar.pmode3.GroupedActions" text="Power Mode Zeranthium Actions" popup="true">
@@ -65,6 +67,8 @@
                     text="Trigger Music A for Power Mode Zeranthium"
                     description="Trigger music A for power mode Zeranthium">
                 <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl j"/>
+
+                <override-text place="ToolsMenu" text="Trigger Music A _Zeranthium"/>
             </action>
 
             <action id="com.cschar.pmode3.PowerModeZeranthiumTriggerSongB"
@@ -72,6 +76,8 @@
                     text="Trigger Music B for Power Mode Zeranthium"
                     description="Trigger music B for power mode Zeranthium">
                 <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl l"/>
+
+                <override-text place="ToolsMenu" text="Trigger Music B _Zeranthium"/>
             </action>
         </group>
 

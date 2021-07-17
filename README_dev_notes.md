@@ -52,20 +52,6 @@ To run project:
 ./gradlew runIde
 
 
-# Snags I ran into:
-
-- If gradle forces you to download new IDE for sandbox
- -- download separately and place e.g.
- '/Users/USERNAME/.gradle/caches/modules-2/files-2.1/com.jetbrains/jbre/jbr-11_0_3-osx-x64-b304.10.tar.gz'
-.e.g.
-```
-cd ~/.gradle/caches/modules-2/files-2.1/com.jetbrains/jbre
-rm -rf *.*
-cp ~/Downloads/jbr-11_0_6-osx-x64-b765.25.tar.gz ~/.gradle/caches/modules-2/files-2.1/com.jetbrains/jbre
-## or whatever version is current e.g.
-cp ~/Downloads/jbr-XX_X_X-osx-x64-bXXX.XX.tar.gz ~/.gradle/caches/modules-2/files-2.1/com.jetbrains/jbre
-```
-
  
 - If serialized options are messed up
 --- delete  build/idea-sandbox/config/options/power.mode3.xml
@@ -90,7 +76,7 @@ Caused by: java.lang.ClassNotFoundException: org.json.JSONException PluginClassL
     
 --Fixed by packaging a FAT JAR
 https://discuss.gradle.org/t/how-to-include-dependencies-in-jar/19571/5
-
+or using shadowJar w/ gradle
 
 #launch bug:
 WARNING: An illegal reflective access operation has occurred

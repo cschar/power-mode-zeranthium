@@ -43,7 +43,11 @@ public class MemoryMonitorServiceImpl implements MemoryMonitorService {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    menuConfigurableUI.initMemoryStatsPanel();
+                    try{
+                        menuConfigurableUI.initMemoryStatsPanel();
+                    }catch(NullPointerException e){
+
+                    }
                 }
             }
         };
