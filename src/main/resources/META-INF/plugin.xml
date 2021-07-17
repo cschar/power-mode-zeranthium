@@ -12,7 +12,6 @@
 
     <!--    see config options here-->
     <!--    https://www.jetbrains.org/intellij/sdk/docs/basics/plugin_structure/plugin_configuration_file.html -->
-    
     <extensions defaultExtensionNs="com.intellij">
         <!-- inserts the a GUI into the settings menu under "appearance -> Power Mode - Zeranthium" -->
 
@@ -23,6 +22,8 @@
                                  instance="com.cschar.pmode3.PowerMode3Configurable" />
 
 
+
+        <applicationService serviceImplementation="com.cschar.pmode3.services.MyGitService"/>
 
         <applicationService serviceImplementation="com.cschar.pmode3.PowerMode3"/>
 
@@ -35,8 +36,6 @@
         <!-- "Plugin code should only be executed when projects are opened" -->
         <postStartupActivity implementation="com.cschar.pmode3.PowerMode3StartupActivity"/>
 
-<!--        <applicationService serviceImplementation="com.github.cschar.pmode3.services.MyApplicationService"/>-->
-<!--        <projectService serviceImplementation="com.github.cschar.pmode3.services.MyProjectService"/>-->
     </extensions>
 
 
@@ -49,6 +48,20 @@
 
 <!--    https://plugins.jetbrains.com/docs/intellij/basic-action-system.html#action-declaration-reference-->
     <actions>
+
+        <action id="com.cschar.pmode3.action12"
+                class="com.cschar.pmode3.services.PopupDialogAction"
+                text="Action Basics Plugin: CUSTOM POPUP ACTION----"
+                description="CUSTOM POPUP ACTION">
+            <!--            icon="SdkIcons.Sdk_default_icon"-->
+
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+            <add-to-group group-id="ToolsMenu" anchor="first"/>
+            <override-text place="MainMenu" text="Pop Dialog Action"/>
+            <keyboard-shortcut first-keystroke="control alt A" second-keystroke="C" keymap="$default"/>
+            <mouse-shortcut keystroke="control button3 doubleClick" keymap="$default"/>
+        </action>
+
         <action id="com.cschar.pmode3.PowerModeZeranthiumToggleEnabled"
                 class="com.cschar.pmode3.hotkeys.HotKeyEnabledAction"
                 text="Power Mode Zeranthium Toggle"

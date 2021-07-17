@@ -3,6 +3,7 @@ package com.cschar.pmode3;
 import com.cschar.pmode3.config.*;
 import com.cschar.pmode3.config.common.ui.ZeranthiumColors;
 import com.cschar.pmode3.services.MemoryMonitorService;
+import com.cschar.pmode3.services.MyJComponent;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
@@ -16,6 +17,8 @@ import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.options.ConfigurableUi;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.ui.popup.JBPopup;
+import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTabbedPane;
@@ -628,46 +631,74 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
 
     private void setupPackLoaderButton(){
         loadPackButton.addActionListener((event) -> {
+            System.out.println("Creating custom panel");
+            JComponent content = new MyJComponent("A custom panel");
 
-            ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/bar_small.png"));
+            JBPopup popup = JBPopupFactory.getInstance().createComponentPopupBuilder(content, content).createPopup();
 
+//            Messages.
 
-            int result = Messages.showYesNoDialog(null,
-                    "<html> <h1> Load config pack? </h1>" +
-                            " \n Config <b>packs</b> can be found on the " +
-                            " <a href='https://github.com/cschar/zeranthium-extras'> zeranthium-extras </a>" +
-                            "github repo. " +
-                            "\n\n" +
-                            "Please select a <b> manifest.json </b> file found inside one of the packs </html>",
-                    "LOAD PACK","yes","no", sliderIcon);
-
-            if(result == Messages.YES){
-                FileChooserDescriptor fd = new FileChooserDescriptor(true,false,false,false,false,false);
-//                fd.setForcedToUseIdeaFileChooser(true);
-                FileChooserDialog fcDialog = FileChooserFactory.getInstance().createFileChooser(fd, null, null);
-
-
-                VirtualFile[] vfs = fcDialog.choose(null);
-                if(vfs.length == 1){
-                    if(!vfs[0].getName().equals("manifest.json")){
-                        Messages.showInfoMessage("Please select a manifest.json file in a pack directory", "Pack Load Failed");
-                    }else {
-                        try {
-                            this.loadConfigPack(vfs[0].getPath());
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        } catch( JSONException je){
-                            Messages.showErrorDialog("<html><h1>Pack Failed to load</h1>" +
-                                            "\n There was an error processing the .json info" +
-                                            "\n <pre>" + je.toString() + "</pre>" +
-                                            "" +
-                                            "</html>",
-                                    "Pack Load Failed");
-                            LOGGER.log(Level.SEVERE, je.toString(), je);
-                        }
-                    }
-                }
+            if (popup.getSize() == null) {
+                System.out.println("popup size is null");
+            }else{
+                System.out.println("popup size is" + popup.getSize().toString());
             }
+
+            Dimension d = new Dimension();
+            d.setSize(900,500);
+            popup.setMinimumSize(d);
+            popup.setRequestFocus(true);
+            popup.showInFocusCenter();
+            popup.setUiVisible(true);
+            popup.setCaption("A popup yeah");
+
+
+            if (popup.getSize() == null) {
+                System.out.println("==popup size is null");
+            }else{
+                System.out.println("==popup size is" + popup.getSize().toString());
+            }
+
+            System.out.println("Popup is visible? : " + popup.isVisible());
+//            ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/bar_small.png"));
+//
+//
+//            int result = Messages.showYesNoDialog(null,
+//                    "<html> <h1> Load config pack? </h1>" +
+//                            " \n Config <b>packs</b> can be found on the " +
+//                            " <a href='https://github.com/cschar/zeranthium-extras'> zeranthium-extras </a>" +
+//                            "github repo. " +
+//                            "\n\n" +
+//                            "Please select a <b> manifest.json </b> file found inside one of the packs </html>",
+//                    "LOAD PACK","yes","no", sliderIcon);
+//
+//            if(result == Messages.YES){
+//                FileChooserDescriptor fd = new FileChooserDescriptor(true,false,false,false,false,false);
+////                fd.setForcedToUseIdeaFileChooser(true);
+//                FileChooserDialog fcDialog = FileChooserFactory.getInstance().createFileChooser(fd, null, null);
+//
+//
+//                VirtualFile[] vfs = fcDialog.choose(null);
+//                if(vfs.length == 1){
+//                    if(!vfs[0].getName().equals("manifest.json")){
+//                        Messages.showInfoMessage("Please select a manifest.json file in a pack directory", "Pack Load Failed");
+//                    }else {
+//                        try {
+//                            this.loadConfigPack(vfs[0].getPath());
+//                        } catch (FileNotFoundException e) {
+//                            e.printStackTrace();
+//                        } catch( JSONException je){
+//                            Messages.showErrorDialog("<html><h1>Pack Failed to load</h1>" +
+//                                            "\n There was an error processing the .json info" +
+//                                            "\n <pre>" + je.toString() + "</pre>" +
+//                                            "" +
+//                                            "</html>",
+//                                    "Pack Load Failed");
+//                            LOGGER.log(Level.SEVERE, je.toString(), je);
+//                        }
+//                    }
+//                }
+//            }
         });
     }
 

@@ -46,16 +46,14 @@ var remoteRobotVersion = "0.11.4"
 
 dependencies {
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.17.1")
-//    implementation(files("libs/imgscalr-lib-4.2.jar"))
-//    implementation(files("libs/jlayer-1.0.1.jar"))
-//    implementation(files("libs/json-20090211.jar"))
 
     implementation(group = "org.json", name = "json", version = "20090211")
     implementation(group = "javazoom", name = "jlayer", version = "1.0.1")
     implementation(group = "org.imgscalr", name = "imgscalr-lib", version = "4.2")
 
-    // configurations.compile.extendsFrom(configurations.extraLibs)
-
+    implementation(group = "org.eclipse.jgit", name = "org.eclipse.jgit", version = "5.12.0.202106070339-r") {
+        exclude(group = "org.slf4j", module = "slf4j-api")
+    }
 
     // robot-ui testing stuff
 //    testImplementation 'com.intellij.remoterobot:remote-robot:' + remoteRobotVersion
@@ -68,8 +66,6 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.0")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.2")
-
-
 
     // Logging Network Calls
     testImplementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
@@ -121,18 +117,15 @@ tasks.register("hello") {
     }
 }
 
-
-
 // https://docs.gradle.org/current/userguide/tutorial_using_tasks.html
 tasks {
     jar {
-        //https://docs.gradle.org/current/userguide/more_about_tasks.html
-        //https://docs.gradle.org/current/dsl/org.gradle.api.tasks.bundling.Jar.html#org.gradle.api.tasks.bundling.Jar:archiveBaseName
+        // https://docs.gradle.org/current/userguide/more_about_tasks.html
+        // https://docs.gradle.org/current/dsl/org.gradle.api.tasks.bundling.Jar.html#org.gradle.api.tasks.bundling.Jar:archiveBaseName
 
-        //https://stackoverflow.com/questions/56518451/
+        // https://stackoverflow.com/questions/56518451/
         from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
     }
-
 
     // tag example: https://www.baeldung.com/junit-5-gradle#configuring-junit-5-tests-with-gradle
     // from CLI: // gradle clean test -DincludeTags='regression' -DexcludeTags='accessibility'
