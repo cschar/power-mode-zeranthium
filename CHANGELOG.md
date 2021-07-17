@@ -1,8 +1,9 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
-# demo-proj Changelog
+# power-mode-zeranthium Changelog
 
 ## [Unreleased]
+## [2.6.0]
 - add background loading at startup
 - move to intellij-plugin-template
 
