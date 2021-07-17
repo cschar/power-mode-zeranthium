@@ -1,3 +1,9 @@
+# TODO:
+ - move over to kotlin based templates
+ https://github.com/JetBrains/intellij-platform-plugin-template
+ - upgrade to gradle intellij-plugin 1.0 
+ https://github.com/JetBrains/gradle-intellij-plugin/
+
 # Deploying new version
 
  1. Change version in build.gradle 
@@ -30,7 +36,6 @@ special as the code is already available on GitHub.`
 
 
 Max plugin size : 200MB:
-
 https://intellij-support.jetbrains.com/hc/en-us/community/posts/206445729--Question-Limitation-of-Upload-Plugin-Size
 
 
@@ -47,69 +52,11 @@ To run project:
 ./gradlew runIde
 
 
-# Snags I ran into:
-
-- If gradle forces you to download new IDE for sandbox
- -- download separately and place e.g.
- '/Users/USERNAME/.gradle/caches/modules-2/files-2.1/com.jetbrains/jbre/jbr-11_0_3-osx-x64-b304.10.tar.gz'
-.e.g.
-```
-cd ~/.gradle/caches/modules-2/files-2.1/com.jetbrains/jbre
-rm -rf *.*
-cp ~/Downloads/jbr-11_0_6-osx-x64-b765.25.tar.gz ~/.gradle/caches/modules-2/files-2.1/com.jetbrains/jbre
-## or whatever version is current e.g.
-cp ~/Downloads/jbr-XX_X_X-osx-x64-bXXX.XX.tar.gz ~/.gradle/caches/modules-2/files-2.1/com.jetbrains/jbre
-```
-
  
 - If serialized options are messed up
 --- delete  build/idea-sandbox/config/options/power.mode3.xml
-
--------
-
-Other styles:
-https://github.com/codeinthedark/awesome-power-mode
-
-
-
-Notes on plugin Dev:
-
-So To tell your plugin to use all these classes...
-
-We put our ONE, Component in this section:
-```xml
-    <application-components>
-        <component>
-            <implementation-class>com.cschar.myPlugin.MyPlugin</implementation-class>
-        </component>
-    </application-components>
-```
-
-we put TWO, our ConfigurableBase in this section:
-
-```xml
- <extensions defaultExtensionNs="com.intellij">
- 
-        <applicationConfigurable
-         groupId="appearance"
-         groupWeight="20"
-         id="com.your.long.unique.id"
-         displayName="menu item name for users 3 3 3"
-         instance="path.to.your.Class.using.ConfigurableBase" />
-  </extensions>
-```
-
-by adding this in your .xml you are using the file com.intellij.openapi.options.ConfigurableEP
-
-we put groupId as "appearance" since in that file, it has been set up that:
-```
-Appearance & Behavior {@code groupId="appearance"}</dt>
-   * <dd>This group contains settings to personalize IDE appearance and behavior:
-   * change themes and font size, tune the keymap, and configure plugins and system settings,
-   * such as password policies, HTTP proxy, updates and more.
-```
-
-
+  
+  
 
 
 # CRASH notes:
@@ -129,7 +76,7 @@ Caused by: java.lang.ClassNotFoundException: org.json.JSONException PluginClassL
     
 --Fixed by packaging a FAT JAR
 https://discuss.gradle.org/t/how-to-include-dependencies-in-jar/19571/5
-
+or using shadowJar w/ gradle
 
 #launch bug:
 WARNING: An illegal reflective access operation has occurred
@@ -138,3 +85,32 @@ WARNING: Please consider reporting this to the maintainers of com.intellij.util.
 WARNING: Use --illegal-access=warn to enable warnings of further illeg
 
 this is being tracked here: https://youtrack.jetbrains.com/issue/IDEA-210683
+
+##runIdeForUiTest gotcha
+make sure no file is open inside the ./build folder, :clean and :runIdeForUiTest will break
+
+
+#Gradle dev env
+in intellij run configurations make an empty gradle config with these args to intended project file
+runIde --args="C:\\path\\to\\my\\project\\file\\App22336.kt"
+
+When upgrading gradle... (to make ./gradlew use a diff version on commadnline...)
+go into gradle/wrapper/gradle-wrapper.properties, and change the URL from which it downloads the version
+
+
+## when setting up on a new computer...
+
+step 1. in File -> project structure -> SDKs ... '+' icon ---> add the IntelliJP Platform Plugin SDK
+step 2. set that SDK as the project SDK to have the external library defined to access all intellij.openapi stuff
+
+
+
+# testing
+
+./gradlew :clean :runIdeForUiTests
+
+
+## for example reference of test code
+https://github.com/JetBrains/gradle-intellij-plugin/tree/master/examples/simple-plugin/src/test/java/org/intellij/examples/simple/plugin
+and maybe..
+https://github.com/JetBrains/intellij-sdk-code-samples/

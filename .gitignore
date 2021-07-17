@@ -1,13 +1,13 @@
 .gradle
 #build.gradle
-gradlew
-gradlew.bat
+#gradlew
+#gradlew.bat
 #settings.gradle
 
 .DS_Store
 
 build
-gradle
+#gradle
 .idea
 
 

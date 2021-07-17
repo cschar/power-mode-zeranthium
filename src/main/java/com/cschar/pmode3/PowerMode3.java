@@ -18,25 +18,22 @@ package com.cschar.pmode3;
  */
 
 
-import com.cschar.pmode3.actionHandlers.MyPasteHandler;
-import com.cschar.pmode3.actionHandlers.MySpecialActionHandler;
 import com.cschar.pmode3.config.*;
 import com.cschar.pmode3.config.common.SoundData;
 import com.cschar.pmode3.config.common.SpriteData;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.BaseComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.*;
 import com.intellij.openapi.progress.*;
 
+import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.JBColor;
 import com.intellij.util.SmartList;
 import com.intellij.util.xmlb.XmlSerializerUtil;
@@ -72,6 +69,16 @@ import java.util.logging.Logger;
 public class PowerMode3 implements
         PersistentStateComponent<PowerMode3>, Disposable {
 
+    @Override
+    public void dispose() {
+//       See https://jetbrains.org/intellij/sdk/docs/basics/disposers.html for more details.
+        //particleContainerManager = null;
+        //why isnt this disposing
+
+        LOGGER.info("Disposing PowerMode3");
+        Disposer.dispose(particleContainerManager);
+    }
+
     //https://www.jetbrains.org/intellij/sdk/docs/basics/persisting_state_of_components.html#implementing-the-persistentstatecomponent-interface
     private static final Logger LOGGER = Logger.getLogger(PowerMode3.class.getName());
 
@@ -82,6 +89,7 @@ public class PowerMode3 implements
 
     @com.intellij.util.xmlb.annotations.Transient
     Color particleColor;
+
     private int particleRGB;
 
 
@@ -108,8 +116,7 @@ public class PowerMode3 implements
 
     public enum ConfigType {
         BASIC_PARTICLE,
-        LIGHTNING,     //cant remove unless we shift num values of others
-        LIGHTNING_ALT, //cant remove unless we shift num values of others
+
         LIZARD,
         MOMA,
         VINE,
@@ -126,12 +133,13 @@ public class PowerMode3 implements
         MULTI_LAYER_CHANCE,
     }
 
+
+
     static class JSONLoader {
+        private static HashMap<ConfigType, String> defaultJSONTables;
 
-        public static HashMap<ConfigType, SmartList<String>> loadDefaultJSONTableConfigs() {
-
-            HashMap<ConfigType, String> defaultJSONTables = new HashMap<ConfigType, String>() {{
-
+        static {
+            JSONLoader.defaultJSONTables = new HashMap<ConfigType, String>() {{
                 put(ConfigType.LOCKED_LAYER, "LOCKED_LAYER.json");
                 put(ConfigType.COPYPASTEVOID, "COPYPASTEVOID.json");
                 put(ConfigType.DROSTE, "DROSTE.json");
@@ -142,41 +150,45 @@ public class PowerMode3 implements
                 put(ConfigType.MULTI_LAYER_CHANCE, "MULTI_LAYER_CHANCE.json");
                 put(ConfigType.TAP_ANIM, "TAP_ANIM.json");
 
-
                 put(ConfigType.MUSIC_TRIGGER, "MUSIC_TRIGGERS.json");
                 put(ConfigType.SOUND, "SOUND.json");
                 put(ConfigType.SPECIAL_ACTION_SOUND, "SPECIAL_ACTION_SOUND.json");
 
             }};
-            HashMap<ConfigType, SmartList<String>> pathDataMap = new HashMap<ConfigType, SmartList<String>>();
+        }
 
+        public static void loadSingleJSONTableConfig(Map<ConfigType, SmartList<String>> pathDataMap, ConfigType t) {
 
-            for (ConfigType t : defaultJSONTables.keySet()) {
-                String jsonFile = defaultJSONTables.get(t);
-                InputStream inputStream = JSONLoader.class.getResourceAsStream("/configJSON/" + jsonFile);
+            String jsonFile = defaultJSONTables.get(t);
+            InputStream inputStream = JSONLoader.class.getResourceAsStream("/configJSON/" + jsonFile);
 
-
-                StringBuilder sb = new StringBuilder();
-                Scanner s = new Scanner(inputStream);
-                while (s.hasNextLine()) {
-                    sb.append(s.nextLine());
-                }
-
-                SmartList<String> smartList = new SmartList<>();
-                try {
-                    JSONObject jo = new JSONObject(sb.toString());
-
-                    //TODO this is extra work, we go .json --> JSONObject --> string ( ..later --> JSONObject ---> pathData)
-                    JSONArray tableData = jo.getJSONArray("data");
-                    for (int i = 0; i < tableData.length(); i++) {
-                        smartList.add(tableData.getJSONObject(i).toString());
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                pathDataMap.put(t, smartList);
+            StringBuilder sb = new StringBuilder();
+            Scanner s = new Scanner(inputStream);
+            while (s.hasNextLine()) {
+                sb.append(s.nextLine());
             }
 
+            SmartList<String> smartList = new SmartList<>();
+            try {
+                JSONObject jo = new JSONObject(sb.toString());
+
+                //TODO this is extra work, we go .json --> JSONObject --> string ( ..later --> JSONObject ---> pathData)
+                JSONArray tableData = jo.getJSONArray("data");
+                for (int i = 0; i < tableData.length(); i++) {
+                    smartList.add(tableData.getJSONObject(i).toString());
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            pathDataMap.put(t, smartList);
+        }
+
+
+        public static HashMap<ConfigType, SmartList<String>> getDefaultJSONTableConfigs() {
+            HashMap<ConfigType, SmartList<String>> pathDataMap = new HashMap<>();
+            for (ConfigType t : defaultJSONTables.keySet()) {
+                loadSingleJSONTableConfig(pathDataMap, t);
+            }
             return pathDataMap;
         }
 
@@ -184,7 +196,7 @@ public class PowerMode3 implements
 
 
     @com.intellij.util.xmlb.annotations.MapAnnotation
-    private Map<ConfigType, SmartList<String>> pathDataMap = new HashMap<ConfigType, SmartList<String>>() {{
+    protected Map<ConfigType, SmartList<String>> pathDataMap = new HashMap<ConfigType, SmartList<String>>() {{
         //populated by loading in .json files in resources folder.
     }};
 
@@ -215,15 +227,14 @@ public class PowerMode3 implements
 
 
     public static PowerMode3 getInstance() {
-        return ApplicationManager.getApplication().getComponent(PowerMode3.class);
+        return ApplicationManager.getApplication().getService(PowerMode3.class);
     }
 
     @Override
     public void initializeComponent() {
-        this.particleColor = new JBColor(new Color(this.getParticleRGB()), new Color(this.getParticleRGB()));
+        LOGGER.info("Initializing pmode3 component...");
 
-        //Load JSON
-        JSONLoader.loadDefaultJSONTableConfigs();
+        this.particleColor = new JBColor(new Color(this.getParticleRGB()), new Color(this.getParticleRGB()));
 
         //Setup SOUND handler
         final EditorActionManager actionManager = EditorActionManager.getInstance();
@@ -233,7 +244,6 @@ public class PowerMode3 implements
                 new TypedActionHandler() {
                     @Override
                     public void execute(@NotNull Editor editor, char c, @NotNull DataContext dataContext) {
-//                                          PowerMode3 settings = PowerMode3.getInstance();
                         if (PowerMode3.this.isEnabled() && PowerMode3.this.getSpriteTypeEnabled(ConfigType.SOUND)) {
 
                             int winner = SoundData.getWeightedAmountWinningIndex(SoundConfig.soundData);
@@ -253,15 +263,21 @@ public class PowerMode3 implements
 
         //Setup Main particle stuff
         //Ensure when a new editor is created,  a particleContainerManager is attached to it
-        final EditorActionManager editorActionManager = EditorActionManager.getInstance();
         final EditorFactory editorFactory = EditorFactory.getInstance();
-        particleContainerManager = new ParticleContainerManager(this);
-        editorFactory.addEditorFactoryListener(particleContainerManager, new Disposable() {
-            @Override
-            public void dispose() {
 
-            }
-        });
+
+        particleContainerManager = new ParticleContainerManager(this);
+
+        Editor[] allEditors = EditorFactory.getInstance().getAllEditors();
+        for(Editor e : allEditors){
+//            LOGGER.info("Editor " + e.toString() + " is open");
+            particleContainerManager.bootstrapEditor(e);
+        }
+
+        editorFactory.addEditorFactoryListener(particleContainerManager, this);
+        EditorFactory.getInstance().refreshAllEditors();
+
+        LOGGER.info("Bootstrapped previous editors...");
 
         //Setup the handler to listen when typing... e.x. for anchor style particles
         final TypedAction typedAction = TypedAction.getInstance();
@@ -273,18 +289,13 @@ public class PowerMode3 implements
                 rawHandler.execute(editor, c, dataContext);
             }
         });
-
+        LOGGER.info("Done initializing...");
     }
 
-    private void updateEditor(@NotNull final Editor editor) {
+    private void updateEditor(@NotNull final Editor editor){
         particleContainerManager.update(editor);
     }
 
-    @Override
-    public void dispose() {
-        particleContainerManager.dispose();
-        particleContainerManager = null;
-    }
 
 
     @Nullable
@@ -298,7 +309,7 @@ public class PowerMode3 implements
     public void noStateLoaded() {
         LOGGER.info("No State loaded previously");
         this.setParticleRGB(JBColor.darkGray.getRGB());
-        pathDataMap = JSONLoader.loadDefaultJSONTableConfigs();
+        pathDataMap = JSONLoader.getDefaultJSONTableConfigs();
 
         loadConfigData();
     }
@@ -307,7 +318,7 @@ public class PowerMode3 implements
     @Override
     public void loadState(@NotNull PowerMode3 state) {
         LOGGER.info("previous state found -- setting up...");
-//        pathDataMap = ConfigLoader.loadDefaultJSONTableConfigs();
+
         XmlSerializerUtil.copyBean(state, this);
 
         //check for missing config data e.g. new setting has been added
@@ -326,44 +337,31 @@ public class PowerMode3 implements
             LOGGER.info("Missing configs found: " + missingConfigs.size() + " -- loading defaults");
             for (ConfigType c : missingConfigs) {
                 LOGGER.info(c.name());
+                JSONLoader.loadSingleJSONTableConfig(pathDataMap, c);
             }
-            //TODO only load missingConfigs default setting , not all of them
-            pathDataMap = JSONLoader.loadDefaultJSONTableConfigs();
         }
 
 
         loadConfigData();
-
+        LOGGER.info("state loaded...");
     }
 
+
+
+    public void loadConfigData() {
+        Task.Backgroundable bgTask = new Task.Backgroundable(null, "Zeranthium Setup...",
+                false, null) {
+            @Override
+            public void run(@NotNull ProgressIndicator progressIndicator) {
+                loadConfigDataAsync(progressIndicator);
+            }
+        };
+        ProgressManager.getInstance().run(bgTask);
+
+    }
 
     @com.intellij.util.xmlb.annotations.Transient
     public boolean isConfigLoaded = false;
-
-    // for use with experimental editor onCreated in particleManager
-//    @com.intellij.util.xmlb.annotations.Transient
-//    public boolean isLoading = false;
-
-    public void loadConfigData() {
-//        boolean DO_BACKGROUND_LOAD = false;
-        boolean DO_BACKGROUND_LOAD = true;
-
-        if (DO_BACKGROUND_LOAD) {
-            Task.Backgroundable bgTask = new Task.Backgroundable(null, "Zeranthium Setup...",
-                    false, null) {
-                //            Task.Modal bgTask = new Task.Modal(null, "Zeranthium Setup...",
-//                    false) {
-                @Override
-                public void run(@NotNull ProgressIndicator progressIndicator) {
-                    loadConfigDataAsync(progressIndicator);
-                }
-            };
-            ProgressManager.getInstance().run(bgTask);
-        } else {
-            loadConfigDataAtSplash();
-        }
-    }
-
 
     private void loadConfigDataAsync(ProgressIndicator progressIndicator) {
         progressIndicator.setIndeterminate(false);
@@ -373,9 +371,7 @@ public class PowerMode3 implements
         this.enabled = false;
 
         if (!this.isConfigLoaded) {
-            LOGGER.info("Loading assets");
-//            for(ConfigType)
-
+            LOGGER.info("Loading assets...");
 
             setUpdateProgress(progressIndicator, "Multi Layer", 0.1);
             MultiLayerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MULTI_LAYER)));
@@ -424,29 +420,7 @@ public class PowerMode3 implements
     }
 
 
-    private void loadConfigDataAtSplash() {
-        if (!this.isConfigLoaded) {
-
-            MultiLayerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MULTI_LAYER)));
-            MultiLayerChanceConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MULTI_LAYER_CHANCE)));
-            LizardConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LIZARD)));
-            LinkerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LINKER)));
-            DrosteConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.DROSTE)));
-            CopyPasteVoidConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.COPYPASTEVOID)));
-            LockedLayerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LOCKED_LAYER)));
-            LanternConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LANTERN)));
-            TapAnimConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.TAP_ANIM)));
-
-            SoundConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.SOUND)));
-            MusicTriggerConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.MUSIC_TRIGGER)));
-            SpecialActionSoundConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.SPECIAL_ACTION_SOUND)));
-        }
-        this.isConfigLoaded = true;
-
-    }
-
-
-    public ArrayList<SoundData> deserializeSoundData(SmartList<String> target) {
+    public ArrayList<SoundData> deserializeSoundData(List<String> target) {
         ArrayList<SoundData> sd = new ArrayList<>();
         for (String s1 : target) {
             sd.add(SoundData.fromJsonObjectString(s1));
@@ -454,18 +428,18 @@ public class PowerMode3 implements
         return sd;
     }
 
-    public ArrayList<SpriteData> deserializeSpriteData(SmartList<String> target) {
-        ArrayList<SpriteData> sd = new ArrayList<SpriteData>();
-        for (String s1 : target) {
+//    public ArrayList<SpriteData> deserializeSpriteData(SmartList<String> target) {
+//        ArrayList<SpriteData> sd = new ArrayList<SpriteData>();
+//        for (String s1 : target) {
+//
+//            sd.add(SpriteData.fromJsonObjectString(s1));
+//
+//        }
+//        return sd;
+//    }
 
-            sd.add(SpriteData.fromJsonObjectString(s1));
-
-        }
-        return sd;
-    }
-
-    public ArrayList<SpriteDataAnimated> deserializeSpriteDataAnimated(SmartList<String> target) {
-        LOGGER.info("deserializing sprite data animated");
+    public ArrayList<SpriteDataAnimated> deserializeSpriteDataAnimated(List<String> target) {
+        LOGGER.info("deserializing sprite data animated" + target);
         ArrayList<SpriteDataAnimated> sd = new ArrayList<SpriteDataAnimated>();
         for (String s1 : target) {
             sd.add(SpriteDataAnimated.fromJsonObjectString(s1));
@@ -474,15 +448,13 @@ public class PowerMode3 implements
     }
 
 
-    public void setSerializedSpriteData(ArrayList<SpriteData> spriteData, ConfigType configType) {
-        SmartList<String> serialized = new SmartList<>();
-        for (SpriteData d : spriteData) {
-            serialized.add(d.toJSONObject().toString());
-//            serialized.add(new String[]{String.valueOf(d.enabled), String.valueOf(d.scale), String.valueOf(d.val1),
-//                    String.valueOf(d.defaultPath), String.valueOf(d.customPath)});
-        }
-        this.pathDataMap.put(configType, serialized);
-    }
+//    public void setSerializedSpriteData(ArrayList<SpriteData> spriteData, ConfigType configType) {
+//        SmartList<String> serialized = new SmartList<>();
+//        for (SpriteData d : spriteData) {
+//            serialized.add(d.toJSONObject().toString());
+//        }
+//        this.pathDataMap.put(configType, serialized);
+//    }
 
     public void setSerializedSpriteDataAnimated(ArrayList<SpriteDataAnimated> spriteData, ConfigType configType) {
         SmartList<String> serialized = new SmartList<>();
@@ -496,8 +468,6 @@ public class PowerMode3 implements
         SmartList<String> serialized = new SmartList<>();
         for (SoundData d : soundData) {
             serialized.add(d.toJSONObject().toString());
-//            serialized.add(String.join(",",new String[]{String.valueOf(d.enabled), String.valueOf(d.val1),
-//                    String.valueOf(d.defaultPath), String.valueOf(d.customPath)}));
         }
         this.pathDataMap.put(configType, serialized);
     }
@@ -581,8 +551,6 @@ public class PowerMode3 implements
     public void setLastTabIndex(int lastTabIndex) {
         this.lastTabIndex = lastTabIndex;
     }
-
-
 
 
 }

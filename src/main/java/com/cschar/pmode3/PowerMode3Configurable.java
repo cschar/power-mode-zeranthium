@@ -22,7 +22,7 @@ public class PowerMode3Configurable extends ConfigurableBase<MenuConfigurableUI,
             "Zeranthium");
         this.settings = settings;
     }
-    public PowerMode3Configurable() {
+    private PowerMode3Configurable() {
         this(PowerMode3.getInstance());
     }
 
@@ -37,8 +37,7 @@ public class PowerMode3Configurable extends ConfigurableBase<MenuConfigurableUI,
     }
 
     @Override
-    protected MenuConfigurableUI createUi()
-    {
+    protected MenuConfigurableUI createUi() {
         return new MenuConfigurableUI(settings);
     }
 

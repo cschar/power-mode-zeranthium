@@ -2,6 +2,7 @@ package com.cschar.pmode3;
 
 import com.cschar.pmode3.config.*;
 import com.cschar.pmode3.config.common.ui.ZeranthiumColors;
+import com.cschar.pmode3.services.MemoryMonitorService;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
@@ -14,29 +15,17 @@ import com.intellij.openapi.fileChooser.FileChooserFactory;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.options.ConfigurableUi;
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.ui.DialogBuilder;
-import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.popup.ComponentPopupBuilder;
-import com.intellij.openapi.ui.popup.JBPopup;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.util.ui.JBUI;
-import kotlin.Pair;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -50,7 +39,6 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
 
 public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposable {
     private static final Logger LOGGER = Logger.getLogger( MenuConfigurableUI.class.getName() );
@@ -122,7 +110,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
     }
 
 
-    public MenuConfigurableUI() {};
+    private MenuConfigurableUI() {};
 
 
 
@@ -325,7 +313,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
     @Override
     public JComponent getComponent() {
         JBScrollPane scrollPane = new JBScrollPane(this.mainPanel);
-
+//        scrollPane.setLayout(new BoxLayout(scrollPane, BoxLayout.Y_AXIS));
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
@@ -493,7 +481,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
 
     }
 
-    private void initMemoryStatsPanel(){
+    public void initMemoryStatsPanel(){
         this.memoryStatsPanel.removeAll();
 
         this.memoryStatsPanel.setBackground(ZeranthiumColors.specialOption3);
@@ -512,7 +500,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
     //Constructor is called _AFTER_ createUIComponents when using IntelliJ GUI designer
     //https://www.jetbrains.com/help/idea/creating-form-initialization-code.html
     private void createUIComponents() {
-        PowerMode3 settings = PowerMode3.getInstance();
+        PowerMode3 settings = ApplicationManager.getApplication().getService(PowerMode3.class);
 
         theCustomCreatePanel = new JPanel();
         theCustomCreatePanel.setOpaque(false);
@@ -521,23 +509,28 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
         this.memoryStatsPanel = new JPanel();
         initMemoryStatsPanel();
 
-        Task.Backgroundable bgTask = new Task.Backgroundable(null, "Zeranthium Config...",
-                false, null) {
-            @Override
-            public void run(@NotNull ProgressIndicator progressIndicator) {
-                while(MenuConfigurableUI.this.refreshMemoryWidget){
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    initMemoryStatsPanel();
-//                    System.out.println("updating");
-                }
-            }
-        };
-        ProgressManager.getInstance().run(bgTask);
-//
+        MemoryMonitorService powerMemoryService = ApplicationManager.getApplication().getService(MemoryMonitorService.class);
+
+        powerMemoryService.setUi(this);
+        powerMemoryService.updateUi();
+
+        //Freezes on buildPlugin
+//        Task.Backgroundable bgTask = new Task.Backgroundable(null, "Zeranthium Config...",
+//                false, null) {
+//            @Override
+//            public void run(@NotNull ProgressIndicator progressIndicator) {
+//                while(MenuConfigurableUI.this.refreshMemoryWidget){
+//                    try {
+//                        Thread.sleep(2000);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                    initMemoryStatsPanel();
+////                    System.out.println("updating");
+//                }
+//            }
+//        };
+//        ProgressManager.getInstance().run(bgTask);
 
 
         if(!settings.isConfigLoaded){
@@ -637,6 +630,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
         loadPackButton.addActionListener((event) -> {
 
             ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/bar_small.png"));
+
 
             int result = Messages.showYesNoDialog(null,
                     "<html> <h1> Load config pack? </h1>" +
@@ -799,7 +793,9 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
         }
 
     @Override
-    public void dispose() {
+    public void dispose(){
         this.refreshMemoryWidget = false; //stop bg thread from updating
+        MemoryMonitorService powerMemoryService = ApplicationManager.getApplication().getService(MemoryMonitorService.class);
+        powerMemoryService.cleanup();
     }
 }

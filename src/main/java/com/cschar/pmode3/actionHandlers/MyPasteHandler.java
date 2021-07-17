@@ -13,6 +13,7 @@ import com.intellij.openapi.editor.actionSystem.EditorTextInsertHandler;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.Producer;
+import org.bouncycastle.util.Arrays;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,16 +26,37 @@ import java.util.logging.Logger;
 public class MyPasteHandler extends EditorActionHandler implements EditorTextInsertHandler {
     private static final java.util.logging.Logger LOGGER = Logger.getLogger(MyPasteHandler.class.getName());
 
+    //   deprecated
+//    @Override
+//    public void execute(Editor editor, DataContext dataContext, Producer<Transferable> producer) {
+//        System.out.println("PasteHandler executed");
+//        LOGGER.info("Psting...in project.." + editor.getProject().getName());
+//        if (origEditorActionHandler != null && origEditorActionHandler instanceof EditorTextInsertHandler) {
+//            ((EditorTextInsertHandler) origEditorActionHandler).execute(editor, dataContext, producer);
+//        }
+//    }
+
+    @Override
+    public void execute(Editor editor, DataContext dataContext, @Nullable Producer<? extends Transferable> producer) {
+        System.out.println("PasteHandler executed");
+        LOGGER.info("Psting...in project.." + editor.getProject().getName());
+        if (origEditorActionHandler != null && origEditorActionHandler instanceof EditorTextInsertHandler) {
+            ((EditorTextInsertHandler) origEditorActionHandler).execute(editor, dataContext, producer);
+        }
+    }
+
+
     private EditorActionHandler origEditorActionHandler;
 
     public MyPasteHandler(@NotNull EditorActionHandler origEditorActionHandler) {
+        LOGGER.info("creating MyPasteHandler");
         this.origEditorActionHandler = origEditorActionHandler;
     }
 
     @Override
     protected void doExecute(@NotNull Editor editor,  @Nullable Caret caret, DataContext dataContext) {
 
-
+        LOGGER.info("Pasting doExectue..in project.." + editor.getProject().getName());
         PowerMode3 settings = PowerMode3.getInstance();
 
         if(!settings.isEnabled() || !settings.getSpriteTypeEnabled(PowerMode3.ConfigType.COPYPASTEVOID)){
@@ -63,37 +85,38 @@ public class MyPasteHandler extends EditorActionHandler implements EditorTextIns
                 }
 
                 TextRange[] pasted = EditorCopyPasteHelper.getInstance().pasteFromClipboard(editor);
-                if(pasted.length != 1) return;
+                if(pasted.length != 1) return; //ensure we have a single TextRange to work with
                 TextRange t = pasted[0];
 
-                int afterPasteOffset = scrollingModel.getVerticalScrollOffset();
-                scrollingModel.enableAnimation();
-
-//                System.out.println("scroll before after " + beforePasteOffset + " " + afterPasteOffset);
-                int dx, dy;
-                int lineHeight = editor.getLineHeight();
-                int charWidth = EditorUtil.getPlainSpaceWidth(editor);
-
-                int size = 5;
-
-
-                int start = t.getStartOffset();
-                int offset = t.getLength();
 
                 //TODO: figure out how to calculate each pasted character x,y coord without incrementing caret
+                //Disable CaretListener for the following...
                 MyCaretListener.enabled = false;
 
+                //   |hey|                           |   |
+                //   |ya|                 ---->      |  |
+                //   |hello there hi|                |           |
 
+                //Begin moving caret along all of selected text to build an outline of
+                //the 'selected' blob. When outline built, add effect to it.
+                int afterPasteOffset = scrollingModel.getVerticalScrollOffset();
+                scrollingModel.enableAnimation();
+//                System.out.println("scroll before after " + beforePasteOffset + " " + afterPasteOffset);
+//                int charWidth = EditorUtil.getPlainSpaceWidth(editor);
+                int lineHeight = editor.getLineHeight();
+                int start = t.getStartOffset();
+                int offset = t.getLength();  //offset is # of characters typed
 
-                //paste outline points  //max size pssible is offset
+                //paste outline points,
+                //to show where each line starts and ends with 2 points
+                // max size possible for line numbers is offset
+                // ex: paste offset 5, but contents is 5 characters w/ newlines
                 Point[][] poPoints = new Point[offset][2];
-                int curLine = 0;
-
-
 
                 Caret curCaret = editor.getCaretModel().getCurrentCaret();
                 Point prevPoint = null;
                 Point point = null;
+                int curLine = 0;
 
                 for(int i = start; i <= start + offset; i++){
                     curCaret.moveToOffset(i);
@@ -102,38 +125,38 @@ public class MyPasteHandler extends EditorActionHandler implements EditorTextIns
                     point.x = point.x - scrollingModel.getHorizontalScrollOffset();
                     point.y = point.y - afterPasteOffset;
 
-                    if(prevPoint == null){
+                    if(prevPoint == null){ //only happens once
                         poPoints[0][0] = point;
                     }else{
-                        //on same line, dont add anything
-                        if(prevPoint.y == point.y){
+                        if(prevPoint.y == point.y){ //on same line, dont add anything
                             //continue
-                        }else {//we've moved to a new line, so add prevPoint as END of last line, add new line boundary
+                        }else {//we've moved to a new line,
+                            // so add prevPoint as END of last line,
                             poPoints[curLine][1] = prevPoint;
                             curLine += 1;
+                            //add new line boundary
                             poPoints[curLine][0] = point;
                         }
                     }
                     prevPoint = point;
 
-//                    ParticleSpritePasteSingle pFont = new ParticleSpritePasteSingle(point.x, point.y,size,
-//                            lineHeight, charWidth,
-//                            100,
-//                            BasicParticleConfig.BASIC_PARTICLE_COLOR(settings));
-//                    ParticleContainerManager.particleContainers.get(editor).particles.add(pFont);
                 }
 
                 poPoints[curLine][1] = point;
 
 
+                //Now, with poPoints containing outline for every caret spot in blob
+                //flesh out the pasteShape
                 Path2D pasteShape = new Path2D.Double();
 
                 for(int i = 0; i <= curLine; i++) {
-                    if (i == 0) {
+                    if (i == 0) { //immediately go to right side
                         pasteShape.moveTo(poPoints[i][0].x, poPoints[i][0].y);
                         pasteShape.lineTo(poPoints[i][1].x, poPoints[i][1].y);
-                    } else {
+                    } else { //work way down to bottom
+                        //move down
                         pasteShape.lineTo(poPoints[i-1][1].x, poPoints[i-1][1].y+lineHeight);
+                        //move either left/right to meet next line point
                         pasteShape.lineTo(poPoints[i][1].x, poPoints[i][1].y);
                     }
                 }
@@ -175,12 +198,6 @@ public class MyPasteHandler extends EditorActionHandler implements EditorTextIns
 
     }
 
-    //   deprecated
-    @Override
-    public void execute(Editor editor, DataContext dataContext, Producer<Transferable> producer) {
-        if (origEditorActionHandler != null && origEditorActionHandler instanceof EditorTextInsertHandler) {
-            ((EditorTextInsertHandler) origEditorActionHandler).execute(editor, dataContext, producer);
-        }
-    }
+
 
 }

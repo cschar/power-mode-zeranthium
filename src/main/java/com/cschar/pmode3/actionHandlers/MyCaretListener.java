@@ -17,10 +17,12 @@ public class MyCaretListener implements CaretListener {
 
     public static boolean enabled = true; //CopyPasteVoid
 
+    public static boolean pluginInitialized = true;
+
     @Override
     public void caretPositionChanged(@NotNull CaretEvent event) {
 
-        if(enabled) {
+        if(enabled && pluginInitialized) {
 
             Editor editor = event.getEditor();
             VisualPosition visualPosition = event.getCaret().getVisualPosition();

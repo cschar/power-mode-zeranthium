@@ -15,6 +15,7 @@ package com.cschar.pmode3;
 
 import com.cschar.pmode3.actionHandlers.MyCaretListener;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.*;
 
 
@@ -26,13 +27,15 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * @author Baptiste Mesta
  * <p>
  * modified by cschar
  */
-public class ParticleContainerManager implements EditorFactoryListener {
+public class ParticleContainerManager implements EditorFactoryListener, Disposable {
+    private static final Logger LOGGER = Logger.getLogger(ParticleContainerManager.class.getName());
 
     private Thread thread;
     public static Map<Editor, ParticleContainer> particleContainers = new HashMap<>();
@@ -41,6 +44,7 @@ public class ParticleContainerManager implements EditorFactoryListener {
     private PowerMode3 settings;
 
     public ParticleContainerManager(PowerMode3 settings) {
+        LOGGER.info("\n\n----ParticleContainerManager initialized \n\n");
         this.settings = settings;
 
         thread = new Thread(new Runnable() {
@@ -66,34 +70,47 @@ public class ParticleContainerManager implements EditorFactoryListener {
         thread.start();
     }
 
-    @Override
-    public void editorCreated(@NotNull EditorFactoryEvent event) {
-        final Editor editor = event.getEditor();
-
+    /**
+     * Dirty way to simulate what happens when a new editor is created without having listener attached beforehand.
+    */
+    public void bootstrapEditor(Editor editor){
+        //        LOGGER.warning("BOOSTRAP=====Editor Created with name:" + editor.toString());
+//        EditorFactoryEvent ev = new EditorFactoryEvent(EditorFactory.getInstance(), e);
+//        final Editor editor = ev.getEditor();
 
         particleContainers.put(editor, new ParticleContainer(editor));
-
         MyCaretListener cl = new MyCaretListener();
         MyCaretListener.enabled = true;
+//        editor.getCaretModel().addCaretListener(cl);
+        editor.getCaretModel().addCaretListener(cl, this);
+    }
 
-        editor.getCaretModel().addCaretListener(cl);
+
+    @Override
+    public void editorCreated(@NotNull EditorFactoryEvent event) {
+        //        LOGGER.info("=====Editor Created with name:" + editor.toString());
+
+        final Editor editor = event.getEditor();
+        particleContainers.put(editor, new ParticleContainer(editor));
+        MyCaretListener cl = new MyCaretListener();
+        MyCaretListener.enabled = true;
+        editor.getCaretModel().addCaretListener(cl, this);
 
     }
 
     @Override
     public void editorReleased(@NotNull EditorFactoryEvent event) {
         ParticleContainer pc = particleContainers.get(event.getEditor());
-
-        pc.cleanupParticles();
-
+        LOGGER.info("releasing editor with particleContainer: " + pc);
+        if(pc != null) {
+            pc.cleanupParticles();
+        }
         particleContainers.remove(event.getEditor());
-
-
     }
 
     public void update(final Editor editor) {
 
-        if (PowerMode3.getInstance().isEnabled()) {
+        if (settings.isEnabled()) {
             SwingUtilities.invokeLater(new Runnable() {
 
                 @Override
@@ -123,9 +140,6 @@ public class ParticleContainerManager implements EditorFactoryListener {
 
     }
 
-    public void resetAllEditors() {
-
-    }
 
     public Anchor[] getAnchors(Editor editor, ParticleContainer particleContainer) {
 
@@ -136,7 +150,6 @@ public class ParticleContainerManager implements EditorFactoryListener {
         int caretOffset = editor.getCaretModel().getOffset();
 
         ArrayList<Anchor> points = new ArrayList<Anchor>();
-//        int searchLength = PowerMode3.getInstance().getMaxPsiSearchDistance();
         int searchLength = settings.getMaxPsiSearchDistance();
 
         String documentText = editor.getDocument().getText();
@@ -192,7 +205,7 @@ public class ParticleContainerManager implements EditorFactoryListener {
         thread.interrupt();
         resetAllContainers();
         particleContainers.clear();
-
+        LOGGER.info("Disposing ParticleContainerManager....");
 
     }
 
