@@ -26,6 +26,10 @@ links to
 https://www.plugin-dev.com/intellij/general/plugin-initial-load/
 
 
+## TESTS
+
+- robotUI test: make a test to load settings UI when it is disabled, check if checkboxes are disabled
+
 ## BUGS ?
 
 

@@ -22,6 +22,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
@@ -34,7 +36,7 @@ public class MenuConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposab
     
     private JPanel particleSettingsPanel;
     private JPanel soundSettingsPanel;
-    private JTabbedPane settingsTabbedPane;
+    private JTabbedPane configSettingsTabbedPane;
 
     private SoundConfig soundConfig;
     private MusicTriggerConfig musicTriggerConfig;
@@ -99,6 +101,7 @@ public class MenuConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposab
 
 
     JPanel ultraPanel;
+    JBScrollPane scrollPane;
 
     //Constructor is called _AFTER_ createUIComponents when using IntelliJ GUI designer
     public MenuConfigurableUI2(PowerMode3 powerMode3) {
@@ -111,10 +114,11 @@ public class MenuConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposab
 
 
         JPanel panel2 = new JPanel();
-        JBScrollPane scrollPane = new JBScrollPane(panel2);
+        scrollPane = new JBScrollPane(panel2);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-//        panel2.setBackground(JBColor.CYAN);
+
+
         panel2.setBorder(JBUI.Borders.empty(2, 2, 200, 2));
         panel2.setLayout(new BoxLayout(panel2, BoxLayout.PAGE_AXIS));
         ImageIcon sliderIcon2 = new ImageIcon(this.getClass().getResource("/icons/bar_small.png"));
@@ -150,19 +154,14 @@ public class MenuConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposab
         panel1.setBackground(JBColor.orange);
         panel1.setBorder(JBUI.Borders.empty(2, 2, 50, 2));
         panel1.setLayout(new BoxLayout(panel1, BoxLayout.X_AXIS));
-        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/bar_small.png"));
-        settingsTabbedPane.addTab("Particle Settings", sliderIcon, panel1);
+        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/barlarge.png"));
+        settingsTabbedPane.addTab("packs", sliderIcon, panel1);
         MyJComponent jComponent = new MyJComponent("title");
         panel1.add(jComponent);
-
 
         this.ultraPanel.setMaximumSize(new Dimension(1000,1000));
         this.ultraPanel.setLayout(new BoxLayout(this.ultraPanel, BoxLayout.X_AXIS));
         this.ultraPanel.add(settingsTabbedPane);
-
-
-
-
 
         MenuConfigurableUI2.single_instance = this;
         settings = powerMode3;
@@ -170,43 +169,17 @@ public class MenuConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposab
 
         //If user has opened settings, but config values arent loaded yet from filesystem...
         if(!settings.isConfigLoaded){
-            isEnabledCheckBox.setEnabled(false);
-            mainTopPanel.setEnabled(false);
-            for(Component j : mainTopPanel.getComponents()){
-                j.setEnabled(false);
-                if(j instanceof JComponent){
-                    for(Component i : ((JComponent)j).getComponents()){
-                        i.setEnabled(false);
-                        if(i instanceof JComponent){
-                            for(Component k : ((JComponent)i).getComponents()){
-                                k.setEnabled(false);
-                            }
-                        }
-                    }
-                }
-            }
-
-
-            mainBottomPanel.setEnabled(false);
-            for(Component j : mainBottomPanel.getComponents()){
-                j.setEnabled(false);
-                if(j instanceof JComponent){
-                    for(Component i : ((JComponent)j).getComponents()){
-                        i.setEnabled(false);
-                        if(i instanceof JComponent){
-                            for(Component k : ((JComponent)i).getComponents()){
-                                k.setEnabled(false);
-                            }
-                        }
-                    }
-                }
-            }
+            toggleMainSettingsEnabled(false);
             return;
         }
 
         loadConfigValues();
 
+        scrollPane.getVerticalScrollBar().setValue(settings.getScrollBarPosition());
+        configSettingsTabbedPane.setSelectedIndex(settings.getLastTabIndex());
 
+//        ultraPanel.revalidate();
+//        ultraPanel.repaint();
     }
 
     public JPanel makeTopSettings(PowerMode3 settings){
@@ -292,7 +265,7 @@ public class MenuConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposab
         JPanel col3 = new JPanel();
         col3.setLayout(new BoxLayout(col3, BoxLayout.Y_AXIS));
         col3.setBorder(JBUI.Borders.empty(10, 10, 50, 10));
-        col3.setBackground(JBColor.GREEN);
+//        col3.setBackground(JBColor.GREEN);
 
         //Col3 - Memory panel
         this.memoryStatsPanel = new JPanel();
@@ -554,41 +527,34 @@ public class MenuConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposab
     @NotNull
     @Override
     public JComponent getComponent() {
-//        JBScrollPane scrollPane = new JBScrollPane(this.mainPanel);
-////        scrollPane.setLayout(new BoxLayout(scrollPane, BoxLayout.Y_AXIS));
-//        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-//        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-//
-//
-//        if(settings.isConfigLoaded) {
-//            scrollPane.getVerticalScrollBar().getValue();
-//            scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
-//                @Override
-//                public void adjustmentValueChanged(AdjustmentEvent e) {
-//                    ApplicationManager.getApplication().invokeLater(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            settings.setScrollBarPosition(e.getValue());
-//                            settings.setLastTabIndex(settingsTabbedPane.getSelectedIndex());
-//
-//                        }
-//                    });
-//                }
-//            });
-//
-//            //http://www.jetbrains.org/intellij/sdk/docs/basics/architectural_overview/general_threading_rules.html?search=BackgroundTaskUtil#invokelater
-//            //https://stackoverflow.com/a/46204157/403403
-//            ApplicationManager.getApplication().invokeLater(new Runnable() {
-//                @Override
-//                public void run() {
-//                    scrollPane.getVerticalScrollBar().setValue(settings.getScrollBarPosition());
-//                    settingsTabbedPane.setSelectedIndex(settings.getLastTabIndex());
-//                }
-//            });
-//        }
 
+        if(settings.isConfigLoaded) {
+            scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+                @Override
+                public void adjustmentValueChanged(AdjustmentEvent e) {
+                    ApplicationManager.getApplication().invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            settings.setScrollBarPosition(e.getValue());
+                            settings.setLastTabIndex(configSettingsTabbedPane.getSelectedIndex());
+                        }
+                    });
+                }
+            });
+            //http://www.jetbrains.org/intellij/sdk/docs/basics/architectural_overview/general_threading_rules.html?search=BackgroundTaskUtil#invokelater
+            //https://stackoverflow.com/a/46204157/403403
+            ApplicationManager.getApplication().invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    LOGGER.info("TOTAL HEIGHT IS: + " + scrollPane.getVerticalScrollBar().getHeight());
+                    scrollPane.getVerticalScrollBar().setValue(settings.getScrollBarPosition());
+                    configSettingsTabbedPane.setSelectedIndex(settings.getLastTabIndex());
+                    LOGGER.info("\n loading saved scroll position ---------- at pos:" + settings.getScrollBarPosition() + "\n\n");
 
-//        return scrollPane;
+                }
+            });
+        }
+
         return this.ultraPanel;
     }
 
@@ -599,42 +565,46 @@ public class MenuConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposab
         // but ConfiguraleUI has already been loaded with 'false' setting
         // ***other settings are loaded from config dict which isn't modified so not needed
 
-        isEnabledCheckBox.setEnabled(true);
+
+        toggleMainSettingsEnabled(true);
         isEnabledCheckBox.setSelected(wasEnabled);
         settings.setEnabled(isEnabledCheckBox.isSelected());
 
-        mainTopPanel.setEnabled(true);
-        for(Component j : mainTopPanel.getComponents()){
-            j.setEnabled(true);
-            if(j instanceof JComponent){
-                for(Component i : ((JComponent)j).getComponents()){
-                    i.setEnabled(true);
-                    if(i instanceof JComponent){
-                        for(Component k : ((JComponent)i).getComponents()){
-                            k.setEnabled(true);
-                        }
-                    }
-                }
-            }
-        }
-
-        mainBottomPanel.setEnabled(true);
-        for(Component j : mainBottomPanel.getComponents()){
-            j.setEnabled(true);
-            if(j instanceof JComponent){
-                for(Component i : ((JComponent)j).getComponents()){
-                    i.setEnabled(true);
-                    if(i instanceof JComponent){
-                        for(Component k : ((JComponent)i).getComponents()){
-                            k.setEnabled(true);
-                        }
-                    }
-                }
-            }
-        }
-
         this.createConfig();
         this.loadConfigValues();
+    }
+
+    private void toggleMainSettingsEnabled(Boolean isEnabled){
+
+        mainTopPanel.setEnabled(isEnabled);
+        for(Component j : mainTopPanel.getComponents()){
+            j.setEnabled(isEnabled);
+            if(j instanceof JComponent){
+                for(Component i : ((JComponent)j).getComponents()){
+                    i.setEnabled(isEnabled);
+                    if(i instanceof JComponent){
+                        for(Component k : ((JComponent)i).getComponents()){
+                            k.setEnabled(isEnabled);
+                        }
+                    }
+                }
+            }
+        }
+
+        mainBottomPanel.setEnabled(isEnabled);
+        for(Component j : mainBottomPanel.getComponents()){
+            j.setEnabled(isEnabled);
+            if(j instanceof JComponent){
+                for(Component i : ((JComponent)j).getComponents()){
+                    i.setEnabled(isEnabled);
+                    if(i instanceof JComponent){
+                        for(Component k : ((JComponent)i).getComponents()){
+                            k.setEnabled(isEnabled);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void createConfig(){
@@ -643,22 +613,22 @@ public class MenuConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposab
             this.theCustomCreatePanel.remove(loadingLabel);
         }
 
-        settingsTabbedPane = new JBTabbedPane();
-        settingsTabbedPane.setOpaque(false);
+        configSettingsTabbedPane = new JBTabbedPane();
+        configSettingsTabbedPane.setOpaque(false);
 
 
         particleSettingsPanel = new JPanel();
         particleSettingsPanel.setBorder(JBUI.Borders.empty(2, 2, 200, 2));
         particleSettingsPanel.setLayout(new BoxLayout(particleSettingsPanel, BoxLayout.PAGE_AXIS));
         ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/bar_small.png"));
-        settingsTabbedPane.addTab("Particle Settings", sliderIcon, particleSettingsPanel);
+        configSettingsTabbedPane.addTab("Particle Settings", sliderIcon, particleSettingsPanel);
 
 
 
         soundSettingsPanel = new JPanel();
         soundSettingsPanel.setLayout(new BoxLayout(soundSettingsPanel, BoxLayout.PAGE_AXIS));
         ImageIcon soundIcon = new ImageIcon(this.getClass().getResource("/icons/sound_small.png"));
-        settingsTabbedPane.addTab("Sound Settings", soundIcon, soundSettingsPanel);
+        configSettingsTabbedPane.addTab("Sound Settings", soundIcon, soundSettingsPanel);
 
 
 
@@ -740,7 +710,7 @@ public class MenuConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposab
         footerPanel.setMinimumSize(new Dimension(100, 300));
         particleSettingsPanel.add(footerPanel);
 
-        theCustomCreatePanel.add(settingsTabbedPane);
+        theCustomCreatePanel.add(configSettingsTabbedPane);
     }
 
     public void reinitMemoryStatsPanel(){
@@ -759,9 +729,6 @@ public class MenuConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposab
         this.memoryStatsPanel.revalidate();
     }
 
-
-
-
     private JPanel createSpacer(){
         JPanel spacer1 = new JPanel();
         spacer1.setMinimumSize(new Dimension(100,30));
@@ -770,7 +737,6 @@ public class MenuConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposab
 
         return spacer1;
     }
-
 
     private int getJTextFieldWithinBounds(JTextField j, int min, int max, String name) throws ConfigurationException{
         int newValue;
