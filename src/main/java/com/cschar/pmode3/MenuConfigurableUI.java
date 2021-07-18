@@ -3,23 +3,19 @@ package com.cschar.pmode3;
 import com.cschar.pmode3.config.*;
 import com.cschar.pmode3.config.common.ui.ZeranthiumColors;
 import com.cschar.pmode3.services.MemoryMonitorService;
-import com.cschar.pmode3.services.MyJComponent;
+import com.cschar.pmode3.services.GitPackDownloaderComponent;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.Shortcut;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDialog;
-import com.intellij.openapi.fileChooser.FileChooserFactory;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.options.ConfigurableUi;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.util.ui.JBUI;
@@ -40,7 +36,6 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposable {
@@ -632,7 +627,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
     private void setupPackLoaderButton(){
         loadPackButton.addActionListener((event) -> {
             System.out.println("Creating custom panel");
-            JComponent content = new MyJComponent("A custom panel");
+            JComponent content = new GitPackDownloaderComponent("A custom panel",null);
 
             JBPopup popup = JBPopupFactory.getInstance().createComponentPopupBuilder(content, content).createPopup();
 
@@ -704,7 +699,7 @@ public class MenuConfigurableUI implements ConfigurableUi<PowerMode3>, Disposabl
 
 //    static class PackLoader {
 
-        private void loadConfigPack(String manifestPath) throws FileNotFoundException, JSONException {
+        public void loadConfigPack(String manifestPath) throws FileNotFoundException, JSONException {
 
             Path path = Paths.get(manifestPath);
     

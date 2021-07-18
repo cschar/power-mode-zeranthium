@@ -20,7 +20,6 @@ package com.cschar.pmode3;
 
 import com.cschar.pmode3.config.*;
 import com.cschar.pmode3.config.common.SoundData;
-import com.cschar.pmode3.config.common.SpriteData;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataContext;
@@ -28,7 +27,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.*;
 import com.intellij.openapi.progress.*;
@@ -402,7 +400,7 @@ public class PowerMode3 implements
             this.enabled = wasEnabled;
             this.isConfigLoaded = true;
 
-            MenuConfigurableUI2 ui = MenuConfigurableUI2.getInstance();
+            PowerMode3ConfigurableUI2 ui = PowerMode3ConfigurableUI2.getInstance();
             if (ui != null) {
                 LOGGER.info("Assets finished loading... Refreshing Config UI ");
                 ui.updateConfigUIAfterAssetsAreLoaded(wasEnabled);
@@ -415,7 +413,7 @@ public class PowerMode3 implements
 //        progressIndicator.setText(s);
         progressIndicator.setText2(s);
         progressIndicator.setFraction(amt);
-        MenuConfigurableUI2.loadingLabel.setText(s);
+        PowerMode3ConfigurableUI2.loadingLabel.setText(s);
 //        try {              Thread.sleep(3000);          } catch (InterruptedException e) {          }
 
     }

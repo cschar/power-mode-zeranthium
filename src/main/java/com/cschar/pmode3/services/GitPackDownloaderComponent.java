@@ -1,5 +1,16 @@
 package com.cschar.pmode3.services;
 
+import com.cschar.pmode3.MenuConfigurableUI;
+import com.cschar.pmode3.ParticleContainerManager;
+import com.cschar.pmode3.PowerMode3;
+import com.cschar.pmode3.PowerMode3ConfigurableUI2;
+import com.cschar.pmode3.config.DrosteConfig;
+import com.cschar.pmode3.config.LizardConfig;
+import com.cschar.pmode3.config.LockedLayerConfig;
+import com.cschar.pmode3.config.TapAnimConfig;
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationType;
+import com.intellij.notification.Notifications;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
@@ -11,6 +22,9 @@ import org.eclipse.jgit.api.errors.CanceledException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ProgressMonitor;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
@@ -18,27 +32,28 @@ import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Scanner;
+import java.util.logging.Logger;
 
-public class MyJComponent extends JPanel{
-
+public class GitPackDownloaderComponent extends JPanel{
+    private static final Logger LOGGER = Logger.getLogger(GitPackDownloaderComponent.class.getName());
 
     public static JLabel statusLabel = new JLabel();
 
-    public JComponent getPackRow(String title){
 
-
+    public JComponent getPackRow(String title, String manifestPath){
 
         JPanel packsCol = new JPanel();
         packsCol.setLayout(new BoxLayout(packsCol, BoxLayout.X_AXIS));
         packsCol.setBackground(JBColor.red);
 //        packsCol.setBorder(JBUI.Borders.emptyBottom(30));
-        packsCol.setBorder(JBUI.Borders.empty(0,10,30,30));
+        packsCol.setBorder(JBUI.Borders.empty(10,10,10,30));
 
         JButton button1 = new JButton();
-        button1.setText("Click it");
+        button1.setText("Load pack");
         button1.setSize(200,50);
 
         button1.addActionListener(new ActionListener() {
@@ -48,6 +63,30 @@ public class MyJComponent extends JPanel{
                 button1.setSize(button1.getWidth()+10, 50);
 
 
+                Task.Modal modalTask = new Task.Modal(null, "Modal cancelable task", true) {
+                    public void run(@NotNull() final ProgressIndicator indicator) {
+                        //TODO save state beforehand to rollback if cancelled
+                        indicator.setText2("loading assets...");
+
+                        try {
+                            menuConfigurable.loadConfigPack(manifestPath, indicator);
+                        } catch (FileNotFoundException fileNotFoundException) {
+                            fileNotFoundException.printStackTrace();
+                        } catch (JSONException jsonException) {
+                            jsonException.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        LOGGER.info("cancelling pack load...");
+                        //TODO rollback changes to a saved state at start of run() above
+                        super.onCancel();
+                    }
+                };
+
+                ApplicationManager.getApplication().invokeLater(() -> ProgressManager.getInstance().run(modalTask));
+
             }
         });
         packsCol.add(button1);
@@ -56,7 +95,8 @@ public class MyJComponent extends JPanel{
         JPanel packInfoPanel = new JPanel();
         packInfoPanel.setLayout(new BoxLayout(packInfoPanel, BoxLayout.Y_AXIS));
         packInfoPanel.setBackground(JBColor.CYAN);
-        packInfoPanel.setBorder(JBUI.Borders.empty(30));
+//        packInfoPanel.setBorder(JBUI.Borders.empty(30));
+        packInfoPanel.setBorder(JBUI.Borders.empty(5));
 
         JPanel headerPanel = new JPanel();
         JLabel headerLabel = new JLabel(title);
@@ -79,16 +119,19 @@ public class MyJComponent extends JPanel{
         return packsCol;
     }
 
+
+
     private JPanel packsList;
 
-    public MyJComponent(String title){
-        setup(title);
+    PowerMode3ConfigurableUI2 menuConfigurable;
 
+    public GitPackDownloaderComponent(String title, PowerMode3ConfigurableUI2 menuConfigurable){
+
+        this.menuConfigurable = menuConfigurable;
 
         this.setMaximumSize(new Dimension(1000,500));
 
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-
 
 
 
@@ -114,8 +157,8 @@ public class MyJComponent extends JPanel{
         JButton downloadBUtton = new JButton();
         downloadBUtton.setText("DOWNLOAD");
 //        downloadBUtton.setSize(300,200);
-        downloadBUtton.setPreferredSize(new Dimension(300,200));
-        downloadBUtton.setMinimumSize(new Dimension(300,200));
+        downloadBUtton.setPreferredSize(new Dimension(300,100));
+//        downloadBUtton.setMinimumSize(new Dimension(300,100));
         downloadBUtton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -130,6 +173,7 @@ public class MyJComponent extends JPanel{
 //                        return false;
 //                    }
 //                };
+
 
                 Task.Backgroundable bgTask2 = new Task.Backgroundable(null, "Cloning zeranthiium-extras...",
                         true, null) {
@@ -187,26 +231,30 @@ public class MyJComponent extends JPanel{
         });
 
 
-        JButton testButton = new JButton();
-        testButton.setText("TEST====");
-        testButton.setSize(300,400);
-        testButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Testing...");
-                downloadStatusLabel.setText(downloadStatusLabel.getText() + "9");
-            }
-        });
+//        JButton testButton = new JButton();
+//        testButton.setText("TEST====");
+//        testButton.setSize(300,100);
+//        testButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                System.out.println("Testing...");
+//                downloadStatusLabel.setText(downloadStatusLabel.getText() + "9");
+//            }
+//        });
 
         JButton loadButton = new JButton();
         loadButton.setText("LOAD====");
-        loadButton.setSize(300,400);
-        loadButton.setPreferredSize(new Dimension(300,200));
-        loadButton.setMinimumSize(new Dimension(300,300));
+
+        loadButton.setPreferredSize(new Dimension(300,100));
         loadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Loading...");
+
+                packsList.removeAll();
+                packsList.validate();
+                packsList.repaint();
+
 //                File f = new File("C:\\users\\codywin\\desktop\\work\\zeranthium-extras");
 
                 String path = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
@@ -226,7 +274,7 @@ public class MyJComponent extends JPanel{
                  if(themes != null){
                     for(File theme : themes){
                         System.out.println("--- " + theme.getName());
-                        packsList.add(getPackRow(theme.getName()));
+                        packsList.add(getPackRow(theme.getName(), theme.getPath() + File.separator + "manifest.json"));
                     }
                  }
 
@@ -236,27 +284,27 @@ public class MyJComponent extends JPanel{
             }
         });
 
-        JButton clearButton = new JButton();
-        clearButton.setText("Clear");
-        clearButton.setSize(200,400);
-        clearButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Pakcslit before remove has children: " + packsList.getComponents().length);
-                packsList.removeAll();
-                packsList.validate();
-                packsList.repaint();
-                System.out.println("Pakcslit now has children: " + packsList.getComponents().length);
-            }
-        });
+//        JButton clearButton = new JButton();
+//        clearButton.setText("Clear");
+//        clearButton.setSize(200,100);
+//        clearButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                System.out.println("Pakcslit before remove has children: " + packsList.getComponents().length);
+//                packsList.removeAll();
+//                packsList.validate();
+//                packsList.repaint();
+//                System.out.println("Pakcslit now has children: " + packsList.getComponents().length);
+//            }
+//        });
 
         gitdownloadPanel.add(downloadBUtton);
         gitdownloadPanel.add(downloadStatusLabel);
         gitdownloadPanel.add(statusLabel);
-        gitdownloadPanel.add(testButton);
+//        gitdownloadPanel.add(testButton);
 
         gitdownloadPanel.add(loadButton);
-        gitdownloadPanel.add(clearButton);
+//        gitdownloadPanel.add(clearButton);
 
 
 
@@ -264,11 +312,6 @@ public class MyJComponent extends JPanel{
         packsList.setLayout(new BoxLayout(packsList, BoxLayout.Y_AXIS));
         packsList.setBackground(JBColor.gray);
         packsList.setBorder(JBUI.Borders.empty(30));
-//        packsList.setBorder(JBUI.Borders.customLine(JBColor.WHITE));
-
-        packsList.add(getPackRow("row1 ya2h"));
-        packsList.add(getPackRow("row2 stuff"));
-        packsList.add(getPackRow("A"));
 
         this.add(gitdownloadPanel);
         //this.add(packsList);
@@ -381,9 +424,6 @@ public class MyJComponent extends JPanel{
     }
 
 
-    void setup(String title){
-
-    }
 }
 
 

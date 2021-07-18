@@ -66,7 +66,7 @@ public class PopupDialogAction extends AnAction {
         //https://plugins.jetbrains.com/docs/intellij/popups.html#introduction
 
         System.out.println("Creating custom panel");
-        JComponent content = new MyJComponent("A custom panel");
+        JComponent content = new GitPackDownloaderComponent("A custom panel", null);
 
         JBPopup popup = JBPopupFactory.getInstance().createComponentPopupBuilder(content, content).createPopup();
 

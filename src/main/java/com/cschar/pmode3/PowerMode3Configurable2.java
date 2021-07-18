@@ -1,6 +1,5 @@
 package com.cschar.pmode3;
 
-import com.cschar.pmode3.config.MenuConfigurableUI2;
 import com.intellij.openapi.options.ConfigurableBase;
 import org.jetbrains.annotations.NotNull;
 
@@ -9,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * Modified by cschar
  */
-public class PowerMode3Configurable2 extends ConfigurableBase<MenuConfigurableUI2, PowerMode3> {
+public class PowerMode3Configurable2 extends ConfigurableBase<PowerMode3ConfigurableUI2, PowerMode3> {
 
     private final PowerMode3 settings;
 
@@ -35,8 +34,8 @@ public class PowerMode3Configurable2 extends ConfigurableBase<MenuConfigurableUI
     }
 
     @Override
-    protected MenuConfigurableUI2 createUi() {
-        return new MenuConfigurableUI2(settings);
+    protected PowerMode3ConfigurableUI2 createUi() {
+        return new PowerMode3ConfigurableUI2(settings);
     }
 
 

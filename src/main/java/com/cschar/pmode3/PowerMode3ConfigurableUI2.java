@@ -1,15 +1,19 @@
-package com.cschar.pmode3.config;
+package com.cschar.pmode3;
 
-import com.cschar.pmode3.PowerMode3;
+import com.cschar.pmode3.config.*;
 import com.cschar.pmode3.config.common.ui.ZeranthiumColors;
 import com.cschar.pmode3.services.MemoryMonitorService;
-import com.cschar.pmode3.services.MyJComponent;
+import com.cschar.pmode3.services.GitPackDownloaderComponent;
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationType;
+import com.intellij.notification.Notifications;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.Shortcut;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.options.ConfigurableUi;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.VerticalSeparatorComponent;
 import com.intellij.ui.JBColor;
@@ -17,6 +21,9 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,11 +31,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Scanner;
 import java.util.logging.Logger;
 
-public class MenuConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposable {
-    private static final Logger LOGGER = Logger.getLogger( MenuConfigurableUI2.class.getName() );
+public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposable {
+    private static final Logger LOGGER = Logger.getLogger( PowerMode3ConfigurableUI2.class.getName() );
     private JPanel mainPanel;
     private JTextField lifetimeTextField;
     private JCheckBox isEnabledCheckBox;
@@ -86,25 +99,25 @@ public class MenuConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposab
     public static JLabel loadingLabel = new JLabel("Loading Config");
 
     // static variable single_instance of type Singleton
-    private static MenuConfigurableUI2 single_instance = null;
+    private static PowerMode3ConfigurableUI2 single_instance = null;
 
 
 
     // static method to create instance of Singleton class
-    public static MenuConfigurableUI2 getInstance()
+    public static PowerMode3ConfigurableUI2 getInstance()
     {
         return single_instance;
     }
 
 
-    private MenuConfigurableUI2() {};
+    private PowerMode3ConfigurableUI2() {};
 
 
     JPanel ultraPanel;
     JBScrollPane scrollPane;
 
     //Constructor is called _AFTER_ createUIComponents when using IntelliJ GUI designer
-    public MenuConfigurableUI2(PowerMode3 powerMode3) {
+    public PowerMode3ConfigurableUI2(PowerMode3 powerMode3) {
         LOGGER.info("Creating MenuConfigurableUI...");
         this.ultraPanel = new JPanel();
         settings = ApplicationManager.getApplication().getService(PowerMode3.class);
@@ -122,7 +135,7 @@ public class MenuConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposab
         panel2.setBorder(JBUI.Borders.empty(2, 2, 200, 2));
         panel2.setLayout(new BoxLayout(panel2, BoxLayout.PAGE_AXIS));
         ImageIcon sliderIcon2 = new ImageIcon(this.getClass().getResource("/icons/bar_small.png"));
-        settingsTabbedPane.addTab("Particle 2", sliderIcon2, scrollPane);
+        settingsTabbedPane.addTab("Settings", sliderIcon2, scrollPane);
 
         mainTopPanel = makeTopSettings(settings);
         panel2.add(mainTopPanel);
@@ -136,13 +149,12 @@ public class MenuConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposab
         panel2.add(theCustomCreatePanel);
 
 
-
         //If we're background loading assets, and the User tries to access UI in settings beforehand
         if(!settings.isConfigLoaded){
             loadingLabel.setFont(new Font ("Arial", Font.BOLD, 30));
             theCustomCreatePanel.add(loadingLabel);
         }else{
-            LOGGER.info("loading settings (they were alreayd loaded)");
+            LOGGER.info("loading settings (they were already loaded)");
             createConfig();
         }
 
@@ -151,19 +163,19 @@ public class MenuConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposab
         // Pack loader UI
         /////////////////////////
         JPanel panel1 = new JPanel();
-        panel1.setBackground(JBColor.orange);
+//        panel1.setBackground(JBColor.orange);
         panel1.setBorder(JBUI.Borders.empty(2, 2, 50, 2));
         panel1.setLayout(new BoxLayout(panel1, BoxLayout.X_AXIS));
         ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/barlarge.png"));
-        settingsTabbedPane.addTab("packs", sliderIcon, panel1);
-        MyJComponent jComponent = new MyJComponent("title");
+        settingsTabbedPane.addTab("pa", sliderIcon, panel1);
+        GitPackDownloaderComponent jComponent = new GitPackDownloaderComponent("title", this);
         panel1.add(jComponent);
 
         this.ultraPanel.setMaximumSize(new Dimension(1000,1000));
         this.ultraPanel.setLayout(new BoxLayout(this.ultraPanel, BoxLayout.X_AXIS));
         this.ultraPanel.add(settingsTabbedPane);
 
-        MenuConfigurableUI2.single_instance = this;
+        PowerMode3ConfigurableUI2.single_instance = this;
         settings = powerMode3;
 
 
@@ -306,7 +318,6 @@ public class MenuConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposab
         col1.setBorder(JBUI.Borders.empty(10, 0, 10, 0));
 //        col1.setBackground(JBColor.CYAN);
         col1.setPreferredSize(new Dimension(175,150));
-//        col1.add(new JLabel("fill"));
 
 
         int checkboxheight = 18 + CHECKBOX_BOT_PAD5;
@@ -414,7 +425,6 @@ public class MenuConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposab
 
 
 
-
         mainBottomPanel.add(col1);
         mainBottomPanel.add(col2);
         mainBottomPanel.add(col3);
@@ -423,7 +433,6 @@ public class MenuConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposab
     }
 
     private void loadConfigValues(){
-
 
         //already initialized from createUIComponents below
         this.basicParticleConfig.loadValues();
@@ -546,11 +555,8 @@ public class MenuConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposab
             ApplicationManager.getApplication().invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    LOGGER.info("TOTAL HEIGHT IS: + " + scrollPane.getVerticalScrollBar().getHeight());
                     scrollPane.getVerticalScrollBar().setValue(settings.getScrollBarPosition());
                     configSettingsTabbedPane.setSelectedIndex(settings.getLastTabIndex());
-                    LOGGER.info("\n loading saved scroll position ---------- at pos:" + settings.getScrollBarPosition() + "\n\n");
-
                 }
             });
         }
@@ -612,10 +618,8 @@ public class MenuConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposab
         if (loadingLabel.getParent() == this.theCustomCreatePanel) {
             this.theCustomCreatePanel.remove(loadingLabel);
         }
-
         configSettingsTabbedPane = new JBTabbedPane();
         configSettingsTabbedPane.setOpaque(false);
-
 
         particleSettingsPanel = new JPanel();
         particleSettingsPanel.setBorder(JBUI.Borders.empty(2, 2, 200, 2));
@@ -623,15 +627,10 @@ public class MenuConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposab
         ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/bar_small.png"));
         configSettingsTabbedPane.addTab("Particle Settings", sliderIcon, particleSettingsPanel);
 
-
-
         soundSettingsPanel = new JPanel();
         soundSettingsPanel.setLayout(new BoxLayout(soundSettingsPanel, BoxLayout.PAGE_AXIS));
         ImageIcon soundIcon = new ImageIcon(this.getClass().getResource("/icons/sound_small.png"));
         configSettingsTabbedPane.addTab("Sound Settings", soundIcon, soundSettingsPanel);
-
-
-
 
 
         //Sound Settings tab
@@ -647,12 +646,9 @@ public class MenuConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposab
         musicTriggerConfig = new MusicTriggerConfig(settings);
         soundSettingsPanel.add(musicTriggerConfig);
 
-
-
         JPanel footerPanel = new JPanel();
         footerPanel.setMinimumSize(new Dimension(100, 300));
         soundSettingsPanel.add(footerPanel);
-
 
         //Particle Settings tab
         particleSettingsPanel.add(this.createSpacer());
@@ -676,11 +672,9 @@ public class MenuConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposab
         particleSettingsPanel.add(multiLayerChanceConfig);
         particleSettingsPanel.add(this.createSpacer());
 
-
         this.lizardConfig = new LizardConfig(settings);
         particleSettingsPanel.add(lizardConfig);
         particleSettingsPanel.add(this.createSpacer());
-
 
         this.copyPasteVoidConfig = new CopyPasteVoidConfig(settings);
         particleSettingsPanel.add(copyPasteVoidConfig);
@@ -821,7 +815,85 @@ public class MenuConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposab
     }
 
 
+    public void loadConfigPack(String manifestPath, ProgressIndicator progressIndicator) throws FileNotFoundException, JSONException {
+        //turn off previous settings
+        disableAllParticleSettings();
+        ParticleContainerManager.resetAllContainers();
 
+        //read in JSON settings
+        Path path = Paths.get(manifestPath);
+        InputStream inputStream = new FileInputStream(manifestPath);
+        StringBuilder sb = new StringBuilder();
+        Scanner s = new Scanner(inputStream);
+        while(s.hasNextLine()){
+            sb.append(s.nextLine());
+        }
+        JSONObject jo = new JSONObject(sb.toString());
+
+        JSONArray configsToLoad = jo.getJSONArray("configsToLoad");
+        JSONObject configSettings = jo.getJSONObject("configSettings");
+        for(int i=0; i < configsToLoad.length(); i++){
+            boolean found = true;
+            String configKey = configsToLoad.getString(i);
+
+            progressIndicator.setFraction(i/(float) configsToLoad.length());
+            progressIndicator.setText2("loading assets... " + configKey);
+
+            JSONObject configKeyData = configSettings.getJSONObject(configKey);
+            if(configKey.equals("LIZARD")){
+                LizardConfig.loadJSONConfig(configKeyData, path.getParent());
+                enableLizardCheckBox.setSelected(true);
+            }
+            else if(configKey.equals("SOUND")){
+                enableBasicSound.setSelected(true);
+                soundConfig.loadJSONConfig(configKeyData, path.getParent());
+            }
+            else if(configKey.equals("DROSTE")){
+                enableDrosteCheckbox.setSelected(true);
+                DrosteConfig.loadJSONConfig(configKeyData, path.getParent());
+            }
+            else if(configKey.equals("MULTI_LAYER")){
+                enableMultilayerCheckbox.setSelected(true);
+                multiLayerConfig.loadJSONConfig(configKeyData, path.getParent());
+            }
+            else if(configKey.equals("MULTI_LAYER_CHANCE")){
+                enableMultiLayerChance.setSelected(true);
+                multiLayerChanceConfig.loadJSONConfig(configKeyData, path.getParent());
+            }
+            else if(configKey.equals("LOCKED_LAYER")){
+                enableLockedLayerCheckbox.setSelected(true);
+                LockedLayerConfig.loadJSONConfig(configKeyData, path.getParent());
+            }
+            else if(configKey.equals("TAP_ANIM")){
+                enableTapAnim.setSelected(true);
+                TapAnimConfig.loadJSONConfig(configKeyData, path.getParent());
+            }
+            else if(configKey.equals("LINKER")){
+                enableLinkerCheckbox.setSelected(true);
+                //TODO updateUI method called on object instance
+                linkerConfig.loadJSONConfig(configKeyData, path.getParent());
+            }
+            else if(configKey.equals("LANTERN")){
+                enableLantern.setSelected(true);
+                //TODO updateUI method called on object instance
+                lanternConfig.loadJSONConfig(configKeyData, path.getParent());
+            }else{
+                found = false;
+                LOGGER.warning("No loader found for key: " + configKey);
+            }
+
+            if(found) {
+                LOGGER.info("Loaded pack for key: " + configKey);
+            }
+        }
+
+        Notification n = new Notification(PowerMode3.NOTIFICATION_GROUP_DISPLAY_ID,
+                PowerMode3.NOTIFICATION_GROUP_DISPLAY_ID + ": Loaded Config Pack",
+                "Successfully loaded pack: " + path,
+                NotificationType.INFORMATION);
+        Notifications.Bus.notify(n);
+
+    }
 
 
 
