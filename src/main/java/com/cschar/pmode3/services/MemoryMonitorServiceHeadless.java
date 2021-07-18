@@ -1,11 +1,11 @@
 package com.cschar.pmode3.services;
 
 import com.cschar.pmode3.MenuConfigurableUI;
+import com.intellij.openapi.options.ConfigurableUi;
 
 public class MemoryMonitorServiceHeadless implements MemoryMonitorService {
-    MenuConfigurableUI menuConfigurableUI;
     @Override
-    public void setUi(MenuConfigurableUI ui){
+    public void setUi(ConfigurableUi ui){
         System.out.println("headless memory set");
     }
     @Override

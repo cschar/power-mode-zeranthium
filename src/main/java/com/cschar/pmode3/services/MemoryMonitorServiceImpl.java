@@ -1,6 +1,7 @@
 package com.cschar.pmode3.services;
 
-import com.cschar.pmode3.MenuConfigurableUI;
+import com.cschar.pmode3.config.MenuConfigurableUI2;
+import com.intellij.openapi.options.ConfigurableUi;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
@@ -11,11 +12,11 @@ import java.util.logging.Logger;
 
 public class MemoryMonitorServiceImpl implements MemoryMonitorService {
     private static final Logger LOGGER = Logger.getLogger(MemoryMonitorServiceImpl.class.getName());
-    MenuConfigurableUI menuConfigurableUI;
+    MenuConfigurableUI2 menuConfigurableUI;
 
     @Override
-    public void setUi(MenuConfigurableUI ui) {
-        this.menuConfigurableUI = ui;
+    public void setUi(ConfigurableUi ui) {
+        this.menuConfigurableUI = (MenuConfigurableUI2) ui;
 
     }
 
@@ -44,7 +45,7 @@ public class MemoryMonitorServiceImpl implements MemoryMonitorService {
                         e.printStackTrace();
                     }
                     try{
-                        menuConfigurableUI.initMemoryStatsPanel();
+                        menuConfigurableUI.reinitMemoryStatsPanel();
                     }catch(NullPointerException e){
 
                     }

@@ -1,11 +1,11 @@
 package com.cschar.pmode3.services;
 
-import com.cschar.pmode3.MenuConfigurableUI;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.options.ConfigurableUi;
 
 public interface MemoryMonitorService extends Disposable {
 
-    void setUi(MenuConfigurableUI ui);
+    void setUi(ConfigurableUi ui);
     void updateUi();
     void cleanup();
 

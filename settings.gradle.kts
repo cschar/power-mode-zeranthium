@@ -1,1 +1,1 @@
-rootProject.name = "Zeranthium Template"
+rootProject.name = "power-mode-zeranthium"

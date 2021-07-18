@@ -15,12 +15,16 @@
     <extensions defaultExtensionNs="com.intellij">
         <!-- inserts the a GUI into the settings menu under "appearance -> Power Mode - Zeranthium" -->
 
-        <applicationConfigurable groupId="appearance"
+  <!--      <applicationConfigurable groupId="appearance"
                                  groupWeight="20"
                                  id="power.mode3.zeranthium"
                                  displayName="Power Mode - Zeranthium"
-                                 instance="com.cschar.pmode3.PowerMode3Configurable" />
-
+                                 instance="com.cschar.pmode3.PowerMode3Configurable" />-->
+        <applicationConfigurable groupId="appearance"
+                                 groupWeight="20"
+                                 id="power.mode3.zeranthium"
+                                 displayName="Power Mode - Zeranthium2"
+                                 instance="com.cschar.pmode3.PowerMode3Configurable2" />
 
 
         <applicationService serviceImplementation="com.cschar.pmode3.services.MyGitService"/>

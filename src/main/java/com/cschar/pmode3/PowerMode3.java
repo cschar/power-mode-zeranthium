@@ -402,8 +402,9 @@ public class PowerMode3 implements
             this.enabled = wasEnabled;
             this.isConfigLoaded = true;
 
-            MenuConfigurableUI ui = MenuConfigurableUI.getInstance();
+            MenuConfigurableUI2 ui = MenuConfigurableUI2.getInstance();
             if (ui != null) {
+                LOGGER.info("Assets finished loading... Refreshing Config UI ");
                 ui.updateConfigUIAfterAssetsAreLoaded(wasEnabled);
             }
         }
@@ -414,7 +415,7 @@ public class PowerMode3 implements
 //        progressIndicator.setText(s);
         progressIndicator.setText2(s);
         progressIndicator.setFraction(amt);
-        MenuConfigurableUI.loadingLabel.setText(s);
+        MenuConfigurableUI2.loadingLabel.setText(s);
 //        try {              Thread.sleep(3000);          } catch (InterruptedException e) {          }
 
     }
@@ -482,7 +483,7 @@ public class PowerMode3 implements
     }
 
 
-    void setSpriteTypeEnabled(Boolean enabled, ConfigType type) {
+    public void setSpriteTypeEnabled(Boolean enabled, ConfigType type) {
         configMap.put("sprite" + type + "Enabled", enabled.toString());
     }
 
