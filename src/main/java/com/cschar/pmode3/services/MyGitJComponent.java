@@ -1,6 +1,7 @@
 package com.cschar.pmode3.services;
 
 import com.cschar.pmode3.PowerMode3ConfigurableUI2;
+import com.cschar.pmode3.config.common.ui.ZeranthiumColors;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
@@ -41,9 +42,9 @@ public class MyGitJComponent extends JPanel{
 
         JPanel packsCol = new JPanel();
         packsCol.setLayout(new BoxLayout(packsCol, BoxLayout.X_AXIS));
-        packsCol.setBackground(JBColor.red);
+        packsCol.setBackground(ZeranthiumColors.specialOption1);
 //        packsCol.setBorder(JBUI.Borders.emptyBottom(30));
-        packsCol.setBorder(JBUI.Borders.empty(0,10,30,30));
+        packsCol.setBorder(JBUI.Borders.empty(10,10,10,30));
 
         JButton button1 = new JButton();
         button1.setText("Load pack - click it");
@@ -93,7 +94,7 @@ public class MyGitJComponent extends JPanel{
         headerPanel.add(headerLabel);
         JLabel headerSizeLabel = new JLabel();
         headerSizeLabel.setText("A size Label");
-        headerSizeLabel.setBackground(JBColor.GREEN);
+        headerSizeLabel.setBackground(ZeranthiumColors.specialOption3);
         headerSizeLabel.setOpaque(true);
         headerSizeLabel.setBorder(JBUI.Borders.empty(5));
         headerPanel.add(headerSizeLabel);
@@ -123,18 +124,19 @@ public class MyGitJComponent extends JPanel{
         JPanel packsPanel = new JPanel();
 //        gitdownloadPanel.setPreferredSize(new Dimension(800,400));
         packsPanel.setLayout(new BoxLayout(packsPanel, BoxLayout.Y_AXIS));
-        packsPanel.setBackground(JBColor.CYAN);
+//        packsPanel.setBackground(JBColor.CYAN);
 
 
         JLabel setPathLabel = new JLabel();
         setPathLabel.setText("base path: " + directoryPath);
+        setPathLabel.setFont(new Font("Times", Font.PLAIN, 16));
         setPathLabel.setBackground(JBColor.GREEN);
         setPathLabel.setOpaque(true);
         setPathLabel.setBorder(JBUI.Borders.empty(5));
         packsPanel.add(setPathLabel);
 
         JButton SetPathButton = new JButton();
-        SetPathButton.setText("SetDownloadPath");
+        SetPathButton.setText("Set Download Path");
 //        downloadBUtton.setSize(300,200);
         SetPathButton.addActionListener(new ActionListener() {
             @Override
@@ -143,13 +145,12 @@ public class MyGitJComponent extends JPanel{
 
 
             int result = Messages.showYesNoDialog(null,
-                    "<html> <h1> Load config pack? </h1>" +
-                            " \n Config <b>packs</b> can be found on the " +
-                            " <a href='https://github.com/cschar/zeranthium-extras'> zeranthium-extras </a>" +
-                            "github repo. " +
-                            "\n\n" +
-                            "Please select a <b> manifest.json </b> file found inside one of the packs </html>",
-                    "LOAD PACK","yes","no", sliderIcon);
+        "<html> <h1> Set Download Path for Packs</h1>" +
+                "\n Config <b>packs</b> from different zeranthium-extras github repos will be downloaded here. " +
+                "\n This path will have a zeranthium-extras folder created inside it with sub-folders for each pack" +
+                "\n\n" +
+                " </html>",
+                "Set Download Path","yes","no", sliderIcon);
 
             if(result == Messages.YES){
                 FileChooserDescriptor fd = new FileChooserDescriptor(false,true,false,false,false,false);
@@ -163,18 +164,17 @@ public class MyGitJComponent extends JPanel{
 
 
                 try {
-                    gitRepoTabbedPane.removeAll();
-                    gitRepoTabbedPane.revalidate();
-                    gitRepoTabbedPane.repaint();
-                    Thread.sleep(1000);
+                    packsPanel.remove(gitRepoTabbedPane);
+                    packsPanel.revalidate();
+                    packsPanel.repaint();
+                    Thread.sleep(200);
                     gitRepoTabbedPane = buildGitRepoTabbedPane(directoryPath);
+//                    gitRepoTabbedPane.setBorder(JBUI.Borders.customLine(JBColor.red, 10));
                 } catch (InterruptedException fds) {
                     fds.printStackTrace();
                 }
 
                 packsPanel.add(gitRepoTabbedPane);
-                gitRepoTabbedPane.revalidate();
-                gitRepoTabbedPane.repaint();
                 packsPanel.revalidate();
                 packsPanel.repaint();
                 }
@@ -183,15 +183,10 @@ public class MyGitJComponent extends JPanel{
 //
         });
         packsPanel.add(SetPathButton);
-
-
+//        packsPanel.setBorder(JBUI.Borders.customLine(JBColor.green, 10));
         gitRepoTabbedPane = buildGitRepoTabbedPane(directoryPath);
         packsPanel.add(gitRepoTabbedPane);
-
         this.add(packsPanel);
-
-
-
     }
 
     private JComponent buildGitRepoTabbedPane(String directoryPath){
@@ -208,10 +203,8 @@ public class MyGitJComponent extends JPanel{
         panel2.setBorder(JBUI.Borders.empty(2, 2, 40, 2));
         panel2.setLayout(new BoxLayout(panel2, BoxLayout.PAGE_AXIS));
         ImageIcon sliderIcon2 = new ImageIcon(this.getClass().getResource("/icons/bar_small.png"));
-        gitRepoTabbedPane.addTab("Repo Vol1", sliderIcon2, panel2);
+        gitRepoTabbedPane.addTab("zeranthium-extras-vol0", sliderIcon2, panel2);
 
-        panel2.add(new JLabel("a repo"));
-        panel2.add(new JLabel("a repo"));
 
         JPanel packListHolder0 = getPackHolder(localPath.getPath(),"https://github.com/cschar/demo-proj-data.git", "zeranthium-extras-vol0");
         panel2.add(packListHolder0);
@@ -234,9 +227,9 @@ public class MyGitJComponent extends JPanel{
         ImageIcon sliderIcon4 = new ImageIcon(this.getClass().getResource("/icons/bar_small.png"));
         gitRepoTabbedPane.addTab("Custom pack file", sliderIcon4, panel4);
 
-        panel4.add(new JLabel("Add your own custom pack from the filesystem here..."));
+        panel4.add(new JLabel("Load your own custom pack from the filesystem here..."));
         JButton customPackLoader = new JButton();
-        customPackLoader.setText("Add pack");
+        customPackLoader.setText("Load pack");
         customPackLoader.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -254,7 +247,7 @@ public class MyGitJComponent extends JPanel{
                 if(result == Messages.YES){
                     FileChooserDescriptor fd = new FileChooserDescriptor(true,false,false,false,false,false);
     //                fd.setForcedToUseIdeaFileChooser(true);
-                    FileChooserDialog fcDialog = FileChooserFactory.getInstance().createFileChooser(fd, null, null);
+//                    FileChooserDialog fcDialog = FileChooserFactory.getInstance().createFileChooser(fd, null, null);
                     VirtualFile toSelect = LocalFileSystem.getInstance().findFileByPath(directoryPath);
 
                     VirtualFile chosen = FileChooser.chooseFile(fd, null, toSelect);
@@ -281,7 +274,7 @@ public class MyGitJComponent extends JPanel{
             }
         });
 
-        panel4.add(new JButton("Add pack"));
+        panel4.add(customPackLoader);
 
         return gitRepoTabbedPane;
 
@@ -291,6 +284,7 @@ public class MyGitJComponent extends JPanel{
         File localPath = new File(baseDirectory + File.separator + customRepoName);
 
         JPanel packsContainer = new JPanel();
+//        packsContainer.setBorder(JBUI.Borders.customLine(JBColor.yellow, 5));
         packsContainer.setLayout(new BoxLayout(packsContainer, BoxLayout.Y_AXIS));
 
         JPanel packsRepoUrlHeader = new JPanel();
@@ -337,8 +331,7 @@ public class MyGitJComponent extends JPanel{
 
         JLabel statusLabel = new JLabel();
 
-        if(statusLabel.getText().equals("")) statusLabel.setText("status - Ready.."); //if we reopen panel, dont reset ... can make a state machine
-        //statusLabel.setText("status - Ready..");
+        if(statusLabel.getText().equals("")) statusLabel.setText("status - Ready.."); //if we reopen panel, dont reset
         statusLabel.setBackground(JBColor.GREEN);
         statusLabel.setOpaque(true);
         statusLabel.setFont(new Font("Arial", Font.BOLD, 15));
@@ -355,13 +348,7 @@ public class MyGitJComponent extends JPanel{
                     public void run(@NotNull ProgressIndicator progressIndicator) {
                         MyGitService gitService = ApplicationManager.getApplication().getService(MyGitService.class);
 
-
-//                        String path = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
-
-
-
                         ProgressMonitor progressMonitor = new SimpleProgressMonitor(downloadStatusLabel, progressIndicator);
-
                         statusLabel.setText("Status - Downloading...");
                         validate();
                         repaint();
@@ -371,10 +358,9 @@ public class MyGitJComponent extends JPanel{
                             interruptedException.printStackTrace();
                         }
                         try {
-                            downloadStatusLabel.setText(downloadStatusLabel.getText() + "+");
+                            downloadStatusLabel.setText("[]+");
                             validate();
                             repaint();
-                            System.out.println("cloning from thread " + Thread.currentThread().toString());
                             gitService.getRepo("https://github.com/cschar/demo-proj-data.git", localPath, progressMonitor);
                             statusLabel.setText("Status - Finished ...");
                         } catch(Exception e){
@@ -382,7 +368,7 @@ public class MyGitJComponent extends JPanel{
                         }
                     }
                 };
-                System.out.println("Launchign cloning task  from thread " + Thread.currentThread().toString());
+                LOGGER.info("Launching cloning task  from thread " + Thread.currentThread().toString());
                 ProgressManager.getInstance().run(bgTask2);
 
             }

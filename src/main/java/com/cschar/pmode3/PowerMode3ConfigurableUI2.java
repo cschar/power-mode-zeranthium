@@ -202,7 +202,7 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
         //Col 1
         JPanel col1 = new JPanel();
         col1.setLayout(new BoxLayout(col1, BoxLayout.Y_AXIS));
-        col1.setBorder(JBUI.Borders.empty(10, 10, 50, 10));
+        col1.setBorder(JBUI.Borders.empty(10, 10, 10, 10));
 //        col1.setBackground(JBColor.DARK_GRAY);
 
         //Col1 - IsEnabled
@@ -232,7 +232,7 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
         //Col2
         JPanel col2 = new JPanel();
         col2.setLayout(new BoxLayout(col2, BoxLayout.Y_AXIS));
-        col2.setBorder(JBUI.Borders.empty(10, 10, 50, 10));
+        col2.setBorder(JBUI.Borders.empty(10, 10, 10, 10));
 //        col2.setBackground(JBColor.darkGray);
 
         //Col2 - Shake distance
@@ -278,7 +278,7 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
         //Col3
         JPanel col3 = new JPanel();
         col3.setLayout(new BoxLayout(col3, BoxLayout.Y_AXIS));
-        col3.setBorder(JBUI.Borders.empty(10, 10, 50, 10));
+        col3.setBorder(JBUI.Borders.empty(10, 10, 10, 10));
 //        col3.setBackground(JBColor.GREEN);
 
         //Col3 - Memory panel
@@ -305,7 +305,7 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
     int CHECKBOX_BOT_PAD5 = 7;
     public JCheckBox setCheckBox(JPanel parent, String title){
         JCheckBox checkbox = new JCheckBox(title);
-        checkbox.setBorder(JBUI.Borders.empty(0,0, CHECKBOX_BOT_PAD5,0));
+        checkbox.setBorder(JBUI.Borders.emptyBottom(CHECKBOX_BOT_PAD5));
         parent.add(checkbox);
         return checkbox;
     }
@@ -818,6 +818,9 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
 
 
     public void loadConfigPack(@NotNull String manifestPath, ProgressIndicator progressIndicator) throws FileNotFoundException, JSONException {
+        if (progressIndicator != null) {
+            progressIndicator.setIndeterminate(false);
+        }
         //turn off previous settings
         disableAllParticleSettings();
         ParticleContainerManager.resetAllContainers();
@@ -844,46 +847,49 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
             }
 
             JSONObject configKeyData = configSettings.getJSONObject(configKey);
-            if(configKey.equals("LIZARD")){
-                LizardConfig.loadJSONConfig(configKeyData, path.getParent());
-                enableLizardCheckBox.setSelected(true);
-            }
-            else if(configKey.equals("SOUND")){
-                enableBasicSound.setSelected(true);
-                soundConfig.loadJSONConfig(configKeyData, path.getParent());
-            }
-            else if(configKey.equals("DROSTE")){
-                enableDrosteCheckbox.setSelected(true);
-                DrosteConfig.loadJSONConfig(configKeyData, path.getParent());
-            }
-            else if(configKey.equals("MULTI_LAYER")){
-                enableMultilayerCheckbox.setSelected(true);
-                multiLayerConfig.loadJSONConfig(configKeyData, path.getParent());
-            }
-            else if(configKey.equals("MULTI_LAYER_CHANCE")){
-                enableMultiLayerChance.setSelected(true);
-                multiLayerChanceConfig.loadJSONConfig(configKeyData, path.getParent());
-            }
-            else if(configKey.equals("LOCKED_LAYER")){
-                enableLockedLayerCheckbox.setSelected(true);
-                LockedLayerConfig.loadJSONConfig(configKeyData, path.getParent());
-            }
-            else if(configKey.equals("TAP_ANIM")){
-                enableTapAnim.setSelected(true);
-                TapAnimConfig.loadJSONConfig(configKeyData, path.getParent());
-            }
-            else if(configKey.equals("LINKER")){
-                enableLinkerCheckbox.setSelected(true);
-                //TODO updateUI method called on object instance
-                linkerConfig.loadJSONConfig(configKeyData, path.getParent());
-            }
-            else if(configKey.equals("LANTERN")){
-                enableLantern.setSelected(true);
-                //TODO updateUI method called on object instance
-                lanternConfig.loadJSONConfig(configKeyData, path.getParent());
-            }else{
-                found = false;
-                LOGGER.warning("No loader found for key: " + configKey);
+            switch (configKey) {
+                case "LIZARD":
+                    LizardConfig.loadJSONConfig(configKeyData, path.getParent());
+                    enableLizardCheckBox.setSelected(true);
+                    break;
+                case "SOUND":
+                    enableBasicSound.setSelected(true);
+                    soundConfig.loadJSONConfig(configKeyData, path.getParent());
+                    break;
+                case "DROSTE":
+                    enableDrosteCheckbox.setSelected(true);
+                    DrosteConfig.loadJSONConfig(configKeyData, path.getParent());
+                    break;
+                case "MULTI_LAYER":
+                    enableMultilayerCheckbox.setSelected(true);
+                    multiLayerConfig.loadJSONConfig(configKeyData, path.getParent());
+                    break;
+                case "MULTI_LAYER_CHANCE":
+                    enableMultiLayerChance.setSelected(true);
+                    multiLayerChanceConfig.loadJSONConfig(configKeyData, path.getParent());
+                    break;
+                case "LOCKED_LAYER":
+                    enableLockedLayerCheckbox.setSelected(true);
+                    LockedLayerConfig.loadJSONConfig(configKeyData, path.getParent());
+                    break;
+                case "TAP_ANIM":
+                    enableTapAnim.setSelected(true);
+                    TapAnimConfig.loadJSONConfig(configKeyData, path.getParent());
+                    break;
+                case "LINKER":
+                    enableLinkerCheckbox.setSelected(true);
+                    //TODO updateUI method called on object instance
+                    linkerConfig.loadJSONConfig(configKeyData, path.getParent());
+                    break;
+                case "LANTERN":
+                    enableLantern.setSelected(true);
+                    //TODO updateUI method called on object instance
+                    lanternConfig.loadJSONConfig(configKeyData, path.getParent());
+                    break;
+                default:
+                    found = false;
+                    LOGGER.warning("No loader found for key: " + configKey);
+                    break;
             }
 
             if(found) {
