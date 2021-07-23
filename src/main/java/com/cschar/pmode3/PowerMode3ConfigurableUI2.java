@@ -4,6 +4,7 @@ import com.cschar.pmode3.config.*;
 import com.cschar.pmode3.config.common.ui.ZeranthiumColors;
 import com.cschar.pmode3.services.MemoryMonitorService;
 import com.cschar.pmode3.services.GitPackDownloaderComponent;
+import com.cschar.pmode3.services.MyGitJComponent;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
@@ -168,7 +169,8 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
         panel1.setLayout(new BoxLayout(panel1, BoxLayout.X_AXIS));
         ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/barlarge.png"));
         settingsTabbedPane.addTab("pa", sliderIcon, panel1);
-        GitPackDownloaderComponent jComponent = new GitPackDownloaderComponent("title", this);
+//        GitPackDownloaderComponent jComponent = new GitPackDownloaderComponent("title", this);
+        MyGitJComponent jComponent = new MyGitJComponent("title", this);
         panel1.add(jComponent);
 
         this.ultraPanel.setMaximumSize(new Dimension(1000,1000));
@@ -815,7 +817,7 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
     }
 
 
-    public void loadConfigPack(String manifestPath, ProgressIndicator progressIndicator) throws FileNotFoundException, JSONException {
+    public void loadConfigPack(@NotNull String manifestPath, ProgressIndicator progressIndicator) throws FileNotFoundException, JSONException {
         //turn off previous settings
         disableAllParticleSettings();
         ParticleContainerManager.resetAllContainers();
@@ -836,8 +838,10 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
             boolean found = true;
             String configKey = configsToLoad.getString(i);
 
-            progressIndicator.setFraction(i/(float) configsToLoad.length());
-            progressIndicator.setText2("loading assets... " + configKey);
+            if(progressIndicator != null) {
+                progressIndicator.setFraction(i / (float) configsToLoad.length());
+                progressIndicator.setText2("loading assets... " + configKey);
+            }
 
             JSONObject configKeyData = configSettings.getJSONObject(configKey);
             if(configKey.equals("LIZARD")){

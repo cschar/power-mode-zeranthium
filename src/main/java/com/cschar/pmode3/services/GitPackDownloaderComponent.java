@@ -63,7 +63,7 @@ public class GitPackDownloaderComponent extends JPanel{
                 button1.setSize(button1.getWidth()+10, 50);
 
 
-                Task.Modal modalTask = new Task.Modal(null, "Modal cancelable task", true) {
+                Task.Modal modalTask = new Task.Modal(null, "Loading Theme Pack", true) {
                     public void run(@NotNull() final ProgressIndicator indicator) {
                         //TODO save state beforehand to rollback if cancelled
                         indicator.setText2("loading assets...");
@@ -125,16 +125,7 @@ public class GitPackDownloaderComponent extends JPanel{
 
     PowerMode3ConfigurableUI2 menuConfigurable;
 
-    public GitPackDownloaderComponent(String title, PowerMode3ConfigurableUI2 menuConfigurable){
-
-        this.menuConfigurable = menuConfigurable;
-
-        this.setMaximumSize(new Dimension(1000,500));
-
-        this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-
-
-
+    private JPanel buildRepoSelectionPanel(){
         JPanel gitdownloadPanel = new JPanel();
         gitdownloadPanel.setLayout(new BoxLayout(gitdownloadPanel, BoxLayout.Y_AXIS));
         gitdownloadPanel.setBackground(JBColor.CYAN);
@@ -162,17 +153,6 @@ public class GitPackDownloaderComponent extends JPanel{
         downloadBUtton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-
-
-//                ProgressManager.getInstance().runProcessWithProgressAsynchronously(task, progressIndicator);
-//
-//                PerformInBackgroundOption opts = new PerformInBackgroundOption() {
-//                    @Override
-//                    public boolean shouldStartInBackground() {
-//                        return false;
-//                    }
-//                };
 
 
                 Task.Backgroundable bgTask2 = new Task.Backgroundable(null, "Cloning zeranthiium-extras...",
@@ -271,12 +251,12 @@ public class GitPackDownloaderComponent extends JPanel{
                     }
                 });
 
-                 if(themes != null){
+                if(themes != null){
                     for(File theme : themes){
                         System.out.println("--- " + theme.getName());
                         packsList.add(getPackRow(theme.getName(), theme.getPath() + File.separator + "manifest.json"));
                     }
-                 }
+                }
 
                 validate();
                 repaint();
@@ -284,19 +264,7 @@ public class GitPackDownloaderComponent extends JPanel{
             }
         });
 
-//        JButton clearButton = new JButton();
-//        clearButton.setText("Clear");
-//        clearButton.setSize(200,100);
-//        clearButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                System.out.println("Pakcslit before remove has children: " + packsList.getComponents().length);
-//                packsList.removeAll();
-//                packsList.validate();
-//                packsList.repaint();
-//                System.out.println("Pakcslit now has children: " + packsList.getComponents().length);
-//            }
-//        });
+
 
         gitdownloadPanel.add(downloadBUtton);
         gitdownloadPanel.add(downloadStatusLabel);
@@ -304,17 +272,54 @@ public class GitPackDownloaderComponent extends JPanel{
 //        gitdownloadPanel.add(testButton);
 
         gitdownloadPanel.add(loadButton);
+
+        JPanel repoList = new JPanel();
+        repoList.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        repoList.setPreferredSize(new Dimension(200,500));
+        repoList.setBackground(JBColor.DARK_GRAY);
+
+        JButton clearButton = new JButton();
+        clearButton.setText("Clear");
+        clearButton.setSize(200,100);
+        clearButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Pakcslit before remove has children: " + packsList.getComponents().length);
+                packsList.removeAll();
+                packsList.validate();
+                packsList.repaint();
+                System.out.println("Pakcslit now has children: " + packsList.getComponents().length);
+            }
+        });
+        repoList.add(clearButton);
+
+        gitdownloadPanel.add(repoList);
+
+        return gitdownloadPanel;
+    }
+
+    public GitPackDownloaderComponent(String title, PowerMode3ConfigurableUI2 menuConfigurable){
+
+        this.menuConfigurable = menuConfigurable;
+        this.setMaximumSize(new Dimension(1000,500));
+        this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+
+
+        JPanel gitdownloadPanel = buildRepoSelectionPanel();
+        this.add(gitdownloadPanel);
 //        gitdownloadPanel.add(clearButton);
 
 
 
+        ////////////////////////////
+        /// PACKS detail
         packsList = new JPanel();
         packsList.setLayout(new BoxLayout(packsList, BoxLayout.Y_AXIS));
         packsList.setBackground(JBColor.gray);
         packsList.setBorder(JBUI.Borders.empty(30));
 
-        this.add(gitdownloadPanel);
-        //this.add(packsList);
+        // this.add(gitdownloadPanel);
+        // this.add(packsList);
 
         //wrap packsList in more visible scrollBar
         JBScrollPane scrollPane = new JBScrollPane(packsList);
@@ -425,21 +430,3 @@ public class GitPackDownloaderComponent extends JPanel{
 
 
 }
-
-
-//JVM BUILTINTS hAS NOT BEEN INTIALIZED POREPRLY?
-//        downloadBUtton.getModel().addChangeListener(new ChangeListener() {
-//            @Override
-//            public void stateChanged(ChangeEvent e) {
-//                ButtonModel model = (ButtonModel) e.getSource();
-//                if (model.isRollover()) {
-//                    //do something with Boolean variable
-//                    System.out.println("Hover button");
-//                    downloadBUtton.setBackground(JBColor.GREEN);
-//                    //downloadBUtton.setForeground(JBColor.GREEN);
-//                } else {
-//                    downloadBUtton.setBackground(JBColor.GRAY);
-//                    //downloadBUtton.setForeground(JBColor.GRAY);
-//                }
-//            }
-//        });

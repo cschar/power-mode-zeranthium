@@ -4,6 +4,7 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ResetCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.errors.RepositoryNotFoundException;
+import org.eclipse.jgit.lib.NullProgressMonitor;
 import org.eclipse.jgit.lib.ProgressMonitor;
 import org.eclipse.jgit.lib.Ref;
 
@@ -67,9 +68,6 @@ public class MyGitService {
             return;
         }
 
-        if(progressMonitor == null){
-            progressMonitor = new SimpleProgressMonitor();
-        }
         // then clone
         System.out.println("Cloning from " + REMOTE_URL + " to " + localPath);
 
@@ -92,46 +90,4 @@ public class MyGitService {
 
     }
 
-    private static class SimpleProgressMonitor implements ProgressMonitor {
-        public static int compl = 0;
-        @Override
-        public void start(int totalTasks) {
-            System.out.println("Starting work on " + totalTasks + " tasks");
-        }
-
-        @Override
-        public void beginTask(String title, int totalWork) {
-            System.out.println("Start " + title + ": " + totalWork);
-        }
-
-        @Override
-        public void update(int completed) {
-            //https://plugins.jetbrains.com/docs/intellij/general-threading-rules.html#background-processes-and-processcanceledexception
-
-            //set the progress indicator here
-            compl += completed;
-            System.out.print(completed + "-");
-            if(compl % 10 == 0){
-                System.out.print("|");
-            }
-
-        }
-
-        @Override
-        public void endTask() {
-            System.out.println("Done");
-        }
-
-        //custom logic to check to cancel process...
-        @Override
-        public boolean isCancelled()
-        {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return false;
-        }
-    }
 }
