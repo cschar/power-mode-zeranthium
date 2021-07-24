@@ -3,8 +3,8 @@ package com.cschar.pmode3;
 import com.cschar.pmode3.config.*;
 import com.cschar.pmode3.config.common.ui.ZeranthiumColors;
 import com.cschar.pmode3.services.MemoryMonitorService;
-import com.cschar.pmode3.services.GitPackDownloaderComponent;
-import com.cschar.pmode3.services.MyGitJComponent;
+
+import com.cschar.pmode3.services.GitPackLoaderJComponent;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
@@ -17,7 +17,6 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.VerticalSeparatorComponent;
-import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.util.ui.JBUI;
@@ -167,10 +166,13 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
 //        panel1.setBackground(JBColor.orange);
         panel1.setBorder(JBUI.Borders.empty(2, 2, 50, 2));
         panel1.setLayout(new BoxLayout(panel1, BoxLayout.X_AXIS));
-        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/barlarge.png"));
-        settingsTabbedPane.addTab("pa", sliderIcon, panel1);
+//        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/barlarge.png"));
+//        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/pack-logo3.png"));
+//        settingsTabbedPane.addTab("pa", sliderIcon, panel1);
+        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/pack-logo6.png"));
+        settingsTabbedPane.addTab("", sliderIcon, panel1);
 //        GitPackDownloaderComponent jComponent = new GitPackDownloaderComponent("title", this);
-        MyGitJComponent jComponent = new MyGitJComponent("title", this);
+        GitPackLoaderJComponent jComponent = new GitPackLoaderJComponent("title", this);
         panel1.add(jComponent);
 
         this.ultraPanel.setMaximumSize(new Dimension(1000,1000));
@@ -179,6 +181,18 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
 
         PowerMode3ConfigurableUI2.single_instance = this;
         settings = powerMode3;
+
+
+        /////////////////////////
+        JPanel panel22 = new JPanel();
+//        panel1.setBackground(JBColor.orange);
+        panel22.setBorder(JBUI.Borders.empty(2, 2, 50, 2));
+        panel22.setLayout(new BoxLayout(panel22, BoxLayout.X_AXIS));
+//        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/barlarge.png"));
+//        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/pack-logo3.png"));
+//        settingsTabbedPane.addTab("pa", sliderIcon, panel1);
+        ImageIcon sliderIcon23 = new ImageIcon(this.getClass().getResource("/icons/pack-logo7.png"));
+        settingsTabbedPane.addTab("", sliderIcon23, panel22);
 
 
         //If user has opened settings, but config values arent loaded yet from filesystem...

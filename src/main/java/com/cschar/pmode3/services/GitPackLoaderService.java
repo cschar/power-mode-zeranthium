@@ -13,10 +13,10 @@ import java.io.File;
 import java.io.IOException;
 
 //UI  https://jetbrains.github.io/ui/principles/groups_of_controls/
-public class MyGitService {
+public class GitPackLoaderService {
 
 
-    public MyGitService(){
+    public GitPackLoaderService(){
         System.out.println("intiialized GitService");
     }
 

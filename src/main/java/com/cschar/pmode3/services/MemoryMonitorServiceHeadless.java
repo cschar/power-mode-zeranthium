@@ -1,6 +1,6 @@
 package com.cschar.pmode3.services;
 
-import com.cschar.pmode3.MenuConfigurableUI;
+
 import com.intellij.openapi.options.ConfigurableUi;
 
 public class MemoryMonitorServiceHeadless implements MemoryMonitorService {

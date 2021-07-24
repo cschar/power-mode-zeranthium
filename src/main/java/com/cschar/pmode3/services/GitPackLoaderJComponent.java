@@ -1,16 +1,20 @@
 package com.cschar.pmode3.services;
 
+import com.cschar.pmode3.PowerMode3;
 import com.cschar.pmode3.PowerMode3ConfigurableUI2;
 import com.cschar.pmode3.config.common.ui.ZeranthiumColors;
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationType;
+import com.intellij.notification.Notifications;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDialog;
-import com.intellij.openapi.fileChooser.FileChooserFactory;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.ui.popup.JBPopup;
+import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.JBColor;
@@ -19,120 +23,59 @@ import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.util.ui.JBUI;
 import org.eclipse.jgit.lib.ProgressMonitor;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileSystemView;
+import javax.swing.plaf.ScrollBarUI;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
+import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.logging.Logger;
 
-public class MyGitJComponent extends JPanel{
-    private static final Logger LOGGER = Logger.getLogger( MyGitJComponent.class.getName() );
+public class GitPackLoaderJComponent extends JPanel{
+    private static final Logger LOGGER = Logger.getLogger( GitPackLoaderJComponent.class.getName() );
 
-
-    public JComponent getPackRow(String title, String manifestPath){
-
-
-
-        JPanel packsCol = new JPanel();
-        packsCol.setLayout(new BoxLayout(packsCol, BoxLayout.X_AXIS));
-        packsCol.setBackground(ZeranthiumColors.specialOption1);
-//        packsCol.setBorder(JBUI.Borders.emptyBottom(30));
-        packsCol.setBorder(JBUI.Borders.empty(10,10,10,30));
-
-        JButton button1 = new JButton();
-        button1.setText("Load pack - click it");
-        button1.setSize(200,50);
-
-        button1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                Task.Modal modalTask = new Task.Modal(null, "Loading Theme Pack", true) {
-                    public void run(@NotNull() final ProgressIndicator indicator) {
-                        //TODO save state beforehand to rollback if cancelled
-                        indicator.setText2("loading assets...");
-
-                        try {
-                            menuConfigurable.loadConfigPack(manifestPath, indicator);
-                        } catch (FileNotFoundException fileNotFoundException) {
-                            fileNotFoundException.printStackTrace();
-                        } catch (JSONException jsonException) {
-                            jsonException.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        LOGGER.info("cancelling pack load...");
-                        //TODO rollback changes to a saved state at start of run() above
-                        super.onCancel();
-                    }
-                };
-
-                ApplicationManager.getApplication().invokeLater(() -> ProgressManager.getInstance().run(modalTask));
-
-            }
-        });
-        packsCol.add(button1);
-
-        //Add Memory header panel
-        JPanel packInfoPanel = new JPanel();
-        packInfoPanel.setLayout(new BoxLayout(packInfoPanel, BoxLayout.Y_AXIS));
-        packInfoPanel.setBackground(JBColor.CYAN);
-        packInfoPanel.setBorder(JBUI.Borders.empty(30));
-
-        JPanel headerPanel = new JPanel();
-        JLabel headerLabel = new JLabel(title);
-        headerLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        headerPanel.add(headerLabel);
-        JLabel headerSizeLabel = new JLabel();
-        headerSizeLabel.setText("A size Label");
-        headerSizeLabel.setBackground(ZeranthiumColors.specialOption3);
-        headerSizeLabel.setOpaque(true);
-        headerSizeLabel.setBorder(JBUI.Borders.empty(5));
-        headerPanel.add(headerSizeLabel);
-        headerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        headerPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        headerPanel.setMaximumSize(new Dimension(500,100));
-        packInfoPanel.add(headerPanel);
-
-        packsCol.add(packInfoPanel);
-
-
-        return packsCol;
-    }
-
-    public  PowerMode3ConfigurableUI2 menuConfigurable;
+    public PowerMode3ConfigurableUI2 menuConfigurable;
+    public PowerMode3 settings;
     public String directoryPath;
     private JComponent gitRepoTabbedPane;
 
 
-    public MyGitJComponent(String title,  PowerMode3ConfigurableUI2 menuConfigurable){
+    public GitPackLoaderJComponent(String title, PowerMode3ConfigurableUI2 menuConfigurable){
 
         this.menuConfigurable = menuConfigurable;
-        directoryPath = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
+        settings = ApplicationManager.getApplication().getService(PowerMode3.class);
+        directoryPath = settings.getPackDownloadPath();
+
+//        directoryPath = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
 
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
         JPanel packsPanel = new JPanel();
 //        gitdownloadPanel.setPreferredSize(new Dimension(800,400));
-        packsPanel.setLayout(new BoxLayout(packsPanel, BoxLayout.Y_AXIS));
+        packsPanel.setLayout(new BoxLayout(packsPanel, BoxLayout.PAGE_AXIS));
 //        packsPanel.setBackground(JBColor.CYAN);
 
 
-        JLabel setPathLabel = new JLabel();
-        setPathLabel.setText("base path: " + directoryPath);
+        JTextField setPathLabel = new JTextField();
+        setPathLabel.setEditable(false);
+
+//        JLabel setPathLabel = new JLabel();
+        setPathLabel.setText("base path : " + directoryPath);
         setPathLabel.setFont(new Font("Times", Font.PLAIN, 16));
-        setPathLabel.setBackground(JBColor.GREEN);
+        setPathLabel.setMaximumSize(new Dimension(700,50));
+
+//        setPathLabel.setBackground(JBColor.gray);
+        setPathLabel.setBorder(JBUI.Borders.customLineBottom(JBColor.gray));
         setPathLabel.setOpaque(true);
-        setPathLabel.setBorder(JBUI.Borders.empty(5));
         packsPanel.add(setPathLabel);
 
         JButton SetPathButton = new JButton();
@@ -155,12 +98,15 @@ public class MyGitJComponent extends JPanel{
             if(result == Messages.YES){
                 FileChooserDescriptor fd = new FileChooserDescriptor(false,true,false,false,false,false);
                 VirtualFile toSelect = LocalFileSystem.getInstance().findFileByPath(directoryPath);
+
+                //TODO Serialize this setting on the PowerMode3 settings
+
                 VirtualFile chosen = FileChooser.chooseFile(fd, null, toSelect);
                 System.out.println("selected" + chosen.getPath());
 
                 directoryPath = chosen.getPath();
                 setPathLabel.setText("path is: " + chosen.getPath());
-
+                settings.setPackDownloadPath(directoryPath);
 
 
                 try {
@@ -222,7 +168,7 @@ public class MyGitJComponent extends JPanel{
 
 
         JPanel panel4 = new JPanel();
-        panel4.setBorder(JBUI.Borders.empty(2, 2, 40, 2));
+        panel4.setBorder(JBUI.Borders.empty(2, 2, 40, 10));
         panel4.setLayout(new BoxLayout(panel4, BoxLayout.PAGE_AXIS));
         ImageIcon sliderIcon4 = new ImageIcon(this.getClass().getResource("/icons/bar_small.png"));
         gitRepoTabbedPane.addTab("Custom pack file", sliderIcon4, panel4);
@@ -230,6 +176,7 @@ public class MyGitJComponent extends JPanel{
         panel4.add(new JLabel("Load your own custom pack from the filesystem here..."));
         JButton customPackLoader = new JButton();
         customPackLoader.setText("Load pack");
+
         customPackLoader.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -266,6 +213,14 @@ public class MyGitJComponent extends JPanel{
                                             "" +
                                             "</html>",
                                     "Pack Load Failed");
+
+//                            JBPopup popup = JBPopupFactory.getInstance().createMessage("There was an error reading the manifest file:" + je.toString());
+
+//                            popup.show(GitPackLoaderJComponent.this);
+//                            JLabel t = new JLabel("failed");
+//                            JBPopupFactory.getInstance().createComponentPopupBuilder(t,null).
+//                                    setTitle("error").createPopup().show(customPackLoader);
+
                             LOGGER.severe(je.toString());
                         }
                     }
@@ -317,7 +272,7 @@ public class MyGitJComponent extends JPanel{
 
         JPanel packsList = new JPanel();
         packsList.setLayout(new BoxLayout(packsList, BoxLayout.Y_AXIS));
-        packsList.setBackground(JBColor.gray);
+//        packsList.setBackground(JBColor.gray);
         packsList.setBorder(JBUI.Borders.empty(30));
 //        packsList.setBorder(JBUI.Borders.customLine(JBColor.WHITE));
 
@@ -342,13 +297,13 @@ public class MyGitJComponent extends JPanel{
         downloadBUtton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Task.Backgroundable bgTask2 = new Task.Backgroundable(null, "Cloning zeranthiium-extras...",
+                Task.Backgroundable bgTask2 = new Task.Backgroundable(null, "Cloning zeranthium-extras...",
                         true, null) {
                     @Override
                     public void run(@NotNull ProgressIndicator progressIndicator) {
-                        MyGitService gitService = ApplicationManager.getApplication().getService(MyGitService.class);
+                        GitPackLoaderService gitService = ApplicationManager.getApplication().getService(GitPackLoaderService.class);
 
-                        ProgressMonitor progressMonitor = new SimpleProgressMonitor(downloadStatusLabel, progressIndicator);
+                        ProgressMonitor progressMonitor = new GitPackLoaderProgressMonitor(downloadStatusLabel, progressIndicator);
                         statusLabel.setText("Status - Downloading...");
                         validate();
                         repaint();
@@ -424,12 +379,15 @@ public class MyGitJComponent extends JPanel{
         JBScrollPane scrollPane = new JBScrollPane(packsList);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
-            @Override
-            protected void configureScrollBarColors() {
-                this.thumbColor = Color.DARK_GRAY;
-            }
-        });
+        scrollPane.setVerticalScrollBar(new MyScrollBar());
+//        scrollPane.setVerticalScrollBar(new );
+//        scrollPane.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
+//            @Override
+//            protected void configureScrollBarColors() {
+////                this.thumbColor = JBColor.DARK_GRAY;
+//                this.thumbColor = JBColor.GREEN;
+//            }
+//        });
         packListHolder.add(scrollPane);
 
         loadButton.doClick();
@@ -438,96 +396,151 @@ public class MyGitJComponent extends JPanel{
 
     }
 
-    private class SimpleProgressMonitor implements ProgressMonitor {
-
-        JLabel statusLabel;
-        ProgressIndicator progressIndicator;
-        public SimpleProgressMonitor(JLabel lbl, ProgressIndicator progressIndicator){
-            this.statusLabel = lbl;
-            this.progressIndicator = progressIndicator;
-        }
-
-
-        public int compl = 0;
+    public class MyScrollBar extends JScrollBar {
         @Override
-        public void start(int totalTasks) {
-
-            //2 tasks
-            System.out.println("Starting work on " + totalTasks + " git tasks");
-            System.out.println("--------------------------------");
-        }
-
-        private int totalWork;
-        private String currentTask;
-
-        @Override
-        public void beginTask(String title, int totalWork)
-        {
-            compl = 0;
-            this.totalWork = totalWork;
-            progressIndicator.setText2("doing task: " + title);
-            currentTask = title;
-
-            System.out.println();
-            System.out.println("Starting task: " + title + " ------- totalWork: " + totalWork );
-            //System.out.println("Starting from thread " + Thread.currentThread().getName());
-        }
-
-        @Override
-        public void update(int completed) {
-            //https://plugins.jetbrains.com/docs/intellij/general-threading-rules.html#background-processes-and-processcanceledexception
-
-            if(progressIndicator.isCanceled()){
-                System.out.println("cancelled the task");
-            }
-
-            //set the progress indicator here
-            double percent = (compl/ (double) totalWork)*100;
-            progressIndicator.setFraction(percent);
-            progressIndicator.setText2("doing task: " + currentTask + " % " + String.format("%3.3f", percent));
-
-            if(compl % 2 == 0) {
-                statusLabel.setText(statusLabel.getText() + "|");
-            }else{
-                statusLabel.setText(statusLabel.getText().substring(0, statusLabel.getText().length()-1));
-
-            }
-            statusLabel.validate();
-            statusLabel.repaint();
-
-            compl += completed;
-            System.out.print(completed + "-");
-            if(compl % 10 == 0){
-                System.out.print("|");
-            }
-
-        }
-
-        @Override
-        public void endTask() {
-
-            System.out.println("Done");
-        }
-
-        //custom logic to check to cancel process...
-        @Override
-        public boolean isCancelled()
-        {
-
-            System.out.print(".");
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            if(progressIndicator.isCanceled()){
-                System.out.println("cancelled the task");
-                return true;
-            }
-            return false;
+        public void setUI(ScrollBarUI ui) {
+//            super.setUI(ui);
+            super.setUI(new BasicScrollBarUI() {
+                @Override
+                protected void configureScrollBarColors() {
+//                this.thumbColor = JBColor.DARK_GRAY;
+//                    this.thumbColor = JBColor.GREEN;
+                    this.thumbColor = ZeranthiumColors.specialOption1;
+                }
+            });
         }
     }
 
+
+    public JComponent getPackRow(String title, String manifestPath){
+
+
+
+        JPanel packsCol = new JPanel();
+        packsCol.setLayout(new BoxLayout(packsCol, BoxLayout.X_AXIS));
+        packsCol.setBackground(ZeranthiumColors.specialOption1);
+//        packsCol.setBorder(JBUI.Borders.emptyBottom(30));
+        packsCol.setBorder(JBUI.Borders.empty(10,10,10,30));
+
+        JButton loadPackButton = new JButton();
+        loadPackButton.setText("Load pack ");
+        loadPackButton.setSize(200,50);
+        loadPackButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                Task.Modal modalTask = new Task.Modal(null, "Loading Theme Pack", true) {
+                    public void run(@NotNull() final ProgressIndicator indicator) {
+                        //TODO save state beforehand to rollback if cancelled
+                        indicator.setText2("loading assets...");
+
+                        try {
+                            menuConfigurable.loadConfigPack(manifestPath, indicator);
+                        } catch (FileNotFoundException fileNotFoundException) {
+                            fileNotFoundException.printStackTrace();
+                        } catch (JSONException jsonException) {
+
+                            Notification n = new Notification(PowerMode3.NOTIFICATION_GROUP_DISPLAY_ID,
+                                    PowerMode3.NOTIFICATION_GROUP_DISPLAY_ID + ": Error loading config",
+                                    "Could not read manifest.json: " + manifestPath +
+                                            "\n\n" + jsonException.toString(),
+                                    NotificationType.ERROR);
+                            Notifications.Bus.notify(n);
+
+                            jsonException.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        LOGGER.info("cancelling pack load...");
+                        //TODO rollback changes to a saved state at start of run() above
+                        super.onCancel();
+                    }
+                };
+
+                ApplicationManager.getApplication().invokeLater(() -> ProgressManager.getInstance().run(modalTask));
+
+            }
+        });
+        packsCol.add(loadPackButton);
+
+        //Add Memory header panel
+        JPanel packInfoPanel = new JPanel();
+        packInfoPanel.setLayout(new BoxLayout(packInfoPanel, BoxLayout.Y_AXIS));
+        packInfoPanel.setBackground(JBColor.CYAN);
+        packInfoPanel.setBorder(JBUI.Borders.empty(30));
+
+        JPanel headerPanel = new JPanel();
+        packsCol.add(packInfoPanel);
+
+        JLabel headerLabel = new JLabel(title);
+        headerLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        headerPanel.add(headerLabel);
+        JLabel headerSizeLabel = new JLabel();
+        headerSizeLabel.setText("[      ]");
+        headerSizeLabel.setBackground(ZeranthiumColors.specialOption3);
+        headerSizeLabel.setOpaque(true);
+        headerSizeLabel.setBorder(JBUI.Borders.empty(5));
+        headerPanel.add(headerSizeLabel);
+        headerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        headerPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        headerPanel.setMaximumSize(new Dimension(500,100));
+        packInfoPanel.add(headerPanel);
+
+        JLabel configsLabel = new JLabel();
+
+        PackScanner ps = new PackScanner();
+//        try {
+//            Pack p = ps.scanForPack(manifestPath);
+//            configsLabel.setText(p.getConfigsString());
+//        } catch (FileNotFoundException | JSONException e) {
+//            e.printStackTrace();
+//        }
+        packInfoPanel.add(configsLabel);
+
+        packsCol.add(packInfoPanel);
+
+        return packsCol;
+    }
+
+    public class Pack {
+        public int memorySize;
+        public ArrayList<String> configs;
+
+        public String getConfigsString(){
+            StringBuilder sb = new StringBuilder();
+            sb.append("[");
+            for(String s: configs){
+                sb.append(s + " ");
+            }
+            sb.append("]");
+            return sb.toString();
+        }
+    }
+
+    public class PackScanner {
+
+        public Pack scanForPack(String manifestPath) throws FileNotFoundException, JSONException {
+            Pack p = new Pack();
+
+            Path path = Paths.get(manifestPath);
+            InputStream inputStream = new FileInputStream(manifestPath);
+            StringBuilder sb = new StringBuilder();
+            Scanner s = new Scanner(inputStream);
+            while(s.hasNextLine()){
+                sb.append(s.nextLine());
+            }
+            JSONObject jo = new JSONObject(sb.toString());
+
+            JSONArray configsToLoad = jo.getJSONArray("configsToLoad");
+            for(int i =0; i< configsToLoad.length(); i++){
+                p.configs.add(configsToLoad.getString(i));
+            }
+
+            return p;
+        }
+    }
 
 
 }

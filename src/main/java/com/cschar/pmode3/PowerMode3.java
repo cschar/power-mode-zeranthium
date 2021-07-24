@@ -41,6 +41,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.io.InputStream;
 import java.util.*;
@@ -90,6 +91,15 @@ public class PowerMode3 implements
 
     private int particleRGB;
 
+    private String packDownloadPath;
+
+    public String getPackDownloadPath(){
+        return packDownloadPath;
+    }
+
+    public void setPackDownloadPath(String s){
+        packDownloadPath = s;
+    }
 
     private int lastTabIndex = 0;
     private int scrollBarPosition = 0;
@@ -231,7 +241,7 @@ public class PowerMode3 implements
     @Override
     public void initializeComponent() {
         LOGGER.info("Initializing pmode3 component...");
-
+        //construct JBColor out of serialized normal Color
         this.particleColor = new JBColor(new Color(this.getParticleRGB()), new Color(this.getParticleRGB()));
 
         //Setup SOUND handler
@@ -307,6 +317,8 @@ public class PowerMode3 implements
     public void noStateLoaded() {
         LOGGER.info("No State loaded previously");
         this.setParticleRGB(JBColor.darkGray.getRGB());
+        this.setPackDownloadPath(FileSystemView.getFileSystemView().getDefaultDirectory().getPath());
+
         pathDataMap = JSONLoader.getDefaultJSONTableConfigs();
 
         loadConfigData();

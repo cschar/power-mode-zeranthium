@@ -7,9 +7,11 @@
 
 <!-- Plugin description -->
 <h1>Power Mode - Zeranthium </h1>
-
-<img src="https://user-images.githubusercontent.com/296551/86540558-4ea4f880-bed4-11ea-830b-5e3bf25e0cb1.gif" />
 <img src="https://user-images.githubusercontent.com/296551/63473991-68b52400-c445-11e9-84dc-e2e5269729d8.png" />
+<br/>
+<img src="https://user-images.githubusercontent.com/296551/86540558-4ea4f880-bed4-11ea-830b-5e3bf25e0cb1.gif" />
+<br/>
+
 <h2> Get Into your Zone... </h2>
 
 <p> See the <a href="https://cschar.github.io/power-mode-zeranthium/"> Docs page </a> for more info </p>
