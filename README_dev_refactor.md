@@ -26,9 +26,22 @@ links to
 https://www.plugin-dev.com/intellij/general/plugin-initial-load/
 
 
+### TODO:
+
+-- add custom config path... save location in settings, so when we reopen, its saved fo ruser
+// i nc ustom config path add a label showing current loaded path...
+
+[ ] - ensure we Save custom pack basepath in settings
+[ ] - make tooltip explaining what 'speed' level is in linker
+[ ] - better squashed UI on pack list
+[ ] - catch error when we try to download a project, close settings, reopen settings and click 'download' again
+[ ] - catch download cancelled exception
+
 ## TESTS
 
-- robotUI test: make a test to load settings UI when it is disabled, check if checkboxes are disabled
+[ ] - robotUI test: make a test to load settings UI when it is disabled, check if checkboxes are disabled
+[ ] - robotUI test: test to load packs through UI, prebuilt packs + custom pack
+
 
 ## BUGS ?
 

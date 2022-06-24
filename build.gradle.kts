@@ -1,4 +1,5 @@
 import io.gitlab.arturbosch.detekt.Detekt
+import org.gradle.api.tasks.testing.TestResult.ResultType
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -14,10 +15,12 @@ plugins {
     // Java support - https://docs.gradle.org/current/userguide/java_plugin.html#java_plugin
     id("java")
     // Kotlin support
-    id("org.jetbrains.kotlin.jvm") version "1.5.10"
+    // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.jvm
+    id("org.jetbrains.kotlin.jvm") version "1.7.0"
 //    id("org.jetbrains.kotlin.jvm") version "1.4.10"
+
     // gradle-intellij-plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
-    id("org.jetbrains.intellij") version "1.0"
+    id("org.jetbrains.intellij") version "1.6.0"
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
     id("org.jetbrains.changelog") version "1.1.2"
     // detekt linter - read more: https://detekt.github.io/detekt/gradle.html
@@ -61,6 +64,8 @@ dependencies {
     // for some reason this version is on maven
     // https://mvnrepository.com/artifact/com.intellij.remoterobot/remote-fixtures/1.1.18
     // https://packages.jetbrains.team/maven/p/ij/intellij-dependencies/com/intellij/remoterobot/
+
+    // https://github.com/JetBrains/intellij-ui-test-robot
     testImplementation("com.intellij.remoterobot:remote-robot:" + "0.11.4")
     testImplementation("com.intellij.remoterobot:remote-fixtures:" + "0.11.4")
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.0")
@@ -127,6 +132,21 @@ tasks {
         from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
     }
 
+    //  https://youtrack.jetbrains.com/issue/IDEA-210683/Illegal-reflective-access-in-IJ-codebase#focus=Comments-27-4620700.0-0
+    getByName<JavaExec>("buildSearchableOptions") {
+        jvmArgs(
+            "--illegal-access=deny",
+            "--add-opens=java.desktop/sun.awt=ALL-UNNAMED",
+            "--add-opens=java.desktop/java.awt=ALL-UNNAMED",
+            "--add-opens=java.base/java.lang=ALL-UNNAMED",
+            "--add-opens=java.desktop/javax.swing=ALL-UNNAMED",
+            "--add-opens=java.desktop/javax.swing.plaf.basic=ALL-UNNAMED",
+            "--add-opens=java.desktop/sun.font=ALL-UNNAMED",
+            "--add-opens=java.desktop/sun.swing=ALL-UNNAMED",
+            "--add-opens=java.desktop/com.apple.eawt.event=ALL-UNNAMED"
+        )
+    }
+
     // tag example: https://www.baeldung.com/junit-5-gradle#configuring-junit-5-tests-with-gradle
     // from CLI: // gradle clean test -DincludeTags='regression' -DexcludeTags='accessibility'
     // custom gradle test config: https://stackoverflow.com/a/59022129/5198805
@@ -137,6 +157,58 @@ tasks {
         // but still have normal Junit4 tests working
         // https://www.baeldung.com/junit-5-gradle#enabling-support-for-old-versions.
         useJUnitPlatform()
+
+        // even trying to mute them all, new warnings still popup...
+        // https://youtrack.jetbrains.com/issue/IDEA-258551
+//        jvmArgs = listOf(
+//            "--add-opens=java.desktop/sun.awt=ALL-UNNAMED",
+//            "--add-opens=java.desktop/java.awt=ALL-UNNAMED",
+//            "--add-opens=java.base/java.lang=ALL-UNNAMED",
+//            "--add-opens=java.desktop/javax.swing=ALL-UNNAMED",
+//            "--add-opens=java.desktop/javax.swing.plaf.basic=ALL-UNNAMED",
+//            "--add-opens=java.desktop/sun.font=ALL-UNNAMED",
+//            "--add-opens=java.desktop/sun.swing=ALL-UNNAMED",
+//            "--add-opens=java.desktop/com.apple.eawt.event=ALL-UNNAMED",
+//            "--add-opens=java.base/java.io=ALL-UNNAMED"
+//        )
+
+        outputs.upToDateWhen { false }
+        testLogging.showStandardStreams = true
+
+        // https://stackoverflow.com/a/69840376/5198805
+        testLogging {
+            showCauses = false
+            showExceptions = false
+            showStackTraces = false
+            showStandardStreams = false
+
+            val ansiReset = "\u001B[0m"
+            val ansiGreen = "\u001B[32m"
+            val ansiRed = "\u001B[31m"
+            val ansiYellow = "\u001B[33m"
+
+            fun getColoredResultType(resultType: ResultType): String {
+                return when (resultType) {
+                    ResultType.SUCCESS -> "$ansiGreen $resultType $ansiReset"
+                    ResultType.FAILURE -> "$ansiRed $resultType $ansiReset"
+                    ResultType.SKIPPED -> "$ansiYellow $resultType $ansiReset"
+                }
+            }
+
+            afterTest(
+                KotlinClosure2({ desc: TestDescriptor, result: TestResult ->
+                    println("${desc.className} | ${desc.displayName} = ${getColoredResultType(result.resultType)}")
+                })
+            )
+
+            afterSuite(
+                KotlinClosure2({ desc: TestDescriptor, result: TestResult ->
+                    if (desc.parent == null) {
+                        println("Result: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} passed, ${result.failedTestCount} failed, ${result.skippedTestCount} skipped)")
+                    }
+                })
+            )
+        }
     }
 
     buildSearchableOptions {
@@ -144,7 +216,8 @@ tasks {
             "-Xmx6G",
             "-Djdk.attach.allowAttachSelf=true", // for IDE perf plugin to be allowed to attach a trace agent
             // "--add-exports", "java.base/jdk.internal.vm=ALL-UNNAMED" //j.internal.DebugAttachDetector
-            "--add-exports=java.base/jdk.internal.vm=ALL-UNNAMED" // j.internal.DebugAttachDetector
+            "--add-exports=java.base/jdk.internal.vm=ALL-UNNAMED", // j.internal.DebugAttachDetector
+
         )
     }
 
@@ -157,7 +230,8 @@ tasks {
             "-Xmx4G",
             "-Djdk.attach.allowAttachSelf=true", // for IDE perf plugin to be allowed to attach a trace agent
             // "--add-exports", "java.base/jdk.internal.vm=ALL-UNNAMED" //j.internal.DebugAttachDetector
-            "--add-exports=java.base/jdk.internal.vm=ALL-UNNAMED" // j.internal.DebugAttachDetector
+            "--add-exports=java.base/jdk.internal.vm=ALL-UNNAMED", // j.internal.DebugAttachDetector
+
         )
     }
 
@@ -227,5 +301,10 @@ tasks {
         // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
         // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
         channels.set(listOf(properties("pluginVersion").split('-').getOrElse(1) { "default" }.split('.').first()))
+    }
+
+    // added to remove warning on build
+    inspectClassesForKotlinIC {
+        dependsOn(instrumentTestCode)
     }
 }

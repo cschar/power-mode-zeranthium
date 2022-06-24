@@ -11,8 +11,11 @@ import java.util.ArrayList;
 
 public class CustomPathCellHighlighterRenderer extends JLabel implements TableCellRenderer {
     ArrayList<PathData> data;
+
+    @SuppressWarnings("unchecked")
     public CustomPathCellHighlighterRenderer(ArrayList<? extends PathData> data) {
         this.data = (ArrayList<PathData>) data;
+
         setOpaque(true); // Or color won't be displayed!
     }
 

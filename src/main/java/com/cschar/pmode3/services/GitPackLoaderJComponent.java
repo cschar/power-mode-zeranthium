@@ -13,8 +13,6 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.popup.JBPopup;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.JBColor;
@@ -34,20 +32,22 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
 public class GitPackLoaderJComponent extends JPanel{
     private static final Logger LOGGER = Logger.getLogger( GitPackLoaderJComponent.class.getName() );
+    public static final String ZERANTHIUM_EXTRAS_GIT_VOL1 = "https://github.com/powermode-zeranthium/zeranthium-extras-vol1.git";
+    public static final String ZERANTHIUM_EXTRAS_GIT_VOL2 = "https://github.com/powermode-zeranthium/zeranthium-extras-vol2.git";
+
 
     public PowerMode3ConfigurableUI2 menuConfigurable;
     public PowerMode3 settings;
     public String directoryPath;
     private JComponent gitRepoTabbedPane;
 
+    private Color jbDarkGreen = JBColor.green.getDarkVariant();
 
     public GitPackLoaderJComponent(String title, PowerMode3ConfigurableUI2 menuConfigurable){
 
@@ -62,6 +62,7 @@ public class GitPackLoaderJComponent extends JPanel{
         JPanel packsPanel = new JPanel();
 //        gitdownloadPanel.setPreferredSize(new Dimension(800,400));
         packsPanel.setLayout(new BoxLayout(packsPanel, BoxLayout.PAGE_AXIS));
+//        packsPanel.setLayout(new BoxLayout(packsPanel, BoxLayout.Y_AXIS));
 //        packsPanel.setBackground(JBColor.CYAN);
 
 
@@ -80,6 +81,7 @@ public class GitPackLoaderJComponent extends JPanel{
 
         JButton SetPathButton = new JButton();
         SetPathButton.setText("Set Download Path");
+
 //        downloadBUtton.setSize(300,200);
         SetPathButton.addActionListener(new ActionListener() {
             @Override
@@ -146,24 +148,24 @@ public class GitPackLoaderJComponent extends JPanel{
         File localPath = new File(directoryPath + File.separator + "zeranthium-extras");
 
         JPanel panel2 = new JPanel();
-        panel2.setBorder(JBUI.Borders.empty(2, 2, 40, 2));
+        panel2.setBorder(JBUI.Borders.empty(2, 2, 2, 2));
         panel2.setLayout(new BoxLayout(panel2, BoxLayout.PAGE_AXIS));
         ImageIcon sliderIcon2 = new ImageIcon(this.getClass().getResource("/icons/bar_small.png"));
-        gitRepoTabbedPane.addTab("zeranthium-extras-vol0", sliderIcon2, panel2);
+        gitRepoTabbedPane.addTab("zeranthium-extras-vol1", sliderIcon2, panel2);
 
 
-        JPanel packListHolder0 = getPackHolder(localPath.getPath(),"https://github.com/cschar/demo-proj-data.git", "zeranthium-extras-vol0");
+        JPanel packListHolder0 = getPackHolder(localPath.getPath(), ZERANTHIUM_EXTRAS_GIT_VOL1, "zeranthium-extras-vol1");
         panel2.add(packListHolder0);
 
         JPanel panel3 = new JPanel();
 //        panel3.setBackground(JBColor.getHSBColor(100,88,20));
-        panel3.setBorder(JBUI.Borders.empty(2, 2, 40, 2));
+        panel3.setBorder(JBUI.Borders.empty(2, 2, 2, 2));
         panel3.setLayout(new BoxLayout(panel3, BoxLayout.PAGE_AXIS));
         ImageIcon sliderIcon3 = new ImageIcon(this.getClass().getResource("/icons/bar_small.png"));
-        gitRepoTabbedPane.addTab("zeranthium-extras-vol1", sliderIcon3, panel3);
+        gitRepoTabbedPane.addTab("zeranthium-extras-vol2", sliderIcon3, panel3);
 
 
-        JPanel packListHolder1 = getPackHolder(localPath.getPath(),"https://github.com/cschar/demo-proj-data.git", "zeranthium-extras-vol1");
+        JPanel packListHolder1 = getPackHolder(localPath.getPath(), ZERANTHIUM_EXTRAS_GIT_VOL2, "zeranthium-extras-vol2");
         panel3.add(packListHolder1);
 
 
@@ -174,6 +176,16 @@ public class GitPackLoaderJComponent extends JPanel{
         gitRepoTabbedPane.addTab("Custom pack file", sliderIcon4, panel4);
 
         panel4.add(new JLabel("Load your own custom pack from the filesystem here..."));
+
+        JLabel customPackLocationLbl = new JLabel();
+//        JTextField customPackLocationLbl = new JTextField();
+//        customPackLocationLbl.setEditable(false);
+
+        customPackLocationLbl.setText("custom pack path : ");
+        customPackLocationLbl.setFont(new Font("Times", Font.PLAIN, 14));
+//        customPackLocationLbl.setMaximumSize(new Dimension(700,50));
+        panel4.add(customPackLocationLbl);
+
         JButton customPackLoader = new JButton();
         customPackLoader.setText("Load pack");
 
@@ -195,36 +207,19 @@ public class GitPackLoaderJComponent extends JPanel{
                     FileChooserDescriptor fd = new FileChooserDescriptor(true,false,false,false,false,false);
     //                fd.setForcedToUseIdeaFileChooser(true);
 //                    FileChooserDialog fcDialog = FileChooserFactory.getInstance().createFileChooser(fd, null, null);
-                    VirtualFile toSelect = LocalFileSystem.getInstance().findFileByPath(directoryPath);
 
-                    VirtualFile chosen = FileChooser.chooseFile(fd, null, toSelect);
+//                    VirtualFile toSelect = LocalFileSystem.getInstance().findFileByPath(directoryPath);
+//                    VirtualFile chosenManifest = FileChooser.chooseFile(fd, null, toSelect);
+                    VirtualFile chosenManifest = FileChooser.chooseFile(fd, null, null);
+                    System.out.println("chose file: " + chosenManifest.getName());
 
-                    if(chosen.getName().equals("manifest.json")){
+                    if(!chosenManifest.getName().equals("manifest.json")){
                         Messages.showInfoMessage("Please select a manifest.json file in a pack directory", "Pack Load Failed");
-                    }else {
-                        try {
-                            menuConfigurable.loadConfigPack(chosen.getPath(),null);
-                        } catch (FileNotFoundException e1) {
-                            e1.printStackTrace();
-                        } catch( JSONException je){
-                            Messages.showErrorDialog("<html><h1>Pack Failed to load</h1>" +
-                                            "\n There was an error processing the .json info" +
-                                            "\n <pre>" + je.toString() + "</pre>" +
-                                            "" +
-                                            "</html>",
-                                    "Pack Load Failed");
-
-//                            JBPopup popup = JBPopupFactory.getInstance().createMessage("There was an error reading the manifest file:" + je.toString());
-
-//                            popup.show(GitPackLoaderJComponent.this);
-//                            JLabel t = new JLabel("failed");
-//                            JBPopupFactory.getInstance().createComponentPopupBuilder(t,null).
-//                                    setTitle("error").createPopup().show(customPackLoader);
-
-                            LOGGER.severe(je.toString());
-                        }
+                        return;
                     }
 
+                    loadPackModal(chosenManifest.getPath());
+                    customPackLocationLbl.setText("custom pack path : " + chosenManifest.getPath());
                 }
             }
         });
@@ -244,15 +239,28 @@ public class GitPackLoaderJComponent extends JPanel{
 
         JPanel packsRepoUrlHeader = new JPanel();
         packsRepoUrlHeader.setLayout(new BoxLayout(packsRepoUrlHeader, BoxLayout.Y_AXIS));
-        JLabel repoLabel = new JLabel("downloading from repo:   " + repoUrl);
+
+        packsRepoUrlHeader.setAlignmentX(Component.LEFT_ALIGNMENT);
+//        packsRepoUrlHeader.setBorder(JBUI.Borders.customLine(JBColor.yellow, 5));
+        JTextField repoLabel = new JTextField("downloading from repo:   " + repoUrl);
+        repoLabel.setMaximumSize(new Dimension(1200,50));
+        repoLabel.setPreferredSize(new Dimension(1200,50));
+//        JLabel repoLabel = new JLabel("downloading from repo:   " + repoUrl);
+//        repoLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+//        JTextField repo = new JTextField("yeah");
+//        repoLabel.add(repo);
 //        repoLabel.setBackground(JBColor.gray);
         repoLabel.setOpaque(true);
         repoLabel.setFont(new Font("Times", Font.PLAIN, 14));
         repoLabel.setBorder(JBUI.Borders.empty(5));
         packsRepoUrlHeader.add(repoLabel);
 
-        JLabel repoTarget = new JLabel("Target path:  " + localPath.getPath());
-        repoTarget.setMaximumSize(new Dimension(800,50));
+//        JLabel repoTarget = new JLabel("Target path:  " + localPath.getPath());
+        JTextField repoTarget = new JTextField("Target path:  " + localPath.getPath());
+        repoTarget.setMaximumSize(new Dimension(1200,50));
+        repoTarget.setMinimumSize(new Dimension(700,50));
+        repoTarget.setSize(new Dimension(1200,50));
+//        repoTarget.setAlignmentX(Component.LEFT_ALIGNMENT);
 //        repoTarget.setBackground(JBColor.gray);
         repoTarget.setOpaque(true);
         repoTarget.setFont(new Font("Times", Font.PLAIN, 12));
@@ -280,14 +288,14 @@ public class GitPackLoaderJComponent extends JPanel{
 
         JLabel downloadStatusLabel = new JLabel();
         downloadStatusLabel.setText("[]");
-        downloadStatusLabel.setBackground(JBColor.GREEN);
+        downloadStatusLabel.setBackground(jbDarkGreen);
         downloadStatusLabel.setOpaque(true);
         downloadStatusLabel.setBorder(JBUI.Borders.empty(5));
 
         JLabel statusLabel = new JLabel();
 
         if(statusLabel.getText().equals("")) statusLabel.setText("status - Ready.."); //if we reopen panel, dont reset
-        statusLabel.setBackground(JBColor.GREEN);
+        statusLabel.setBackground(jbDarkGreen);
         statusLabel.setOpaque(true);
         statusLabel.setFont(new Font("Arial", Font.BOLD, 15));
         statusLabel.setBorder(JBUI.Borders.empty(5));
@@ -316,7 +324,7 @@ public class GitPackLoaderJComponent extends JPanel{
                             downloadStatusLabel.setText("[]+");
                             validate();
                             repaint();
-                            gitService.getRepo("https://github.com/cschar/demo-proj-data.git", localPath, progressMonitor);
+                            gitService.getRepo(repoUrl, localPath, progressMonitor);
                             statusLabel.setText("Status - Finished ...");
                         } catch(Exception e){
                             e.printStackTrace();
@@ -326,13 +334,13 @@ public class GitPackLoaderJComponent extends JPanel{
                 LOGGER.info("Launching cloning task  from thread " + Thread.currentThread().toString());
                 ProgressManager.getInstance().run(bgTask2);
 
-            }
+            };
         });
 
 
 
         JButton loadButton = new JButton();
-        loadButton.setText("LOAD====");
+        loadButton.setText("RELOAD");
         loadButton.setSize(100,100);
         loadButton.addActionListener(new ActionListener() {
             @Override
@@ -358,7 +366,7 @@ public class GitPackLoaderJComponent extends JPanel{
                 if(themes != null){
                     for(File theme : themes){
                         System.out.println("--- " + theme.getName());
-                        packsList.add(getPackRow(theme.getName(), theme.getPath() + File.separator + "manifest.json"));
+                        packsList.add(getPackRow(theme.getName(), theme.getPath() ));
                     }
                 }
 
@@ -378,18 +386,12 @@ public class GitPackLoaderJComponent extends JPanel{
         //wrap packsList in more visible scrollBar
         JBScrollPane scrollPane = new JBScrollPane(packsList);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+//        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+//        scrollPane.setHorizontalScrollBar(new MyScrollBar());
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setVerticalScrollBar(new MyScrollBar());
-//        scrollPane.setVerticalScrollBar(new );
-//        scrollPane.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
-//            @Override
-//            protected void configureScrollBarColors() {
-////                this.thumbColor = JBColor.DARK_GRAY;
-//                this.thumbColor = JBColor.GREEN;
-//            }
-//        });
-        packListHolder.add(scrollPane);
 
+        packListHolder.add(scrollPane);
         loadButton.doClick();
 
         return packsContainer;
@@ -403,24 +405,63 @@ public class GitPackLoaderJComponent extends JPanel{
             super.setUI(new BasicScrollBarUI() {
                 @Override
                 protected void configureScrollBarColors() {
-//                this.thumbColor = JBColor.DARK_GRAY;
-//                    this.thumbColor = JBColor.GREEN;
-                    this.thumbColor = ZeranthiumColors.specialOption1;
+                    this.thumbColor = jbDarkGreen;
                 }
             });
         }
     }
 
+    private void loadPackModal(String manifestPath){
+        Task.Modal modalTask = new Task.Modal(null, "Loading Theme Pack", true) {
+            public void run(@NotNull() final ProgressIndicator indicator) {
+                //TODO save state beforehand to rollback if cancelled
+                indicator.setText2("loading assets...");
 
-    public JComponent getPackRow(String title, String manifestPath){
+
+                try {
+                    menuConfigurable.loadConfigPack(manifestPath, indicator);
+                } catch (FileNotFoundException fileNotFoundException) {
+                    fileNotFoundException.printStackTrace();
+                } catch (JSONException jsonException) {
+
+                    Notification n = new Notification(PowerMode3.NOTIFICATION_GROUP_DISPLAY_ID,
+                            PowerMode3.NOTIFICATION_GROUP_DISPLAY_ID + ": Error loading config",
+                            "Could not read manifest.json: " + manifestPath +
+                                    "\n\n" + jsonException.toString(),
+                            NotificationType.ERROR);
+                    Notifications.Bus.notify(n);
+
+                    int result = Messages.showYesNoDialog(null,
+                            "<html> <h1> Load config pack? </h1>" +
+                                    "Error loading config pack..." +
+                                    "</html>",
+                            "LOAD PACK","yes","no", null);
+
+                    jsonException.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onCancel() {
+                LOGGER.info("cancelling pack load...");
+                //TODO rollback changes to a saved state at start of run() above
+                super.onCancel();
+            }
+        };
+
+        ApplicationManager.getApplication().invokeLater(() -> ProgressManager.getInstance().run(modalTask));
+    }
 
 
+    public JComponent getPackRow(String title, String themePath){
 
-        JPanel packsCol = new JPanel();
-        packsCol.setLayout(new BoxLayout(packsCol, BoxLayout.X_AXIS));
-        packsCol.setBackground(ZeranthiumColors.specialOption1);
+        String manifestPath = themePath + File.separator + "manifest.json";
+
+        JPanel packsRow = new JPanel();
+        packsRow.setLayout(new BoxLayout(packsRow, BoxLayout.X_AXIS));
+        packsRow.setBackground(ZeranthiumColors.specialOption1);
 //        packsCol.setBorder(JBUI.Borders.emptyBottom(30));
-        packsCol.setBorder(JBUI.Borders.empty(10,10,10,30));
+        packsRow.setBorder(JBUI.Borders.empty(10,10,10,30));
 
         JButton loadPackButton = new JButton();
         loadPackButton.setText("Load pack ");
@@ -428,51 +469,28 @@ public class GitPackLoaderJComponent extends JPanel{
         loadPackButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                Task.Modal modalTask = new Task.Modal(null, "Loading Theme Pack", true) {
-                    public void run(@NotNull() final ProgressIndicator indicator) {
-                        //TODO save state beforehand to rollback if cancelled
-                        indicator.setText2("loading assets...");
-
-                        try {
-                            menuConfigurable.loadConfigPack(manifestPath, indicator);
-                        } catch (FileNotFoundException fileNotFoundException) {
-                            fileNotFoundException.printStackTrace();
-                        } catch (JSONException jsonException) {
-
-                            Notification n = new Notification(PowerMode3.NOTIFICATION_GROUP_DISPLAY_ID,
-                                    PowerMode3.NOTIFICATION_GROUP_DISPLAY_ID + ": Error loading config",
-                                    "Could not read manifest.json: " + manifestPath +
-                                            "\n\n" + jsonException.toString(),
-                                    NotificationType.ERROR);
-                            Notifications.Bus.notify(n);
-
-                            jsonException.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        LOGGER.info("cancelling pack load...");
-                        //TODO rollback changes to a saved state at start of run() above
-                        super.onCancel();
-                    }
-                };
-
-                ApplicationManager.getApplication().invokeLater(() -> ProgressManager.getInstance().run(modalTask));
-
+                loadPackModal(manifestPath);
             }
         });
-        packsCol.add(loadPackButton);
+        packsRow.add(loadPackButton);
+
+        JLabel packPreviewLabel = new JLabel();
+        PackScanner ps = new PackScanner();
+        ImageIcon sliderIcon = ps.getPreviewIcon(themePath);
+//        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/pack-logo6.png"));
+        packPreviewLabel.setIcon(sliderIcon);
+        packsRow.add(packPreviewLabel);
 
         //Add Memory header panel
         JPanel packInfoPanel = new JPanel();
         packInfoPanel.setLayout(new BoxLayout(packInfoPanel, BoxLayout.Y_AXIS));
-        packInfoPanel.setBackground(JBColor.CYAN);
+//        packInfoPanel.setBackground(JBColor.CYAN);
+        packInfoPanel.setBackground(JBColor.DARK_GRAY);
         packInfoPanel.setBorder(JBUI.Borders.empty(30));
+//        packInfoPanel.setPreferredSize(new Dimension());
 
         JPanel headerPanel = new JPanel();
-        packsCol.add(packInfoPanel);
+        packsRow.add(packInfoPanel);
 
         JLabel headerLabel = new JLabel(title);
         headerLabel.setFont(new Font("Arial", Font.BOLD, 20));
@@ -484,35 +502,49 @@ public class GitPackLoaderJComponent extends JPanel{
         headerSizeLabel.setBorder(JBUI.Borders.empty(5));
         headerPanel.add(headerSizeLabel);
         headerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        headerPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        headerPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         headerPanel.setMaximumSize(new Dimension(500,100));
+//        headerPanel.setMinimumSize(new Dimension(500,80));
         packInfoPanel.add(headerPanel);
 
         JLabel configsLabel = new JLabel();
+//        configsLabel.setMaximumSize(new Dimension(500,200));
+        configsLabel.setFont(new Font("Arial", Font.BOLD, 12));
+        configsLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        configsLabel.setBorder(JBUI.Borders.empty(5));
+        configsLabel.setOpaque(true);
 
-        PackScanner ps = new PackScanner();
-//        try {
-//            Pack p = ps.scanForPack(manifestPath);
-//            configsLabel.setText(p.getConfigsString());
-//        } catch (FileNotFoundException | JSONException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            Pack p = ps.scanForPack(manifestPath);
+            configsLabel.setText(p.getConfigsString());
+            configsLabel.setBackground(JBColor.LIGHT_GRAY);
+        } catch (FileNotFoundException | JSONException e) {
+            e.printStackTrace();
+            configsLabel.setText("Error loading manifest.json");
+            configsLabel.setFont(new Font("Arial", Font.BOLD, 15));
+            configsLabel.setBackground(JBColor.red);
+            configsLabel.setForeground(Color.black);
+        }
         packInfoPanel.add(configsLabel);
+        packInfoPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        packsRow.add(packInfoPanel);
 
-        packsCol.add(packInfoPanel);
-
-        return packsCol;
+        return packsRow;
     }
 
     public class Pack {
         public int memorySize;
         public ArrayList<String> configs;
 
+        public Pack(){
+            configs = new ArrayList<>();
+        }
+
         public String getConfigsString(){
             StringBuilder sb = new StringBuilder();
-            sb.append("[");
+            sb.append(configs.size() + " Configs used: [");
             for(String s: configs){
-                sb.append(s + " ");
+                sb.append(s + ",   ");
             }
             sb.append("]");
             return sb.toString();
@@ -521,22 +553,36 @@ public class GitPackLoaderJComponent extends JPanel{
 
     public class PackScanner {
 
+        public ImageIcon getPreviewIcon(String packPath){
+            String previewIconPath = packPath + File.separator + "preview.png";
+            File f = new File(previewIconPath);
+
+            ImageIcon sliderIcon;
+            if(f.exists()){
+                sliderIcon = new ImageIcon(previewIconPath);
+            }else{
+                sliderIcon = new ImageIcon(this.getClass().getResource("/icons/pack-logo6.png"));
+            }
+            return sliderIcon;
+        }
+
         public Pack scanForPack(String manifestPath) throws FileNotFoundException, JSONException {
             Pack p = new Pack();
 
-            Path path = Paths.get(manifestPath);
+//            Path path = Paths.get(manifestPath);
             InputStream inputStream = new FileInputStream(manifestPath);
             StringBuilder sb = new StringBuilder();
             Scanner s = new Scanner(inputStream);
             while(s.hasNextLine()){
                 sb.append(s.nextLine());
             }
-            JSONObject jo = new JSONObject(sb.toString());
 
+            JSONObject jo = new JSONObject(sb.toString());
             JSONArray configsToLoad = jo.getJSONArray("configsToLoad");
-            for(int i =0; i< configsToLoad.length(); i++){
+            for (int i = 0; i < configsToLoad.length(); i++) {
                 p.configs.add(configsToLoad.getString(i));
             }
+
 
             return p;
         }

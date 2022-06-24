@@ -49,7 +49,7 @@ public class GitPackLoaderService {
             result.reset().setMode(ResetCommand.ResetType.HARD).call();
             //checkout master
             Ref r = result.checkout().setName("master").call();
-            assert(r.getObjectId().getName().equals("831b714961dc667b62c5ed4aa74c4505a17561a9"));
+//            assert(r.getObjectId().getName().equals("831b714961dc667b62c5ed4aa74c4505a17561a9"));
             System.out.println("found repo @ commit" + r.getObjectId().getName());
 
             found = true;

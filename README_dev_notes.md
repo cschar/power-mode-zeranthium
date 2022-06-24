@@ -1,15 +1,15 @@
-# TODO:
- - move over to kotlin based templates
- https://github.com/JetBrains/intellij-platform-plugin-template
- - upgrade to gradle intellij-plugin 1.0 
- https://github.com/JetBrains/gradle-intellij-plugin/
+
+## TODO:
+
+
+
 
 # Deploying new version
 
  1. Change version in build.gradle 
  2. Update change notes in build.gradle
- 3. Build the jar ex: ```./gradlew :jar```
- 4. upload new .jar file to site
+ 3. build ex: ```./gradlew :buildPlugin --info```
+ 4. upload new .jar file at `zeranthium/build/libs` to site
 
 # logo design
 
@@ -104,10 +104,23 @@ step 1. in File -> project structure -> SDKs ... '+' icon ---> add the IntelliJP
 step 2. set that SDK as the project SDK to have the external library defined to access all intellij.openapi stuff
 
 
+## testing normal
 
-# testing
+`./gradlew :test --info`
+- run a single test
+`./gradlew :test --tests "com.cschar.pmode3.uitest.WriteTextJavaTest.writeSomeText"`
 
-./gradlew :clean :runIdeForUiTests
+# testing ui
+
+- in 1 terminal run 
+`./gradlew :clean :runIdeForUiTests`
+  then open `http://localhost:8082/` to check UI structure
+
+- in another terminal
+all tests: `TEST_TYPE=UI ./gradlew :test`
+single test: `TEST_TYPE=UI ./gradlew :test --tests "com.cschar.pmode3.uitest.WriteTextJavaTest"`
+- 
+
 
 
 ## for example reference of test code

@@ -15,6 +15,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -28,7 +29,8 @@ import static com.cschar.pmode3.uitest.pages.ActionMenuFixtureKt.actionMenuItem;
 import static com.cschar.pmode3.uitest.pages.EditorKt.editor;
 
 @ExtendWith(RemoteRobotExtension.class)
-@Disabled
+//@Disabled
+@EnabledIfEnvironmentVariable(named = "TEST_TYPE", matches = "UI")
 public class WriteTextJavaTest {
 
     private final RemoteRobot remoteRobot = new RemoteRobot("http://127.0.0.1:8082");

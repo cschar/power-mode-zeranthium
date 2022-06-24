@@ -78,7 +78,7 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
     private JCheckBox enableTapAnim;
     private JPanel memoryStatsPanel;
     private JButton anchorConfigButton;
-    private JCheckBox enableMultiLayerChance;
+    private JCheckBox enableMultiLayerChanceCheckbox;
 
 
     private BasicParticleConfig basicParticleConfig;
@@ -169,7 +169,8 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
 //        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/barlarge.png"));
 //        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/pack-logo3.png"));
 //        settingsTabbedPane.addTab("pa", sliderIcon, panel1);
-        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/pack-logo6.png"));
+//        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/pack-logo6.png"));
+        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/pack-logo7.png"));
         settingsTabbedPane.addTab("", sliderIcon, panel1);
 //        GitPackDownloaderComponent jComponent = new GitPackDownloaderComponent("title", this);
         GitPackLoaderJComponent jComponent = new GitPackLoaderJComponent("title", this);
@@ -184,15 +185,15 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
 
 
         /////////////////////////
-        JPanel panel22 = new JPanel();
-//        panel1.setBackground(JBColor.orange);
-        panel22.setBorder(JBUI.Borders.empty(2, 2, 50, 2));
-        panel22.setLayout(new BoxLayout(panel22, BoxLayout.X_AXIS));
-//        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/barlarge.png"));
-//        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/pack-logo3.png"));
-//        settingsTabbedPane.addTab("pa", sliderIcon, panel1);
-        ImageIcon sliderIcon23 = new ImageIcon(this.getClass().getResource("/icons/pack-logo7.png"));
-        settingsTabbedPane.addTab("", sliderIcon23, panel22);
+//        JPanel panel22 = new JPanel();
+////        panel1.setBackground(JBColor.orange);
+//        panel22.setBorder(JBUI.Borders.empty(2, 2, 50, 2));
+//        panel22.setLayout(new BoxLayout(panel22, BoxLayout.X_AXIS));
+////        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/barlarge.png"));
+////        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/pack-logo3.png"));
+////        settingsTabbedPane.addTab("pa", sliderIcon, panel1);
+//        ImageIcon sliderIcon23 = new ImageIcon(this.getClass().getResource("/icons/pack-logo7.png"));
+//        settingsTabbedPane.addTab("", sliderIcon23, panel22);
 
 
         //If user has opened settings, but config values arent loaded yet from filesystem...
@@ -390,9 +391,9 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
         }
 
 
-        enableMultiLayerChance = setCheckBox(col2, "Enable MultiLayer Chance");
+        enableMultiLayerChanceCheckbox = setCheckBox(col2, "Enable MultiLayer Chance");
         if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.MULTI_LAYER_CHANCE)){
-            enableMultiLayerChance.setSelected(true);
+            enableMultiLayerChanceCheckbox.setSelected(true);
         }
 
 
@@ -514,7 +515,7 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
         settings.setSpriteTypeEnabled(enableLockedLayerCheckbox.isSelected(), PowerMode3.ConfigType.LOCKED_LAYER);
         settings.setSpriteTypeEnabled(enableLantern.isSelected(), PowerMode3.ConfigType.LANTERN);
         settings.setSpriteTypeEnabled(enableTapAnim.isSelected(), PowerMode3.ConfigType.TAP_ANIM);
-        settings.setSpriteTypeEnabled(enableMultiLayerChance.isSelected(), PowerMode3.ConfigType.MULTI_LAYER_CHANCE);
+        settings.setSpriteTypeEnabled(enableMultiLayerChanceCheckbox.isSelected(), PowerMode3.ConfigType.MULTI_LAYER_CHANCE);
 
 
         //Sound
@@ -772,6 +773,7 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
             enableMOMACheckBox.setSelected(false);
             enableVineCheckBox.setSelected(false);
             enableMultilayerCheckbox.setSelected(false);
+            enableMultiLayerChanceCheckbox.setSelected(false);
             enableLinkerCheckbox.setSelected(false);
             enableDrosteCheckbox.setSelected(false);
             enableCopyPasteVoid.setSelected(false);
@@ -879,7 +881,7 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
                     multiLayerConfig.loadJSONConfig(configKeyData, path.getParent());
                     break;
                 case "MULTI_LAYER_CHANCE":
-                    enableMultiLayerChance.setSelected(true);
+                    enableMultiLayerChanceCheckbox.setSelected(true);
                     multiLayerChanceConfig.loadJSONConfig(configKeyData, path.getParent());
                     break;
                 case "LOCKED_LAYER":
