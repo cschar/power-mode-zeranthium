@@ -118,7 +118,7 @@ step 2. set that SDK as the project SDK to have the external library defined to 
 
 - in another terminal
 all tests: `TEST_TYPE=UI ./gradlew :test`
-single test: `TEST_TYPE=UI ./gradlew :test --tests "com.cschar.pmode3.uitest.WriteTextJavaTest"`
+single test: `TEST_TYPE=UI ./gradlew :test --tests "com.cschar.pmode3.uitest.OpenSettingsJavaTest"`
 - 
 
 #### testing the demo repo for ui-robot test

@@ -504,9 +504,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
     @Override
     public void componentResized(ComponentEvent e) {
         updateBounds();
-
-        Logger.getInstance(this.getClass()).info("Resized");
-
+//        Logger.getInstance(this.getClass()).info("Resized");
     }
 
     private void updateBounds() {

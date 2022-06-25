@@ -1,11 +1,14 @@
 package com.cschar.pmode3.services;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import org.eclipse.jgit.lib.ProgressMonitor;
 
 import javax.swing.*;
 
 class GitPackLoaderProgressMonitor implements ProgressMonitor {
+
+    private static final com.intellij.openapi.diagnostic.Logger LOGGER = Logger.getInstance(GitPackLoaderProgressMonitor.class.getName());
 
     JLabel statusLabel;
     ProgressIndicator progressIndicator;
@@ -21,10 +24,8 @@ class GitPackLoaderProgressMonitor implements ProgressMonitor {
 
     @Override
     public void start(int totalTasks) {
-
         //2 tasks
-        System.out.println("Starting work on " + totalTasks + " git tasks");
-        System.out.println("--------------------------------");
+        LOGGER.info("Starting work on " + totalTasks + " git tasks");
     }
 
     private int totalWork;
@@ -36,9 +37,7 @@ class GitPackLoaderProgressMonitor implements ProgressMonitor {
         this.totalWork = totalWork;
         progressIndicator.setText2("doing task: " + title);
         currentTask = title;
-
-        System.out.println();
-        System.out.println("Starting task: " + title + " ------- totalWork: " + totalWork);
+        LOGGER.info("Starting task: " + title + " ------- totalWork: " + totalWork);
         //System.out.println("Starting from thread " + Thread.currentThread().getName());
     }
 
@@ -46,9 +45,9 @@ class GitPackLoaderProgressMonitor implements ProgressMonitor {
     public void update(int completed) {
         //https://plugins.jetbrains.com/docs/intellij/general-threading-rules.html#background-processes-and-processcanceledexception
 
-        if (progressIndicator.isCanceled()) {
-            System.out.println("cancelled the task");
-        }
+//        if (progressIndicator.isCanceled()) {
+//            LOGGER.info("task was cancelled");
+//        }
 
         //set the progress indicator here
         double percent = (compl / (double) totalWork) * 100;
@@ -65,31 +64,29 @@ class GitPackLoaderProgressMonitor implements ProgressMonitor {
         statusLabel.repaint();
 
         compl += completed;
-        System.out.print(completed + "-");
-        if (compl % 10 == 0) {
-            System.out.print("|");
-        }
+//        System.out.print(completed + "-");
+//        if (compl % 10 == 0) {
+//            System.out.print("|");
+//        }
 
     }
 
     @Override
     public void endTask() {
-
-        System.out.println("Done");
+        //System.out.println("Ending zeranthium pack download task");
     }
 
     //custom logic to check to cancel process...
     @Override
     public boolean isCancelled() {
 
-        System.out.print(".");
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         if (progressIndicator.isCanceled()) {
-            System.out.println("cancelled the task");
+            LOGGER.info("cancelled the git pack loader task");
             return true;
         }
         return false;

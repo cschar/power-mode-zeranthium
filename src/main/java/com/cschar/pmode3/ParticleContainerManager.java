@@ -44,7 +44,6 @@ public class ParticleContainerManager implements EditorFactoryListener, Disposab
     private PowerMode3 settings;
 
     public ParticleContainerManager(PowerMode3 settings) {
-        LOGGER.info("\n\n----ParticleContainerManager initialized \n\n");
         this.settings = settings;
 
         thread = new Thread(new Runnable() {

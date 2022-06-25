@@ -114,7 +114,7 @@ public class GitPackLoaderJComponent extends JPanel{
                 //TODO Serialize this setting on the PowerMode3 settings
 
                 VirtualFile chosen = FileChooser.chooseFile(fd, null, toSelect);
-                System.out.println("selected" + chosen.getPath());
+                LOGGER.info("selected: " + chosen.getPath() + " as custom download path for zeranthium packs");
 
                 directoryPath = chosen.getPath();
                 setPathLabel.setText("path is: " + chosen.getPath());
@@ -402,7 +402,7 @@ public class GitPackLoaderJComponent extends JPanel{
         loadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Loading...");
+                LOGGER.info("Loading pack for " + customRepoName+"...");
 
                 packsList.removeAll();
                 packsList.validate();
@@ -422,7 +422,7 @@ public class GitPackLoaderJComponent extends JPanel{
 
                 if(themes != null){
                     for(File theme : themes){
-                        System.out.println("--- " + theme.getName());
+                        LOGGER.info("--- loading theme: " + theme.getName());
                         packsList.add(getPackRow(theme.getName(), theme.getPath() ));
                     }
                 }
@@ -558,7 +558,8 @@ public class GitPackLoaderJComponent extends JPanel{
         headerSizeLabel.setOpaque(true);
         headerSizeLabel.setBorder(JBUI.Borders.empty(5));
         headerPanel.add(headerSizeLabel);
-        headerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+//        headerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         headerPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         headerPanel.setMaximumSize(new Dimension(500,100));
 //        headerPanel.setMinimumSize(new Dimension(500,80));

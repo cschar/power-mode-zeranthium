@@ -22,6 +22,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.time.Duration;
@@ -36,11 +37,13 @@ import static java.time.Duration.ofMinutes;
 import static java.time.Duration.ofSeconds;
 
 @ExtendWith(RemoteRobotExtension.class)
+@EnabledIfEnvironmentVariable(named = "TEST_TYPE", matches = "UI")
 public class OpenSettingsJavaTest {
 
     private final RemoteRobot remoteRobot = new RemoteRobot("http://127.0.0.1:8082");
     private final JavaExampleSteps sharedSteps = new JavaExampleSteps(remoteRobot);
     private final Keyboard keyboard = new Keyboard(remoteRobot);
+    private final int LONG_WAIT_5s = 5;
 
     @BeforeAll
     public static void initLogging() {
@@ -66,6 +69,8 @@ public class OpenSettingsJavaTest {
 //        sharedSteps.createNewCommandLineProject();
 //        sharedSteps.closeTipOfTheDay();
 
+
+
         final IdeaFrame idea = remoteRobot.find(IdeaFrame.class, ofSeconds(10));
         waitFor(ofMinutes(5), () -> !idea.isDumbMode());
 
@@ -86,11 +91,13 @@ public class OpenSettingsJavaTest {
                     DialogFixture.byTitle("Settings"), Duration.ofSeconds(3));
 
             settingsDialog.find(  JTreeFixture.class,
-                    byXpath("//div[@class='MyTree']")).clickRow(0);
+                    byXpath("//div[@class='MyTree']"),
+                    Duration.ofSeconds(3)).clickRow(0);
 
 
             settingsDialog.find(ComponentFixture.class,
-                    byXpath("//div[@text='Power Mode - Zeranthium']"), Duration.ofSeconds(3)).click();
+                    byXpath("//div[@text='Power Mode - Zeranthium']"),
+                    Duration.ofSeconds(3)).click();
 
 
             settingsDialog.find(ComponentFixture.class,
@@ -105,21 +112,21 @@ public class OpenSettingsJavaTest {
             //can do assert here
             settingsDialog.find(ComponentFixture.class,
                     byXpath("//div[@text='Ready']"),
-                    Duration.ofSeconds(2)).click();
+                    Duration.ofSeconds(5)).click();
 
             settingsDialog.find(ComponentFixture.class,
                     byXpath("//div[@text='DOWNLOAD']"),
-                    Duration.ofSeconds(2)).click();
+                    Duration.ofSeconds(5)).click();
 
             //assert here
             settingsDialog.find(JLabelFixture.class,
                     byXpath("//div[@text='Downloading...']"),
-                    Duration.ofSeconds(2)).click();
+                    Duration.ofSeconds(5)).click();
 
 
             settingsDialog.find(ComponentFixture.class,
                     byXpath("//div[@text.key='button.cancel']"),
-                    Duration.ofSeconds(2)).click();
+                    Duration.ofSeconds(5)).click();
 
 //            GitPackLoaderService gitService = ApplicationManager.getApplication().getService(GitPackLoaderService.class);
 //
@@ -127,7 +134,7 @@ public class OpenSettingsJavaTest {
 
             idea.find(ComponentFixture.class,
                     byXpath("//div[@mytext='Cloning zeranthium-extras-vol1...']"),
-                    Duration.ofSeconds(5)).click();
+                    Duration.ofSeconds(LONG_WAIT_5s)).click();
 
             idea.find(ComponentFixture.class,
                     byXpath("//div[@myicon='stop.svg']"),
@@ -145,26 +152,31 @@ public class OpenSettingsJavaTest {
                     DialogFixture.byTitle("Settings"), Duration.ofSeconds(3));
 
             settingsRentry.find(  JTreeFixture.class,
-                    byXpath("//div[@class='MyTree']")).clickRow(0);
+                    byXpath("//div[@class='MyTree']"),
+                    Duration.ofSeconds(LONG_WAIT_5s)).clickRow(0);
 
             settingsRentry.find(ComponentFixture.class,
-                    byXpath("//div[@text='Power Mode - Zeranthium']"), Duration.ofSeconds(3)).click();
+                    byXpath("//div[@text='Power Mode - Zeranthium']"),
+                    Duration.ofSeconds(LONG_WAIT_5s)).click();
 
             settingsRentry.find(ComponentFixture.class,
                     byXpath("//div[@accessiblename.key='icon.nodes.nodePlaceholder.tooltip' and @class='JLabel']"),
-                    Duration.ofSeconds((3))).click();
+                    Duration.ofSeconds((LONG_WAIT_5s))).click();
 
             settingsRentry.find(ComponentFixture.class,
                     byXpath("//div[@text='zeranthium-extras-vol1']"),
-                    Duration.ofSeconds(3)).click();
+                    Duration.ofSeconds(LONG_WAIT_5s)).click();
 
             //should be ready since we cancelled downloading state
             assert(settingsRentry.find(JLabelFixture.class,
                     byXpath("//div[@text='Ready']"),
-                    Duration.ofSeconds(2)).hasText("Ready"));
+                    Duration.ofSeconds(LONG_WAIT_5s)).hasText("Ready"));
 
+            //exit settings menu
+            settingsRentry.find(ComponentFixture.class,
+                    byXpath("//div[@text.key='button.cancel']"),
+                    Duration.ofSeconds(LONG_WAIT_5s)).click();
         });
-
 
     }
 
@@ -201,31 +213,31 @@ public class OpenSettingsJavaTest {
 
             settingsDialog.find(ComponentFixture.class,
                     byXpath("//div[@accessiblename.key='icon.nodes.nodePlaceholder.tooltip' and @class='JLabel']"),
-                    Duration.ofSeconds(1)).click();
+                    Duration.ofSeconds(LONG_WAIT_5s)).click();
 
             settingsDialog.find(ComponentFixture.class,
                     byXpath("//div[@text='zeranthium-extras-vol1']"),
-                    Duration.ofSeconds(1)).click();
+                    Duration.ofSeconds(LONG_WAIT_5s)).click();
 
 
             //can do assert here
             settingsDialog.find(ComponentFixture.class,
                     byXpath("//div[@text='Ready']"),
-                    Duration.ofSeconds(1)).click();
+                    Duration.ofSeconds(LONG_WAIT_5s)).click();
 
             settingsDialog.find(ComponentFixture.class,
                     byXpath("//div[@text='DOWNLOAD']"),
-                    Duration.ofSeconds(1)).click();
+                    Duration.ofSeconds(LONG_WAIT_5s)).click();
 
             //assert here
             settingsDialog.find(JLabelFixture.class,
                     byXpath("//div[@text='Downloading...']"),
-                    Duration.ofSeconds(1)).click();
+                    Duration.ofSeconds(LONG_WAIT_5s)).click();
 
 
             settingsDialog.find(ComponentFixture.class,
                     byXpath("//div[@text.key='button.cancel']"),
-                    Duration.ofSeconds(1)).click();
+                    Duration.ofSeconds(LONG_WAIT_5s)).click();
         });
 
         step("re-enter download menu, ensure downloading label is correct", () -> {
@@ -238,17 +250,17 @@ public class OpenSettingsJavaTest {
             actionMenu(remoteRobot, "File").click();
             actionMenuItem(remoteRobot, "Settings...").click();
             final DialogFixture settingsRentry = remoteRobot.find(DialogFixture.class,
-                    DialogFixture.byTitle("Settings"), Duration.ofSeconds(1));
+                    DialogFixture.byTitle("Settings"), Duration.ofSeconds(LONG_WAIT_5s));
             settingsRentry.find(  JTreeFixture.class,
-                    byXpath("//div[@class='MyTree']")).clickRow(0);
+                    byXpath("//div[@class='MyTree']"), Duration.ofSeconds(LONG_WAIT_5s)).clickRow(0);
             settingsRentry.find(ComponentFixture.class,
-                    byXpath("//div[@text='Power Mode - Zeranthium']"), Duration.ofSeconds(1)).click();
+                    byXpath("//div[@text='Power Mode - Zeranthium']"), Duration.ofSeconds(LONG_WAIT_5s)).click();
             settingsRentry.find(ComponentFixture.class,
                     byXpath("//div[@accessiblename.key='icon.nodes.nodePlaceholder.tooltip' and @class='JLabel']"),
-                    Duration.ofSeconds(1)).click();
+                    Duration.ofSeconds(LONG_WAIT_5s)).click();
             settingsRentry.find(ComponentFixture.class,
                     byXpath("//div[@text='zeranthium-extras-vol1']"),
-                    Duration.ofSeconds(1)).click();
+                    Duration.ofSeconds(LONG_WAIT_5s)).click();
 
             //should be ready since we cancelled downloading state
             assert(settingsRentry.find(JLabelFixture.class,
