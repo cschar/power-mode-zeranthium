@@ -11,13 +11,20 @@ import org.eclipse.jgit.lib.Ref;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.io.IOException;
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.List;
 
 //UI  https://jetbrains.github.io/ui/principles/groups_of_controls/
 public class GitPackLoaderService {
 
+    /** used to keep track of whether to change label to 'downloading...' when we reopen the GitPackLoaderJComponent panel */
+    public HashMap<String, GitPackLoaderProgressMonitor> runningMonitors;
 
-    public GitPackLoaderService(){
+    public GitPackLoaderService()
+    {
         System.out.println("intiialized GitService");
+        runningMonitors = new HashMap<>();
     }
 
 

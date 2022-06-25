@@ -121,6 +121,13 @@ all tests: `TEST_TYPE=UI ./gradlew :test`
 single test: `TEST_TYPE=UI ./gradlew :test --tests "com.cschar.pmode3.uitest.WriteTextJavaTest"`
 - 
 
+#### testing the demo repo for ui-robot test
+
+terminal 1:
+./gradlew ui-test-example:clean ui-test-example:runIdeForUiTests &
+./gradlew ui-test-example:clean ui-test-example:runIdeForUiTests --args="C:\\Users\\codywin\\IdeaProjects\\untitled13\\src\\App22336.kt"
+terminal2
+./gradlew ui-test-example:test --tests "SayHelloJavaTest"
 
 
 ## for example reference of test code

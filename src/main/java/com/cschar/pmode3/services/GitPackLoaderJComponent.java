@@ -3,18 +3,27 @@ package com.cschar.pmode3.services;
 import com.cschar.pmode3.PowerMode3;
 import com.cschar.pmode3.PowerMode3ConfigurableUI2;
 import com.cschar.pmode3.config.common.ui.ZeranthiumColors;
+import com.intellij.ide.DataManager;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.DataConstants;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
+import com.intellij.openapi.progress.util.BackgroundTaskUtil;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.tasks.LocalTask;
+import com.intellij.tasks.TaskManager;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTabbedPane;
@@ -33,6 +42,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
@@ -82,7 +92,7 @@ public class GitPackLoaderJComponent extends JPanel{
         JButton SetPathButton = new JButton();
         SetPathButton.setText("Set Download Path");
 
-//        downloadBUtton.setSize(300,200);
+
         SetPathButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -294,25 +304,72 @@ public class GitPackLoaderJComponent extends JPanel{
 
         JLabel statusLabel = new JLabel();
 
-        if(statusLabel.getText().equals("")) statusLabel.setText("status - Ready.."); //if we reopen panel, dont reset
+        if(statusLabel.getText().equals("")){
+            statusLabel.setText("Ready"); //if we reopen panel, dont reset
+        }
+
+        GitPackLoaderService gitService = ApplicationManager.getApplication().getService(GitPackLoaderService.class);
+        if(gitService.runningMonitors.get(customRepoName) != null){
+            statusLabel.setText("Downloading...");
+        }
+
+
+
         statusLabel.setBackground(jbDarkGreen);
         statusLabel.setOpaque(true);
         statusLabel.setFont(new Font("Arial", Font.BOLD, 15));
         statusLabel.setBorder(JBUI.Borders.empty(5));
+
+//        DataContext dataContext = (DataContext) DataManager.getDataProvider(this);
+//        Project project = (Project) dataContext.getData(CommonDataKeys.PROJECT);
+//
+//        System.out.println("project is " + project.getName());
+//
+////        List<LocalTask> localTasks = TaskManager.getManager(project).getLocalTasks();
+////        TaskManager.getManager(project).
+//
+//        ProgressManager.getInstance().
+
 
         JButton downloadBUtton = new JButton();
         downloadBUtton.setText("DOWNLOAD");
         downloadBUtton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Task.Backgroundable bgTask2 = new Task.Backgroundable(null, "Cloning zeranthium-extras...",
-                        true, null) {
+                Task.Backgroundable bgTask2 = new Task.Backgroundable(null,
+                                                                        "Cloning "+customRepoName+"...",
+                                                                true, null) {
+
+                    @Override
+                    public void onCancel() {
+                        super.onCancel();
+                        GitPackLoaderService gitService = ApplicationManager.getApplication().getService(GitPackLoaderService.class);
+                        gitService.runningMonitors.remove(customRepoName);
+                    }
+
+                    @Override
+                    public void onFinished() {
+                        GitPackLoaderService gitService = ApplicationManager.getApplication().getService(GitPackLoaderService.class);
+                        gitService.runningMonitors.remove(customRepoName);
+                        super.onFinished();
+                    }
+
                     @Override
                     public void run(@NotNull ProgressIndicator progressIndicator) {
                         GitPackLoaderService gitService = ApplicationManager.getApplication().getService(GitPackLoaderService.class);
 
+
+                        //need to save this progressMonitor to check if its still going each time we load panel
                         ProgressMonitor progressMonitor = new GitPackLoaderProgressMonitor(downloadStatusLabel, progressIndicator);
-                        statusLabel.setText("Status - Downloading...");
+//                        statusLabel.setText("Status - Downloading...");
+
+                        if(gitService.runningMonitors.get(customRepoName) == null){
+                            gitService.runningMonitors.put(customRepoName, (GitPackLoaderProgressMonitor) progressMonitor);
+                        }
+
+
+                        statusLabel.setText("Downloading...");
+                        statusLabel.setToolTipText("git repo download status");
                         validate();
                         repaint();
                         try {

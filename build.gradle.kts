@@ -45,7 +45,7 @@ repositories {
     }
 }
 
-var remoteRobotVersion = "0.11.4"
+var remoteRobotVersion = "0.11.14"
 
 dependencies {
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.17.1")
