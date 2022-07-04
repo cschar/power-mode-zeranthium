@@ -36,6 +36,10 @@ https://www.plugin-dev.com/intellij/general/plugin-initial-load/
 [x] - better squashed UI on packRow component list
 [x] - catch error when we try to download a project, close settings, reopen settings and click 'download' again
 [x] - catch download cancelled exception
+[ ] - show preview if preview.png in pack directory
+[ ] - write script to convert folder of images to best compression using quant program
+        https://askubuntu.com/questions/1011550/how-can-i-convert-all-video-files-in-nested-folders-batch-conversion
+  ### OR JUST USE PNGoo .... write to same folder structure etc...
 
 ## TESTS
 

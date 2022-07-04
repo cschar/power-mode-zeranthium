@@ -1,8 +1,4 @@
 
-## TODO:
-
-
-
 
 # Deploying new version
 
@@ -16,6 +12,8 @@
 -- SVG editor for logo here:
 https://editor.method.ac/
 
+# any new images added, make sure to run through quant image compression
+https://pngquant.org/
 
 # LICENSING ... 
 
@@ -114,6 +112,8 @@ step 2. set that SDK as the project SDK to have the external library defined to 
 
 - in 1 terminal run 
 `./gradlew :clean :runIdeForUiTests`
+ `./gradlew :clean :runIdeForUiTests --args="C:\\Users\\codywin\\IdeaProjects\\untitled13\\src\\App22336.kt"`
+
   then open `http://localhost:8082/` to check UI structure
 
 - in another terminal
@@ -125,7 +125,7 @@ single test: `TEST_TYPE=UI ./gradlew :test --tests "com.cschar.pmode3.uitest.Ope
 
 terminal 1:
 ./gradlew ui-test-example:clean ui-test-example:runIdeForUiTests &
-./gradlew ui-test-example:clean ui-test-example:runIdeForUiTests --args="C:\\Users\\codywin\\IdeaProjects\\untitled13\\src\\App22336.kt"
+`./gradlew ui-test-example:clean ui-test-example:runIdeForUiTests --args="C:\\Users\\codywin\\IdeaProjects\\untitled13\\src\\App22336.kt"`
 terminal2
 ./gradlew ui-test-example:test --tests "SayHelloJavaTest"
 

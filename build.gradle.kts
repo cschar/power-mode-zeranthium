@@ -66,8 +66,8 @@ dependencies {
     // https://packages.jetbrains.team/maven/p/ij/intellij-dependencies/com/intellij/remoterobot/
 
     // https://github.com/JetBrains/intellij-ui-test-robot
-    testImplementation("com.intellij.remoterobot:remote-robot:" + "0.11.4")
-    testImplementation("com.intellij.remoterobot:remote-fixtures:" + "0.11.4")
+    testImplementation("com.intellij.remoterobot:remote-robot:" + remoteRobotVersion)
+    testImplementation("com.intellij.remoterobot:remote-fixtures:" + remoteRobotVersion)
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.0")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.2")
@@ -248,6 +248,7 @@ tasks {
         systemProperty("robot-server.port", "8082")
         systemProperty("ide.mac.message.dialogs.as.sheets", "false")
         systemProperty("jb.privacy.policy.text", "<!--999.999-->")
+        systemProperty("idea.trust.all.projects", "true")
         systemProperty("jb.consents.confirmation.enabled", "false")
     }
 

@@ -1,6 +1,7 @@
 package com.cschar.pmode3;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -16,6 +17,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 import com.intellij.util.SmartList;
+import com.intellij.util.xml.dom.XmlDomReader;
+import com.intellij.util.xml.dom.XmlElement;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.hamcrest.CoreMatchers;
 import org.jdom.Document;
@@ -55,6 +58,7 @@ public class PowerMode3Test extends LightPlatform4TestCase {  //This boots up th
     @Test
     public void testPowerMode3_serialization() throws IOException, JDOMException {
         SAXBuilder saxBuilder = new SAXBuilder();
+        // XmlElement el = XmlDomReader.readXmlAsModel(Files.newInputStream(inputFile.toPath()))
         File inputFile = new File("build/resources/test/save_config.xml");
         Document document = saxBuilder.build(inputFile);
         Element zeranthiumComponentEl = document.getRootElement().getChildren().get(0);

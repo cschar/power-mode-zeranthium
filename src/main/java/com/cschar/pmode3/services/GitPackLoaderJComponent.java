@@ -57,7 +57,7 @@ public class GitPackLoaderJComponent extends JPanel{
     public String directoryPath;
     private JComponent gitRepoTabbedPane;
 
-    private Color jbDarkGreen = JBColor.green.getDarkVariant();
+    private Color jbDarkGreen = JBColor.green;
 
     public GitPackLoaderJComponent(String title, PowerMode3ConfigurableUI2 menuConfigurable){
 
@@ -85,7 +85,7 @@ public class GitPackLoaderJComponent extends JPanel{
         setPathLabel.setMaximumSize(new Dimension(700,50));
 
 //        setPathLabel.setBackground(JBColor.gray);
-        setPathLabel.setBorder(JBUI.Borders.customLineBottom(JBColor.gray));
+//        setPathLabel.setBorder(JBUI.Borders.customLineBottom(JBColor.gray));
         setPathLabel.setOpaque(true);
         packsPanel.add(setPathLabel);
 
@@ -488,11 +488,11 @@ public class GitPackLoaderJComponent extends JPanel{
                             NotificationType.ERROR);
                     Notifications.Bus.notify(n);
 
-                    int result = Messages.showYesNoDialog(null,
-                            "<html> <h1> Load config pack? </h1>" +
-                                    "Error loading config pack..." +
-                                    "</html>",
-                            "LOAD PACK","yes","no", null);
+//                    int result = Messages.showYesNoDialog(null,
+//                            "<html> <h1> Load config pack? </h1>" +
+//                                    "Error loading config pack..." +
+//                                    "</html>",
+//                            "LOAD PACK","yes","no", null);
 
                     jsonException.printStackTrace();
                 }
@@ -618,6 +618,9 @@ public class GitPackLoaderJComponent extends JPanel{
             ImageIcon sliderIcon;
             if(f.exists()){
                 sliderIcon = new ImageIcon(previewIconPath);
+                Image sliderIconImage = sliderIcon.getImage(); // transform it
+                Image sliderIconResized = sliderIconImage.getScaledInstance(150, 150,  java.awt.Image.SCALE_SMOOTH);
+                sliderIcon = new ImageIcon(sliderIconResized);
             }else{
                 sliderIcon = new ImageIcon(this.getClass().getResource("/icons/pack-logo6.png"));
             }

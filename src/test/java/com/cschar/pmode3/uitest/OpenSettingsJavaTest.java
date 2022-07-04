@@ -101,7 +101,8 @@ public class OpenSettingsJavaTest {
 
 
             settingsDialog.find(ComponentFixture.class,
-                    byXpath("//div[@accessiblename.key='icon.nodes.nodePlaceholder.tooltip' and @class='JLabel']"),
+//                    byXpath("//div[@accessiblename.key='icon.nodes.nodePlaceholder.tooltip' and @class='JLabel']"),
+                    byXpath("//div[@text='packs']"),
                     Duration.ofSeconds((3))).click();
 
             settingsDialog.find(ComponentFixture.class,
@@ -160,7 +161,8 @@ public class OpenSettingsJavaTest {
                     Duration.ofSeconds(LONG_WAIT_5s)).click();
 
             settingsRentry.find(ComponentFixture.class,
-                    byXpath("//div[@accessiblename.key='icon.nodes.nodePlaceholder.tooltip' and @class='JLabel']"),
+                    byXpath("//div[@text='packs']"),
+//                    byXpath("//div[@accessiblename.key='icon.nodes.nodePlaceholder.tooltip' and @class='JLabel']"),
                     Duration.ofSeconds((LONG_WAIT_5s))).click();
 
             settingsRentry.find(ComponentFixture.class,
@@ -212,7 +214,8 @@ public class OpenSettingsJavaTest {
 
 
             settingsDialog.find(ComponentFixture.class,
-                    byXpath("//div[@accessiblename.key='icon.nodes.nodePlaceholder.tooltip' and @class='JLabel']"),
+                    byXpath("//div[@text='packs']"),
+//                    byXpath("//div[@accessiblename.key='icon.nodes.nodePlaceholder.tooltip' and @class='JLabel']"),
                     Duration.ofSeconds(LONG_WAIT_5s)).click();
 
             settingsDialog.find(ComponentFixture.class,
@@ -256,7 +259,8 @@ public class OpenSettingsJavaTest {
             settingsRentry.find(ComponentFixture.class,
                     byXpath("//div[@text='Power Mode - Zeranthium']"), Duration.ofSeconds(LONG_WAIT_5s)).click();
             settingsRentry.find(ComponentFixture.class,
-                    byXpath("//div[@accessiblename.key='icon.nodes.nodePlaceholder.tooltip' and @class='JLabel']"),
+                    byXpath("//div[@text='packs']"),
+//                    byXpath("//div[@accessiblename.key='icon.nodes.nodePlaceholder.tooltip' and @class='JLabel']"),
                     Duration.ofSeconds(LONG_WAIT_5s)).click();
             settingsRentry.find(ComponentFixture.class,
                     byXpath("//div[@text='zeranthium-extras-vol1']"),
