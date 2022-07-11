@@ -26,6 +26,7 @@ public class SpriteDataAnimated  extends SpriteData {
     public int speedRate = 2;
     public boolean isCyclic=false;
     public int val2 =20;
+    public int val3 = 0;
 
     public int previewSize=60;
 
@@ -41,13 +42,14 @@ public class SpriteDataAnimated  extends SpriteData {
     private double totalLoadedAssetSizeMB =0;
 
     public SpriteDataAnimated(int previewSize, boolean enabled, float scale, int speedRate, String defaultPath, String customPath,
-                              boolean isCyclic, int val2, float alpha, int val1) {
+                              boolean isCyclic, int val2, float alpha, int val1, int val3) {
         super(enabled, scale, val1, defaultPath, customPath,false);
 
         this.previewSize = previewSize;
         this.speedRate = speedRate;
         this.isCyclic = isCyclic;
         this.val2 = val2; //maxNumCYcleParticles
+        this.val3 = val3; //max particle length
         this.alpha = alpha;
         if(this.alpha < 0.0f) this.alpha = 0.f;
         if(this.alpha > 1.0f) this.alpha = 1.0f;
@@ -254,9 +256,10 @@ public class SpriteDataAnimated  extends SpriteData {
             jo.put("defaultPath",this.defaultPath);
             jo.put("customPath",this.customPath);
             jo.put("isCyclic",this.isCyclic);
-            jo.put("val2",this.val2);
             jo.put("alpha",this.alpha);
             jo.put("val1",this.val1);
+            jo.put("val2",this.val2);
+            jo.put("val3",this.val3);
 
 
         }catch(JSONException e){
@@ -267,32 +270,67 @@ public class SpriteDataAnimated  extends SpriteData {
     }
 
     public static SpriteDataAnimated fromJsonObjectString(String s){
-
-
         SpriteDataAnimated sd = null;
         try {
             JSONObject jo = new JSONObject(s);
-            sd =  new SpriteDataAnimated(
-                    jo.getInt("previewSize"),
-                    jo.getBoolean("enabled"),
-                    (float) jo.getDouble("scale"),
-                    jo.getInt("speedRate"),
-                    jo.getString("defaultPath"),
-                    jo.getString("customPath"),
-                    jo.getBoolean("isCyclic"),
-                    jo.getInt("val2"),
-                    (float) jo.getDouble("alpha"),
-                    jo.getInt("val1"));
-
-
+            return fromJSONObject(jo);
         }catch(JSONException e){
             LOGGER.log(Level.SEVERE,e.toString(),e);
         }
+        return sd;
+    }
 
-//public SpriteDataAnimated(int previewSize, boolean enabled, float scale, int speedRate, String defaultPath, String customPath,
-//        boolean isCyclic, int val2, float alpha, int val1) {
+    public static SpriteDataAnimated fromJSONObject(JSONObject jo){
+        SpriteDataAnimated sd = null;
+            //TODO REMOVE PREVIEW SIZE
+            sd =  new SpriteDataAnimated(
+
+                  60,
+//                    jo.getInt("previewSize"),
+
+                    (Boolean) safeUnwrap(false, "enabled", jo),
+//                    (float) jo.getDouble("scale"),
+                    (float) safeUnwrap(0.0f, "scale", jo),
+//                    jo.getInt("speedRate"),
+                    (Integer) safeUnwrap(0, "speedRate", jo),
+//                    jo.getString("defaultPath"),
+                    (String) safeUnwrap("", "defaultPath", jo),
+//                    jo.getString("customPath"),
+                    (String) safeUnwrap("", "customPath", jo),
+//                    jo.getBoolean("isCyclic"),
+                    (Boolean) safeUnwrap(false, "isCyclic", jo),
+//                    jo.getInt("val2"),
+                    (Integer) safeUnwrap(0, "val2", jo),
+//                    (float) jo.getDouble("alpha"),
+                    (float) safeUnwrap(0.0f, "alpha", jo),
+//                    jo.getInt("val1"),
+                    (Integer) safeUnwrap(0, "val1", jo),
+//                    jo.getInt("val3")
+                    (Integer) safeUnwrap(-1, "val3", jo)
+            );
 
         return sd;
+    }
+
+    private static Object safeUnwrap( Object myDefault, String inputValue, JSONObject jo) {
+        try {
+            if(myDefault.getClass().equals(Boolean.class)){
+                return jo.getBoolean(inputValue);
+            }else if(myDefault.getClass().equals(Double.class)){
+                return (float) jo.getDouble(inputValue);
+            }else if(myDefault.getClass().equals(Float.class)){
+                return (float) jo.getDouble(inputValue);
+            }else if(myDefault.getClass().equals(Integer.class)){
+                return jo.getInt(inputValue);
+            }else if(myDefault.getClass().equals(String.class)){
+                return jo.getString(inputValue);
+            }
+        } catch (Exception e) {
+            LOGGER.warning("Could not unwrap value: " + inputValue);
+            return myDefault;
+        }
+        LOGGER.warning("Could not identify value to unwrap: " + inputValue);
+        return 0;
     }
 
 

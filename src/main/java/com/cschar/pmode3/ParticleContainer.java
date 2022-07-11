@@ -163,7 +163,8 @@ public class ParticleContainer extends JComponent implements ComponentListener {
                         LanternConfig.TRACER_ENABLED(settings),
                         LanternConfig.MOVE_WITH_CARET(settings),
                         LanternConfig.CARET_MOVE_SPEED(settings),
-                        LanternConfig.IS_CYCLIC_ENABLED(settings));
+                        LanternConfig.IS_CYCLIC_ENABLED(settings),
+                        LanternConfig.ADD_LOOP(settings));
                 particles.add(l);
             }
 

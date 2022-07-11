@@ -171,7 +171,8 @@ public class TapAnimConfig extends BaseConfigPanel {
 //                    1,
                     jo.getInt("val2"), //val2  xoffset
                     (float) jo.getDouble("alpha"),
-                    jo.getInt("val1")); //val1  yoffset
+                    jo.getInt("val1"),
+                    0); //val1  yoffset
 
 
             spriteDataAnimated.set(i, sd);

@@ -303,7 +303,8 @@ public class LizardConfig extends BaseConfigPanel{
                 false,
                 1, //no use
                 (float) jo.getDouble("alpha"),
-                jo.has("val1") ? Math.max(1, Math.min(1000, jo.getInt("val1"))): 10); //weight
+                jo.has("val1") ? Math.max(1, Math.min(1000, jo.getInt("val1"))): 10,
+                0); //weight
 
         return sd;
     }

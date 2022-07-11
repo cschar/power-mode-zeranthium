@@ -41,6 +41,7 @@ public class LanternConfig extends BaseConfigPanel {
     private JTextField maxParticlesTextField;
 
     private JCheckBox moveWithCaret;
+    private JCheckBox addLoop;
     private JTextField moveSpeedTextField;
 
 
@@ -103,10 +104,12 @@ public class LanternConfig extends BaseConfigPanel {
         JPanel caretMovementPanel = new JPanel();
         caretMovementPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         caretMovementPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        caretMovementPanel.setMaximumSize(new Dimension(500,100));
+        caretMovementPanel.setMaximumSize(new Dimension(500,50));
 //        this.moveWithCaret = new JCheckBox("move with Caret?");
         this.moveWithCaret = new JCheckBox("move with caret/mouse?");
         caretMovementPanel.add(moveWithCaret);
+
+
         this.moveSpeedTextField = new JTextField();
 //        this.moveSpeedTextField.setEditable(false);
         caretMovementPanel.add(Config.populateTextFieldPanel(this.moveSpeedTextField, "speed (0.01 - 1.0)"));
@@ -114,7 +117,15 @@ public class LanternConfig extends BaseConfigPanel {
         caretMovementPanel.setBackground(ZeranthiumColors.specialOption1);
         firstCol.add(caretMovementPanel);
 
-
+        JPanel addLoopPanel = new JPanel();
+        addLoopPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        addLoopPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        addLoopPanel.setMaximumSize(new Dimension(500,50));
+        addLoopPanel.setOpaque(true);
+        addLoopPanel.setBackground(ZeranthiumColors.specialOption1);
+        this.addLoop = new JCheckBox("add loop?");
+        addLoopPanel.add(addLoop);
+        firstCol.add(addLoopPanel);
 
         this.maxLinksTextField = new JTextField();
 //        this.maxAnchorsToUse.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -213,6 +224,7 @@ public class LanternConfig extends BaseConfigPanel {
 
         this.tracerEnabledCheckBox.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.LANTERN,"tracerEnabled", true));
 
+        this.addLoop.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.LANTERN,"addLoop", true));
         this.moveWithCaret.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.LANTERN,"moveWithCaretEnabled", true));
         this.moveSpeedTextField.setText(String.valueOf(Config.getFloatProperty(settings, PowerMode3.ConfigType.LANTERN,"movespeed", 1.0f)));
         this.maxLinksTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LANTERN,"maxLinks", 20)));
@@ -252,6 +264,10 @@ public class LanternConfig extends BaseConfigPanel {
         for(int i =0; i<tableData.length(); i++){
             JSONObject jo = tableData.getJSONObject(i);
 
+            //when a val3 does not exist, the default value is -1,
+            //for an unset val3 in lantern context, we set it to value 100
+            int safeSetVal3 = jo.getInt("val3") == -1 ? 100 : jo.getInt("val3");
+//            SpriteDataAnimated sd = SpriteDataAnimated.fromJSONObject(jo);
             SpriteDataAnimated sd =  new SpriteDataAnimated(
                     PREVIEW_SIZE,
                     jo.getBoolean("enabled"),
@@ -262,7 +278,8 @@ public class LanternConfig extends BaseConfigPanel {
                     jo.getBoolean("isCyclic"),
                     jo.getInt("val2"), //val2 //repeat every n links
                     (float) jo.getDouble("alpha"),
-                    jo.getInt("val1")); //val1  //offset to start on links
+                    jo.getInt("val1"), //val1  //offset to start on links
+                    safeSetVal3);
 
 
             spriteDataAnimated.set(i, sd);
@@ -274,6 +291,7 @@ public class LanternConfig extends BaseConfigPanel {
 
 
 
+        settings.setSpriteTypeProperty(PowerMode3.ConfigType.LANTERN, "addLoop", String.valueOf(addLoop.isSelected()));
         settings.setSpriteTypeProperty(PowerMode3.ConfigType.LANTERN, "moveWithCaretEnabled", String.valueOf(moveWithCaret.isSelected()));
         settings.setSpriteTypeProperty(PowerMode3.ConfigType.LANTERN, "movespeed",
                 String.valueOf(Config.getJTextFieldWithinBoundsFloat(this.moveSpeedTextField,
@@ -300,7 +318,8 @@ public class LanternConfig extends BaseConfigPanel {
         ParticleSpriteLinkerAnchor.MAX_CYCLE_PARTICLES = LinkerConfig.MAX_CYCLE_PARTICLES(settings);
 
 
-        settings.setSerializedSpriteDataAnimated(LanternConfig.spriteDataAnimated, PowerMode3.ConfigType.LANTERN);
+        settings.setSerializedSpriteDataAnimated(LanternConfig.spriteDataAnimated,
+                                                 PowerMode3.ConfigType.LANTERN);
     }
 
 
@@ -320,6 +339,7 @@ public class LanternConfig extends BaseConfigPanel {
 
 
 
+
     public static boolean IS_CYCLIC_ENABLED(PowerMode3 settings){
         return Config.getBoolProperty(settings, PowerMode3.ConfigType.LANTERN, "isCyclicEnabled");
     }
@@ -330,6 +350,10 @@ public class LanternConfig extends BaseConfigPanel {
 
     public static boolean MOVE_WITH_CARET(PowerMode3 settings){
         return Config.getBoolProperty(settings, PowerMode3.ConfigType.LANTERN, "moveWithCaretEnabled",true);
+    }
+
+    public static boolean ADD_LOOP(PowerMode3 settings){
+        return Config.getBoolProperty(settings, PowerMode3.ConfigType.LANTERN, "addLoop",true);
     }
 
     //TODO PUT THIS IN TABLE as val4 , make one row change all other rows ugh
@@ -364,7 +388,8 @@ class LanternTableModel extends AbstractConfigTableModel {
             "reset",
             "alpha",
             "offset",
-            "repeat every"
+            "repeat every",
+            "abs limit"
 
     };
 
@@ -381,6 +406,7 @@ class LanternTableModel extends AbstractConfigTableModel {
             String.class,
             JButton.class,
             Float.class,
+            Integer.class,
             Integer.class,
             Integer.class
     };
@@ -451,7 +477,8 @@ class LanternTableModel extends AbstractConfigTableModel {
                 return d.val1;
             case 9: // maxParticles --> repeatEvery
                 return d.val2;
-
+            case 10: // max length
+                return d.val3;
         }
 
         throw new IllegalArgumentException();
@@ -508,6 +535,12 @@ class LanternTableModel extends AbstractConfigTableModel {
                 v1 = Math.max(1, v1);
                 v1 = Math.min(v1,100);
                 d.val2 = v1;
+                return;
+            case 10:
+                int v3 = (Integer) value;
+                v3 = Math.max(1, v3);
+                v3 = Math.min(v3,100);
+                d.val3 = v3;
                 return;
 
         }

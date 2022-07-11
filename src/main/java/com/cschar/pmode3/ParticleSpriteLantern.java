@@ -18,6 +18,7 @@
 package com.cschar.pmode3;
 
 import com.cschar.pmode3.config.LanternConfig;
+import com.cschar.pmode3.config.common.SpriteData;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.intellij.openapi.editor.Editor;
 import org.jetbrains.annotations.NotNull;
@@ -31,14 +32,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class ParticleSpriteLantern extends Particle{
 
-
-
-
-
     public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
-
-    static {}
-
 
     public static int typeX;
     public static int typeY;
@@ -61,6 +55,8 @@ public class ParticleSpriteLantern extends Particle{
     int randomNum50;
     int randomNum100;
     int randomNum200;
+
+    /** max global links, can override maxLinks set in spriteData */
     private int maxLinks = 0;
     private boolean tracerEnabled = true;
     private boolean moveWithCaret = false;
@@ -68,21 +64,25 @@ public class ParticleSpriteLantern extends Particle{
     private boolean isCylic = false;
     private int lineHeight = 10;
 
+    private boolean makeLoop = false;
 
 
     //TODO add trigger key?
     public ParticleSpriteLantern(int x, int y, int dx, int dy, int size, int life, Color c,
                                  Editor editor, int maxLinks, boolean tracerEnabled, boolean moveWithCaret,
-                                 double moveSpeed, boolean isCyclic) {
+                                 double moveSpeed, boolean isCyclic, boolean makeLoop) {
         super(x,y,dx,dy,size,life,c);
         this.editor = editor;
 
-        this.maxLinks = maxLinks;
+
+        //cheap hack to resolve off by 1 code below
+        this.maxLinks = maxLinks + 1;
         this.tracerEnabled = tracerEnabled;
         this.moveWithCaret = moveWithCaret;
         this.moveSpeed = moveSpeed;
         this.isCylic = isCyclic;
         this.lineHeight = editor.getLineHeight();
+        this.makeLoop = makeLoop;
 
         this.typeX = x;
         this.typeY = y;
@@ -117,11 +117,12 @@ public class ParticleSpriteLantern extends Particle{
         editorOffsets[1] = -1*visibleArea.y;
 
 
-        repeats_offsets = new int[spriteDataAnimated.size()][2];
+        repeats_offsets = new int[spriteDataAnimated.size()][3];
         for(int i = 0; i < repeats_offsets.length; i++){
             repeats_offsets[i][0] = spriteDataAnimated.get(i).val2; //repeat
             repeats_offsets[i][1] = spriteDataAnimated.get(i).val1; //offset
-
+            //cheap hack to resolve off by 1 code below
+            repeats_offsets[i][2] = spriteDataAnimated.get(i).val3 + 1; //local max length
         }
 
 
@@ -129,18 +130,24 @@ public class ParticleSpriteLantern extends Particle{
         //TODO: add  repeats_for ....
         //  repeat N times
 
-        //Compute which spriteData's are valid on which index along curve
-        validOnPosIndex = new boolean[spriteDataAnimated.size()][maxLinks];
+        //Compute which spriteData's get drawn on which point along curve
+        validOnPosIndex = new boolean[spriteDataAnimated.size()][this.maxLinks];
 
-        for(int j =0; j < validOnPosIndex.length; j++){
-            int offset = repeats_offsets[j][1];
-            for(int pos_index=0; pos_index < maxLinks; pos_index++) {
-                if (pos_index < offset) {
-                    validOnPosIndex[j][pos_index] = false;
-                } else {
-                    boolean repeatsOnThisIndex = ((pos_index - offset) % repeats_offsets[j][0] == 0);
-                    validOnPosIndex[j][pos_index] = repeatsOnThisIndex;
-                }
+        //For each SpriteDataAnimated Row
+        for(int j =0; j < spriteDataAnimated.size(); j++){
+            SpriteDataAnimated row = spriteDataAnimated.get(j);
+//            int offset = repeats_offsets[j][1];
+            int offset = row.val1;
+            int maxLocalLinks = Math.min(this.maxLinks, row.val3+1);
+
+            for(int pos_index=offset; pos_index < maxLocalLinks; pos_index++) {
+
+//                if (pos_index < offset) {
+//                    validOnPosIndex[j][pos_index] = false;
+//                } else {
+                boolean repeatsOnThisIndex = ((pos_index - offset) % repeats_offsets[j][0] == 0);
+                validOnPosIndex[j][pos_index] = repeatsOnThisIndex;
+//                }
             }
         }
 
@@ -156,7 +163,7 @@ public class ParticleSpriteLantern extends Particle{
         pathPoints.add(new Point(x, y-20));
 
         int offsetX0 = (int) (50 + 250*(randomNum100/100.0));
-        int offsetY0 = (int) (100 + 300*(randomNum200/200.0));
+        int offsetY0 = (int) (100 + 250*(randomNum200/200.0));
         if(offsetY0 > 300) offsetX0 = Math.min(offsetX0 / 2, 100);
         Point[] controlPoints0 = new Point[]{
                 new Point(this.x, this.y - 20),
@@ -165,20 +172,22 @@ public class ParticleSpriteLantern extends Particle{
         };
 
 
-        int next0 = drawSegment(0, 10, controlPoints0);
+        int next0 = drawSegment(0, 15, controlPoints0);
 
 
+        if(this.makeLoop) {
+            int xOffset = randomNum50 + 30;
+            if(offsetY0 < 150) xOffset = Math.min(40, xOffset);
+            int yOffset = xOffset;
+            Point startPoint = controlPoints0[2];
+            Point endPoint = new Point(x + offsetX0 + 100 + randomNum50,y - offsetY0/2);
 
-        int xOffset = randomNum50 + 30;
-        if(offsetY0 < 150) xOffset = Math.min(40, xOffset);
-        int yOffset = xOffset;
-        Point startPoint = controlPoints0[2];
-        Point endPoint = new Point(x + offsetX0 + 100 + randomNum50,y - offsetY0/2);
-        int next = drawLoopSegment(next0, 40,
-                xOffset,yOffset,
-                startPoint,
-                endPoint
-        );
+            drawLoopSegment(next0, 40,
+                    xOffset,yOffset,
+                    startPoint,
+                    endPoint
+            );
+        }
 
 //        drawLanternSegment(g2d, next, 10, endPoint);
     }
@@ -314,7 +323,7 @@ public class ParticleSpriteLantern extends Particle{
             editorOffsets[1] = -1*visibleArea.y;
             g2d.translate(editorOffsets[0],  editorOffsets[1]);
 
-
+            //draw tracer
             if(tracerEnabled) {
                 g2d.setColor(this.c);
                 g2d.setStroke(new BasicStroke(2.0f));
@@ -344,10 +353,14 @@ public class ParticleSpriteLantern extends Particle{
                 Point p0 = pathPoints.get(pos_index-1);
                 Point p1 = pathPoints.get(pos_index);
 
+                boolean isLessThanGlobalMaxLinks = (pos_index < this.maxLinks);
+
                 if(pos_index < this.maxLinks) {
                     for (int spriteDataIndex = 0; spriteDataIndex < repeats_offsets.length; spriteDataIndex++) {
                         if (validOnPosIndex[spriteDataIndex][pos_index]) {
-                            SpriteDataAnimated.drawSprite(g2d, p0, p1, spriteDataAnimated.get(spriteDataIndex), frames[spriteDataIndex]);
+                            SpriteDataAnimated.drawSprite(g2d, p0, p1,
+                                                          spriteDataAnimated.get(spriteDataIndex),
+                                                          frames[spriteDataIndex]);
                         }
                     }
                 }

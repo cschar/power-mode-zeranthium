@@ -169,7 +169,8 @@ public class LockedLayerConfig extends BaseConfigPanel {
                     jo.getBoolean("isCyclic"),
                     screenPosition,
                     (float) jo.getDouble("alpha"),
-                    60); // --> gutterWidth
+                    60,
+                    0); // --> gutterWidth
 //                    jo.getInt("val1")); // --> gutterWidth
 
             spriteDataAnimated.set(i, sd);

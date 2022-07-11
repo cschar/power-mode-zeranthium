@@ -522,7 +522,8 @@ public class LinkerConfig extends BaseConfigPanel {
                     jo.getBoolean("isCyclic"),
                     jo.getInt("val2"), //val2 //repeat every n links
                     (float) jo.getDouble("alpha"),
-                    jo.getInt("val1")); //val1  //offset to start on links
+                    jo.getInt("val1"),
+                    0); //val1  //offset to start on links
 
 
             spriteDataAnimated.set(i, sd);

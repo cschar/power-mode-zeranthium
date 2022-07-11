@@ -235,7 +235,8 @@ public class MultiLayerConfig extends BaseConfigPanel{
                     jo.getBoolean("isCyclic"),
                     jo.has("val2") ? Math.max(1, Math.min(jo.getInt("val2"),10)) : 1,
                     (float) jo.getDouble("alpha"),
-                    1);
+                    1,
+                    0);
 
             spriteDataAnimated.set(i, sd);
             count += 1;
