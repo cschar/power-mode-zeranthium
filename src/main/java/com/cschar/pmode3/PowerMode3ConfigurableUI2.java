@@ -170,8 +170,10 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
 //        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/pack-logo3.png"));
 //        settingsTabbedPane.addTab("pa", sliderIcon, panel1);
 //        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/pack-logo6.png"));
-        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/pack-logo7.png"));
-        settingsTabbedPane.addTab("packs", sliderIcon, panel1);
+//        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/pack-logo7.png"));
+        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/pack-logo8.png"));
+
+        settingsTabbedPane.addTab("|", sliderIcon, panel1);
 //        settingsTabbedPane.addTab("", sliderIcon, panel1);
 
 //        GitPackDownloaderComponent jComponent = new GitPackDownloaderComponent("title", this);

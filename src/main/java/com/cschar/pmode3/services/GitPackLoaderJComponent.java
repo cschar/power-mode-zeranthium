@@ -81,7 +81,7 @@ public class GitPackLoaderJComponent extends JPanel{
 
 //        JLabel setPathLabel = new JLabel();
         setPathLabel.setText("base path : " + directoryPath);
-        setPathLabel.setFont(new Font("Times", Font.PLAIN, 16));
+        setPathLabel.setFont(new Font("Arial", Font.PLAIN, 16));
         setPathLabel.setMaximumSize(new Dimension(700,50));
 
 //        setPathLabel.setBackground(JBColor.gray);
@@ -269,7 +269,7 @@ public class GitPackLoaderJComponent extends JPanel{
 //        repoLabel.add(repo);
 //        repoLabel.setBackground(JBColor.gray);
         repoLabel.setOpaque(true);
-        repoLabel.setFont(new Font("Times", Font.PLAIN, 14));
+        repoLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         repoLabel.setBorder(JBUI.Borders.empty(5));
         packsRepoUrlHeader.add(repoLabel);
 
@@ -281,7 +281,7 @@ public class GitPackLoaderJComponent extends JPanel{
 //        repoTarget.setAlignmentX(Component.LEFT_ALIGNMENT);
 //        repoTarget.setBackground(JBColor.gray);
         repoTarget.setOpaque(true);
-        repoTarget.setFont(new Font("Times", Font.PLAIN, 12));
+        repoTarget.setFont(new Font("Arial", Font.PLAIN, 12));
         repoTarget.setBorder(JBUI.Borders.empty(5));
         packsRepoUrlHeader.add(repoTarget);
 
