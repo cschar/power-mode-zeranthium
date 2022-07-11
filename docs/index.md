@@ -1,52 +1,17 @@
 
--/=
-
-<!--
-<div class="header">
-<div class="header__bg"></div>
-<h1>Basics</h1>
-</div>
--->
-
-<!--
-# Basics
-
-
-You enter a dark cave.
-
-To your left is a crate of ore, to your right, a cold stone wall.
-Infront of you appears a terminal. You open up an IntelliJ IDE session.
-
-You install Powermode Zeranthium and use its basic settings for a while.
-
-You then grow hungry.... for something more.
-
-
-You open up Blender 2.8 and pop open some youtube tutorials.
-
-In a couple hours you have down the basics, a cube doing some tricks
-with a transparent background.
-
-You render out the PNG files to a folder called "myCube".
-
-You then open up Power Mode Zeranthium's settings and load in
-your folder of renders.
-
-It's beautiful.
--->
-
-
 # Downloads:
 get more stuff here:
-
-
 
 <h1> zeranthium-extras -----> PreConfigured Themes </h1>
 
 Assets can be found in the zeranthium-extras repo.
 You can download the assets using this command:
 ```bash
-git clone --depth=1 git@github.com:cschar/zeranthium-extras.git
+
+git clone --depth=1 https://github.com/powermode-zeranthium/zeranthium-extras-vol1
+git clone --depth=1 https://github.com/powermode-zeranthium/zeranthium-extras-vol2
+git clone --depth=1 https://github.com/powermode-zeranthium/zeranthium-extras-vol3
+
 ```
 
 
@@ -55,10 +20,6 @@ git clone --depth=1 git@github.com:cschar/zeranthium-extras.git
 
 <h2> zeranthium-extras ---> fire1 Theme </h2>
 <img width="400" src="https://user-images.githubusercontent.com/296551/67990855-8c4ad680-fc0d-11e9-9ac1-66bcc0f959c9.png">
-
-
-<h2> zeranthium-extras ---> ceramic1 Theme </h2>
-<img width="485" src="https://user-images.githubusercontent.com/296551/67993251-5b22d400-fc16-11e9-9212-7ffcd39608a9.png">
 
 
 
@@ -88,6 +49,9 @@ with sibling folders containing the assets the manifest.json file will point to:
               ----- 099.png
 
 ```
+
+Once the manifest.json file is present with the assets, from inside the settings you can open
+that custom pack file. The plugin will autoload all configurations specified in the manifest.
 
 Here is an example manifest.json file for a theme
 that provides settings for SOUND, MULTI_LAYER, and LOCKED_LAYER options.
@@ -264,21 +228,25 @@ Bot/Left -> 4
 <h3> Lantern </h3>
 
 ```
+val3: max length of links per sprite type
 val2: Repeat every N links
 val1: Offset to start on links
 ```
 
 ```json
 "LANTERN":{
+      "maxParticles": 40, 
       "tracerEnabled": false,
-      "isCyclicEnabled" false,
+      "isCyclicEnabled": false,
       "tableData":[
         {
           "defaultPath": "./lantern1/",
-          "val2": 100,
+          
           "isCyclic": false,
           "alpha": 1,
           "val1": 1,
+          "val2": 2,
+          "val3": 12,
           "scale": 0.3,
           "enabled": true,
           "speedRate": 2

@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -69,14 +70,14 @@ public class ParticleSpriteLantern extends Particle{
 
     //TODO add trigger key?
     public ParticleSpriteLantern(int x, int y, int dx, int dy, int size, int life, Color c,
-                                 Editor editor, int maxLinks, boolean tracerEnabled, boolean moveWithCaret,
+                                 Editor editor,  boolean tracerEnabled, boolean moveWithCaret,
                                  double moveSpeed, boolean isCyclic, boolean makeLoop) {
         super(x,y,dx,dy,size,life,c);
         this.editor = editor;
 
 
         //cheap hack to resolve off by 1 code below
-        this.maxLinks = maxLinks + 1;
+        this.maxLinks = 100;
         this.tracerEnabled = tracerEnabled;
         this.moveWithCaret = moveWithCaret;
         this.moveSpeed = moveSpeed;
@@ -158,21 +159,31 @@ public class ParticleSpriteLantern extends Particle{
     }
 
     private void calculateLanternPath(){
-        Path2D path = new Path2D.Double();
-        path.moveTo(x, y - 20);
-        pathPoints.add(new Point(x, y-20));
 
-        int offsetX0 = (int) (50 + 250*(randomNum100/100.0));
-        int offsetY0 = (int) (100 + 250*(randomNum200/200.0));
-        if(offsetY0 > 300) offsetX0 = Math.min(offsetX0 / 2, 100);
+        //40 pixels above caret line
+        int yStart = this.y - 20;
+        pathPoints.add(new Point(x, yStart));
+
+        int offsetX0 = (int) (100 + 200*(randomNum100/100.0));
+        int offsetY0 = (int) (150 + 200*(randomNum200/200.0));
+
+        //if we go really high up, bring us back a bit in the left direction
+//        if(offsetY0 > 300) {
+//            offsetX0 = Math.min(offsetX0 / 2, 100);
+//        }
+
         Point[] controlPoints0 = new Point[]{
-                new Point(this.x, this.y - 20),
+                new Point(this.x, yStart),
                 new Point(this.x, this.y - offsetY0),
                 new Point(this.x + offsetX0, this.y - offsetY0)
         };
 
+        int distance = (int) Point2D.distance(controlPoints0[0].x, controlPoints0[0].y,
+                                              controlPoints0[2].x, controlPoints0[2].y);
+        int segmentPoints = distance / 20;
 
-        int next0 = drawSegment(0, 15, controlPoints0);
+        int next0 = drawSegment(0, segmentPoints, controlPoints0);
+//        int next0 = drawSegment(0, 15, controlPoints0);
 
 
         if(this.makeLoop) {
@@ -420,6 +431,7 @@ public class ParticleSpriteLantern extends Particle{
         return start+3*SEGMENT_PER_QUARTER+SEGMENT_PER_QUARTER;
     }
 
+    /** draws the 'beam' shooting down onto caret line */
     private void drawLanternSegment(Graphics2D g2d, int start, Point controlPoint) {
         if (stemPointsToDraw < start) return;
 
@@ -430,36 +442,24 @@ public class ParticleSpriteLantern extends Particle{
 
 //        if(moveWithCaret && this.y > controlPoint.y + 20) { //if we're 'below' lantern
         if(moveWithCaret) { //if we're 'below' lantern
-
             path.moveTo(controlPoint.x, controlPoint.y);
-
             Point p1 = new Point(this.x + 100, this.y);
             Point p2 = new Point(this.x - 100, this.y);
             if(this.y < controlPoint.y) {
                 p1 = new Point(this.x + 100, this.y + lineHeight);
                 p2 = new Point(this.x - 100, this.y + lineHeight);
             }
-
             path.lineTo(p1.x, p1.y);
             path.lineTo(p2.x, p2.y);
             path.lineTo(controlPoint.x, controlPoint.y);
-
-
         }else{
-
-
             path.moveTo(controlPoint.x, controlPoint.y);
             path.lineTo(controlPoint.x + 100 + randomNum, editor.getContentComponent().getHeight());
             path.lineTo(controlPoint.x - 100 + randomNum, editor.getContentComponent().getHeight());
             path.lineTo(controlPoint.x, controlPoint.y);
 
         }
-
-
-
         g2d.fill(path);
-
-
     }
 
     private int drawSegment(int start, int SEGMENT_POINTS, Point[] controlPoints){

@@ -159,7 +159,6 @@ public class ParticleContainer extends JComponent implements ComponentListener {
                 final ParticleSpriteLantern l = new ParticleSpriteLantern(x, y, dx, dy, size, lifeSetting,
                         LanternConfig.TRACER_COLOR(settings),
                         editor,
-                        LanternConfig.MAX_LINKS(settings),
                         LanternConfig.TRACER_ENABLED(settings),
                         LanternConfig.MOVE_WITH_CARET(settings),
                         LanternConfig.CARET_MOVE_SPEED(settings),

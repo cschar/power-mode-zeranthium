@@ -280,6 +280,7 @@ public class SpriteDataAnimated  extends SpriteData {
         return sd;
     }
 
+    /** used only for resources since defaultPath is defined there */
     public static SpriteDataAnimated fromJSONObject(JSONObject jo){
         SpriteDataAnimated sd = null;
             //TODO REMOVE PREVIEW SIZE
@@ -312,7 +313,9 @@ public class SpriteDataAnimated  extends SpriteData {
         return sd;
     }
 
-    private static Object safeUnwrap( Object myDefault, String inputValue, JSONObject jo) {
+
+
+    public static Object safeUnwrap( Object myDefault, String inputValue, JSONObject jo) {
         try {
             if(myDefault.getClass().equals(Boolean.class)){
                 return jo.getBoolean(inputValue);
@@ -326,10 +329,10 @@ public class SpriteDataAnimated  extends SpriteData {
                 return jo.getString(inputValue);
             }
         } catch (Exception e) {
-            LOGGER.warning("Could not unwrap value: " + inputValue);
+//            LOGGER.warning("Could not unwrap value: " + inputValue);
             return myDefault;
         }
-        LOGGER.warning("Could not identify value to unwrap: " + inputValue);
+//        LOGGER.warning("Could not identify value to unwrap: " + inputValue);
         return 0;
     }
 
@@ -365,6 +368,7 @@ public class SpriteDataAnimated  extends SpriteData {
         AffineTransform at = new AffineTransform();
         at.scale(pData.scale, pData.scale);
         at.translate((int) p0.x * (1 / pData.scale), (int) p0.y * (1 / pData.scale));
+//        at.translate((int) p0.x, (int) p0.y);
 
 
         double radius = Point.distance(p0.x, p0.y, p1.x, p1.y);
@@ -377,8 +381,8 @@ public class SpriteDataAnimated  extends SpriteData {
 
         at.rotate(initAnchorAngle);
 
-        at.translate(-pData.image.getWidth() / 2,
-                -pData.image.getHeight() / 2);
+        at.translate(-pData.image.getWidth() / 2.0,
+                     -pData.image.getHeight() / 2.0);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pData.alpha));
 
 

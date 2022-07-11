@@ -6,6 +6,7 @@
 - 2022 update
 - added a GIT based pack downloader for zeranthium-extras repositories
 - compressed default images included in JAR to reduce download size
+- modified LANTERN options to have individual length per sprite (val3), simplify movement
 
 ## [2.6.0]
 - add background loading at startup

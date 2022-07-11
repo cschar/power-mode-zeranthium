@@ -34,7 +34,7 @@ public class LanternConfig extends BaseConfigPanel {
     private JCheckBox tracerEnabledCheckBox;
 
 
-    private JTextField maxLinksTextField;
+//    private JTextField maxLinksTextField;
 
 
     private JCheckBox isCyclicEnabled;
@@ -127,16 +127,16 @@ public class LanternConfig extends BaseConfigPanel {
         addLoopPanel.add(addLoop);
         firstCol.add(addLoopPanel);
 
-        this.maxLinksTextField = new JTextField();
-//        this.maxAnchorsToUse.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        JLabel maxLinksLabel = new JLabel("Max Links to Use (5-100)");
-        JPanel maxLinksPanel = new JPanel();
-        maxLinksPanel.add(maxLinksLabel);
-        maxLinksPanel.add(this.maxLinksTextField);
-        maxLinksPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        maxLinksPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
-        maxLinksPanel.setMaximumSize(new Dimension(500, 40));
-        firstCol.add(maxLinksPanel);
+//        this.maxLinksTextField = new JTextField();
+////        this.maxAnchorsToUse.setAlignmentX(Component.RIGHT_ALIGNMENT);
+//        JLabel maxLinksLabel = new JLabel("Max Links to Use (5-100)");
+//        JPanel maxLinksPanel = new JPanel();
+//        maxLinksPanel.add(maxLinksLabel);
+//        maxLinksPanel.add(this.maxLinksTextField);
+//        maxLinksPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+//        maxLinksPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+//        maxLinksPanel.setMaximumSize(new Dimension(500, 40));
+//        firstCol.add(maxLinksPanel);
 
 
 
@@ -227,7 +227,7 @@ public class LanternConfig extends BaseConfigPanel {
         this.addLoop.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.LANTERN,"addLoop", true));
         this.moveWithCaret.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.LANTERN,"moveWithCaretEnabled", true));
         this.moveSpeedTextField.setText(String.valueOf(Config.getFloatProperty(settings, PowerMode3.ConfigType.LANTERN,"movespeed", 1.0f)));
-        this.maxLinksTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LANTERN,"maxLinks", 20)));
+//        this.maxLinksTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LANTERN,"maxLinks", 20)));
 
         this.maxParticlesTextField.setText(String.valueOf(Config.getIntProperty(settings, PowerMode3.ConfigType.LANTERN,"maxParticles", 10)));
         this.isCyclicEnabled.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.LANTERN,"isCyclicEnabled", false));
@@ -235,14 +235,23 @@ public class LanternConfig extends BaseConfigPanel {
 
     }
 
+    /** currently only used when loading packs... not in resource loader */
     public void loadJSONConfig(JSONObject configData, Path parentPath) throws JSONException {
         PowerMode3 settings = PowerMode3.getInstance();
 
-        if(configData.has("maxLinks")) {
-            int maxLinks = configData.getInt("maxLinks");
-            this.maxLinksTextField.setText(String.valueOf(maxLinks));
-            settings.setSpriteTypeProperty(PowerMode3.ConfigType.LANTERN, "maxLinks",
-                    String.valueOf(maxLinks));
+//        if(configData.has("maxLinks")) {
+//            int maxLinks = configData.getInt("maxLinks");
+//            this.maxLinksTextField.setText(String.valueOf(maxLinks));
+//            settings.setSpriteTypeProperty(PowerMode3.ConfigType.LANTERN, "maxLinks",
+//                    String.valueOf(maxLinks));
+//        }
+
+        if(configData.has("maxParticles")) {
+            int maxParticles = configData.getInt("maxParticles");
+            maxParticles = Math.max(1, Math.min(maxParticles, 50));
+            this.maxParticlesTextField.setText(String.valueOf(maxParticles));
+            settings.setSpriteTypeProperty(PowerMode3.ConfigType.LANTERN, "maxParticles",
+                    String.valueOf(maxParticles));
         }
 
         if(configData.has("tracerEnabled")) {
@@ -264,9 +273,10 @@ public class LanternConfig extends BaseConfigPanel {
         for(int i =0; i<tableData.length(); i++){
             JSONObject jo = tableData.getJSONObject(i);
 
+            int val3 = (Integer) SpriteDataAnimated.safeUnwrap(-1, "val3", jo);
             //when a val3 does not exist, the default value is -1,
             //for an unset val3 in lantern context, we set it to value 100
-            int safeSetVal3 = jo.getInt("val3") == -1 ? 100 : jo.getInt("val3");
+            int safeSetVal3 = val3 == -1 ? 100 : val3;
 //            SpriteDataAnimated sd = SpriteDataAnimated.fromJSONObject(jo);
             SpriteDataAnimated sd =  new SpriteDataAnimated(
                     PREVIEW_SIZE,
@@ -298,11 +308,11 @@ public class LanternConfig extends BaseConfigPanel {
                         0.01f, 1.0f,"movespeed")));
 
 
-        int maxLinks = Config.getJTextFieldWithinBoundsInt(this.maxLinksTextField,
-                5, 100,
-                "max links on lantern");
-        settings.setSpriteTypeProperty(PowerMode3.ConfigType.LANTERN, "maxLinks",
-                String.valueOf(maxLinks));
+//        int maxLinks = Config.getJTextFieldWithinBoundsInt(this.maxLinksTextField,
+//                5, 100,
+//                "max links on lantern");
+//        settings.setSpriteTypeProperty(PowerMode3.ConfigType.LANTERN, "maxLinks",
+//                String.valueOf(maxLinks));
 
 
         settings.setSpriteTypeProperty(PowerMode3.ConfigType.LANTERN, "tracerEnabled", String.valueOf(tracerEnabledCheckBox.isSelected()));
@@ -332,12 +342,6 @@ public class LanternConfig extends BaseConfigPanel {
     public static Color TRACER_COLOR(PowerMode3 settings){
         return Config.getColorProperty(settings, PowerMode3.ConfigType.LANTERN, "tracer Color", originalTracerColor);
     }
-
-    public static int MAX_LINKS(PowerMode3 settings){
-        return Config.getIntProperty(settings, PowerMode3.ConfigType.LANTERN, "maxLinks");
-    }
-
-
 
 
     public static boolean IS_CYCLIC_ENABLED(PowerMode3 settings){
