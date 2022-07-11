@@ -80,7 +80,7 @@ public class LanternConfig extends BaseConfigPanel {
 
 
         JPanel tracerColorPanel = Config.getColorPickerPanel("tracer Color", PowerMode3.ConfigType.LANTERN, settings, this.originalTracerColor);
-        this.tracerEnabledCheckBox = new JCheckBox("is enabled?", true);
+        this.tracerEnabledCheckBox = new JCheckBox("tracer enabled?", true);
         JPanel tracerConfig = Config.populateEnabledColorPickerPanel(tracerColorPanel, tracerEnabledCheckBox);
         secondCol.add(tracerConfig);
 

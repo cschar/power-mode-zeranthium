@@ -164,7 +164,7 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
         /////////////////////////
         JPanel panel1 = new JPanel();
 //        panel1.setBackground(JBColor.orange);
-        panel1.setBorder(JBUI.Borders.empty(2, 2, 50, 2));
+        panel1.setBorder(JBUI.Borders.empty(2, 2, 0, 2));
         panel1.setLayout(new BoxLayout(panel1, BoxLayout.X_AXIS));
 //        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/barlarge.png"));
 //        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/pack-logo3.png"));
@@ -178,7 +178,7 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
         GitPackLoaderJComponent jComponent = new GitPackLoaderJComponent("title", this);
         panel1.add(jComponent);
 
-        this.ultraPanel.setMaximumSize(new Dimension(1000,1000));
+        this.ultraPanel.setMaximumSize(new Dimension(1000,1100));
         this.ultraPanel.setLayout(new BoxLayout(this.ultraPanel, BoxLayout.X_AXIS));
         this.ultraPanel.add(settingsTabbedPane);
 

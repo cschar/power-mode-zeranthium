@@ -56,8 +56,8 @@ public class GitPackLoaderService {
 
             //reset hard
             result.reset().setMode(ResetCommand.ResetType.HARD).call();
-            //checkout master
-            Ref r = result.checkout().setName("master").call();
+            //checkout main
+            Ref r = result.checkout().setName("main").call();
             // optionally assert we are at a specific commit
             // assert(r.getObjectId().getName().equals("831b714961dc667b62c5ed4aa74c4505a17561a9"));
             LOG.info("found repo @ commit" + r.getObjectId().getName());

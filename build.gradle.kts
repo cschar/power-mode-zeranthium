@@ -1,4 +1,4 @@
-import io.gitlab.arturbosch.detekt.Detekt
+//import io.gitlab.arturbosch.detekt.Detekt
 import org.gradle.api.tasks.testing.TestResult.ResultType
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -24,7 +24,7 @@ plugins {
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
     id("org.jetbrains.changelog") version "1.1.2"
     // detekt linter - read more: https://detekt.github.io/detekt/gradle.html
-    id("io.gitlab.arturbosch.detekt") version "1.17.1"
+//    id("io.gitlab.arturbosch.detekt") version "1.17.1"
     // ktlint linter - read more: https://github.com/JLLeitschuh/ktlint-gradle
     //  id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
 
@@ -48,7 +48,7 @@ repositories {
 var remoteRobotVersion = "0.11.14"
 
 dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.17.1")
+//    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.17.1")
 
     implementation(group = "org.json", name = "json", version = "20090211")
     implementation(group = "javazoom", name = "jlayer", version = "1.0.1")
@@ -103,16 +103,16 @@ changelog {
 
 // Configure detekt plugin.
 // Read more: https://detekt.github.io/detekt/kotlindsl.html
-detekt {
-    config = files("./detekt-config.yml")
-    buildUponDefaultConfig = true
-
-    reports {
-        html.enabled = false
-        xml.enabled = false
-        txt.enabled = false
-    }
-}
+//detekt {
+//    config = files("./detekt-config.yml")
+//    buildUponDefaultConfig = true
+//
+//    reports {
+//        html.enabled = false
+//        xml.enabled = false
+//        txt.enabled = false
+//    }
+//}
 
 val commandLineProjectProp: String by project
 
@@ -120,6 +120,37 @@ tasks.register("hello") {
     doLast {
         println(commandLineProjectProp)
     }
+}
+
+
+// For Some reason :jar task adds frame classes to jar? here we manually exclude it
+sourceSets.forEach {
+    val dirPaths = it.java.srcDirs.map { d -> d.path }
+    println("${it.name} : ${dirPaths.joinToString()}")
+}
+sourceSets {
+    test {
+        java {
+            exclude("**/uitest**")
+        }
+    }
+}
+
+
+subprojects {
+    apply {
+        plugin(JavaPlugin::class.java)
+        plugin("org.jetbrains.kotlin.jvm")
+    }
+
+//    tasks {
+//        runIde {
+//            onlyIf {
+//                println("skipping runIde")
+//                false
+//            }
+//        }
+//    }
 }
 
 // https://docs.gradle.org/current/userguide/tutorial_using_tasks.html
@@ -252,18 +283,20 @@ tasks {
         systemProperty("jb.consents.confirmation.enabled", "false")
     }
 
+    var javaVersion = "11"
+
     // Set the compatibility versions to 11
     withType<JavaCompile> {
-        sourceCompatibility = "11"
-        targetCompatibility = "11"
+        sourceCompatibility = javaVersion
+        targetCompatibility = javaVersion
     }
     withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "11"
+        kotlinOptions.jvmTarget = javaVersion
     }
 
-    withType<Detekt> {
-        jvmTarget = "11"
-    }
+//    withType<Detekt> {
+//        jvmTarget = javaVersion
+//    }
 
     patchPluginXml {
         version.set(properties("pluginVersion"))

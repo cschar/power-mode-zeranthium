@@ -54,7 +54,7 @@ public class CreateCommandLineJavaTest {
 
     @Test
     void createCommandLineProject(final RemoteRobot remoteRobot) {
-        sharedSteps.createNewCommandLineProject();
+//        sharedSteps.createNewCommandLineProject();
         sharedSteps.closeTipOfTheDay();
 
         final IdeaFrame idea = remoteRobot.find(IdeaFrame.class);

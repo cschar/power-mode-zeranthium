@@ -4,7 +4,7 @@ package com.cschar.pmode3.uitest.steps;
 
 import com.cschar.pmode3.uitest.pages.DialogFixture;
 import com.cschar.pmode3.uitest.pages.IdeaFrame;
-import com.cschar.pmode3.uitest.pages.WelcomeFrameFixture;
+//import com.cschar.pmode3.uitest.pages.WelcomeFrameFixture2;
 import com.intellij.remoterobot.RemoteRobot;
 import com.intellij.remoterobot.fixtures.ComponentFixture;
 import com.intellij.remoterobot.search.locators.Locator;
@@ -32,22 +32,22 @@ public class JavaExampleSteps {
         this.keyboard = new Keyboard(remoteRobot);
     }
 
-    public void createNewCommandLineProject() {
-        step("Create New Command Line Project", () -> {
-           final WelcomeFrameFixture welcomeFrame = remoteRobot.find(WelcomeFrameFixture.class, Duration.ofSeconds(10));
-            welcomeFrame.createNewProjectLink().click();
-
-            final DialogFixture newProjectDialog = welcomeFrame.find(DialogFixture.class, DialogFixture.byTitle("New Project"), Duration.ofSeconds(20));
-            newProjectDialog.findText("Java").click();
-            newProjectDialog.find(ComponentFixture.class,
-                    byXpath("FrameworksTree", "//div[@class='FrameworksTree']"))
-                    .findText("Kotlin/JVM")
-                    .click();
-            keyboard.key(KeyEvent.VK_SPACE, Duration.ZERO);
-            newProjectDialog.button("Next").click();
-            newProjectDialog.button("Finish").click();
-        });
-    }
+//    public void createNewCommandLineProject() {
+//        step("Create New Command Line Project", () -> {
+//           final WelcomeFrameFixture2 welcomeFrame = remoteRobot.find(WelcomeFrameFixture2.class, Duration.ofSeconds(10));
+//            welcomeFrame.createNewProjectLink().click();
+//
+//            final DialogFixture newProjectDialog = welcomeFrame.find(DialogFixture.class, DialogFixture.byTitle("New Project"), Duration.ofSeconds(20));
+//            newProjectDialog.findText("Java").click();
+//            newProjectDialog.find(ComponentFixture.class,
+//                    byXpath("FrameworksTree", "//div[@class='FrameworksTree']"))
+//                    .findText("Kotlin/JVM")
+//                    .click();
+//            keyboard.key(KeyEvent.VK_SPACE, Duration.ZERO);
+//            newProjectDialog.button("Next").click();
+//            newProjectDialog.button("Finish").click();
+//        });
+//    }
 
     public void closeTipOfTheDay() {
         step("Close Tip of the Day if it appears", () -> {

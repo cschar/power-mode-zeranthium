@@ -50,7 +50,7 @@ public class GitPackLoaderJComponent extends JPanel{
     private static final Logger LOGGER = Logger.getLogger( GitPackLoaderJComponent.class.getName() );
     public static final String ZERANTHIUM_EXTRAS_GIT_VOL1 = "https://github.com/powermode-zeranthium/zeranthium-extras-vol1.git";
     public static final String ZERANTHIUM_EXTRAS_GIT_VOL2 = "https://github.com/powermode-zeranthium/zeranthium-extras-vol2.git";
-
+    public static final String ZERANTHIUM_EXTRAS_GIT_VOL3 = "https://github.com/powermode-zeranthium/zeranthium-extras-vol3.git";
 
     public PowerMode3ConfigurableUI2 menuConfigurable;
     public PowerMode3 settings;
@@ -157,28 +157,36 @@ public class GitPackLoaderJComponent extends JPanel{
 
         File localPath = new File(directoryPath + File.separator + "zeranthium-extras");
 
+        //vol1 pack
         JPanel panel2 = new JPanel();
         panel2.setBorder(JBUI.Borders.empty(2, 2, 2, 2));
         panel2.setLayout(new BoxLayout(panel2, BoxLayout.PAGE_AXIS));
         ImageIcon sliderIcon2 = new ImageIcon(this.getClass().getResource("/icons/bar_small.png"));
         gitRepoTabbedPane.addTab("zeranthium-extras-vol1", sliderIcon2, panel2);
-
-
         JPanel packListHolder0 = getPackHolder(localPath.getPath(), ZERANTHIUM_EXTRAS_GIT_VOL1, "zeranthium-extras-vol1");
         panel2.add(packListHolder0);
 
+        //vol2 pack
         JPanel panel3 = new JPanel();
 //        panel3.setBackground(JBColor.getHSBColor(100,88,20));
         panel3.setBorder(JBUI.Borders.empty(2, 2, 2, 2));
         panel3.setLayout(new BoxLayout(panel3, BoxLayout.PAGE_AXIS));
         ImageIcon sliderIcon3 = new ImageIcon(this.getClass().getResource("/icons/bar_small.png"));
         gitRepoTabbedPane.addTab("zeranthium-extras-vol2", sliderIcon3, panel3);
-
-
         JPanel packListHolder1 = getPackHolder(localPath.getPath(), ZERANTHIUM_EXTRAS_GIT_VOL2, "zeranthium-extras-vol2");
         panel3.add(packListHolder1);
 
+        //vol3 pack
+        JPanel panelVol3= new JPanel();
+//        panel3.setBackground(JBColor.getHSBColor(100,88,20));
+        panelVol3.setBorder(JBUI.Borders.empty(2, 2, 2, 2));
+        panelVol3.setLayout(new BoxLayout(panelVol3, BoxLayout.PAGE_AXIS));
+        ImageIcon sliderIconVol3 = new ImageIcon(this.getClass().getResource("/icons/bar_small.png"));
+        gitRepoTabbedPane.addTab("zeranthium-extras-vol3", sliderIconVol3, panelVol3);
+        JPanel packListHolderVol3 = getPackHolder(localPath.getPath(), ZERANTHIUM_EXTRAS_GIT_VOL3, "zeranthium-extras-vol3");
+        panelVol3.add(packListHolderVol3);
 
+        //user defined pack
         JPanel panel4 = new JPanel();
         panel4.setBorder(JBUI.Borders.empty(2, 2, 40, 10));
         panel4.setLayout(new BoxLayout(panel4, BoxLayout.PAGE_AXIS));

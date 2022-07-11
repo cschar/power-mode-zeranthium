@@ -8,13 +8,11 @@ import com.intellij.remoterobot.fixtures.CommonContainerFixture
 import com.intellij.remoterobot.fixtures.ComponentFixture
 import com.intellij.remoterobot.fixtures.DefaultXpath
 import com.intellij.remoterobot.fixtures.FixtureName
-
 import com.intellij.remoterobot.search.locators.byXpath
-import java.time.Duration
 
-fun RemoteRobot.welcomeFrame(function: WelcomeFrame.() -> Unit) {
-    find(WelcomeFrame::class.java, Duration.ofSeconds(10)).apply(function)
-}
+// fun RemoteRobot.welcomeFrame(function: WelcomeFrame.() -> Unit) {
+//    find(WelcomeFrame::class.java, Duration.ofSeconds(10)).apply(function)
+// }
 
 @FixtureName("Welcome Frame65765")
 @DefaultXpath("ooogly", "//div[@class='FlatWelcomeFrame']")

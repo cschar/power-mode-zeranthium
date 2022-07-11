@@ -38,6 +38,7 @@ import static java.time.Duration.ofSeconds;
 
 @ExtendWith(RemoteRobotExtension.class)
 @EnabledIfEnvironmentVariable(named = "TEST_TYPE", matches = "UI")
+@Disabled
 public class OpenSettingsJavaTest {
 
     private final RemoteRobot remoteRobot = new RemoteRobot("http://127.0.0.1:8082");

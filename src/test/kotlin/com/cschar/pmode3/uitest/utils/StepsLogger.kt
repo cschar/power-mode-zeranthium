@@ -9,7 +9,7 @@ object StepsLogger {
     private var initializaed = false
 
     @JvmStatic
-    fun init() = synchronized(initializaed) {
+    fun init(): () -> Unit = {
         if (initializaed.not()) {
             StepWorker.registerProcessor(StepLogger())
             initializaed = true

@@ -23,6 +23,42 @@
     "scale":1,
     "enabled":false,
     "speedRate":3
-  }
+  },
+  {
+    "previewSize":120,
+    "customPath":"",
+    "defaultPath":"/blender/locked2",
+    "val2":0,
+    "isCyclic":true,
+    "alpha":1,
+    "val1":60,
+    "scale":1,
+    "enabled":false,
+    "speedRate":3
+  },
+  {
+    "previewSize":120,
+    "customPath":"",
+    "defaultPath":"/blender/locked2",
+    "val2":0,
+    "isCyclic":true,
+    "alpha":1,
+    "val1":60,
+    "scale":1,
+    "enabled":false,
+    "speedRate":3
+  },
+  {
+    "previewSize":120,
+    "customPath":"",
+    "defaultPath":"/blender/locked2",
+    "val2":0,
+    "isCyclic":true,
+    "alpha":1,
+    "val1":60,
+    "scale":1,
+    "enabled":false,
+    "speedRate":3
+  },
 ]
   }

@@ -29,7 +29,7 @@ import static com.cschar.pmode3.uitest.pages.ActionMenuFixtureKt.actionMenuItem;
 import static com.cschar.pmode3.uitest.pages.EditorKt.editor;
 
 @ExtendWith(RemoteRobotExtension.class)
-//@Disabled
+@Disabled
 @EnabledIfEnvironmentVariable(named = "TEST_TYPE", matches = "UI")
 public class WriteTextJavaTest {
 

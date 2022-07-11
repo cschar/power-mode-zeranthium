@@ -20,84 +20,65 @@ package com.cschar.pmode3;
 
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.intellij.openapi.editor.Editor;
-import org.imgscalr.Scalr;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 
 public class ParticleSpriteLockedLayer extends Particle{
-
-
-
     public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
-
     private BufferedImage sprite;
     private ArrayList<BufferedImage> sprites = new ArrayList<BufferedImage>();
-
     private int frame = 0;
-    public static int cursorX;
-    public static int cursorY;
-
-
-
     private int frameLife;
 
     private SpriteDataAnimated d;
     private String spritePath;
 
 
+    /** target editor this object is rendering in */
     private Editor editor;
 
     //each spot is a SpriteDataAnimated instance counter
     public static Map<Editor, int[]> spawnMap = new HashMap<>();
 
-    public static int MAX_PARTICLES = 2;
 
-    private int spriteIndex = 0;
+    /** max # of particles per editor */
+    public static int MAX_PARTICLES = 5;
+
+    /** determines which sprite collection this object is rendering (one of the rows in the UI config) */
+    private int spriteRowIndex = 0;
 
     public ParticleSpriteLockedLayer(int x, int y, int dx, int dy,
                                      int size, int life, int spriteDataIndex,
                                      Editor editor) {
         super(x,y,dx,dy,size,life,Color.GREEN);
-        this.spriteIndex = spriteDataIndex;
+        this.editor = editor;
+        this.spriteRowIndex = spriteDataIndex;
+        this.frameLife = 10000;
 
+        // If its the first time an editor is rendering this type of particle...
+        // initialize the state
         if(spawnMap.get(editor) == null){
-            int[] state = new int[]{0,0};
-            state[spriteDataIndex] = 1;
+            //initialize the tracker for 5 spawn points (5 rows in ui config)
+            int[] state = new int[MAX_PARTICLES];
+            state[spriteRowIndex] = 1;
             spawnMap.put(editor, state);
         }else{
             int[] state = spawnMap.get(editor);
-            state[spriteDataIndex] = 1;
+            state[spriteRowIndex] = 1;
             spawnMap.put(editor, state);
         }
 
-
-        this.editor = editor;
-        this.frameLife = 10000;
-
-        cursorX = x;
-        cursorY = y;
-
-
-
-        sprites = spriteDataAnimated.get(spriteDataIndex).images;
-
-
+        this.sprites = spriteDataAnimated.get(spriteDataIndex).images;
+        this.sprite = spriteDataAnimated.get(spriteDataIndex).image;
         this.d = spriteDataAnimated.get(spriteDataIndex);
         this.spritePath = d.customPath;
-
-        sprite = spriteDataAnimated.get(spriteDataIndex).image;
-
     }
-
-
-
 
 
     public boolean update() {
@@ -155,11 +136,12 @@ public class ParticleSpriteLockedLayer extends Particle{
         return lifeOver;
     }
 
+    /** cleanup single lockedlayer item, either stretch,topr,topl,botr,bot */
     private void cleanupSingle(Editor editor){
         if(spawnMap.get(editor) != null){
             int[] state = spawnMap.get(editor);
-            if(state[this.spriteIndex] >= 1){
-                state[this.spriteIndex] = 0;
+            if(state[this.spriteRowIndex] >= 1){
+                state[this.spriteRowIndex] = 0;
                 spawnMap.put(editor, state);
             }
         }
@@ -197,10 +179,10 @@ public class ParticleSpriteLockedLayer extends Particle{
                 double heightScale = bounds.height / (double) sprite.getHeight();
                 Point midPoint = new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
                 at.scale(widthScale, heightScale);
-                at.translate((int) midPoint.x * (1 / widthScale), (int) midPoint.y * (1 / heightScale));
-
-                at.translate(-sprite.getWidth() / 2,
-                        -sprite.getHeight() / 2);
+                at.translate((int) midPoint.x * (1 / widthScale),
+                             (int) midPoint.y * (1 / heightScale));
+                at.translate(-sprite.getWidth() / 2.0,
+                             -sprite.getHeight() / 2.0);
 
             }else if(d.val2 == 1){ //top/right
                 Point drawPoint = new Point(bounds.x + bounds.width - sprite.getWidth(), bounds.y);
