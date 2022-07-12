@@ -393,7 +393,7 @@ class LanternTableModel extends AbstractConfigTableModel {
             "alpha",
             "offset",
             "repeat every",
-            "abs limit"
+            "limit"
 
     };
 

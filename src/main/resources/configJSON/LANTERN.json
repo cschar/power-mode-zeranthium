@@ -8,6 +8,7 @@
       "isCyclic": false,
       "alpha": 1,
       "val1": 2,
+      "val3": 100,
       "scale": 0.3,
       "enabled": true,
       "speedRate": 4
@@ -20,6 +21,7 @@
       "isCyclic": false,
       "alpha": 0.6,
       "val1": 2,
+      "val3": 100,
       "scale": 0.3,
       "enabled": true,
       "speedRate": 6
@@ -32,6 +34,7 @@
       "isCyclic": false,
       "alpha": 1,
       "val1": 10,
+      "val3": 100,
       "scale": 0.2,
       "enabled": true,
       "speedRate": 7

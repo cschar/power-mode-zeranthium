@@ -283,11 +283,12 @@ public class SpriteDataAnimated  extends SpriteData {
     /** used only for resources since defaultPath is defined there */
     public static SpriteDataAnimated fromJSONObject(JSONObject jo){
         SpriteDataAnimated sd = null;
-            //TODO REMOVE PREVIEW SIZE
+            //TODO REMOVE PREVIEW SIZE, set in table directly
+
             sd =  new SpriteDataAnimated(
 
-                  60,
-//                    jo.getInt("previewSize"),
+//                  jo.getInt("previewSize),,
+                    (Integer) safeUnwrap(0,"previewSize", jo),
 
                     (Boolean) safeUnwrap(false, "enabled", jo),
 //                    (float) jo.getDouble("scale"),
