@@ -6,6 +6,7 @@ package com.cschar.pmode3.uitest;
 import com.cschar.pmode3.services.GitPackLoaderService;
 import com.cschar.pmode3.uitest.pages.DialogFixture;
 import com.cschar.pmode3.uitest.pages.IdeaFrame;
+import com.cschar.pmode3.uitest.pages.WelcomeFrame;
 import com.cschar.pmode3.uitest.steps.JavaExampleSteps;
 import com.cschar.pmode3.uitest.utils.RemoteRobotExtension;
 import com.cschar.pmode3.uitest.utils.StepsLogger;
@@ -15,6 +16,7 @@ import com.intellij.remoterobot.fixtures.*;
 import com.intellij.remoterobot.search.locators.Locator;
 import com.intellij.remoterobot.utils.Keyboard;
 import com.intellij.ui.components.GradientViewport;
+import com.automation.remarks.junit5.Video;
 
 import com.intellij.ui.components.JBTabbedPane;
 import org.assertj.swing.fixture.JTabbedPaneFixture;
@@ -29,6 +31,7 @@ import java.time.Duration;
 
 import static com.cschar.pmode3.uitest.pages.ActionMenuFixtureKt.actionMenu;
 import static com.cschar.pmode3.uitest.pages.ActionMenuFixtureKt.actionMenuItem;
+import static com.cschar.pmode3.uitest.pages.DialogFixture.byTitle;
 import static com.intellij.remoterobot.search.locators.Locators.byXpath;
 import static com.intellij.remoterobot.stepsProcessing.StepWorkerKt.step;
 import static com.intellij.remoterobot.utils.RepeatUtilsKt.waitFor;
@@ -66,6 +69,77 @@ public class OpenSettingsJavaTest {
 //    }
 
     @Test
+    @Video
+    void opens_project(final RemoteRobot remoteRobot) {
+        System.out.println("starting..");
+
+        final WelcomeFrame welcomeFrame = remoteRobot.find(WelcomeFrame.class,
+                                                           Duration.ofSeconds(30));
+        welcomeFrame.getCreateNewProjectLink().click();
+
+        final DialogFixture newProjectDialog = welcomeFrame.find(DialogFixture.class,
+                byTitle("New Project"),
+                Duration.ofSeconds(30));
+
+        //div[@text.key='action.WelcomeScreen.CreateNewProject.text']
+//            settingsDialog.find(ComponentFixture.class,
+//                    byXpath("//div[@text='Power Mode - Zeranthium']"),
+//                    Duration.ofSeconds(3)).click();
+
+        newProjectDialog.find(JListFixture.class, byXpath("//div[@class='JBList']")).clickItem("New Project", true);
+        System.out.println("clicking Java button");
+        newProjectDialog.findText("Java").click();
+        System.out.println("clicking Create button");
+        newProjectDialog.button("Create").click();
+
+
+//        sharedSteps.createNewCommandLineProject();
+
+        System.out.println("waiting for IDE to load after creating project...");
+
+        final IdeaFrame idea = remoteRobot.find(IdeaFrame.class, ofSeconds(10));
+        waitFor(ofMinutes(5), () -> !idea.isDumbMode());
+
+        System.out.println("opening settings..");
+
+        step("open settings in the project", () -> {
+            if (remoteRobot.isMac()) {
+                keyboard.hotKey(VK_SHIFT, VK_META, VK_A);
+                actionMenuItem(remoteRobot, "Settings...").click();
+                keyboard.enter();
+            } else {
+                actionMenu(remoteRobot, "File").click();
+                actionMenuItem(remoteRobot, "Settings...").click();
+            }
+        });
+
+        final DialogFixture settingsDialog = remoteRobot.find(DialogFixture.class,
+                DialogFixture.byTitle("Settings"), Duration.ofSeconds(10));
+
+
+        System.out.println("Closing settings...");
+
+        settingsDialog.find(ComponentFixture.class,
+                byXpath("//div[@text.key='button.cancel']"),
+                Duration.ofSeconds(5)).click();
+
+        System.out.println("Closing the project...");
+
+        step("Close the project", () -> {
+            if (remoteRobot.isMac()) {
+                keyboard.hotKey(VK_SHIFT, VK_META, VK_A);
+                keyboard.enterText("Close Project");
+                keyboard.enter();
+            } else {
+                actionMenu(remoteRobot, "File").click();
+                actionMenuItem(remoteRobot, "Close Project").click();
+            }
+        });
+
+//        assert 5 == 3;
+    }
+
+    @Test
     void createDownloadAndCancel_ReopeningShows_ReadyStatus(final RemoteRobot remoteRobot) {
 //        sharedSteps.createNewCommandLineProject();
 //        sharedSteps.closeTipOfTheDay();
@@ -75,7 +149,7 @@ public class OpenSettingsJavaTest {
         final IdeaFrame idea = remoteRobot.find(IdeaFrame.class, ofSeconds(10));
         waitFor(ofMinutes(5), () -> !idea.isDumbMode());
 
-        step("open settings the project", () -> {
+        step("open settings in the project", () -> {
             if (remoteRobot.isMac()) {
                 keyboard.hotKey(VK_SHIFT, VK_META, VK_A);
                 actionMenuItem(remoteRobot, "Settings...").click();

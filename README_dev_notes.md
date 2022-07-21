@@ -112,13 +112,16 @@ step 2. set that SDK as the project SDK to have the external library defined to 
 
 - in 1 terminal run 
 `./gradlew :clean :runIdeForUiTests`
- `./gradlew :clean :runIdeForUiTests --args="C:\\Users\\codywin\\IdeaProjects\\untitled13\\src\\App22336.kt"`
+`./gradlew :clean :runIdeForUiTests --args="C:\\Users\\codywin\\IdeaProjects\\untitled13\\src\\App22336.kt"`
 
   then open `http://localhost:8082/` to check UI structure
 
 - in another terminal
 all tests: `TEST_TYPE=UI ./gradlew :test`
-single test: `TEST_TYPE=UI ./gradlew :test --tests "com.cschar.pmode3.uitest.OpenSettingsJavaTest"`
+single test class:
+- `TEST_TYPE=UI ./gradlew :test --tests "com.cschar.pmode3.uitest.OpenSettingsJavaTest"`
+single testcase
+- `TEST_TYPE=UI ./gradlew :test --info --tests "com.cschar.pmode3.uitest.OpenSettingsJavaTest.opens_project"` 
 - 
 
 #### testing the demo repo for ui-robot test

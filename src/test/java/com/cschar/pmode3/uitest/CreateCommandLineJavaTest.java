@@ -20,6 +20,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import static com.intellij.remoterobot.search.locators.Locators.byXpath;
 import static com.intellij.remoterobot.stepsProcessing.StepWorkerKt.step;
 import static com.intellij.remoterobot.utils.RepeatUtilsKt.waitFor;
+import static java.awt.event.KeyEvent.*;
 import static java.time.Duration.ofMinutes;
 import static com.cschar.pmode3.uitest.pages.ActionMenuFixtureKt.actionMenu;
 import static com.cschar.pmode3.uitest.pages.ActionMenuFixtureKt.actionMenuItem;

@@ -75,6 +75,9 @@ dependencies {
     // Logging Network Calls
     testImplementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
 
+    // Video Recording
+    testImplementation("com.automation-remarks:video-recorder-junit5:2.0")
+
     // https://www.baeldung.com/junit-5-gradle#enabling-support-for-old-versions
     testCompileOnly("junit:junit:4.12")
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.3.1")
@@ -129,11 +132,11 @@ sourceSets.forEach {
     println("${it.name} : ${dirPaths.joinToString()}")
 }
 sourceSets {
-    test {
-        java {
-            exclude("**/uitest**")
-        }
-    }
+//    test {
+//        java {
+//            exclude("**/uitest**")
+//        }
+//    }
 }
 
 
