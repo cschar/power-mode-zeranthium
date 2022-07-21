@@ -1,6 +1,6 @@
 # power-mode-zeranthium
 
-![Build](https://github.com/cschar/power-mode-zeranthium/workflows/Build/badge.svg)
+[![Build](https://github.com/cschar/power-mode-zeranthium/actions/workflows/runTest.yaml/badge.svg)](https://github.com/cschar/power-mode-zeranthium/actions/workflows/runTest.yaml)
 [![Version](https://img.shields.io/jetbrains/plugin/v/13176-power-mode--zeranthium.svg)](https://plugins.jetbrains.com/plugin/13176-power-mode--zeranthium)
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/13176-power-mode--zeranthium.svg)](https://plugins.jetbrains.com/plugin/13176-power-mode--zeranthium)
 
