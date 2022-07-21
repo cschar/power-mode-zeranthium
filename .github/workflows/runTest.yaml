@@ -1,13 +1,15 @@
 name: Build
 
 
-#on:
-#  workflow_dispatch
-
 on:
-  push:
-    branches:
-      test_actions_branch
+  workflow_dispatch
+
+#on:
+#  push:
+#    branches:
+#      master
+#      test_actions_branch
+
 
 jobs:
 
