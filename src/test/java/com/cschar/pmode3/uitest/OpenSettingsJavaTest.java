@@ -41,7 +41,7 @@ import static java.time.Duration.ofSeconds;
 
 @ExtendWith(RemoteRobotExtension.class)
 @EnabledIfEnvironmentVariable(named = "TEST_TYPE", matches = "UI")
-@Disabled
+//@Disabled
 public class OpenSettingsJavaTest {
 
     private final RemoteRobot remoteRobot = new RemoteRobot("http://127.0.0.1:8082");
@@ -97,24 +97,31 @@ public class OpenSettingsJavaTest {
 
         System.out.println("waiting for IDE to load after creating project...");
 
-        final IdeaFrame idea = remoteRobot.find(IdeaFrame.class, ofSeconds(10));
+        final IdeaFrame idea = remoteRobot.find(IdeaFrame.class, ofSeconds(120));
+        System.out.println("found Ideaframe, waiting to exit dumb mode...");
         waitFor(ofMinutes(5), () -> !idea.isDumbMode());
 
         System.out.println("opening settings..");
 
-        step("open settings in the project", () -> {
-            if (remoteRobot.isMac()) {
-                keyboard.hotKey(VK_SHIFT, VK_META, VK_A);
-                actionMenuItem(remoteRobot, "Settings...").click();
-                keyboard.enter();
-            } else {
-                actionMenu(remoteRobot, "File").click();
-                actionMenuItem(remoteRobot, "Settings...").click();
-            }
-        });
+        if (remoteRobot.isMac()) {
+            keyboard.hotKey(VK_META, VK_COMMA);
+//            keyboard.hotKey(VK_SHIFT, VK_META, VK_A);
+//            keyboard.enterText("Setting");
+//            actionMenuItem(remoteRobot, "Settings...").click();
+//            keyboard.enter();
+        } else {
+            keyboard.hotKey(VK_ALT, VK_CONTROL, VK_S);
+//            keyboard.enterText("Setting");
+//            keyboard.enter();
+//            actionMenu(remoteRobot, "File").click();
+//            actionMenuItem(remoteRobot, "Settings...").click();
+        }
 
+        System.out.println("looking for settings dialog...");
+
+        //MacOS is preferences?!!??!
         final DialogFixture settingsDialog = remoteRobot.find(DialogFixture.class,
-                DialogFixture.byTitle("Settings"), Duration.ofSeconds(10));
+                DialogFixture.byTitle("Settings"), Duration.ofSeconds(120));
 
 
         System.out.println("Closing settings...");
