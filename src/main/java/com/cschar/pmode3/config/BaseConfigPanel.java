@@ -1,9 +1,7 @@
 package com.cschar.pmode3.config;
 
-import com.cschar.pmode3.PowerMode3;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.cschar.pmode3.config.common.ui.ZeranthiumColors;
-import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.util.ui.JBUI;
 
 import javax.swing.*;

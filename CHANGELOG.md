@@ -1,8 +1,12 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
 # power-mode-zeranthium Changelog
-
 ## [Unreleased]
+- 2023 update
+
+
+
+## [3.0.0]
 - 2022 update
 - added a GIT based pack downloader for zeranthium-extras repositories
 - compressed default images included in JAR to reduce download size

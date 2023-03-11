@@ -8,10 +8,10 @@ import java.io.InputStream;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.intellij.openapi.diagnostic.Logger;
 
 public class Sound {
-    private static final Logger LOGGER = Logger.getLogger( Sound.class.getName() );
+    private static final Logger LOGGER = Logger.getInstance( Sound.class.getName() );
     public static Queue<Player> playerBank = new ConcurrentLinkedQueue<Player>();
 
     Player player;
@@ -36,8 +36,8 @@ public class Sound {
                 stream = new FileInputStream(filePath);
                 initPlayer(stream);
             }catch(FileNotFoundException ex){
-                LOGGER.severe("File not found for MP3 sound.. falling back to resource");
-                LOGGER.log(Level.SEVERE, ex.toString(), ex );
+                LOGGER.error("File not found for MP3 sound.. falling back to resource");
+                LOGGER.error(ex.toString(), ex );
                 stream = this.getClass().getResourceAsStream(filePath);
                 initPlayer(stream);
             }
@@ -50,8 +50,8 @@ public class Sound {
             this.player = new Player(stream);
             playerBank.add(this.player);
         }catch( Exception ex){
-            LOGGER.severe("Error initializing MP3 sound player");
-            LOGGER.log(Level.SEVERE, ex.toString(), ex );
+            LOGGER.error("Error initializing MP3 sound player");
+            LOGGER.error(ex.toString(), ex );
         }
     }
 
@@ -62,7 +62,7 @@ public class Sound {
                 player.close();
                 playerBank.remove(player);
             } catch (Exception ex) {
-                LOGGER.log(Level.SEVERE, ex.toString(), ex );
+                LOGGER.error( ex.toString(), ex );
             }
         }).start();
     }
@@ -75,7 +75,7 @@ public class Sound {
                 playerBank.remove(player);
                 callback.call();
             } catch (Exception ex) {
-                LOGGER.log(Level.SEVERE, ex.toString(), ex );
+                LOGGER.error(ex.toString(), ex );
             }
         }).start();
 

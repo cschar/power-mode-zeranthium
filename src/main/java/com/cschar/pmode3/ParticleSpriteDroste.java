@@ -19,10 +19,7 @@ package com.cschar.pmode3;
 
 
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
-import com.intellij.notification.Notification;
-import com.intellij.notification.Notifications;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.ui.Messages;
 import org.imgscalr.Scalr;
 
 import java.awt.*;
@@ -138,7 +135,7 @@ public class ParticleSpriteDroste extends Particle{
         double currentX = sprite.getWidth();
         double currentY = sprite.getHeight();
 
-//        System.out.println("Expands: " + expands + " Max found:" + maxMargin);
+//        
         expandScales = new double[expands][2];
         for(int i = 0; i < expands; i++){
             currentX += expandSize*2;

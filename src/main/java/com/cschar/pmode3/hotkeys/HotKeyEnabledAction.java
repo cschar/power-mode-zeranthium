@@ -2,9 +2,9 @@ package com.cschar.pmode3.hotkeys;
 
 
 import com.cschar.pmode3.PowerMode3;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

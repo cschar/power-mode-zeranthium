@@ -2,10 +2,25 @@
 
 # Deploying new version
 
- 1. Change version in build.gradle 
- 2. Update change notes in build.gradle
+ 1. Change version in build.gradle
+    - make actual change in gradle.properties
+    - change pluginVersion
+    - update pluginUntilBuild
+    
+ 2. Update change notes plugin in build.gradle
+    - update CHANGELOG.md
+    
  3. build ex: ```./gradlew :buildPlugin --info```
  4. upload new .jar file at `zeranthium/build/libs` to site
+
+# upgrading gradle
+https://tomgregory.com/how-to-update-gradle/
+./gradlew wrapper --gradle-version 7.6.1
+./gradlew --version
+
+# dropping down to debug level logging when in sandbox
+add in Help > diagnostic Tools > Debug Log Settings
+#com.cschar.pmode3:all     (including # at start)
 
 # logo design
 
@@ -19,9 +34,6 @@ https://pngquant.org/
 
 audio code is LGPL:
 https://stackoverflow.com/questions/6045384/playing-mp3-and-wav-in-java
-
-can i combine LGPL with this project + APACHE 2.0 code?
-Can i license it under MIT? 
 https://opensource.stackexchange.com/questions/5175/including-untouched-lgpl-library-in-a-mit-licenced-project?rq=1
 https://opensource.stackexchange.com/questions/7904/can-your-mit-library-use-an-lgpl-library?rq=1
 

@@ -7,11 +7,11 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.logging.Logger;
+import com.intellij.openapi.diagnostic.Logger;
 
 
 public class MemoryMonitorServiceImpl implements MemoryMonitorService {
-    private static final Logger LOGGER = Logger.getLogger(MemoryMonitorServiceImpl.class.getName());
+    private static final Logger LOGGER = Logger.getInstance(MemoryMonitorServiceImpl.class.getName());
     PowerMode3ConfigurableUI2 menuConfigurableUI;
 
     @Override
@@ -22,13 +22,13 @@ public class MemoryMonitorServiceImpl implements MemoryMonitorService {
 
     @Override
     public void cleanup() {
-        LOGGER.info("Cleanup");
+        LOGGER.debug("Cleanup");
         this.menuConfigurableUI = null;
     }
 
     @Override
     public void dispose() {
-        LOGGER.info("Disposing");
+        LOGGER.debug("Disposing");
         this.menuConfigurableUI = null;
     }
 

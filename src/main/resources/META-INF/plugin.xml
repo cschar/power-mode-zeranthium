@@ -18,13 +18,13 @@
         <applicationConfigurable groupId="appearance"
                                  groupWeight="20"
                                  id="power.mode3.zeranthium"
-                                 displayName="Power Mode - Zeranthium"
-                                 instance="com.cschar.pmode3.PowerMode3Configurable2" />
 
+                                 instance="com.cschar.pmode3.PowerMode3Configurable2"
+                                 />
+<!--        https://github.com/JetBrains/intellij-sdk-code-samples/blob/main/settings/src/main/resources/META-INF/plugin.xml-->
+        <applicationService serviceImplementation="com.cschar.pmode3.PowerMode3"/>
 
         <applicationService serviceImplementation="com.cschar.pmode3.services.GitPackLoaderService"/>
-
-        <applicationService serviceImplementation="com.cschar.pmode3.PowerMode3"/>
 
         <applicationService serviceInterface="com.cschar.pmode3.services.MemoryMonitorService"
                             serviceImplementation="com.cschar.pmode3.services.MemoryMonitorServiceImpl"
@@ -34,6 +34,7 @@
         <!-- https://plugins.jetbrains.com/docs/intellij/plugin-components.html#application-startup -->
         <!-- "Plugin code should only be executed when projects are opened" -->
         <postStartupActivity implementation="com.cschar.pmode3.PowerMode3StartupActivity"/>
+<!--        <backgroundPostStartupActivity implementation="com.cschar.pmode3.PowerMode3StartupActivity"/>-->
 
     </extensions>
 

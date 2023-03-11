@@ -3,27 +3,18 @@ package com.cschar.pmode3.services;
 import com.cschar.pmode3.PowerMode3;
 import com.cschar.pmode3.PowerMode3ConfigurableUI2;
 import com.cschar.pmode3.config.common.ui.ZeranthiumColors;
-import com.intellij.ide.DataManager;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataConstants;
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.progress.util.BackgroundTaskUtil;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.tasks.LocalTask;
-import com.intellij.tasks.TaskManager;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTabbedPane;
@@ -42,12 +33,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Logger;
+import com.intellij.openapi.diagnostic.Logger;
 
 public class GitPackLoaderJComponent extends JPanel{
-    private static final Logger LOGGER = Logger.getLogger( GitPackLoaderJComponent.class.getName() );
+    private static final Logger LOGGER = Logger.getInstance( GitPackLoaderJComponent.class.getName() );
     public static final String ZERANTHIUM_EXTRAS_GIT_VOL1 = "https://github.com/powermode-zeranthium/zeranthium-extras-vol1.git";
     public static final String ZERANTHIUM_EXTRAS_GIT_VOL2 = "https://github.com/powermode-zeranthium/zeranthium-extras-vol2.git";
     public static final String ZERANTHIUM_EXTRAS_GIT_VOL3 = "https://github.com/powermode-zeranthium/zeranthium-extras-vol3.git";
@@ -114,7 +104,7 @@ public class GitPackLoaderJComponent extends JPanel{
                 //TODO Serialize this setting on the PowerMode3 settings
 
                 VirtualFile chosen = FileChooser.chooseFile(fd, null, toSelect);
-                LOGGER.info("selected: " + chosen.getPath() + " as custom download path for zeranthium packs");
+                LOGGER.debug("selected: " + chosen.getPath() + " as custom download path for zeranthium packs");
 
                 directoryPath = chosen.getPath();
                 setPathLabel.setText("path is: " + chosen.getPath());
@@ -153,7 +143,7 @@ public class GitPackLoaderJComponent extends JPanel{
         ////////////TABBED REPOS
         JBTabbedPane gitRepoTabbedPane = new JBTabbedPane(JTabbedPane.LEFT);
         gitRepoTabbedPane.setOpaque(false);
-        LOGGER.info("building git repo tab at " + directoryPath);
+        LOGGER.trace("building git repo tab at " + directoryPath);
 
         File localPath = new File(directoryPath + File.separator + "zeranthium-extras");
 
@@ -229,7 +219,7 @@ public class GitPackLoaderJComponent extends JPanel{
 //                    VirtualFile toSelect = LocalFileSystem.getInstance().findFileByPath(directoryPath);
 //                    VirtualFile chosenManifest = FileChooser.chooseFile(fd, null, toSelect);
                     VirtualFile chosenManifest = FileChooser.chooseFile(fd, null, null);
-                    System.out.println("chose file: " + chosenManifest.getName());
+                    
 
                     if(!chosenManifest.getName().equals("manifest.json")){
                         Messages.showInfoMessage("Please select a manifest.json file in a pack directory", "Pack Load Failed");
@@ -331,7 +321,7 @@ public class GitPackLoaderJComponent extends JPanel{
 //        DataContext dataContext = (DataContext) DataManager.getDataProvider(this);
 //        Project project = (Project) dataContext.getData(CommonDataKeys.PROJECT);
 //
-//        System.out.println("project is " + project.getName());
+//        
 //
 ////        List<LocalTask> localTasks = TaskManager.getManager(project).getLocalTasks();
 ////        TaskManager.getManager(project).
@@ -396,7 +386,7 @@ public class GitPackLoaderJComponent extends JPanel{
                         }
                     }
                 };
-                LOGGER.info("Launching cloning task  from thread " + Thread.currentThread().toString());
+                LOGGER.trace("Launching cloning task  from thread " + Thread.currentThread().toString());
                 ProgressManager.getInstance().run(bgTask2);
 
             };
@@ -410,7 +400,7 @@ public class GitPackLoaderJComponent extends JPanel{
         loadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                LOGGER.info("Loading pack for " + customRepoName+"...");
+                LOGGER.debug("Loading pack for " + customRepoName+"...");
 
                 packsList.removeAll();
                 packsList.validate();
@@ -430,7 +420,7 @@ public class GitPackLoaderJComponent extends JPanel{
 
                 if(themes != null){
                     for(File theme : themes){
-                        LOGGER.info("--- loading theme: " + theme.getName());
+                        LOGGER.trace("loading theme: " + theme.getName());
                         packsList.add(getPackRow(theme.getName(), theme.getPath() ));
                     }
                 }
@@ -508,7 +498,7 @@ public class GitPackLoaderJComponent extends JPanel{
 
             @Override
             public void onCancel() {
-                LOGGER.info("cancelling pack load...");
+                LOGGER.debug("cancelling pack load...");
                 //TODO rollback changes to a saved state at start of run() above
                 super.onCancel();
             }
@@ -627,7 +617,7 @@ public class GitPackLoaderJComponent extends JPanel{
             if(f.exists()){
                 sliderIcon = new ImageIcon(previewIconPath);
                 Image sliderIconImage = sliderIcon.getImage(); // transform it
-                Image sliderIconResized = sliderIconImage.getScaledInstance(150, 150,  java.awt.Image.SCALE_SMOOTH);
+                Image sliderIconResized = sliderIconImage.getScaledInstance(150, 150,  Image.SCALE_SMOOTH);
                 sliderIcon = new ImageIcon(sliderIconResized);
             }else{
                 sliderIcon = new ImageIcon(this.getClass().getResource("/icons/pack-logo6.png"));

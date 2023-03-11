@@ -24,13 +24,19 @@ import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.Service;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.actionSystem.*;
-import com.intellij.openapi.progress.*;
-
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.EditorFactory;
+import com.intellij.openapi.editor.actionSystem.TypedAction;
+import com.intellij.openapi.editor.actionSystem.TypedActionHandler;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.JBColor;
 import com.intellij.util.SmartList;
@@ -44,9 +50,9 @@ import org.json.JSONObject;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.io.InputStream;
-import java.util.*;
 import java.util.List;
-import java.util.logging.Logger;
+import java.util.*;
+
 
 
 /**
@@ -65,8 +71,10 @@ import java.util.logging.Logger;
         //./build/idea-sandbox/config/options/power.mode.3.Zeranthium.xml
         storages = {@Storage(value = "$APP_CONFIG$/power.mode.3.Zeranthium.xml")}
 )
-public class PowerMode3 implements
+@Service(Service.Level.APP)
+final public class PowerMode3 implements
         PersistentStateComponent<PowerMode3>, Disposable {
+    private static final Logger LOGGER = Logger.getInstance(PowerMode3.class);
 
     @Override
     public void dispose() {
@@ -74,12 +82,13 @@ public class PowerMode3 implements
         //particleContainerManager = null;
         //why isnt this disposing
 
-        LOGGER.info("Disposing PowerMode3");
+        LOGGER.debug("Disposing PowerMode3");
         Disposer.dispose(particleContainerManager);
     }
 
     //https://www.jetbrains.org/intellij/sdk/docs/basics/persisting_state_of_components.html#implementing-the-persistentstatecomponent-interface
-    private static final Logger LOGGER = Logger.getLogger(PowerMode3.class.getName());
+
+
 
     public static String NOTIFICATION_GROUP_DISPLAY_ID = "PowerMode - Zeranthium";
 
@@ -240,20 +249,63 @@ public class PowerMode3 implements
 
     @Override
     public void initializeComponent() {
-        LOGGER.info("Initializing pmode3 component...");
+        LOGGER.debug("Initializing pmode3 component...");
         //construct JBColor out of serialized normal Color
         this.particleColor = new JBColor(new Color(this.getParticleRGB()), new Color(this.getParticleRGB()));
 
+        setupSoundTyper();
+        setupParticles();
+        LOGGER.debug("Done initializing...");
+    }
+
+
+    private void setupParticles(){
+        //call this on the main UI thread, since setup is done in a background task.
+        // https://plugins.jetbrains.com/docs/intellij/general-threading-rules.html#write-access
+        ApplicationManager.getApplication().invokeLater(() -> {
+            
+            final EditorFactory editorFactory = EditorFactory.getInstance();
+            particleContainerManager = new ParticleContainerManager(this);
+
+            Editor[] allEditors = EditorFactory.getInstance().getAllEditors();
+            
+            for(Editor e : allEditors){
+//            LOGGER.info("Editor " + e.toString() + " is open");
+                particleContainerManager.bootstrapEditor(e);
+            }
+            editorFactory.addEditorFactoryListener(particleContainerManager, this);
+            EditorFactory.getInstance().refreshAllEditors();
+            LOGGER.debug("Bootstrapped previous editors...");
+
+
+            //Setup the handler to listen when typing... e.x. for anchor style particles
+            final TypedAction typedAction = TypedAction.getInstance();
+            final TypedActionHandler rawHandler = typedAction.getRawHandler();
+            typedAction.setupRawHandler(new TypedActionHandler() {
+                @Override
+                public void execute(@NotNull final Editor editor, final char c, @NotNull final DataContext dataContext) {
+                    if (PowerMode3.this.isConfigLoaded && PowerMode3.this.enabled) {
+                        updateEditor(editor);
+                        rawHandler.execute(editor, c, dataContext);
+                    }
+                }
+            });
+        }, ModalityState.NON_MODAL);
+
+//        ApplicationManager.getApplication().runWriteAction(() -> {
+//
+//        });
+    }
+
+    private void setupSoundTyper(){
         //Setup SOUND handler
-        final EditorActionManager actionManager = EditorActionManager.getInstance();
         final TypedAction typedAction2 = TypedAction.getInstance();
         TypedActionHandler rawHandler2 = typedAction2.getRawHandler();
         typedAction2.setupRawHandler(
                 new TypedActionHandler() {
                     @Override
                     public void execute(@NotNull Editor editor, char c, @NotNull DataContext dataContext) {
-                        if (PowerMode3.this.isEnabled() && PowerMode3.this.getSpriteTypeEnabled(ConfigType.SOUND)) {
-
+                        if (PowerMode3.this.isConfigLoaded && PowerMode3.this.enabled && PowerMode3.this.getSpriteTypeEnabled(ConfigType.SOUND)) {
                             int winner = SoundData.getWeightedAmountWinningIndex(SoundConfig.soundData);
                             if (winner != -1) {
                                 //TODO refactor to just return object or null
@@ -261,43 +313,11 @@ public class PowerMode3 implements
                                 Sound s = new Sound(d.getPath(), !d.customPathValid);
                                 s.play();
                             }
-
                         }
+                        LOGGER.debug("sound type");
                         rawHandler2.execute(editor, c, dataContext);
                     }
                 });
-
-
-
-        //Setup Main particle stuff
-        //Ensure when a new editor is created,  a particleContainerManager is attached to it
-        final EditorFactory editorFactory = EditorFactory.getInstance();
-
-
-        particleContainerManager = new ParticleContainerManager(this);
-
-        Editor[] allEditors = EditorFactory.getInstance().getAllEditors();
-        for(Editor e : allEditors){
-//            LOGGER.info("Editor " + e.toString() + " is open");
-            particleContainerManager.bootstrapEditor(e);
-        }
-
-        editorFactory.addEditorFactoryListener(particleContainerManager, this);
-        EditorFactory.getInstance().refreshAllEditors();
-
-        LOGGER.info("Bootstrapped previous editors...");
-
-        //Setup the handler to listen when typing... e.x. for anchor style particles
-        final TypedAction typedAction = TypedAction.getInstance();
-        final TypedActionHandler rawHandler = typedAction.getRawHandler();
-        typedAction.setupRawHandler(new TypedActionHandler() {
-            @Override
-            public void execute(@NotNull final Editor editor, final char c, @NotNull final DataContext dataContext) {
-                updateEditor(editor);
-                rawHandler.execute(editor, c, dataContext);
-            }
-        });
-        LOGGER.info("Done initializing...");
     }
 
     private void updateEditor(@NotNull final Editor editor){
@@ -327,7 +347,7 @@ public class PowerMode3 implements
 
     @Override
     public void loadState(@NotNull PowerMode3 state) {
-        LOGGER.info("previous state found -- setting up...");
+        LOGGER.debug("previous state found: setting up...");
 
         XmlSerializerUtil.copyBean(state, this);
 
@@ -344,16 +364,16 @@ public class PowerMode3 implements
         }
 
         if (missingConfigs.size() != 0) {
-            LOGGER.info("Missing configs found: " + missingConfigs.size() + " -- loading defaults");
+            LOGGER.debug("Missing configs found: " + missingConfigs.size() + " -- loading defaults");
             for (ConfigType c : missingConfigs) {
-                LOGGER.info(c.name());
+                LOGGER.debug(c.name());
                 JSONLoader.loadSingleJSONTableConfig(pathDataMap, c);
             }
         }
 
 
         loadConfigData();
-        LOGGER.info("state loaded...");
+        LOGGER.debug("state loaded...");
     }
 
 
@@ -381,7 +401,8 @@ public class PowerMode3 implements
         this.enabled = false;
 
         if (!this.isConfigLoaded) {
-            LOGGER.info("Loading assets...");
+            
+            long startTime = System.nanoTime();
 
             setUpdateProgress(progressIndicator, "Multi Layer", 0.1);
             MultiLayerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MULTI_LAYER)));
@@ -408,13 +429,17 @@ public class PowerMode3 implements
             MusicTriggerConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.MUSIC_TRIGGER)));
             SpecialActionSoundConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.SPECIAL_ACTION_SOUND)));
 
+            long endTime = System.nanoTime();
+            long duration = (endTime - startTime);
+            
+
 
             this.enabled = wasEnabled;
             this.isConfigLoaded = true;
 
             PowerMode3ConfigurableUI2 ui = PowerMode3ConfigurableUI2.getInstance();
             if (ui != null) {
-                LOGGER.info("Assets finished loading... Refreshing Config UI ");
+                
                 ui.updateConfigUIAfterAssetsAreLoaded(wasEnabled);
             }
         }
@@ -450,7 +475,7 @@ public class PowerMode3 implements
 //    }
 
     public ArrayList<SpriteDataAnimated> deserializeSpriteDataAnimated(List<String> target) {
-        LOGGER.info("deserializing sprite data animated" + target);
+        LOGGER.debug("deserializing sprite data animated" + target);
         ArrayList<SpriteDataAnimated> sd = new ArrayList<SpriteDataAnimated>();
         for (String s1 : target) {
             sd.add(SpriteDataAnimated.fromJsonObjectString(s1));

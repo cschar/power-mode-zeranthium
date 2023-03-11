@@ -4,14 +4,12 @@ package com.cschar.pmode3.hotkeys;
 import com.cschar.pmode3.PowerMode3;
 import com.cschar.pmode3.Sound;
 import com.cschar.pmode3.config.MusicTriggerConfig;
-import com.cschar.pmode3.config.SoundConfig;
 import com.cschar.pmode3.config.common.SoundData;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 
 import javax.swing.*;
 

@@ -5,11 +5,7 @@ import com.cschar.pmode3.ParticleSpriteLinkerAnchor;
 import com.cschar.pmode3.PowerMode3;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.cschar.pmode3.config.common.ui.*;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDialog;
-import com.intellij.openapi.fileChooser.FileChooserFactory;
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
 import org.json.JSONArray;
@@ -17,7 +13,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
@@ -93,7 +88,7 @@ public class LanternConfig extends BaseConfigPanel {
         cyclicPanel.add(maxCycleParticleLabel);
         cyclicPanel.add(this.maxParticlesTextField);
         cyclicPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        cyclicPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+        cyclicPanel.setAlignmentX(RIGHT_ALIGNMENT);//0.0
         cyclicPanel.setMaximumSize(new Dimension(500, 50));
         secondCol.add(cyclicPanel);
 
@@ -103,7 +98,7 @@ public class LanternConfig extends BaseConfigPanel {
 
         JPanel caretMovementPanel = new JPanel();
         caretMovementPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        caretMovementPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        caretMovementPanel.setAlignmentX(RIGHT_ALIGNMENT);
         caretMovementPanel.setMaximumSize(new Dimension(500,50));
 //        this.moveWithCaret = new JCheckBox("move with Caret?");
         this.moveWithCaret = new JCheckBox("move with caret/mouse?");
@@ -119,7 +114,7 @@ public class LanternConfig extends BaseConfigPanel {
 
         JPanel addLoopPanel = new JPanel();
         addLoopPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        addLoopPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        addLoopPanel.setAlignmentX(RIGHT_ALIGNMENT);
         addLoopPanel.setMaximumSize(new Dimension(500,50));
         addLoopPanel.setOpaque(true);
         addLoopPanel.setBackground(ZeranthiumColors.specialOption1);

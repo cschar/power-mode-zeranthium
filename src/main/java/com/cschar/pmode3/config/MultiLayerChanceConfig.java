@@ -1,10 +1,12 @@
 package com.cschar.pmode3.config;
 
-import com.cschar.pmode3.ParticleSpriteMultiLayer;
 import com.cschar.pmode3.ParticleSpriteMultiLayerChance;
 import com.cschar.pmode3.PowerMode3;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
-import com.cschar.pmode3.config.common.ui.*;
+import com.cschar.pmode3.config.common.ui.AbstractConfigTableModel;
+import com.cschar.pmode3.config.common.ui.CustomPathCellHighlighterRenderer;
+import com.cschar.pmode3.config.common.ui.JTableButtonMouseListener;
+import com.cschar.pmode3.config.common.ui.JTableButtonRenderer;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
@@ -14,13 +16,11 @@ import org.json.JSONObject;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.EventObject;
 
 public class MultiLayerChanceConfig extends BaseConfigPanel{
 

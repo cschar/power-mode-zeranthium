@@ -7,16 +7,11 @@ import com.cschar.pmode3.config.common.ui.AbstractConfigTableModel;
 import com.cschar.pmode3.config.common.ui.CustomPathCellHighlighterRenderer;
 import com.cschar.pmode3.config.common.ui.JTableButtonMouseListener;
 import com.cschar.pmode3.config.common.ui.JTableButtonRenderer;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDialog;
-import com.intellij.openapi.fileChooser.FileChooserFactory;
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
 
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
@@ -62,7 +57,7 @@ public class CopyPasteVoidConfig extends BaseConfigPanel{
         JPanel fadeColorPanel = Config.getColorPickerPanel("fade Color", PowerMode3.ConfigType.COPYPASTEVOID, settings, fadeColor);
         fadeColorJPanel.add(fadeColorPanel);
         fadeColorJPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        fadeColorJPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+        fadeColorJPanel.setAlignmentX(RIGHT_ALIGNMENT);//0.0
         fadeColorJPanel.setMaximumSize(new Dimension(500, 50));
         secondCol.add(fadeColorJPanel);
 

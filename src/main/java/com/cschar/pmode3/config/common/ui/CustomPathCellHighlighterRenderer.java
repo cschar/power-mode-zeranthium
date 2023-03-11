@@ -1,7 +1,6 @@
 package com.cschar.pmode3.config.common.ui;
 
 import com.cschar.pmode3.config.common.PathData;
-import com.cschar.pmode3.config.common.SpriteData;
 import com.intellij.ui.JBColor;
 
 import javax.swing.*;

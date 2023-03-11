@@ -7,21 +7,23 @@ import com.intellij.notification.Notifications;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.intellij.openapi.diagnostic.Logger;
 
 public class SpriteDataAnimated  extends SpriteData {
-    private static final Logger LOGGER = Logger.getLogger( SpriteDataAnimated.class.getName() );
+    private static final Logger LOGGER = Logger.getInstance( SpriteDataAnimated.class.getName() );
 
     public int speedRate = 2;
     public boolean isCyclic=false;
@@ -139,10 +141,10 @@ public class SpriteDataAnimated  extends SpriteData {
 
 
                         totalSizeMBResources += sizeMB;
-//                        System.out.println(String.format("1 asset is size %.9f - %s", sizeMB, imageURL.toString()));
+//                        
 
                     } catch (IOException ex) {
-                        LOGGER.log(Level.SEVERE, ex.toString(), ex );
+                        LOGGER.error(ex.toString(), ex );
                     }
 
 //                    BufferedImage loadedImage = ParticleUtils.loadSprite(tmpPath);
@@ -158,7 +160,7 @@ public class SpriteDataAnimated  extends SpriteData {
 
             this.totalLoadedAssetSizeMB = totalSizeMBResources;
 //            LOGGER.info(String.format("Loaded assets with size MB: %.2f",this.totalLoadedAssetSizeMB));
-            LOGGER.info(String.format("Loaded default resource %s    size MB: %.2f", dir.getPath(), this.totalLoadedAssetSizeMB));
+            LOGGER.debug(String.format("Loaded default resource %s    size MB: %.2f", dir.getPath(), this.totalLoadedAssetSizeMB));
 
         }else{
             ArrayList<BufferedImage> newImages = new ArrayList<BufferedImage>();
@@ -197,7 +199,7 @@ public class SpriteDataAnimated  extends SpriteData {
                     }
 
                 } catch (final IOException e) {
-                    LOGGER.severe("error loading image directory: " + path);
+                    LOGGER.warn("error loading image directory: " + path);
                     setImageAnimated(this.defaultPath, true);
                     customPathValid = false;
                     return;
@@ -214,7 +216,7 @@ public class SpriteDataAnimated  extends SpriteData {
 
 //                if(newPreviewIcons.size() == 0 || newImages.size() == 0){
                 if(newImages.size() == 0){
-                    LOGGER.severe("No images found in directory: " + path);
+                    LOGGER.info("No images found in directory: " + path);
                     this.customPathValid = false;
                 }else{
 ;
@@ -229,7 +231,7 @@ public class SpriteDataAnimated  extends SpriteData {
                     this.previewIcon = new ImageIcon(previewImage);
 
                     this.totalLoadedAssetSizeMB = totalSizeGB * 1024;
-                    LOGGER.info("Loaded customPath directory: " + path + "   total size (MB): " + this.totalLoadedAssetSizeMB);
+                    LOGGER.debug("Loaded customPath directory: " + path + "   total size (MB): " + this.totalLoadedAssetSizeMB);
                 }
 
 
@@ -263,7 +265,7 @@ public class SpriteDataAnimated  extends SpriteData {
 
 
         }catch(JSONException e){
-            LOGGER.log(Level.SEVERE,e.toString(),e);
+            LOGGER.error(e.toString(),e);
         }
 
         return jo;
@@ -275,7 +277,7 @@ public class SpriteDataAnimated  extends SpriteData {
             JSONObject jo = new JSONObject(s);
             return fromJSONObject(jo);
         }catch(JSONException e){
-            LOGGER.log(Level.SEVERE,e.toString(),e);
+            LOGGER.error(e.toString(),e);
         }
         return sd;
     }
@@ -354,7 +356,7 @@ public class SpriteDataAnimated  extends SpriteData {
     }
 
     private void notifyError(String msg){
-        LOGGER.severe(msg);
+        LOGGER.error(msg);
         Notification n = new Notification(PowerMode3.NOTIFICATION_GROUP_DISPLAY_ID,
                 PowerMode3.NOTIFICATION_GROUP_DISPLAY_ID + ": Error loading image set",
                 msg,

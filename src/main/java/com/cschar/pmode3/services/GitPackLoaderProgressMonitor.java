@@ -8,7 +8,7 @@ import javax.swing.*;
 
 class GitPackLoaderProgressMonitor implements ProgressMonitor {
 
-    private static final com.intellij.openapi.diagnostic.Logger LOGGER = Logger.getInstance(GitPackLoaderProgressMonitor.class.getName());
+    private static final Logger LOGGER = Logger.getInstance(GitPackLoaderProgressMonitor.class.getName());
 
     JLabel statusLabel;
     ProgressIndicator progressIndicator;
@@ -25,7 +25,7 @@ class GitPackLoaderProgressMonitor implements ProgressMonitor {
     @Override
     public void start(int totalTasks) {
         //2 tasks
-        LOGGER.info("Starting work on " + totalTasks + " git tasks");
+        LOGGER.debug("Starting work on " + totalTasks + " git tasks");
     }
 
     private int totalWork;
@@ -37,8 +37,8 @@ class GitPackLoaderProgressMonitor implements ProgressMonitor {
         this.totalWork = totalWork;
         progressIndicator.setText2("doing task: " + title);
         currentTask = title;
-        LOGGER.info("Starting task: " + title + " ------- totalWork: " + totalWork);
-        //System.out.println("Starting from thread " + Thread.currentThread().getName());
+        LOGGER.debug("Starting task: " + title + " ------- totalWork: " + totalWork);
+        //
     }
 
     @Override
@@ -73,7 +73,7 @@ class GitPackLoaderProgressMonitor implements ProgressMonitor {
 
     @Override
     public void endTask() {
-        //System.out.println("Ending zeranthium pack download task");
+        //
     }
 
     //custom logic to check to cancel process...
@@ -86,7 +86,7 @@ class GitPackLoaderProgressMonitor implements ProgressMonitor {
             e.printStackTrace();
         }
         if (progressIndicator.isCanceled()) {
-            LOGGER.info("cancelled the git pack loader task");
+            LOGGER.debug("cancelled the git pack loader task");
             return true;
         }
         return false;

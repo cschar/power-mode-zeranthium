@@ -14,20 +14,21 @@
 package com.cschar.pmode3;
 
 import com.cschar.pmode3.actionHandlers.MyCaretListener;
-
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.editor.*;
-
-
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.ScrollingModel;
+import com.intellij.openapi.editor.VisualPosition;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
-
 import com.intellij.openapi.editor.event.EditorFactoryListener;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
+import java.util.HashMap;
+import java.util.Map;
+import com.intellij.openapi.diagnostic.Logger;
 
 /**
  * @author Baptiste Mesta
@@ -35,7 +36,7 @@ import java.util.logging.Logger;
  * modified by cschar
  */
 public class ParticleContainerManager implements EditorFactoryListener, Disposable {
-    private static final Logger LOGGER = Logger.getLogger(ParticleContainerManager.class.getName());
+    private static final Logger LOGGER = Logger.getInstance(ParticleContainerManager.class);
 
     private Thread thread;
     public static Map<Editor, ParticleContainer> particleContainers = new HashMap<>();
@@ -73,7 +74,7 @@ public class ParticleContainerManager implements EditorFactoryListener, Disposab
      * Dirty way to simulate what happens when a new editor is created without having listener attached beforehand.
     */
     public void bootstrapEditor(Editor editor){
-        //        LOGGER.warning("BOOSTRAP=====Editor Created with name:" + editor.toString());
+
 //        EditorFactoryEvent ev = new EditorFactoryEvent(EditorFactory.getInstance(), e);
 //        final Editor editor = ev.getEditor();
 
@@ -87,9 +88,8 @@ public class ParticleContainerManager implements EditorFactoryListener, Disposab
 
     @Override
     public void editorCreated(@NotNull EditorFactoryEvent event) {
-        //        LOGGER.info("=====Editor Created with name:" + editor.toString());
-
         final Editor editor = event.getEditor();
+        LOGGER.debug("Editor Created :" + editor);
         particleContainers.put(editor, new ParticleContainer(editor));
         MyCaretListener cl = new MyCaretListener();
         MyCaretListener.enabled = true;
@@ -100,7 +100,7 @@ public class ParticleContainerManager implements EditorFactoryListener, Disposab
     @Override
     public void editorReleased(@NotNull EditorFactoryEvent event) {
         ParticleContainer pc = particleContainers.get(event.getEditor());
-        LOGGER.info("releasing editor with particleContainer: " + pc);
+        LOGGER.debug("releasing editor with particleContainer: " + pc);
         if(pc != null) {
             pc.cleanupParticles();
         }
@@ -204,7 +204,7 @@ public class ParticleContainerManager implements EditorFactoryListener, Disposab
         thread.interrupt();
         resetAllContainers();
         particleContainers.clear();
-        LOGGER.info("Disposing ParticleContainerManager....");
+        LOGGER.debug("Disposing ParticleContainerManager....");
 
     }
 

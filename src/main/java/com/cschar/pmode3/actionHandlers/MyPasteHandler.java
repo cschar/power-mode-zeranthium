@@ -1,35 +1,34 @@
 package com.cschar.pmode3.actionHandlers;
 
 
-import com.cschar.pmode3.*;
-import com.cschar.pmode3.config.BasicParticleConfig;
+import com.cschar.pmode3.ParticleContainerManager;
+import com.cschar.pmode3.ParticleSpritePasteShape;
+import com.cschar.pmode3.PowerMode3;
 import com.cschar.pmode3.config.CopyPasteVoidConfig;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.actionSystem.EditorTextInsertHandler;
-import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.Producer;
-import org.bouncycastle.util.Arrays;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.geom.Path2D;
-import java.util.logging.Logger;
+import com.intellij.openapi.diagnostic.Logger;
 
 
 public class MyPasteHandler extends EditorActionHandler implements EditorTextInsertHandler {
-    private static final java.util.logging.Logger LOGGER = Logger.getLogger(MyPasteHandler.class.getName());
+    private static final Logger LOGGER = Logger.getInstance(MyPasteHandler.class.getName());
 
     //   deprecated
 //    @Override
 //    public void execute(Editor editor, DataContext dataContext, Producer<Transferable> producer) {
-//        System.out.println("PasteHandler executed");
+//        
 //        LOGGER.info("Psting...in project.." + editor.getProject().getName());
 //        if (origEditorActionHandler != null && origEditorActionHandler instanceof EditorTextInsertHandler) {
 //            ((EditorTextInsertHandler) origEditorActionHandler).execute(editor, dataContext, producer);
@@ -38,8 +37,8 @@ public class MyPasteHandler extends EditorActionHandler implements EditorTextIns
 
     @Override
     public void execute(Editor editor, DataContext dataContext, @Nullable Producer<? extends Transferable> producer) {
-        System.out.println("PasteHandler executed");
-        LOGGER.info("Psting...in project.." + editor.getProject().getName());
+        
+        LOGGER.debug("Pasting...in project.." + editor.getProject().getName());
         if (origEditorActionHandler != null && origEditorActionHandler instanceof EditorTextInsertHandler) {
             ((EditorTextInsertHandler) origEditorActionHandler).execute(editor, dataContext, producer);
         }
@@ -49,14 +48,14 @@ public class MyPasteHandler extends EditorActionHandler implements EditorTextIns
     private EditorActionHandler origEditorActionHandler;
 
     public MyPasteHandler(@NotNull EditorActionHandler origEditorActionHandler) {
-        LOGGER.info("creating MyPasteHandler");
+        LOGGER.debug("creating MyPasteHandler");
         this.origEditorActionHandler = origEditorActionHandler;
     }
 
     @Override
     protected void doExecute(@NotNull Editor editor,  @Nullable Caret caret, DataContext dataContext) {
 
-        LOGGER.info("Pasting doExectue..in project.." + editor.getProject().getName());
+        LOGGER.debug("Pasting doExecute..in project.." + editor.getProject().getName());
         PowerMode3 settings = PowerMode3.getInstance();
 
         if(!settings.isEnabled() || !settings.getSpriteTypeEnabled(PowerMode3.ConfigType.COPYPASTEVOID)){
@@ -76,7 +75,7 @@ public class MyPasteHandler extends EditorActionHandler implements EditorTextIns
                 try {
                     int beforePasteOffset = scrollingModel.getVerticalScrollOffset();
                 }catch(UnsupportedOperationException e){
-                    LOGGER.fine("paste unsupported, exiting early");
+                    LOGGER.debug("paste unsupported, exiting early");
                     //if we are pasting into a search box via ctrl+f, etc.. (not a real editor),
                     // e.g. com.intellij.openapi.editor.textarea.TextComponentScrollingModel
                     // don't draw to GUI, just paste and exit
@@ -101,7 +100,7 @@ public class MyPasteHandler extends EditorActionHandler implements EditorTextIns
                 //the 'selected' blob. When outline built, add effect to it.
                 int afterPasteOffset = scrollingModel.getVerticalScrollOffset();
                 scrollingModel.enableAnimation();
-//                System.out.println("scroll before after " + beforePasteOffset + " " + afterPasteOffset);
+//                
 //                int charWidth = EditorUtil.getPlainSpaceWidth(editor);
                 int lineHeight = editor.getLineHeight();
                 int start = t.getStartOffset();

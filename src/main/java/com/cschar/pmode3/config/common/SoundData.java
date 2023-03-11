@@ -1,19 +1,16 @@
 package com.cschar.pmode3.config.common;
 
-import com.cschar.pmode3.Sound;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Collection;
 import java.util.Objects;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.intellij.openapi.diagnostic.Logger;
 
 public class SoundData extends PathData{
-    private static final Logger LOGGER = Logger.getLogger( SoundData.class.getName() );
+    private static final Logger LOGGER = Logger.getInstance( SoundData.class.getName() );
 
     public SoundData(boolean enabled, int val1, String defaultPath, String customPath) {
         super(enabled, defaultPath, customPath, val1);
@@ -91,7 +88,7 @@ public class SoundData extends PathData{
             jo.put("customPath",this.customPath);
             jo.put("val1",this.val1);
         }catch(JSONException e){
-            LOGGER.log(Level.SEVERE,e.toString(),e);
+            LOGGER.error(e.toString(),e);
         }
 
         return jo;
@@ -108,7 +105,7 @@ public class SoundData extends PathData{
                     jo.getString("customPath"));
 
         }catch(JSONException e){
-            LOGGER.log(Level.SEVERE,e.toString(),e);
+            LOGGER.error(e.toString(),e);
         }
 
         return sd;
