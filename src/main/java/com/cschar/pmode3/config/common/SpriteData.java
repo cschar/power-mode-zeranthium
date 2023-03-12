@@ -11,11 +11,11 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.intellij.openapi.diagnostic.Logger;
 
 public class SpriteData extends PathData{
 
-    private static final Logger LOGGER = Logger.getLogger( SpriteData.class.getName() );
+    private static final Logger LOGGER = Logger.getInstance( SpriteData.class.getName() );
 
     public float scale=1.0f;
 
@@ -71,9 +71,9 @@ public class SpriteData extends PathData{
                 previewIcon = new ImageIcon(newimg);
 
             } catch (IOException e) {
-                Logger logger  = Logger.getLogger(SpriteData.class.getName());
-                logger.severe("error loading image file: " + path);
-                logger.severe(e.toString());
+
+                LOGGER.error("error loading image file: " + path);
+                LOGGER.error(e);
 
                 setImage(this.defaultPath, true);
 
@@ -99,7 +99,7 @@ public class SpriteData extends PathData{
 //            jo.put("alpha",this.alpha);
             jo.put("val1",this.val1);
         }catch(JSONException e){
-            LOGGER.log(Level.SEVERE,e.toString(),e);
+            LOGGER.error(e.toString(),e);
         }
 
         return jo;
@@ -120,7 +120,7 @@ public class SpriteData extends PathData{
 
 
         }catch(JSONException e){
-            LOGGER.log(Level.SEVERE,e.toString(),e);
+            LOGGER.error(e.toString(),e);
         }
 
         //public SpriteData(boolean enabled, float scale, int val1, String defaultPath, String customPath, boolean doSetupImage) {

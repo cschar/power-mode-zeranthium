@@ -2,14 +2,9 @@ package com.cschar.pmode3.config;
 
 import com.cschar.pmode3.ParticleSpriteLizardAnchor;
 import com.cschar.pmode3.PowerMode3;
-import com.cschar.pmode3.config.common.*;
+import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.cschar.pmode3.config.common.ui.*;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDialog;
-import com.intellij.openapi.fileChooser.FileChooserFactory;
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.JBColor;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
 import org.json.JSONArray;
@@ -17,7 +12,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
@@ -70,7 +64,7 @@ public class LizardConfig extends BaseConfigPanel{
         this.maxPsiAnchorDistanceTextField = new JTextField("");
         this.maxPsiAnchorDistanceTextField.setMinimumSize(new Dimension(50,20));
         maxPsi.add(maxPsiAnchorDistanceTextField);
-        maxPsi.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+        maxPsi.setAlignmentX(RIGHT_ALIGNMENT);//0.0
         maxPsi.setMaximumSize(new Dimension(500, 50));
         maxPsi.setLayout(new FlowLayout(FlowLayout.RIGHT));
         secondCol.add(maxPsi);
@@ -83,7 +77,7 @@ public class LizardConfig extends BaseConfigPanel{
         this.minPsiAnchorDistanceTextField.setMinimumSize(new Dimension(50,20));
         minPsi.add(minPsiAnchorDistanceTextField);
         minPsi.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        minPsi.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+        minPsi.setAlignmentX(RIGHT_ALIGNMENT);//0.0
         minPsi.setMaximumSize(new Dimension(500, 50));
 //        minPsi.setBackground(Color.YELLOW);
         secondCol.add(minPsi);
@@ -94,7 +88,7 @@ public class LizardConfig extends BaseConfigPanel{
         chancePerKeyPressPanel.add(chancePerKeyPressLabel);
         chancePerKeyPressPanel.add(chancePerKeyPressTextField);
         chancePerKeyPressPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        chancePerKeyPressPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+        chancePerKeyPressPanel.setAlignmentX(RIGHT_ALIGNMENT);//0.0
         chancePerKeyPressPanel.setMaximumSize(new Dimension(400, 50));
         chancePerKeyPressPanel.setBackground(ZeranthiumColors.specialOption2);
         secondCol.add(chancePerKeyPressPanel);
@@ -105,7 +99,7 @@ public class LizardConfig extends BaseConfigPanel{
         chancePanel.add(chanceOfSpawnLabel);
         chancePanel.add(chanceOfSpawnTextField);
         chancePanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        chancePanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+        chancePanel.setAlignmentX(RIGHT_ALIGNMENT);//0.0
         chancePanel.setMaximumSize(new Dimension(400, 50));
 //        chancePanel.setBackground(Color.lightGray);
         secondCol.add(chancePanel);
@@ -117,7 +111,7 @@ public class LizardConfig extends BaseConfigPanel{
         maxAnchorsPanel.add(maxAnchorsLabel);
         maxAnchorsPanel.add(maxAnchorsToUse);
         maxAnchorsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        maxAnchorsPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+        maxAnchorsPanel.setAlignmentX(RIGHT_ALIGNMENT);//0.0
         maxAnchorsPanel.setMaximumSize(new Dimension(500, 50));
 //        maxAnchorsPanel.setBackground(Color.yellow);
         secondCol.add(maxAnchorsPanel);

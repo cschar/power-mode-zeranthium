@@ -1,7 +1,6 @@
 
-# Downloads:
-get more stuff here:
 
+get more stuff here:
 <h1> zeranthium-extras -----> PreConfigured Themes </h1>
 
 Assets can be found in the zeranthium-extras repo.

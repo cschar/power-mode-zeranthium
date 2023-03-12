@@ -18,7 +18,6 @@
 package com.cschar.pmode3;
 
 
-import com.cschar.pmode3.config.MultiLayerConfig;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.intellij.openapi.editor.Editor;
 

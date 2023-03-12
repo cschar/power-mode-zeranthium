@@ -22,6 +22,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.util.Queue;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ThreadLocalRandom;
@@ -514,8 +515,6 @@ public class ParticleContainer extends JComponent implements ComponentListener {
     @Override
     public void componentMoved(ComponentEvent e) {
         updateBounds();
-        Logger.getInstance(this.getClass()).info("Moved");
-
     }
 
     @Override

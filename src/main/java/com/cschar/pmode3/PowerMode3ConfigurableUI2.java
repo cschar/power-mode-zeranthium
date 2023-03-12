@@ -2,9 +2,8 @@ package com.cschar.pmode3;
 
 import com.cschar.pmode3.config.*;
 import com.cschar.pmode3.config.common.ui.ZeranthiumColors;
-import com.cschar.pmode3.services.MemoryMonitorService;
-
 import com.cschar.pmode3.services.GitPackLoaderJComponent;
+import com.cschar.pmode3.services.MemoryMonitorService;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
@@ -38,10 +37,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.util.logging.Logger;
+import com.intellij.openapi.diagnostic.Logger;
 
 public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposable {
-    private static final Logger LOGGER = Logger.getLogger( PowerMode3ConfigurableUI2.class.getName() );
+    private static final Logger LOGGER = Logger.getInstance(PowerMode3ConfigurableUI2.class.getName());
     private JPanel mainPanel;
     private JTextField lifetimeTextField;
     private JCheckBox isEnabledCheckBox;
@@ -118,7 +117,7 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
 
     //Constructor is called _AFTER_ createUIComponents when using IntelliJ GUI designer
     public PowerMode3ConfigurableUI2(PowerMode3 powerMode3) {
-        LOGGER.info("Creating MenuConfigurableUI...");
+        LOGGER.debug("Creating MenuConfigurableUI...");
         this.ultraPanel = new JPanel();
         settings = ApplicationManager.getApplication().getService(PowerMode3.class);
 
@@ -154,7 +153,7 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
             loadingLabel.setFont(new Font ("Arial", Font.BOLD, 30));
             theCustomCreatePanel.add(loadingLabel);
         }else{
-            LOGGER.info("loading settings (they were already loaded)");
+            LOGGER.debug("loading settings (they were already loaded)");
             createConfig();
         }
 
@@ -342,7 +341,6 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
 
 
         int checkboxheight = 18 + CHECKBOX_BOT_PAD5;
-        LOGGER.info("checkbox height is " + checkboxheight);
 
         enableCopyPasteVoid = setCheckBox(col1, "Enable CopyPasteVoid");
         enableCopyPasteVoid.setBorder(JBUI.Borders.empty(checkboxheight,0, CHECKBOX_BOT_PAD5,0));
@@ -908,12 +906,12 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
                     break;
                 default:
                     found = false;
-                    LOGGER.warning("No loader found for key: " + configKey);
+                    LOGGER.warn("No loader found for key: " + configKey);
                     break;
             }
 
             if(found) {
-                LOGGER.info("Loaded pack for key: " + configKey);
+                LOGGER.debug("Loaded pack for key: " + configKey);
             }
         }
 

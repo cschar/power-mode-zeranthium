@@ -2,23 +2,16 @@ package com.cschar.pmode3.config;
 
 import com.cschar.pmode3.ParticleSpriteLinkerAnchor;
 import com.cschar.pmode3.PowerMode3;
-import com.cschar.pmode3.config.common.ui.*;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDialog;
-import com.intellij.openapi.fileChooser.FileChooserFactory;
+import com.cschar.pmode3.config.common.ui.*;
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.JBColor;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
@@ -91,7 +84,7 @@ public class LinkerConfig extends BaseConfigPanel {
         this.maxPsiAnchorDistanceTextField = new JTextField("");
         this.maxPsiAnchorDistanceTextField.setMinimumSize(new Dimension(50,20));
         maxPsi.add(maxPsiAnchorDistanceTextField);
-        maxPsi.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+        maxPsi.setAlignmentX(RIGHT_ALIGNMENT);//0.0
         maxPsi.setMaximumSize(new Dimension(500, 50));
         maxPsi.setLayout(new FlowLayout(FlowLayout.RIGHT));
         secondCol.add(maxPsi);
@@ -104,7 +97,7 @@ public class LinkerConfig extends BaseConfigPanel {
         this.minPsiAnchorDistanceTextField.setMinimumSize(new Dimension(50,20));
         minPsi.add(minPsiAnchorDistanceTextField);
         minPsi.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        minPsi.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+        minPsi.setAlignmentX(RIGHT_ALIGNMENT);//0.0
         minPsi.setMaximumSize(new Dimension(500, 50));
 //        minPsi.setBackground(Color.YELLOW);
         secondCol.add(minPsi);
@@ -133,7 +126,7 @@ public class LinkerConfig extends BaseConfigPanel {
         cyclicPanel.add(maxCycleParticleLabel);
         cyclicPanel.add(this.maxCycleParticlesTextField);
         cyclicPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        cyclicPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+        cyclicPanel.setAlignmentX(RIGHT_ALIGNMENT);//0.0
         cyclicPanel.setMaximumSize(new Dimension(500, 50));
         secondCol.add(cyclicPanel);
 
@@ -165,7 +158,7 @@ public class LinkerConfig extends BaseConfigPanel {
 
         JPanel caretMovementPanel = new JPanel();
         caretMovementPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        caretMovementPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        caretMovementPanel.setAlignmentX(RIGHT_ALIGNMENT);
         caretMovementPanel.setMaximumSize(new Dimension(500,100));
 //        this.moveWithCaret = new JCheckBox("move with Caret?");
         this.moveWithCaret = new JCheckBox("move with caret/mouse?");
@@ -186,7 +179,7 @@ public class LinkerConfig extends BaseConfigPanel {
         maxLinksPanel.add(maxLinksLabel);
         maxLinksPanel.add(this.maxLinksTextField);
         maxLinksPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        maxLinksPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+        maxLinksPanel.setAlignmentX(RIGHT_ALIGNMENT);//0.0
         maxLinksPanel.setMaximumSize(new Dimension(500, 40));
         firstCol.add(maxLinksPanel);
 
@@ -196,7 +189,7 @@ public class LinkerConfig extends BaseConfigPanel {
         distanceFromCenterPanel.add(distanceFromCenterLabel);
         distanceFromCenterPanel.add(this.distanceFromCenterTextField);
         distanceFromCenterPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        distanceFromCenterPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+        distanceFromCenterPanel.setAlignmentX(RIGHT_ALIGNMENT);//0.0
         distanceFromCenterPanel.setMaximumSize(new Dimension(500, 40));
         firstCol.add(distanceFromCenterPanel);
 

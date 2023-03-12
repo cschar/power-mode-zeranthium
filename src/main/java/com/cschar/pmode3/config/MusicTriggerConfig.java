@@ -2,7 +2,7 @@ package com.cschar.pmode3.config;
 
 import com.cschar.pmode3.PowerMode3;
 import com.cschar.pmode3.Sound;
-import com.cschar.pmode3.config.common.*;
+import com.cschar.pmode3.config.common.SoundData;
 import com.cschar.pmode3.config.common.ui.*;
 import com.intellij.openapi.actionSystem.Shortcut;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;

@@ -50,7 +50,7 @@
     <li> Everything is pretty much customizable -- just point your table paths to your own custom images/sounds (PNG/MP3)
      and eventually build up a nice visual package with multiple effects/layering. </li>
     <li> To install pre-configured themes clone the
-        <a href="https://github.com/cschar/zeranthium-extras"> zeranthium-extras </a> repo.
+        <a href="https://github.com/powermode-zeranthium/zeranthium-extras-vol1"> zeranthium-extras </a> repo.
         You can also make your own (see docs site)
     </li>
     <li> You may need to

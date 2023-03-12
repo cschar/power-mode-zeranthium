@@ -13,9 +13,9 @@ https://stackoverflow.com/a/46533151/5198805
 https://github.com/radarsh/gradle-test-logger-plugin
 
 
-interesting blog post on figuring out openAPI:
+Resources on IntelliJ API:
+https://developerlife.com/2021/03/13/ij-idea-plugin-advanced/
 http://vladsch.com/blog/3
-
 https://github.com/krasa/StringManipulation/issues/92
 links to
 [1] https://github.com/krasa/StringManipulation/commit/43a4bc5e99f63663a7b2c5d8d75b1550a3e0a408
@@ -38,3 +38,6 @@ https://www.plugin-dev.com/intellij/general/plugin-initial-load/
 
 -- in Droste, moving caret with arrow keys doesnt resize cover
 
+## 2023
+
+- Update StartupActivity API  (write UI tests to see if PowerMode3StartupActivity are working on startup)

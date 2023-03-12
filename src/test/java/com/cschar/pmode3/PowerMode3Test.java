@@ -110,11 +110,9 @@ public class PowerMode3Test extends LightPlatform4TestCase {  //This boots up th
 
     @Test
     public void testPowerMode3_serialization_handlesMissingSetting() throws IOException, JDOMException {
-        LOG.info("hi info123123");
         PowerMode3 pmode3Service = ApplicationManager.getApplication().getService(PowerMode3.class);
-        LOG.info("hi info");
-        System.out.println("H");
-        LOG.warn("hi info");
+        LOG.info("info log");
+        LOG.warn("warn log");
 
         SAXBuilder saxBuilder = new SAXBuilder();
         File inputFile = new File("build/resources/test/save_config_missingConfigType.xml");
