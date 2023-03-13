@@ -30,12 +30,14 @@ https://www.plugin-dev.com/intellij/general/plugin-initial-load/
 
 [ ] - robotUI test: make a test to load settings UI when it is disabled, check if checkboxes are disabled
 [x] - robotUI test: test to load packs through UI, prebuilt packs + custom pack
-
+[ ] - Type , Disabled plugin, Type,  assert when plugin disabled, characters are still typed
 
 ## BUGS ?
 
+-- Dyanmic Plugin memory when shutting down
+   -- HeapDump debug with VisualVM, start VM with same JDK that Sandbox IDe is running
+   -- Use VisualVMPlugin extension tool to start it with same JDK
 -- When stopping with CTRL+SHIFT+Z.... particles still float away instead of immediatly disappearing\
-
 -- in Droste, moving caret with arrow keys doesnt resize cover
 
 ## 2023

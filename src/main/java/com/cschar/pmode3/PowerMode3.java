@@ -286,8 +286,9 @@ final public class PowerMode3 implements
                 public void execute(@NotNull final Editor editor, final char c, @NotNull final DataContext dataContext) {
                     if (PowerMode3.this.isConfigLoaded && PowerMode3.this.enabled) {
                         updateEditor(editor);
-                        rawHandler.execute(editor, c, dataContext);
                     }
+                    //this handler is Sound wrapped one below
+                    rawHandler.execute(editor, c, dataContext);
                 }
             });
         }, ModalityState.NON_MODAL);
@@ -431,7 +432,9 @@ final public class PowerMode3 implements
 
             long endTime = System.nanoTime();
             long duration = (endTime - startTime);
-            
+            LOGGER.debug("Loaded config in " + (duration / 1000000 / 1000.0) + " seconds");
+
+
 
 
             this.enabled = wasEnabled;

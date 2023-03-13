@@ -1,10 +1,11 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
 # power-mode-zeranthium Changelog
+
 ## [Unreleased]
 - 2022.3 update
-
-
+- quieter logs
+- require restart on disable (Use builtin pseudo-enable/disable hotkey to avoid)
 
 ## [3.0.0]
 - 2022 update
@@ -17,5 +18,12 @@
 - move to intellij-plugin-template
 
 ## [2.5.1]
+
 ### Added
 - Initial scaffold created from [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
+
+[Unreleased]: https://github.com/cschar/power-mode-zeranthium/compare/v3.1.0...HEAD
+[3.1.0]: https://github.com/cschar/power-mode-zeranthium/compare/v3.0.0...v3.1.0
+[3.0.0]: https://github.com/cschar/power-mode-zeranthium/compare/v2.6.0...v3.0.0
+[2.6.0]: https://github.com/cschar/power-mode-zeranthium/compare/v2.5.1...v2.6.0
+[2.5.1]: https://github.com/cschar/power-mode-zeranthium/commits/v2.5.1
