@@ -10,8 +10,8 @@
  2. Update change notes plugin in build.gradle
     - update CHANGELOG.md
     
- 3. build ex: ```./gradlew :buildPlugin --info```
- 4. upload new .jar file at `zeranthium/build/libs` to site
+ 3. build     ```./gradlew :buildPlugin --info```
+ 4. publish   ```./gradlew :publishPlugin --no-configuration-cache ```
 
 # upgrading gradle
 https://tomgregory.com/how-to-update-gradle/

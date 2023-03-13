@@ -3,6 +3,8 @@
 # power-mode-zeranthium Changelog
 
 ## [Unreleased]
+
+## [3.1.0] - 2023-03-13
 - 2022.3 update
 - quieter logs
 - require restart on disable (Use builtin pseudo-enable/disable hotkey to avoid)
