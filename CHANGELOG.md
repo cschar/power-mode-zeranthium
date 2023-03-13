@@ -3,7 +3,8 @@
 # power-mode-zeranthium Changelog
 ## [Unreleased]
 - 2022.3 update
-
+- quieter logs
+- require restart on disable (Future version will focus on Dynamic-Disable/Enable)
 
 
 ## [3.0.0]
