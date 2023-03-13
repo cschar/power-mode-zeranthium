@@ -2,7 +2,7 @@
 
 # power-mode-zeranthium Changelog
 ## [Unreleased]
-- 2023 update
+- 2022.3 update
 
 
 
