@@ -52,7 +52,7 @@ import java.awt.*;
 import java.io.InputStream;
 import java.util.List;
 import java.util.*;
-
+import java.util.function.Function;
 
 
 /**
@@ -75,21 +75,6 @@ import java.util.*;
 final public class PowerMode3 implements
         PersistentStateComponent<PowerMode3>, Disposable {
     private static final Logger LOGGER = Logger.getInstance(PowerMode3.class);
-
-    @Override
-    public void dispose() {
-//       See https://jetbrains.org/intellij/sdk/docs/basics/disposers.html for more details.
-        //particleContainerManager = null;
-        //why isnt this disposing
-
-        LOGGER.debug("Disposing PowerMode3");
-        Disposer.dispose(particleContainerManager);
-    }
-
-    //https://www.jetbrains.org/intellij/sdk/docs/basics/persisting_state_of_components.html#implementing-the-persistentstatecomponent-interface
-
-
-
     public static String NOTIFICATION_GROUP_DISPLAY_ID = "PowerMode - Zeranthium";
 
     @com.intellij.util.xmlb.annotations.Transient
@@ -130,7 +115,6 @@ final public class PowerMode3 implements
 
     public AnchorTypes anchorType = AnchorTypes.PARENTHESIS;
 
-
     public enum ConfigType {
         BASIC_PARTICLE,
 
@@ -149,8 +133,6 @@ final public class PowerMode3 implements
         TAP_ANIM,
         MULTI_LAYER_CHANCE,
     }
-
-
 
     static class JSONLoader {
         private static HashMap<ConfigType, String> defaultJSONTables;
@@ -248,6 +230,17 @@ final public class PowerMode3 implements
     }
 
     @Override
+    public void dispose() {
+        LOGGER.debug("Disposing PowerMode3");
+        Disposer.dispose(particleContainerManager);
+
+        for( Function f : this.cleanupFunctions){
+            f.apply(null);
+        }
+
+    }
+
+    @Override
     public void initializeComponent() {
         LOGGER.debug("Initializing pmode3 component...");
         //construct JBColor out of serialized normal Color
@@ -257,7 +250,6 @@ final public class PowerMode3 implements
         setupParticles();
         LOGGER.debug("Done initializing...");
     }
-
 
     private void setupParticles(){
         //call this on the main UI thread, since setup is done in a background task.
@@ -288,36 +280,45 @@ final public class PowerMode3 implements
                         updateEditor(editor);
                         rawHandler.execute(editor, c, dataContext);
                     }
+                    LOGGER.trace("particle type");
                 }
             });
         }, ModalityState.NON_MODAL);
 
-//        ApplicationManager.getApplication().runWriteAction(() -> {
-//
-//        });
+
     }
+
+    private List<Function> cleanupFunctions = new ArrayList<>();
 
     private void setupSoundTyper(){
         //Setup SOUND handler
         final TypedAction typedAction2 = TypedAction.getInstance();
-        TypedActionHandler rawHandler2 = typedAction2.getRawHandler();
-        typedAction2.setupRawHandler(
-                new TypedActionHandler() {
-                    @Override
-                    public void execute(@NotNull Editor editor, char c, @NotNull DataContext dataContext) {
-                        if (PowerMode3.this.isConfigLoaded && PowerMode3.this.enabled && PowerMode3.this.getSpriteTypeEnabled(ConfigType.SOUND)) {
-                            int winner = SoundData.getWeightedAmountWinningIndex(SoundConfig.soundData);
-                            if (winner != -1) {
-                                //TODO refactor to just return object or null
-                                SoundData d = SoundConfig.soundData.get(winner);
-                                Sound s = new Sound(d.getPath(), !d.customPathValid);
-                                s.play();
-                            }
-                        }
-                        LOGGER.debug("sound type");
-                        rawHandler2.execute(editor, c, dataContext);
+        TypedActionHandler origRawTypeHandler = typedAction2.getRawHandler();
+        TypedActionHandler soundTypeHandler = new TypedActionHandler() {
+            @Override
+            public void execute(@NotNull Editor editor, char c, @NotNull DataContext dataContext) {
+                if (PowerMode3.this.isConfigLoaded && PowerMode3.this.enabled && PowerMode3.this.getSpriteTypeEnabled(ConfigType.SOUND)) {
+                    int winner = SoundData.getWeightedAmountWinningIndex(SoundConfig.soundData);
+                    if (winner != -1) {
+                        //TODO refactor to just return object or null
+                        SoundData d = SoundConfig.soundData.get(winner);
+                        Sound s = new Sound(d.getPath(), !d.customPathValid);
+                        s.play();
                     }
-                });
+                }
+                LOGGER.trace("sound type");
+                origRawTypeHandler.execute(editor, c, dataContext);
+            }
+        };
+
+        typedAction2.setupRawHandler(soundTypeHandler);
+
+        cleanupFunctions.add(o -> {
+            LOGGER.debug("Dispose: Cleaning up Sound Typing handler");
+            //reset to original noraml type handler
+            typedAction2.setupRawHandler(origRawTypeHandler);
+            return null;
+        });
     }
 
     private void updateEditor(@NotNull final Editor editor){

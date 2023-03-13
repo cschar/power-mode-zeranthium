@@ -34,6 +34,7 @@ https://www.plugin-dev.com/intellij/general/plugin-initial-load/
 
 ## BUGS ?
 
+-- When disabling plugin, sound handler still exists on typing.
 -- When stopping with CTRL+SHIFT+Z.... particles still float away instead of immediatly disappearing\
 
 -- in Droste, moving caret with arrow keys doesnt resize cover

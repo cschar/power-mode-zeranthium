@@ -1,5 +1,9 @@
 <!--https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html-->
-<idea-plugin url="https://github.com/cschar/power-mode-zeranthium">
+<!--https://plugins.jetbrains.com/docs/intellij/dynamic-plugins.html-->
+<idea-plugin url="https://github.com/cschar/power-mode-zeranthium"
+
+>
+<!--    require-restart="true"-->
     <id>com.cschar.power.mode3.zeranthium</id>
     <name>Power Mode - Zeranthium</name>
     <vendor email="codyscharfe@gmail.com">cody scharfe</vendor>
@@ -39,11 +43,10 @@
     </extensions>
 
 
-<!--    <applicationListeners>-->
-<!--        <listener class="com.github.cschar.pmode3.listeners.MyProjectManagerListener"-->
-<!--                  topic="com.intellij.openapi.project.ProjectManagerListener"/>-->
-<!--    </applicationListeners>-->
-
+    <applicationListeners>
+        <listener class="com.cschar.pmode3.PowerMode3DynamicListener"
+                  topic="com.intellij.ide.plugins.DynamicPluginListener"/>
+    </applicationListeners>
 
 
 <!--    https://plugins.jetbrains.com/docs/intellij/basic-action-system.html#action-declaration-reference-->

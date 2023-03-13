@@ -10,7 +10,7 @@ build
 #gradle
 .idea
 
-
+*_DEV.md*
 
 docs/_site
 docs/.jekyll-cache
