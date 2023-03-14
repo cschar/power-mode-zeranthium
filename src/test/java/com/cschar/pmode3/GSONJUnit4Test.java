@@ -1,16 +1,9 @@
 package com.cschar.pmode3;
 
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-import org.junit.Test;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 //Dummy test for pipeline
 public class GSONJUnit4Test {

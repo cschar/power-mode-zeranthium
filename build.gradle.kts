@@ -6,6 +6,9 @@ fun properties(key: String) = providers.gradleProperty(key)
 fun environment(key: String) = providers.environmentVariable(key)
 
 plugins {
+
+    id("com.adarshr.test-logger") version "3.2.0"
+
     // Java support
     id("java")
     // Kotlin support
@@ -43,8 +46,9 @@ dependencies {
     // Video Recording
     testImplementation("com.automation-remarks:video-recorder-junit5:2.0")
     // https://www.baeldung.com/junit-5-gradle#enabling-support-for-old-versions
-    testCompileOnly("junit:junit:4.13.1")
+//    testCompileOnly("junit:junit:4.13.1")
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.3.1")
+
 }
 
 group = properties("pluginGroup").get()
@@ -148,11 +152,11 @@ tasks {
         // we can specify to use Junit5... above
         // but still have normal Junit4 tests working
         // https://www.baeldung.com/junit-5-gradle#enabling-support-for-old-versions.
-//        useJUnitPlatform()
+        useJUnitPlatform()
 
 
         outputs.upToDateWhen { false }
-//        testLogging.showStandardStreams = true
+        testLogging.showStandardStreams = true
 //
 //        // https://stackoverflow.com/a/69840376/5198805
         testLogging {
