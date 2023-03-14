@@ -33,6 +33,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * Modified by cschar
  */
 public class ParticleContainer extends JComponent implements ComponentListener {
+    private static final Logger LOGGER = Logger.getInstance(ParticleContainer.class);
 
     private final JComponent parent;
     private final Editor editor;
@@ -124,8 +125,38 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         int lifeSetting = settings.getLifetime();
 
 
-        if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.TAP_ANIM)){
+        if (settings.getSpriteTypeEnabled(PowerMode3.ConfigType.BASIC_PARTICLE)) {
+            LOGGER.debug("adding basic_particle");
 
+            int maxSize = settings.BASIC_PARTICLE.maxParticleSize;
+            Color basicColor = settings.BASIC_PARTICLE.basicColor;
+            int numParticles = settings.BASIC_PARTICLE.numParticles;
+
+            for(int i = 0; i < numParticles; i++){
+
+                size = (int) (Math.random() * maxSize + 1);
+
+
+                if(settings.BASIC_PARTICLE.emitTop){
+                    dx = (int) (Math.random() * 4) * (Math.random() > 0.5 ? -1 : 1);
+                    dy = (int) (Math.random() * -3 - 1);
+
+                    final Particle e = new Particle(x, y, dx, dy, size, lifeSetting, basicColor);
+                    particles.add(e);
+                }
+
+                if(settings.BASIC_PARTICLE.emitBot){
+                    dx = (int) (Math.random() * 4) * (Math.random() > 0.5 ? -1 : 1);
+                    dy = (int) (Math.random() * 3 + 1);
+//                    y = y + 20;
+                    final Particle e2 = new Particle(x, y + 20, dx, dy, size, lifeSetting, basicColor);
+                    particles.add(e2);
+                }
+            }
+        }
+
+        if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.TAP_ANIM)){
+            LOGGER.trace("adding tap_anim");
 
             ParticleSpriteTapAnim.updateCursor(this.editor, x, y);
             ParticleSpriteTapAnim.incrementFrame(this.editor);
@@ -287,32 +318,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         }
 
 
-        if (settings.getSpriteTypeEnabled(PowerMode3.ConfigType.BASIC_PARTICLE)) {
-            int maxSize = BasicParticleConfig.MAX_PARTICLE_SIZE(settings);
-            Color basicColor = BasicParticleConfig.BASIC_PARTICLE_COLOR(settings);
-            int numParticles = BasicParticleConfig.NUM_PARTICLES(settings);
 
-            for(int i = 0; i < numParticles; i++){
-
-                size = (int) (Math.random() * maxSize + 1);
-
-                if(BasicParticleConfig.EMIT_TOP(settings)){
-                    dx = (int) (Math.random() * 4) * (Math.random() > 0.5 ? -1 : 1);
-                    dy = (int) (Math.random() * -3 - 1);
-
-                    final Particle e = new Particle(x, y, dx, dy, size, lifeSetting, basicColor);
-                    particles.add(e);
-                }
-                if(BasicParticleConfig.EMIT_BOTTOM(settings)) {
-                    dx = (int) (Math.random() * 4) * (Math.random() > 0.5 ? -1 : 1);
-                    dy = (int) (Math.random() * 3 + 1);
-//                    y = y + 20;
-                    final Particle e2 = new Particle(x, y + 20, dx, dy, size, lifeSetting, basicColor);
-                    particles.add(e2);
-                }
-            }
-
-        }
 
     }
 

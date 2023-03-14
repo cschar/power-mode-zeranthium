@@ -20,9 +20,9 @@ plugins {
 }
 
 var remoteRobotVersion = "0.11.18"
-//var remoteRobotVersion = "0.11.14"
 
 dependencies {
+    implementation("com.google.code.gson:gson:2.10.1")
     implementation(group = "org.json", name = "json", version = "20220320")
     implementation(group = "javazoom", name = "jlayer", version = "1.0.1")
     implementation(group = "org.imgscalr", name = "imgscalr-lib", version = "4.2")
@@ -102,7 +102,6 @@ tasks {
     jar {
         // https://docs.gradle.org/current/userguide/more_about_tasks.html
         // https://docs.gradle.org/current/dsl/org.gradle.api.tasks.bundling.Jar.html#org.gradle.api.tasks.bundling.Jar:archiveBaseName
-
         // https://stackoverflow.com/questions/56518451/
         from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
     }

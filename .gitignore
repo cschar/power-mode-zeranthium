@@ -10,7 +10,7 @@ build
 #gradle
 .idea
 
-
+.qodana
 
 docs/_site
 docs/.jekyll-cache

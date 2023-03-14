@@ -36,13 +36,6 @@ public class SmokeJUnit4Test {
         assertEquals(options.get(0).getAttribute("value").getValue(), "-12566465");
 
 
-//        PowerMode3 pmode3Service = new PowerMode3();
-//        assertEquals(pmode3Service.getParticleRGB(), 0);
-//
-//        XmlSerializer.deserializeAndLoadState(pmode3Service, classElement);
-//
-//        assertEquals(-12566465, pmode3Service.getParticleRGB());
-
         assertEquals(true,true);
     }
 }

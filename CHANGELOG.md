@@ -3,6 +3,7 @@
 # power-mode-zeranthium Changelog
 
 ## [Unreleased]
+- 2023.1 eap update
 
 ## [3.1.0] - 2023-03-13
 - 2022.3 update
