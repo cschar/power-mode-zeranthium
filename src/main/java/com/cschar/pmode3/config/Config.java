@@ -14,6 +14,47 @@ import java.awt.event.ActionListener;
 public class Config {
 
 
+    public static JPanel getColorPickerPaneBuilder(String labelTextKey, Color toSet, PowerMode3.ConfigType configType, PowerMode3 settings){
+
+        JPanel colorPickerPanel = new JPanel();
+        JLabel colorLabel = new JLabel(labelTextKey);
+        JLabel colorPreviewLabel = new JLabel("[----]");
+        colorPreviewLabel.setOpaque(true);
+        colorLabel.setOpaque(true); //to show background  https://stackoverflow.com/a/2380328/403403
+        colorPickerPanel.add(colorLabel);
+        colorPickerPanel.add(colorPreviewLabel);
+
+        colorPreviewLabel.setBackground(toSet);
+
+
+
+        JButton colorPickerButton = new JButton("Pick color");
+        colorPickerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Color prevColor = toSet;
+
+                Color newColor = JColorChooser.showDialog(colorPickerPanel, "Choose Color",
+                        prevColor);
+
+                if(newColor != null) {
+//                    colorLabel.setBackground(newColor);
+                    colorPreviewLabel.setBackground(newColor);
+                    if(configType.equals(PowerMode3.ConfigType.BASIC_PARTICLE)){
+                        settings.BASIC_PARTICLE.basicColor = newColor;
+                    }
+                }
+            }
+        });
+        colorPickerPanel.add(colorPickerButton);
+
+
+        colorPickerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        colorPickerPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
+        colorPickerPanel.setMaximumSize(new Dimension(500, 50));
+
+        return colorPickerPanel;
+    }
 
     public static JPanel getColorPickerPanel(String labelTextKey, PowerMode3.ConfigType configType, PowerMode3 settings, Color defaultColor){
 

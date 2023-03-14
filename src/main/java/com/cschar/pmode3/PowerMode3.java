@@ -41,6 +41,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.JBColor;
 import com.intellij.util.SmartList;
 import com.intellij.util.xmlb.XmlSerializerUtil;
+import com.intellij.util.xmlb.annotations.OptionTag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
@@ -74,23 +75,17 @@ import java.util.*;
 @Service(Service.Level.APP)
 final public class PowerMode3 implements
         PersistentStateComponent<PowerMode3>, Disposable {
+    public static String NOTIFICATION_GROUP_DISPLAY_ID = "PowerMode - Zeranthium";
     private static final Logger LOGGER = Logger.getInstance(PowerMode3.class);
+
 
     @Override
     public void dispose() {
-//       See https://jetbrains.org/intellij/sdk/docs/basics/disposers.html for more details.
-        //particleContainerManager = null;
-        //why isnt this disposing
-
+//      See https://jetbrains.org/intellij/sdk/docs/basics/disposers.html for more details.
         LOGGER.debug("Disposing PowerMode3");
         Disposer.dispose(particleContainerManager);
     }
 
-    //https://www.jetbrains.org/intellij/sdk/docs/basics/persisting_state_of_components.html#implementing-the-persistentstatecomponent-interface
-
-
-
-    public static String NOTIFICATION_GROUP_DISPLAY_ID = "PowerMode - Zeranthium";
 
     @com.intellij.util.xmlb.annotations.Transient
     private ParticleContainerManager particleContainerManager;
@@ -98,28 +93,26 @@ final public class PowerMode3 implements
     @com.intellij.util.xmlb.annotations.Transient
     Color particleColor;
 
-    private int particleRGB;
-
     private String packDownloadPath;
-
     public String getPackDownloadPath(){
         return packDownloadPath;
     }
-
     public void setPackDownloadPath(String s){
         packDownloadPath = s;
     }
 
+    //Basic particle
+    private int particleRGB;
+
+    @OptionTag(converter = ZStateBasicParticleConverter.class)
+    public ZStateBasicParticle BASIC_PARTICLE = new ZStateBasicParticle();
+
     private int lastTabIndex = 0;
     private int scrollBarPosition = 0;
-
-//    public String scrollBarPosition2 = "0";
-
     private boolean enabled = true;
     private int shakeDistance = 0;
     private int lifetime = 200;
     private int maxPsiSearchDistance = 400;  //amount of total characters searched around caret for anchors
-
 
     public enum AnchorTypes {
         BRACE,
@@ -129,7 +122,6 @@ final public class PowerMode3 implements
     }
 
     public AnchorTypes anchorType = AnchorTypes.PARENTHESIS;
-
 
     public enum ConfigType {
         BASIC_PARTICLE,
@@ -152,6 +144,8 @@ final public class PowerMode3 implements
 
 
 
+    //TODO: Make non-static
+    //Populates the pathDataMap
     static class JSONLoader {
         private static HashMap<ConfigType, String> defaultJSONTables;
 
@@ -218,16 +212,13 @@ final public class PowerMode3 implements
     }};
 
     //consider JSON https://stackabuse.com/reading-and-writing-json-in-java/ ??
-    @com.intellij.util.xmlb.annotations.MapAnnotation
     //this tells it to copy its inner values, wont serialize without it
+    @com.intellij.util.xmlb.annotations.MapAnnotation
+    //Map to keep track of what's enabled currently
     private Map<String, String> configMap = new HashMap<String, String>() {{
-
         put("sprite" + ConfigType.BASIC_PARTICLE + "Enabled", "true");
-        put("sprite" + ConfigType.LIZARD + "Enabled", "true");
-
-
+        put("sprite" + ConfigType.LIZARD + "Enabled", "false");
         put("sprite" + ConfigType.MOMA + "Enabled", "false");
-
         put("sprite" + ConfigType.VINE + "Enabled", "false");
         put("sprite" + ConfigType.MULTI_LAYER + "Enabled", "false");
         put("sprite" + ConfigType.LINKER + "Enabled", "false");
@@ -237,7 +228,6 @@ final public class PowerMode3 implements
         put("sprite" + ConfigType.LANTERN + "Enabled", "false");
         put("sprite" + ConfigType.TAP_ANIM + "Enabled", "true");
         put("sprite" + ConfigType.MULTI_LAYER_CHANCE + "Enabled", "false");
-
         put("sprite" + ConfigType.SOUND + "Enabled", "true");
         put("sprite" + ConfigType.SPECIAL_ACTION_SOUND + "Enabled", "false");
     }};
@@ -268,9 +258,7 @@ final public class PowerMode3 implements
             particleContainerManager = new ParticleContainerManager(this);
 
             Editor[] allEditors = EditorFactory.getInstance().getAllEditors();
-            
             for(Editor e : allEditors){
-//            LOGGER.info("Editor " + e.toString() + " is open");
                 particleContainerManager.bootstrapEditor(e);
             }
             editorFactory.addEditorFactoryListener(particleContainerManager, this);
@@ -292,10 +280,7 @@ final public class PowerMode3 implements
                 }
             });
         }, ModalityState.NON_MODAL);
-
-//        ApplicationManager.getApplication().runWriteAction(() -> {
-//
-//        });
+        
     }
 
     private void setupSoundTyper(){

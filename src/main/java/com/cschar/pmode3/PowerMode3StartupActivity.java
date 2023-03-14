@@ -8,6 +8,7 @@ import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import com.intellij.openapi.project.Project;
 //import com.intellij.openapi.startup.ProjectActivity;
+import com.intellij.openapi.startup.ProjectActivity;
 import com.intellij.openapi.startup.StartupActivity;
 import kotlin.Unit;
 import kotlin.coroutines.Continuation;
@@ -37,26 +38,20 @@ import com.intellij.openapi.diagnostic.Logger;
  *            </extensions>
  *
  */
-//public class PowerMode3StartupActivity implements ProjectActivity {
-public class PowerMode3StartupActivity implements StartupActivity {
+public class PowerMode3StartupActivity implements ProjectActivity {
     private static final Logger LOGGER = Logger.getInstance(PowerMode3StartupActivity.class);
 
+
+
+//    In EAP
+    @Nullable
     @Override
-    public void runActivity(@NotNull Project project) {
+    public Object execute(@NotNull Project project, @NotNull Continuation<? super Unit> continuation) {
         LOGGER.debug("Loading Startup Activity..");
         PowerMode3.getInstance();
         setupActionEditorKeys();
+        return null;
     }
-
-//    In EAP
-//    @Nullable
-//    @Override
-//    public Object execute(@NotNull Project project, @NotNull Continuation<? super Unit> continuation) {
-//        //force lazy loading of service
-//        PowerMode3 pm = PowerMode3.getInstance();
-//        setupActionEditorKeys();
-//        return null;
-//    }
 
 
 
