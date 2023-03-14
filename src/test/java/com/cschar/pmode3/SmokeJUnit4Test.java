@@ -35,7 +35,5 @@ public class SmokeJUnit4Test {
         assertEquals(options.get(0).getAttribute("name").getValue(), "particleRGB");
         assertEquals(options.get(0).getAttribute("value").getValue(), "-12566465");
 
-
-        assertEquals(true,true);
     }
 }

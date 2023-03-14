@@ -1,5 +1,6 @@
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
+import org.gradle.api.tasks.testing.TestResult.ResultType
 
 fun properties(key: String) = providers.gradleProperty(key)
 fun environment(key: String) = providers.environmentVariable(key)
@@ -42,7 +43,7 @@ dependencies {
     // Video Recording
     testImplementation("com.automation-remarks:video-recorder-junit5:2.0")
     // https://www.baeldung.com/junit-5-gradle#enabling-support-for-old-versions
-    testCompileOnly("junit:junit:4.12")
+    testCompileOnly("junit:junit:4.13.1")
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.3.1")
 }
 
@@ -136,6 +137,56 @@ tasks {
                 )
             }
         })
+    }
+
+    // tag example: https://www.baeldung.com/junit-5-gradle#configuring-junit-5-tests-with-gradle
+    // from CLI: // gradle clean test -DincludeTags='regression' -DexcludeTags='accessibility'
+    // custom gradle test config: https://stackoverflow.com/a/59022129/5198805
+    // https://docs.gradle.org/current/dsl/org.gradle.api.tasks.testing.Test.html
+    test {
+
+        // we can specify to use Junit5... above
+        // but still have normal Junit4 tests working
+        // https://www.baeldung.com/junit-5-gradle#enabling-support-for-old-versions.
+//        useJUnitPlatform()
+
+
+        outputs.upToDateWhen { false }
+//        testLogging.showStandardStreams = true
+//
+//        // https://stackoverflow.com/a/69840376/5198805
+        testLogging {
+            showCauses = false
+            showExceptions = false
+            showStackTraces = false
+
+            val ansiReset = "\u001B[0m"
+            val ansiGreen = "\u001B[32m"
+            val ansiRed = "\u001B[31m"
+            val ansiYellow = "\u001B[33m"
+
+            fun getColoredResultType(resultType: ResultType): String {
+                return when (resultType) {
+                    ResultType.SUCCESS -> "$ansiGreen $resultType $ansiReset"
+                    ResultType.FAILURE -> "$ansiRed $resultType $ansiReset"
+                    ResultType.SKIPPED -> "$ansiYellow $resultType $ansiReset"
+                }
+            }
+
+            afterTest(
+                KotlinClosure2({ desc: TestDescriptor, result: TestResult ->
+                    println("${desc.className} | ${desc.displayName} = ${getColoredResultType(result.resultType)}")
+                })
+            )
+
+            afterSuite(
+                KotlinClosure2({ desc: TestDescriptor, result: TestResult ->
+                    if (desc.parent == null) {
+                        println("Result: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} passed, ${result.failedTestCount} failed, ${result.skippedTestCount} skipped)")
+                    }
+                })
+            )
+        }
     }
 
     // Configure UI tests plugin
