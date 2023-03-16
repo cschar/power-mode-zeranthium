@@ -15,8 +15,10 @@ package com.cschar.pmode3;
 
 import com.cschar.pmode3.config.*;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.util.Disposer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,10 +34,10 @@ import java.util.concurrent.ThreadLocalRandom;
  *
  * Modified by cschar
  */
-public class ParticleContainer extends JComponent implements ComponentListener {
+public class ParticleContainer extends JComponent implements ComponentListener, Disposable {
     private static final Logger LOGGER = Logger.getInstance(ParticleContainer.class);
 
-    private final JComponent parent;
+    public final JComponent parentJComponent;
     private final Editor editor;
     private boolean shakeDir;
     private ConcurrentLinkedQueue<Particle> particles = new ConcurrentLinkedQueue<Particle>();
@@ -44,11 +46,24 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
     public ParticleContainer(Editor editor) {
         this.editor = editor;
-        parent = this.editor.getContentComponent();
-        parent.add(this);
+        parentJComponent = this.editor.getContentComponent();
+        parentJComponent.add(this);
         updateBounds();
         setVisible(true);
-        parent.addComponentListener(this);
+        parentJComponent.addComponentListener(this);
+
+    }
+
+    private void cleanupReferences() {
+        parentJComponent.removeComponentListener(this);
+        parentJComponent.remove(this);
+    }
+
+    @Override
+    public void dispose() {
+        LOGGER.debug("Particle instance disposing..." + this);
+        LOGGER.debug("Removing JComponent Listener");
+        cleanupReferences();
     }
 
     public void addExternalParticle(Particle p){
@@ -126,7 +141,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
 
 
         if (settings.getSpriteTypeEnabled(PowerMode3.ConfigType.BASIC_PARTICLE)) {
-            LOGGER.debug("adding basic_particle");
+//            LOGGER.debug("adding basic_particle");
 
             int maxSize = settings.BASIC_PARTICLE.maxParticleSize;
             Color basicColor = settings.BASIC_PARTICLE.basicColor;
@@ -156,7 +171,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         }
 
         if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.TAP_ANIM)){
-            LOGGER.trace("adding tap_anim");
+//            LOGGER.trace("adding tap_anim");
 
             ParticleSpriteTapAnim.updateCursor(this.editor, x, y);
             ParticleSpriteTapAnim.incrementFrame(this.editor);
@@ -503,7 +518,7 @@ public class ParticleContainer extends JComponent implements ComponentListener {
         addParticle(point.x, point.y, settings);
         addParticleUsingAnchors(point.x, point.y, anchors, settings);
 
-        shakeEditor(parent, settings.getShakeDistance(), settings.getShakeDistance(), shakeDir);
+        shakeEditor(parentJComponent, settings.getShakeDistance(), settings.getShakeDistance(), shakeDir);
         shakeDir = !shakeDir;
         this.repaint();
     }
@@ -532,4 +547,6 @@ public class ParticleContainer extends JComponent implements ComponentListener {
     public void componentHidden(ComponentEvent e) {
 
     }
+
+
 }

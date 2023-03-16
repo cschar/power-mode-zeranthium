@@ -39,6 +39,8 @@ import java.util.HashMap;
 import java.util.Scanner;
 import com.intellij.openapi.diagnostic.Logger;
 
+import static com.cschar.pmode3.ParticleContainerManager.resetAllContainers;
+
 public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposable {
     private static final Logger LOGGER = Logger.getInstance(PowerMode3ConfigurableUI2.class.getName());
     private JPanel mainPanel;
@@ -841,7 +843,7 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
         }
         //turn off previous settings
         disableAllParticleSettings();
-        ParticleContainerManager.resetAllContainers();
+        resetAllContainers();
 
         //read in JSON settings
         Path path = Paths.get(manifestPath);

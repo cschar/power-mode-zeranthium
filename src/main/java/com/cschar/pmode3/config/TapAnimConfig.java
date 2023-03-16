@@ -144,6 +144,10 @@ public class TapAnimConfig extends BaseConfigPanel {
         ParticleSpriteTapAnim.spriteDataAnimated = data;
     }
 
+    public static void disposeSpriteDataAnimated(){
+
+    }
+
 
 
 

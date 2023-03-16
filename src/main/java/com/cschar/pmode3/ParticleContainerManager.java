@@ -20,6 +20,7 @@ import com.intellij.openapi.editor.ScrollingModel;
 import com.intellij.openapi.editor.VisualPosition;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
 import com.intellij.openapi.editor.event.EditorFactoryListener;
+import com.intellij.openapi.util.Disposer;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -38,6 +39,7 @@ import com.intellij.openapi.diagnostic.Logger;
 public class ParticleContainerManager implements EditorFactoryListener, Disposable {
     private static final Logger LOGGER = Logger.getInstance(ParticleContainerManager.class);
 
+    /** the main render thread */
     private Thread thread;
     public static Map<Editor, ParticleContainer> particleContainers = new HashMap<>();
 //    private Map<Editor, ParticleContainer> particleContainers = new HashMap<>();
@@ -45,6 +47,7 @@ public class ParticleContainerManager implements EditorFactoryListener, Disposab
     private PowerMode3 settings;
 
     public ParticleContainerManager(PowerMode3 settings) {
+        Disposer.register(settings, this);
         this.settings = settings;
 
         thread = new Thread(new Runnable() {
@@ -55,6 +58,9 @@ public class ParticleContainerManager implements EditorFactoryListener, Disposab
                     for (ParticleContainer particleContainer : particleContainers.values()) {
                         particleContainer.updateParticles();
                     }
+
+                    //TODO: if internal disabled, delete all particle containers
+
                     try {
                         // 1000ms/60 = 16.6666666667      60 fps
                         Thread.sleep(17);
@@ -70,13 +76,25 @@ public class ParticleContainerManager implements EditorFactoryListener, Disposab
         thread.start();
     }
 
+    @Override
+    public void dispose() {
+        LOGGER.debug("Disposing ParticleContainerManager....");
+        thread.interrupt();
+        resetAllContainers();
+        particleContainers.clear();
+        particleContainers = null;
+    }
+
+    public static void resetAllContainers() {
+        for (ParticleContainer pc : particleContainers.values()) {
+            pc.resetParticles();
+        }
+    }
+
     /**
      * Dirty way to simulate what happens when a new editor is created without having listener attached beforehand.
     */
     public void bootstrapEditor(Editor editor){
-
-//        EditorFactoryEvent ev = new EditorFactoryEvent(EditorFactory.getInstance(), e);
-//        final Editor editor = ev.getEditor();
 
         particleContainers.put(editor, new ParticleContainer(editor));
         MyCaretListener cl = new MyCaretListener();
@@ -90,19 +108,28 @@ public class ParticleContainerManager implements EditorFactoryListener, Disposab
     public void editorCreated(@NotNull EditorFactoryEvent event) {
         final Editor editor = event.getEditor();
         LOGGER.debug("Editor Created :" + editor);
-        particleContainers.put(editor, new ParticleContainer(editor));
+        ParticleContainer pc = new ParticleContainer(editor);
+
+        //        Disposer.register(this, pc);
+
+        particleContainers.put(editor, pc);
+
         MyCaretListener cl = new MyCaretListener();
         MyCaretListener.enabled = true;
+        //TODO: we dont need to dispose caret listener, it doesnt have anything
         editor.getCaretModel().addCaretListener(cl, this);
-
+//        editor.getCaretModel().addCaretListener(cl, pc);
     }
 
     @Override
     public void editorReleased(@NotNull EditorFactoryEvent event) {
         ParticleContainer pc = particleContainers.get(event.getEditor());
-        LOGGER.debug("releasing editor with particleContainer: " + pc);
+
         if(pc != null) {
+            LOGGER.debug("releasing editor with particleContainer: " + pc);
             pc.cleanupParticles();
+            pc.parentJComponent.removeComponentListener(pc);
+            pc.parentJComponent.remove(pc);
         }
         particleContainers.remove(event.getEditor());
     }
@@ -135,10 +162,7 @@ public class ParticleContainerManager implements EditorFactoryListener, Disposab
             Anchor[] anchors = getAnchors(editor, particleContainer);
             particleContainer.updateWithAnchors(point, anchors);
         }
-
-
     }
-
 
     public Anchor[] getAnchors(Editor editor, ParticleContainer particleContainer) {
 
@@ -198,19 +222,5 @@ public class ParticleContainerManager implements EditorFactoryListener, Disposab
 
 
         return points.toArray(new Anchor[points.size()]);
-    }
-
-    public void dispose() {
-        thread.interrupt();
-        resetAllContainers();
-        particleContainers.clear();
-        LOGGER.debug("Disposing ParticleContainerManager....");
-
-    }
-
-    public static void resetAllContainers() {
-        for (ParticleContainer pc : particleContainers.values()) {
-            pc.resetParticles();
-        }
     }
 }

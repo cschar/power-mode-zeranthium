@@ -32,7 +32,7 @@ public class SpriteDataAnimated  extends SpriteData {
 
     public int previewSize=60;
 
-
+    //flush these images on dispose
     public ArrayList<BufferedImage> images = new ArrayList<>();
 //    public ArrayList<ImageIcon> previewIcons = new ArrayList<>();
 
@@ -47,6 +47,7 @@ public class SpriteDataAnimated  extends SpriteData {
                               boolean isCyclic, int val2, float alpha, int val1, int val3) {
         super(enabled, scale, val1, defaultPath, customPath,false);
 
+//        this.image.flush();
         this.previewSize = previewSize;
         this.speedRate = speedRate;
         this.isCyclic = isCyclic;

@@ -26,6 +26,9 @@ links to
 [ ] - Type , pseudo-Disable plugin, Type,  assert when plugin disabled, characters are still typed
 
 ## BUGS ?
+-- ensure SpriteDataAnimated only loads at startup if its enabled
+-- load them at settings pane if they are switched on
+-- unload them at settings pane on 'apply' if they are switched off
 
 -- Dyanmic Plugin memory when shutting down
    -- HeapDump debug with VisualVM, start VM with same JDK that Sandbox IDe is running

@@ -32,17 +32,11 @@ import java.util.Map;
 public class ParticleSpriteTapAnim extends Particle{
 
     private static ArrayList<BufferedImage> sprites = new ArrayList<BufferedImage>();
-
     public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
-
-
-
     private static BufferedImage sprite;
 
     private SpriteDataAnimated d;
     private String spritePath;
-
-
     private int frameLife;
     private Editor editor;
 

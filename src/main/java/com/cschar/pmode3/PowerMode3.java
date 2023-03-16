@@ -78,12 +78,18 @@ final public class PowerMode3 implements
     public static String NOTIFICATION_GROUP_DISPLAY_ID = "PowerMode - Zeranthium";
     private static final Logger LOGGER = Logger.getInstance(PowerMode3.class);
 
+    private ZJSONLoader JSONLoader;
+    public void PowerMode3(){
+        JSONLoader = new ZJSONLoader();
+        JSONLoader.getDefaultJSONTableConfigs();
+
+    }
 
     @Override
     public void dispose() {
 //      See https://jetbrains.org/intellij/sdk/docs/basics/disposers.html for more details.
         LOGGER.debug("Disposing PowerMode3");
-        Disposer.dispose(particleContainerManager);
+//        Disposer.dispose(particleContainerManager);
     }
 
 
@@ -142,68 +148,6 @@ final public class PowerMode3 implements
         MULTI_LAYER_CHANCE,
     }
 
-
-
-    //TODO: Make non-static
-    //Populates the pathDataMap
-    static class JSONLoader {
-        private static HashMap<ConfigType, String> defaultJSONTables;
-
-        static {
-            JSONLoader.defaultJSONTables = new HashMap<ConfigType, String>() {{
-                put(ConfigType.LOCKED_LAYER, "LOCKED_LAYER.json");
-                put(ConfigType.COPYPASTEVOID, "COPYPASTEVOID.json");
-                put(ConfigType.DROSTE, "DROSTE.json");
-                put(ConfigType.LINKER, "LINKER.json");
-                put(ConfigType.LANTERN, "LANTERN.json");
-                put(ConfigType.LIZARD, "LIZARD.json");
-                put(ConfigType.MULTI_LAYER, "MULTI_LAYER.json");
-                put(ConfigType.MULTI_LAYER_CHANCE, "MULTI_LAYER_CHANCE.json");
-                put(ConfigType.TAP_ANIM, "TAP_ANIM.json");
-
-                put(ConfigType.MUSIC_TRIGGER, "MUSIC_TRIGGERS.json");
-                put(ConfigType.SOUND, "SOUND.json");
-                put(ConfigType.SPECIAL_ACTION_SOUND, "SPECIAL_ACTION_SOUND.json");
-
-            }};
-        }
-
-        public static void loadSingleJSONTableConfig(Map<ConfigType, SmartList<String>> pathDataMap, ConfigType t) {
-
-            String jsonFile = defaultJSONTables.get(t);
-            InputStream inputStream = JSONLoader.class.getResourceAsStream("/configJSON/" + jsonFile);
-
-            StringBuilder sb = new StringBuilder();
-            Scanner s = new Scanner(inputStream);
-            while (s.hasNextLine()) {
-                sb.append(s.nextLine());
-            }
-
-            SmartList<String> smartList = new SmartList<>();
-            try {
-                JSONObject jo = new JSONObject(sb.toString());
-
-                //TODO this is extra work, we go .json --> JSONObject --> string ( ..later --> JSONObject ---> pathData)
-                JSONArray tableData = jo.getJSONArray("data");
-                for (int i = 0; i < tableData.length(); i++) {
-                    smartList.add(tableData.getJSONObject(i).toString());
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            pathDataMap.put(t, smartList);
-        }
-
-
-        public static HashMap<ConfigType, SmartList<String>> getDefaultJSONTableConfigs() {
-            HashMap<ConfigType, SmartList<String>> pathDataMap = new HashMap<>();
-            for (ConfigType t : defaultJSONTables.keySet()) {
-                loadSingleJSONTableConfig(pathDataMap, t);
-            }
-            return pathDataMap;
-        }
-
-    }
 
 
     @com.intellij.util.xmlb.annotations.MapAnnotation
@@ -407,6 +351,7 @@ final public class PowerMode3 implements
             LockedLayerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LOCKED_LAYER)));
             setUpdateProgress(progressIndicator, "Lantern", 0.8);
             LanternConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LANTERN)));
+
             setUpdateProgress(progressIndicator, "Tap Anim", 0.85);
             TapAnimConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.TAP_ANIM)));
 
