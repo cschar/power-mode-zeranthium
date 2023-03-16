@@ -33,3 +33,6 @@ links to
 -- When stopping with CTRL+SHIFT+Z.... particles/dinos still float away instead of immediatly disappearing
 -- in Droste, moving caret with arrow keys doesnt resize cover
 
+## upgrade
+put docs on astro site
+https://docs.astro.build/en/guides/deploy/github/

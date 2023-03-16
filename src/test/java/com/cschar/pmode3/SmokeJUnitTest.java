@@ -2,7 +2,6 @@ package com.cschar.pmode3;
 
 import static org.junit.Assert.assertEquals;
 
-import com.intellij.configurationStore.XmlSerializer;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -14,7 +13,7 @@ import java.io.IOException;
 import java.util.List;
 
 //Dummy test for pipeline
-public class SmokeJUnit4Test {
+public class SmokeJUnitTest {
     @Test
     public void testAdd() {
         assertEquals(42, Integer.sum(19, 23));

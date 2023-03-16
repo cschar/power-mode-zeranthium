@@ -6,7 +6,7 @@ fun properties(key: String) = providers.gradleProperty(key)
 fun environment(key: String) = providers.environmentVariable(key)
 
 plugins {
-
+    //Gradle Test Output
     id("com.adarshr.test-logger") version "3.2.0"
 
     // Java support
@@ -76,9 +76,12 @@ intellij {
     version.set(properties("platformVersion"))
     type.set(properties("platformType"))
 
+    instrumentCode.set(false)
+
     // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file.
     plugins.set(properties("platformPlugins").map { it.split(',').map(String::trim).filter(String::isNotEmpty) })
 }
+
 
 // Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
 changelog {
@@ -100,9 +103,17 @@ kover.xmlReport {
 }
 
 tasks {
+
+//    https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html#tasks-buildsearchableoptions
+    buildSearchableOptions {
+//        enabled = false
+    }
+
     wrapper {
         gradleVersion = properties("gradleVersion").get()
     }
+
+
 
     jar {
         // https://docs.gradle.org/current/userguide/more_about_tasks.html
@@ -148,49 +159,9 @@ tasks {
     // custom gradle test config: https://stackoverflow.com/a/59022129/5198805
     // https://docs.gradle.org/current/dsl/org.gradle.api.tasks.testing.Test.html
     test {
-
-        // we can specify to use Junit5... above
-        // but still have normal Junit4 tests working
-        // https://www.baeldung.com/junit-5-gradle#enabling-support-for-old-versions.
         useJUnitPlatform()
-
-
         outputs.upToDateWhen { false }
         testLogging.showStandardStreams = true
-//
-//        // https://stackoverflow.com/a/69840376/5198805
-        testLogging {
-            showCauses = false
-            showExceptions = false
-            showStackTraces = false
-
-            val ansiReset = "\u001B[0m"
-            val ansiGreen = "\u001B[32m"
-            val ansiRed = "\u001B[31m"
-            val ansiYellow = "\u001B[33m"
-
-            fun getColoredResultType(resultType: ResultType): String {
-                return when (resultType) {
-                    ResultType.SUCCESS -> "$ansiGreen $resultType $ansiReset"
-                    ResultType.FAILURE -> "$ansiRed $resultType $ansiReset"
-                    ResultType.SKIPPED -> "$ansiYellow $resultType $ansiReset"
-                }
-            }
-
-            afterTest(
-                KotlinClosure2({ desc: TestDescriptor, result: TestResult ->
-                    println("${desc.className} | ${desc.displayName} = ${getColoredResultType(result.resultType)}")
-                })
-            )
-
-            afterSuite(
-                KotlinClosure2({ desc: TestDescriptor, result: TestResult ->
-                    if (desc.parent == null) {
-                        println("Result: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} passed, ${result.failedTestCount} failed, ${result.skippedTestCount} skipped)")
-                    }
-                })
-            )
-        }
     }
 
     // Configure UI tests plugin
@@ -204,9 +175,7 @@ tasks {
 
 
 
-//    buildSearchableOptions {
-//        enabled = false
-//    }
+
 
     runPluginVerifier {
         ideVersions.set(listOf(properties("pluginVerifierIdeVersions").get()))

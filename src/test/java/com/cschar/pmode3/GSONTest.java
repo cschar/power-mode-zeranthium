@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 //Dummy test for pipeline
-public class GSONJUnit4Test {
+public class GSONTest {
     @Test
     public void testSerializeColor() {
         ZStateBasicParticle z = new ZStateBasicParticle();
