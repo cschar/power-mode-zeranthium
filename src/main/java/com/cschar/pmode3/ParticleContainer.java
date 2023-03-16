@@ -13,11 +13,13 @@
 
 package com.cschar.pmode3;
 
+import com.cschar.pmode3.actionHandlers.MyCaretListener;
 import com.cschar.pmode3.config.*;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.event.CaretListener;
 import com.intellij.openapi.util.Disposer;
 
 import javax.swing.*;
@@ -44,6 +46,7 @@ public class ParticleContainer extends JComponent implements ComponentListener, 
 
 //    private ArrayList<Particle> particles = new ArrayList<>(50);
 
+    private CaretListener myCaretListener;
     public ParticleContainer(Editor editor) {
         this.editor = editor;
         parentJComponent = this.editor.getContentComponent();
@@ -52,18 +55,24 @@ public class ParticleContainer extends JComponent implements ComponentListener, 
         setVisible(true);
         parentJComponent.addComponentListener(this);
 
+        myCaretListener = new MyCaretListener();
+        MyCaretListener.enabled = true; //TODO make this non-static wtf lol
+        editor.getCaretModel().addCaretListener(myCaretListener);
+
     }
 
     private void cleanupReferences() {
+        LOGGER.trace("Removing JComponent Listener");
         parentJComponent.removeComponentListener(this);
         parentJComponent.remove(this);
+        LOGGER.trace("Removing Caret Listener");
+        editor.getCaretModel().removeCaretListener(this.myCaretListener);
     }
 
     @Override
     public void dispose() {
         LOGGER.debug("Particle instance disposing..." + this);
-        LOGGER.debug("Removing JComponent Listener");
-        cleanupReferences();
+        this.cleanupReferences();
     }
 
     public void addExternalParticle(Particle p){

@@ -38,13 +38,12 @@ import com.intellij.openapi.diagnostic.Logger;
  */
 public class ParticleContainerManager implements EditorFactoryListener, Disposable {
     private static final Logger LOGGER = Logger.getInstance(ParticleContainerManager.class);
-
+    private PowerMode3 settings;
     /** the main render thread */
     private Thread thread;
     public static Map<Editor, ParticleContainer> particleContainers = new HashMap<>();
 //    private Map<Editor, ParticleContainer> particleContainers = new HashMap<>();
 
-    private PowerMode3 settings;
 
     public ParticleContainerManager(PowerMode3 settings) {
         Disposer.register(settings, this);
@@ -97,10 +96,11 @@ public class ParticleContainerManager implements EditorFactoryListener, Disposab
     public void bootstrapEditor(Editor editor){
 
         particleContainers.put(editor, new ParticleContainer(editor));
-        MyCaretListener cl = new MyCaretListener();
-        MyCaretListener.enabled = true;
+//        MyCaretListener cl = new MyCaretListener();
+//        MyCaretListener.enabled = true;
 //        editor.getCaretModel().addCaretListener(cl);
-        editor.getCaretModel().addCaretListener(cl, this);
+        //TODO: disposable, should removeCaretLIstener from editor if it still exists
+//        editor.getCaretModel().addCaretListener(cl, this);
     }
 
 
@@ -110,14 +110,14 @@ public class ParticleContainerManager implements EditorFactoryListener, Disposab
         LOGGER.debug("Editor Created :" + editor);
         ParticleContainer pc = new ParticleContainer(editor);
 
-        //        Disposer.register(this, pc);
+        // Add to disposable, so when plugin disabled, we cascade into removing container
+        Disposer.register(this, pc);
 
         particleContainers.put(editor, pc);
 
-        MyCaretListener cl = new MyCaretListener();
-        MyCaretListener.enabled = true;
-        //TODO: we dont need to dispose caret listener, it doesnt have anything
-        editor.getCaretModel().addCaretListener(cl, this);
+//        MyCaretListener cl = new MyCaretListener();
+//        MyCaretListener.enabled = true;
+//        editor.getCaretModel().addCaretListener(cl, this);
 //        editor.getCaretModel().addCaretListener(cl, pc);
     }
 
@@ -128,8 +128,7 @@ public class ParticleContainerManager implements EditorFactoryListener, Disposab
         if(pc != null) {
             LOGGER.debug("releasing editor with particleContainer: " + pc);
             pc.cleanupParticles();
-            pc.parentJComponent.removeComponentListener(pc);
-            pc.parentJComponent.remove(pc);
+            Disposer.dispose(pc);
         }
         particleContainers.remove(event.getEditor());
     }
