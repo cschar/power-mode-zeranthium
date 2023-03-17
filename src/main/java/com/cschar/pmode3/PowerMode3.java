@@ -37,10 +37,12 @@ import com.intellij.openapi.editor.actionSystem.TypedActionHandler;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.JBColor;
 import com.intellij.util.SmartList;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.OptionTag;
+import com.intellij.util.xmlb.annotations.Transient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -76,6 +78,9 @@ final public class PowerMode3 implements
     @com.intellij.util.xmlb.annotations.Transient
     private ZJSONLoader JSONLoader;
 
+    @com.intellij.util.xmlb.annotations.Transient
+    public int dummyValue = 2;
+
     public void PowerMode3(){
         LOGGER.debug("Constructing PowerMode3...");
         JSONLoader = new ZJSONLoader();
@@ -95,6 +100,8 @@ final public class PowerMode3 implements
         //unload special action handlers for COPY/PASTE etc..
         this.startup1.teardownActionEditorKeys();
         this.startup1 = null;
+        this.BASIC_PARTICLE = null;
+
 
         LOGGER.trace("Restoring original TypedAction");
         //replace TypedActionHandler with original one
@@ -213,8 +220,21 @@ final public class PowerMode3 implements
         }
         SpecialActionSoundConfig.soundData = null;
 
+
+        this.pathDataMap.clear();
+        this.pathDataMap = null;
+
+        this.configMap.clear();
+        this.configMap = null;
+
+        Disposer.dispose(this.configurableUI2);
+        this.configurableUI2 = null;
         LOGGER.trace("Done disposing Powermode3");
+
     }
+
+    @Transient
+    public PowerMode3Configurable2 configurableUI2;
 
 
     @com.intellij.util.xmlb.annotations.Transient
@@ -253,6 +273,10 @@ final public class PowerMode3 implements
 
     public AnchorTypes anchorType = AnchorTypes.PARENTHESIS;
 
+    public static class CONF {
+        public static int MY_BASIC_PARTICLE = 1;
+        public static int MY_LIZARD = 2;
+    }
     public enum ConfigType {
         BASIC_PARTICLE,
 

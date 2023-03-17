@@ -49,8 +49,11 @@ public class PowerMode3StartupActivity implements ProjectActivity {
     @Override
     public Object execute(@NotNull Project project, @NotNull Continuation<? super Unit> continuation) {
         LOGGER.debug(" ====== Loading Startup Activity.. ======= ");
-        PowerMode3 p = PowerMode3.getInstance();
-        ApplicationManager.getApplication().getService(PowerMode3.class);
+
+
+        ApplicationManager.getApplication().getService(PowerMode3Configurable2.class);
+//        PowerMode3 p = PowerMode3.getInstance();
+        PowerMode3 p = ApplicationManager.getApplication().getService(PowerMode3.class);
 
         p.startup1 = this;
         setupActionEditorKeys();

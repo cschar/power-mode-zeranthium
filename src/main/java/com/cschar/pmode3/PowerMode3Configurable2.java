@@ -2,8 +2,10 @@ package com.cschar.pmode3;
 
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.ConfigurableBase;
+import com.intellij.openapi.util.Disposer;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -13,18 +15,30 @@ import org.jetbrains.annotations.NotNull;
  */
 public class PowerMode3Configurable2 extends ConfigurableBase<PowerMode3ConfigurableUI2, PowerMode3> implements Disposable {
     private static final Logger LOGGER = Logger.getInstance( PowerMode3Configurable2.class.getName() );
-    private final PowerMode3 settings;
+    private PowerMode3 settings;
 
-
-    public PowerMode3Configurable2(@NotNull PowerMode3 settings) {
+    public PowerMode3Configurable2() {
         super("com.cschar.pmode3",
-            "PowerMode Zeranthium",
-            "Zeranthium");
-        this.settings = settings;
+                "PowerMode Zeranthium",
+                "Zeranthium");
+        LOGGER.debug("Creating ConfigurableUI...");
+        settings = ApplicationManager.getApplication().getService(PowerMode3.class);
+//        Disposer.register(settings, this);
+        settings.configurableUI2 = this;
     }
-    private PowerMode3Configurable2() {
-        this(PowerMode3.getInstance());
-    }
+
+//    public PowerMode3Configurable2(@NotNull PowerMode3 settings) {
+//        super("com.cschar.pmode3",
+//            "PowerMode Zeranthium",
+//            "Zeranthium");
+//        this.settings = settings;
+//        this.settings.dummyValue = 30;
+//        Disposer.register(settings, this);
+//    }
+
+//    private PowerMode3Configurable2() {
+//        this(PowerMode3.getInstance());
+//    }
 
 
     @NotNull
@@ -55,7 +69,9 @@ public class PowerMode3Configurable2 extends ConfigurableBase<PowerMode3Configur
 
     @Override
     public void dispose() {
-        LOGGER.debug("ConfigurableUi: Disposing...");
+        LOGGER.debug(" ConfigurableUi: Disposing... ======== ==== ========");
+        this.settings = null;
+
     }
 }
 
