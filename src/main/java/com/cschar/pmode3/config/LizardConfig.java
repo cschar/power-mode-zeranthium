@@ -19,7 +19,7 @@ import java.awt.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-public class LizardConfig extends BaseConfigPanel{
+public class LizardConfig extends BaseConfigJPanel {
 
 
     PowerMode3 settings;
@@ -32,7 +32,7 @@ public class LizardConfig extends BaseConfigPanel{
 
     private JComponent lizardSpriteConfigPanel;
 
-    static ArrayList<SpriteDataAnimated> spriteDataAnimated;
+    public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
     public static int PREVIEW_SIZE = 60;
 
     public LizardConfig(PowerMode3 settings){
@@ -237,7 +237,7 @@ public class LizardConfig extends BaseConfigPanel{
         settings.setSpriteTypeProperty(PowerMode3.ConfigType.LIZARD, "maxAnchorsToUse",
                 String.valueOf(maxAnchorsToUse));
 
-        settings.setSerializedSpriteDataAnimated(LizardConfig.spriteDataAnimated, PowerMode3.ConfigType.LIZARD);
+        settings.setSerializedSDAJsonInfo(LizardConfig.spriteDataAnimated, PowerMode3.ConfigType.LIZARD);
     }
 
 
@@ -340,7 +340,7 @@ class LizardTableModel extends AbstractConfigTableModel {
             Float.class
     };
 
-    public LizardTableModel(BaseConfigPanel config) {
+    public LizardTableModel(BaseConfigJPanel config) {
         super(config);
     }
 

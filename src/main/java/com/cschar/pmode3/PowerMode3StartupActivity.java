@@ -4,6 +4,7 @@ import com.cschar.pmode3.actionHandlers.MyPasteHandler;
 import com.cschar.pmode3.actionHandlers.MySpecialActionHandler;
 import com.cschar.pmode3.config.SpecialActionSoundConfig;
 import com.intellij.openapi.actionSystem.IdeActions;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import com.intellij.openapi.project.Project;
@@ -47,8 +48,11 @@ public class PowerMode3StartupActivity implements ProjectActivity {
     @Nullable
     @Override
     public Object execute(@NotNull Project project, @NotNull Continuation<? super Unit> continuation) {
-        LOGGER.debug("Loading Startup Activity..");
-        PowerMode3.getInstance();
+        LOGGER.debug(" ====== Loading Startup Activity.. ======= ");
+        PowerMode3 p = PowerMode3.getInstance();
+        ApplicationManager.getApplication().getService(PowerMode3.class);
+
+        p.startup1 = this;
         setupActionEditorKeys();
         return null;
     }

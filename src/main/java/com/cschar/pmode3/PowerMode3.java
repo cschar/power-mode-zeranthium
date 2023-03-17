@@ -37,20 +37,15 @@ import com.intellij.openapi.editor.actionSystem.TypedActionHandler;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.JBColor;
 import com.intellij.util.SmartList;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.OptionTag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
-import java.io.InputStream;
 import java.util.List;
 import java.util.*;
 
@@ -78,18 +73,147 @@ final public class PowerMode3 implements
     public static String NOTIFICATION_GROUP_DISPLAY_ID = "PowerMode - Zeranthium";
     private static final Logger LOGGER = Logger.getInstance(PowerMode3.class);
 
+    @com.intellij.util.xmlb.annotations.Transient
     private ZJSONLoader JSONLoader;
+
     public void PowerMode3(){
+        LOGGER.debug("Constructing PowerMode3...");
         JSONLoader = new ZJSONLoader();
         JSONLoader.getDefaultJSONTableConfigs();
 
     }
+    @com.intellij.util.xmlb.annotations.Transient
+    public PowerMode3StartupActivity startup1;
+    @com.intellij.util.xmlb.annotations.Transient
+    public TypedActionHandler origHandler;
 
     @Override
     public void dispose() {
 //      See https://jetbrains.org/intellij/sdk/docs/basics/disposers.html for more details.
         LOGGER.debug("Disposing PowerMode3");
-//        Disposer.dispose(particleContainerManager);
+        this.particleContainerManager = null;
+        //unload special action handlers for COPY/PASTE etc..
+        this.startup1.teardownActionEditorKeys();
+        this.startup1 = null;
+
+        LOGGER.trace("Restoring original TypedAction");
+        //replace TypedActionHandler with original one
+        final TypedAction typedAction = TypedAction.getInstance();
+        typedAction.setupRawHandler(origHandler);
+
+        LOGGER.trace("Unloading MULTI_LAYER sprites...");
+        if(MultiLayerConfig.spriteDataAnimated != null) {
+            for (SpriteDataAnimated sda : MultiLayerConfig.spriteDataAnimated) {
+                sda.unloadImages();
+            }
+            MultiLayerConfig.spriteDataAnimated.clear();
+        }
+        MultiLayerConfig.spriteDataAnimated = null;
+        ParticleSpriteMultiLayer.spriteDataAnimated = null;
+
+
+
+        LOGGER.trace("Unloading LIZARD sprites...");
+        if(LizardConfig.spriteDataAnimated != null) {
+            for (SpriteDataAnimated sda : LizardConfig.spriteDataAnimated) {
+                sda.unloadImages();
+            }
+            LizardConfig.spriteDataAnimated.clear();
+        }
+        LizardConfig.spriteDataAnimated = null;
+        ParticleSpriteLizardAnchor.spriteDataAnimated = null;
+
+        LOGGER.trace("Unloading MULTI_LAYER_Chance sprites...");
+        if(MultiLayerChanceConfig.spriteDataAnimated != null) {
+            for (SpriteDataAnimated sda : MultiLayerChanceConfig.spriteDataAnimated) {
+                sda.unloadImages();
+            }
+            MultiLayerChanceConfig.spriteDataAnimated.clear();
+        }
+        MultiLayerChanceConfig.spriteDataAnimated = null;
+        ParticleSpriteMultiLayerChance.spriteDataAnimated = null;
+
+        LOGGER.trace("Unloading LINKER sprites...");
+        if(LinkerConfig.spriteDataAnimated != null) {
+            for (SpriteDataAnimated sda : LinkerConfig.spriteDataAnimated) {
+                sda.unloadImages();
+            }
+            LinkerConfig.spriteDataAnimated.clear();
+        }
+        LinkerConfig.spriteDataAnimated = null;
+        ParticleSpriteLinkerAnchor.spriteDataAnimated = null;
+
+
+        LOGGER.trace("Unloading DROSTE sprites...");
+        if(DrosteConfig.spriteDataAnimated != null) {
+            for (SpriteDataAnimated sda : DrosteConfig.spriteDataAnimated) {
+                sda.unloadImages();
+            }
+            DrosteConfig.spriteDataAnimated.clear();
+        }
+        DrosteConfig.spriteDataAnimated = null;
+        ParticleSpriteDroste.spriteDataAnimated = null;
+
+        LOGGER.trace("Unloading COPYPASTEVOID sprites...");
+        if(CopyPasteVoidConfig.spriteDataAnimated != null) {
+            for (SpriteDataAnimated sda : CopyPasteVoidConfig.spriteDataAnimated) {
+                sda.unloadImages();
+            }
+            CopyPasteVoidConfig.spriteDataAnimated.clear();
+        }
+        CopyPasteVoidConfig.spriteDataAnimated = null;
+        ParticleSpritePasteShape.spriteDataAnimated = null;
+
+        LOGGER.trace("Unloading LOCKEDLAYER sprites...");
+        if(LockedLayerConfig.spriteDataAnimated != null) {
+            for (SpriteDataAnimated sda : LockedLayerConfig.spriteDataAnimated) {
+                sda.unloadImages();
+            }
+            LockedLayerConfig.spriteDataAnimated.clear();
+        }
+        LockedLayerConfig.spriteDataAnimated = null;
+        ParticleSpriteLockedLayer.spriteDataAnimated = null;
+
+        LOGGER.trace("Unloading LANTERN sprites...");
+        if(LanternConfig.spriteDataAnimated != null) {
+            for (SpriteDataAnimated sda : LanternConfig.spriteDataAnimated) {
+                sda.unloadImages();
+            }
+            LanternConfig.spriteDataAnimated.clear();
+        }
+        LanternConfig.spriteDataAnimated = null;
+        ParticleSpriteLantern.spriteDataAnimated = null;
+
+        LOGGER.trace("Unloading TAP_ANIM sprites...");
+        if(TapAnimConfig.spriteDataAnimated != null) {
+            for (SpriteDataAnimated sda : TapAnimConfig.spriteDataAnimated) {
+                sda.unloadImages();
+            }
+            TapAnimConfig.spriteDataAnimated.clear();
+        }
+        TapAnimConfig.spriteDataAnimated = null;
+        ParticleSpriteTapAnim.spriteDataAnimated = null;
+
+
+        LOGGER.trace("Unloading SOUND data...");
+        if(SoundConfig.soundData != null) {
+            SoundConfig.soundData.clear();
+        }
+        SoundConfig.soundData = null;
+
+        LOGGER.trace("Unloading MUSIC_TRIGGER data...");
+        if(MusicTriggerConfig.soundData != null) {
+            MusicTriggerConfig.soundData.clear();
+        }
+        MusicTriggerConfig.soundData = null;
+
+        LOGGER.trace("Unloading SPECIAL_ACTION_SOUND data...");
+        if(SpecialActionSoundConfig.soundData != null) {
+            SpecialActionSoundConfig.soundData.clear();
+        }
+        SpecialActionSoundConfig.soundData = null;
+
+        LOGGER.trace("Done disposing Powermode3");
     }
 
 
@@ -231,6 +355,7 @@ final public class PowerMode3 implements
         //Setup SOUND handler
         final TypedAction typedAction2 = TypedAction.getInstance();
         TypedActionHandler rawHandler2 = typedAction2.getRawHandler();
+        this.origHandler = rawHandler2;
         typedAction2.setupRawHandler(
                 new TypedActionHandler() {
                     @Override
@@ -259,6 +384,7 @@ final public class PowerMode3 implements
     @Nullable
     @Override
     public PowerMode3 getState() {
+        LOGGER.debug("Powermode3: Getting State");
         //http://www.jetbrains.org/intellij/sdk/docs/basics/persisting_state_of_components.html#persistent-component-lifecycle
         return this;
     }
@@ -268,7 +394,9 @@ final public class PowerMode3 implements
         LOGGER.info("No State loaded previously");
         this.setParticleRGB(JBColor.darkGray.getRGB());
         this.setPackDownloadPath(FileSystemView.getFileSystemView().getDefaultDirectory().getPath());
-
+        if(JSONLoader == null){
+            JSONLoader =  new ZJSONLoader();
+        }
         pathDataMap = JSONLoader.getDefaultJSONTableConfigs();
 
         loadConfigData();
@@ -334,26 +462,45 @@ final public class PowerMode3 implements
             
             long startTime = System.nanoTime();
 
-            setUpdateProgress(progressIndicator, "Multi Layer", 0.1);
-            MultiLayerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MULTI_LAYER)));
-            setUpdateProgress(progressIndicator, "Multi Layer Chance", 0.2);
-            MultiLayerChanceConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MULTI_LAYER_CHANCE)));
+            if(this.getSpriteTypeEnabled(ConfigType.MULTI_LAYER)) {
+                setUpdateProgress(progressIndicator, "Multi Layer", 0.1);
+                MultiLayerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MULTI_LAYER)));
+            }
+//            if(this.getSpriteTypeEnabled(ConfigType.MULTI_LAYER_CHANCE)) {
+                setUpdateProgress(progressIndicator, "Multi Layer Chance", 0.2);
+                MultiLayerChanceConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MULTI_LAYER_CHANCE)));
+//            }
 
-            setUpdateProgress(progressIndicator, "lizard", 0.3);
-            LizardConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LIZARD)));
-            setUpdateProgress(progressIndicator, "linker", 0.4);
-            LinkerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LINKER)));
-            setUpdateProgress(progressIndicator, "Droste", 0.5);
-            DrosteConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.DROSTE)));
-            setUpdateProgress(progressIndicator, "Copypaste", 0.6);
-            CopyPasteVoidConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.COPYPASTEVOID)));
-            setUpdateProgress(progressIndicator, "Locked Layer", 0.7);
-            LockedLayerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LOCKED_LAYER)));
-            setUpdateProgress(progressIndicator, "Lantern", 0.8);
-            LanternConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LANTERN)));
+//            if(this.getSpriteTypeEnabled(ConfigType.LIZARD)) {
+                setUpdateProgress(progressIndicator, "lizard", 0.3);
+                LizardConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LIZARD)));
+//            }
 
-            setUpdateProgress(progressIndicator, "Tap Anim", 0.85);
-            TapAnimConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.TAP_ANIM)));
+//            if(this.getSpriteTypeEnabled(ConfigType.LINKER)) {
+                setUpdateProgress(progressIndicator, "linker", 0.4);
+                LinkerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LINKER)));
+//            }
+//            if(this.getSpriteTypeEnabled(ConfigType.DROSTE)) {
+                setUpdateProgress(progressIndicator, "Droste", 0.5);
+                DrosteConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.DROSTE)));
+//            }
+//            if(this.getSpriteTypeEnabled(ConfigType.COPYPASTEVOID)) {
+                setUpdateProgress(progressIndicator, "Copypaste", 0.6);
+                CopyPasteVoidConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.COPYPASTEVOID)));
+//            }
+//            if(this.getSpriteTypeEnabled(ConfigType.LOCKED_LAYER)) {
+                setUpdateProgress(progressIndicator, "Locked Layer", 0.7);
+                LockedLayerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LOCKED_LAYER)));
+//            }
+//            if(this.getSpriteTypeEnabled(ConfigType.LANTERN)) {
+                setUpdateProgress(progressIndicator, "Lantern", 0.8);
+                LanternConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LANTERN)));
+//            }
+
+//            if(this.getSpriteTypeEnabled(ConfigType.TAP_ANIM)){
+                setUpdateProgress(progressIndicator, "Tap Anim", 0.85);
+                TapAnimConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.TAP_ANIM)));
+//            }
 
             setUpdateProgress(progressIndicator, "Sounds", 0.9);
             SoundConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.SOUND)));
@@ -370,11 +517,13 @@ final public class PowerMode3 implements
             this.enabled = wasEnabled;
             this.isConfigLoaded = true;
 
-            PowerMode3ConfigurableUI2 ui = PowerMode3ConfigurableUI2.getInstance();
-            if (ui != null) {
-                
-                ui.updateConfigUIAfterAssetsAreLoaded(wasEnabled);
-            }
+            //TODO: replace this with a message or signal or listener or something..
+            // remove the static reference plumbing
+//            PowerMode3ConfigurableUI2 ui = PowerMode3ConfigurableUI2.getInstance();
+//            if (ui != null) {
+//
+//                ui.updateConfigUIAfterAssetsAreLoaded(wasEnabled);
+//            }
         }
     }
 
@@ -425,7 +574,7 @@ final public class PowerMode3 implements
 //        this.pathDataMap.put(configType, serialized);
 //    }
 
-    public void setSerializedSpriteDataAnimated(ArrayList<SpriteDataAnimated> spriteData, ConfigType configType) {
+    public void setSerializedSDAJsonInfo(ArrayList<SpriteDataAnimated> spriteData, ConfigType configType) {
         SmartList<String> serialized = new SmartList<>();
         for (SpriteDataAnimated d : spriteData) {
             serialized.add(d.toJSONObject().toString());

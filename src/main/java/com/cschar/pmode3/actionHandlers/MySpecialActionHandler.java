@@ -56,6 +56,7 @@ public class MySpecialActionHandler extends EditorActionHandler implements Edito
         if(d.enabled) {
             Sound s = new Sound(d.getPath(), !d.customPathValid);
             s.play();
+
         }
         origEditorActionHandler.execute(editor, caret, dataContext);
 

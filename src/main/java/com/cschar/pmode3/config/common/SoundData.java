@@ -41,43 +41,6 @@ public class SoundData extends PathData{
     }
 
 
-//
-//    public boolean setImage(String path, boolean isResource){
-//        ImageIcon imageIcon;
-//        if(isResource){
-//            imageIcon = new ImageIcon(this.getClass().getResource(path));
-//            Image image = imageIcon.getImage(); // transform it
-//            Image newimg = image.getScaledInstance(60, 60,  Image.SCALE_SMOOTH); // scale it the smooth way
-//            previewIcon = new ImageIcon(newimg);
-//            this.image = ParticleUtils.loadSprite(path);
-//            return true;
-//        }else{
-//
-//            try {
-//                File f = new File(path);
-//                this.image = ImageIO.read(f);
-//
-//                customPathValid = true;
-//
-//                imageIcon = new ImageIcon(path);
-//                Image image = imageIcon.getImage(); // transform it
-//                Image newimg = image.getScaledInstance(60, 60, Image.SCALE_SMOOTH); // scale it the smooth way
-//                previewIcon = new ImageIcon(newimg);
-//
-//            } catch (IOException e) {
-//                Logger logger  = Logger.getLogger(ParticleSpriteLightning.class.getName());
-//                logger.severe("error loading image file: " + path);
-//
-//                setImage(this.defaultPath, true);
-//
-//                customPathValid = false;
-//                return false;
-//            }
-//        }
-//        return false;
-//    }
-
-
     @Override
     public JSONObject toJSONObject(){
         ////enabled, scale, speed, defaultPath, customPath, isCyclic, val2, alpha, val1

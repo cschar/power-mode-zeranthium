@@ -1,6 +1,7 @@
 package com.cschar.pmode3;
 
 import com.cschar.pmode3.config.*;
+import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.cschar.pmode3.config.common.ui.ZeranthiumColors;
 import com.cschar.pmode3.services.GitPackLoaderJComponent;
 import com.cschar.pmode3.services.MemoryMonitorService;
@@ -43,7 +44,7 @@ import static com.cschar.pmode3.ParticleContainerManager.resetAllContainers;
 
 public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposable {
     private static final Logger LOGGER = Logger.getInstance(PowerMode3ConfigurableUI2.class.getName());
-    private JPanel mainPanel;
+
     private JTextField lifetimeTextField;
     private JCheckBox isEnabledCheckBox;
     private JLabel toggleHotkeyLabel;
@@ -57,6 +58,7 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
     private SpecialActionSoundConfig specialActionSoundConfig;
 
 
+    //TODO: Move all this into a component
     private JCheckBox enableLizardCheckBox;
     private JCheckBox enableMOMACheckBox;
     private JPanel theCustomCreatePanel;
@@ -99,39 +101,37 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
 
     public static JLabel loadingLabel = new JLabel("Loading Config");
 
-    // static variable single_instance of type Singleton
-    private static PowerMode3ConfigurableUI2 single_instance = null;
 
-
-
-    // static method to create instance of Singleton class
-    public static PowerMode3ConfigurableUI2 getInstance()
-    {
-        return single_instance;
-    }
-
-
-    private PowerMode3ConfigurableUI2() {};
-
-
+    /** The master panel,
+     *
+     * Contains everything
+     * */
     JPanel ultraPanel;
     JBScrollPane scrollPane;
 
-    //Constructor is called _AFTER_ createUIComponents when using IntelliJ GUI designer
+    @Override
+    public void dispose(){
+        LOGGER.debug("ConfigurableUI: disposing...");
+
+        this.refreshMemoryWidget = false; //stop bg thread from updating
+        MemoryMonitorService powerMemoryService = ApplicationManager.getApplication().getService(MemoryMonitorService.class);
+        powerMemoryService.cleanup();
+    }
+
+
     public PowerMode3ConfigurableUI2(PowerMode3 powerMode3) {
         LOGGER.debug("Creating MenuConfigurableUI...");
+
         this.ultraPanel = new JPanel();
         settings = ApplicationManager.getApplication().getService(PowerMode3.class);
 
         JBTabbedPane settingsTabbedPane = new JBTabbedPane(JTabbedPane.LEFT);
         settingsTabbedPane.setOpaque(false);
 
-
         JPanel panel2 = new JPanel();
         scrollPane = new JBScrollPane(panel2);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-
 
         panel2.setBorder(JBUI.Borders.empty(2, 2, 200, 2));
         panel2.setLayout(new BoxLayout(panel2, BoxLayout.PAGE_AXIS));
@@ -155,7 +155,7 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
             loadingLabel.setFont(new Font ("Arial", Font.BOLD, 30));
             theCustomCreatePanel.add(loadingLabel);
         }else{
-            LOGGER.debug("loading settings (they were already loaded)");
+            LOGGER.debug("loading settings (config is already loaded, dont need to wait)");
             createConfig();
         }
 
@@ -167,38 +167,18 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
 //        panel1.setBackground(JBColor.orange);
         panel1.setBorder(JBUI.Borders.empty(2, 2, 0, 2));
         panel1.setLayout(new BoxLayout(panel1, BoxLayout.X_AXIS));
-//        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/barlarge.png"));
-//        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/pack-logo3.png"));
-//        settingsTabbedPane.addTab("pa", sliderIcon, panel1);
-//        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/pack-logo6.png"));
-//        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/pack-logo7.png"));
-        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/pack-logo8.png"));
-
-        settingsTabbedPane.addTab("|", sliderIcon, panel1);
-//        settingsTabbedPane.addTab("", sliderIcon, panel1);
 
 //        GitPackDownloaderComponent jComponent = new GitPackDownloaderComponent("title", this);
         GitPackLoaderJComponent jComponent = new GitPackLoaderJComponent("title", this);
         panel1.add(jComponent);
 
+        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/pack-logo8.png"));
+        settingsTabbedPane.addTab("|", sliderIcon, panel1);
         this.ultraPanel.setMaximumSize(new Dimension(1000,1100));
         this.ultraPanel.setLayout(new BoxLayout(this.ultraPanel, BoxLayout.X_AXIS));
         this.ultraPanel.add(settingsTabbedPane);
 
-        PowerMode3ConfigurableUI2.single_instance = this;
         settings = powerMode3;
-
-
-        /////////////////////////
-//        JPanel panel22 = new JPanel();
-////        panel1.setBackground(JBColor.orange);
-//        panel22.setBorder(JBUI.Borders.empty(2, 2, 50, 2));
-//        panel22.setLayout(new BoxLayout(panel22, BoxLayout.X_AXIS));
-////        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/barlarge.png"));
-////        ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/pack-logo3.png"));
-////        settingsTabbedPane.addTab("pa", sliderIcon, panel1);
-//        ImageIcon sliderIcon23 = new ImageIcon(this.getClass().getResource("/icons/pack-logo7.png"));
-//        settingsTabbedPane.addTab("", sliderIcon23, panel22);
 
 
         //If user has opened settings, but config values arent loaded yet from filesystem...
@@ -207,7 +187,7 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
             return;
         }
 
-        loadConfigValues();
+        this.loadConfigValues();
 
         scrollPane.getVerticalScrollBar().setValue(settings.getScrollBarPosition());
         configSettingsTabbedPane.setSelectedIndex(settings.getLastTabIndex());
@@ -216,7 +196,47 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
 //        ultraPanel.repaint();
     }
 
+    private AdjustmentListener scrollAdjustmentListener;
+
+    @NotNull
+    @Override
+    public JComponent getComponent() {
+        LOGGER.debug("ConfigurableUI: getComponent() override ");
+
+        if(settings.isConfigLoaded) {
+            LOGGER.trace("ConfigurableUI: adding scrollPane listener ");
+            scrollAdjustmentListener = new AdjustmentListener() {
+                @Override
+                public void adjustmentValueChanged(AdjustmentEvent e) {
+                    ApplicationManager.getApplication().invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            settings.setScrollBarPosition(e.getValue());
+                            settings.setLastTabIndex(configSettingsTabbedPane.getSelectedIndex());
+                        }
+                    });
+                }
+            };
+
+            //TODO: deregister this listener
+            scrollPane.getVerticalScrollBar().addAdjustmentListener(scrollAdjustmentListener);
+
+            //http://www.jetbrains.org/intellij/sdk/docs/basics/architectural_overview/general_threading_rules.html?search=BackgroundTaskUtil#invokelater
+            //https://stackoverflow.com/a/46204157/403403
+            ApplicationManager.getApplication().invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    scrollPane.getVerticalScrollBar().setValue(settings.getScrollBarPosition());
+                    configSettingsTabbedPane.setSelectedIndex(settings.getLastTabIndex());
+                }
+            });
+        }
+
+        return this.ultraPanel;
+    }
+
     public JPanel makeTopSettings(PowerMode3 settings){
+        LOGGER.trace("ConfigurableUI: making top settings ");
         mainTopPanel = new JPanel();
 
         //Col 1
@@ -314,7 +334,6 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
         col3.add(anchorConfigButton);
 
 
-
         mainTopPanel.add(col1);
         mainTopPanel.add(col2);
         mainTopPanel.add(col3);
@@ -330,7 +349,9 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
         return checkbox;
     }
 
+    /** The Switch Panel for turning on all Configs */
     public JPanel makeBotSettings(){
+        LOGGER.trace("ConfigurableUI:making bot settings ");
         mainBottomPanel = new JPanel();
 //        mainBottomPanel.setBorder(JBUI.Borders.customLine(JBColor.black, 1));
 
@@ -366,8 +387,6 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
 
 
 
-
-
         JPanel col2 = new JPanel();
         col2.setLayout(new BoxLayout(col2, BoxLayout.Y_AXIS));
         col2.setBorder(JBUI.Borders.empty(10, 0, 10, 0));
@@ -400,8 +419,6 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
             enableMultiLayerChanceCheckbox.setSelected(true);
         }
 
-
-
         JPanel col3 = new JPanel();
         col3.setLayout(new BoxLayout(col3, BoxLayout.Y_AXIS));
         col3.setBorder(JBUI.Borders.empty(10, 0, 10, 0));
@@ -426,7 +443,6 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
         }
 
 
-
         JPanel col4 = new JPanel();
         col4.setLayout(new BoxLayout(col4, BoxLayout.Y_AXIS));
         col4.setBorder(JBUI.Borders.empty(10, 0, 10, 0));
@@ -445,7 +461,6 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
         }
 
 
-
         mainBottomPanel.add(col1);
         mainBottomPanel.add(col2);
         mainBottomPanel.add(col3);
@@ -454,7 +469,7 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
     }
 
     private void loadConfigValues(){
-
+        LOGGER.trace("ConfigurableUI: loading Config values from powermode3 settings ");
         //already initialized from createUIComponents below
         this.basicParticleConfig.loadValues();
         this.lizardConfig.loadValues();
@@ -468,8 +483,6 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
         this.lanternConfig.loadValues();
         this.tapAnimConfig.loadValues();
         this.multiLayerChanceConfig.loadValues();
-
-
         //sound panel
         this.soundConfig.loadValues();
         this.musicTriggerConfig.loadValues();
@@ -495,6 +508,7 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
 
     @Override
     public void apply(@NotNull PowerMode3 settings) throws ConfigurationException {
+        LOGGER.trace("ConfigurableUI: apply ");
 
         settings.setEnabled(isEnabledCheckBox.isSelected());
         settings.setShakeDistance(getJTextFieldWithinBounds(shakeDistanceTextField, 0, 30, "Distance to shake editor in pixels when typing"));
@@ -538,7 +552,16 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
 
         this.vineConfig.saveValues(maxPsiSearch);
         this.momaConfig.saveValues();
+
+
+        //TODO: remoeve this unload
+        //unload to ensure we can setData without needing binary stuff
+//        for(SpriteDataAnimated sd: multiLayerConfig.spriteDataAnimated){
+//            sd.unloadImages();
+//        }
         this.multiLayerConfig.saveValues(enableMultilayerCheckbox.isSelected());
+
+
         this.linkerConfig.saveValues(maxPsiSearch, enableLinkerCheckbox.isSelected());
         this.drosteConfig.saveValues();
         this.copyPasteVoidConfig.saveValues();
@@ -552,40 +575,41 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
         this.musicTriggerConfig.saveValues();
         this.specialActionSoundConfig.saveValues();
 
-    }
 
-    @NotNull
-    @Override
-    public JComponent getComponent() {
-
-        if(settings.isConfigLoaded) {
-            scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
-                @Override
-                public void adjustmentValueChanged(AdjustmentEvent e) {
-                    ApplicationManager.getApplication().invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            settings.setScrollBarPosition(e.getValue());
-                            settings.setLastTabIndex(configSettingsTabbedPane.getSelectedIndex());
-                        }
-                    });
-                }
-            });
-            //http://www.jetbrains.org/intellij/sdk/docs/basics/architectural_overview/general_threading_rules.html?search=BackgroundTaskUtil#invokelater
-            //https://stackoverflow.com/a/46204157/403403
-            ApplicationManager.getApplication().invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    scrollPane.getVerticalScrollBar().setValue(settings.getScrollBarPosition());
-                    configSettingsTabbedPane.setSelectedIndex(settings.getLastTabIndex());
-                }
-            });
+        //Load the Data if settings turned on
+        //Determine if particle types have been turned on and load data if so
+//        settings.loadConfigData();
+        if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.MULTI_LAYER)) {
+            //load data
+            for(SpriteDataAnimated sd: multiLayerConfig.spriteDataAnimated){
+                sd.loadImages();
+            }
+//            MultiLayerConfig.setSpriteDataAnimated(settings.deserializeSpriteDataAnimated(settings.pathDataMap.get(PowerMode3.ConfigType.MULTI_LAYER)));
+        }else{
+            //unload
+            for(SpriteDataAnimated sd: multiLayerConfig.spriteDataAnimated){
+                sd.unloadImages();
+            }
         }
 
-        return this.ultraPanel;
+        if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.MULTI_LAYER_CHANCE)) {
+            MultiLayerChanceConfig.setSpriteDataAnimated(settings.deserializeSpriteDataAnimated(settings.pathDataMap.get(PowerMode3.ConfigType.MULTI_LAYER_CHANCE)));
+        }
+        // -------------Unload-------------------------
+        //Unload the Data if settings turned off
+        if(!settings.getSpriteTypeEnabled(PowerMode3.ConfigType.MULTI_LAYER)) {
+            LOGGER.debug("Unsetting MULTI_LAYER SpriteDataAnimated images, count: " + multiLayerConfig.spriteDataAnimated.size());
+            for(SpriteDataAnimated sd: multiLayerConfig.spriteDataAnimated){
+                sd.unloadImages();
+            }
+        }
+
     }
 
 
+
+
+    //TODO: Readd when we hook up with messages instead of global
     public void updateConfigUIAfterAssetsAreLoaded(boolean wasEnabled){
         //TODO weird extra setting 'wasEnabled' here, needed when 'enabled' manually switched to "false" during load
         // (since we dont want to have plugin enabled before assets are loaded)
@@ -601,6 +625,11 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
         this.loadConfigValues();
     }
 
+    /** used for when user is looking at settings and assets are still loading...
+     *
+     * disables UI components so they are not clickable.
+     *
+     * */
     private void toggleMainSettingsEnabled(Boolean isEnabled){
 
         mainTopPanel.setEnabled(isEnabled);
@@ -635,7 +664,7 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
     }
 
     private void createConfig(){
-
+        LOGGER.debug("CreateConfig:  Creating Config JPanels...");
         if (loadingLabel.getParent() == this.theCustomCreatePanel) {
             this.theCustomCreatePanel.remove(loadingLabel);
         }
@@ -652,7 +681,6 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
         soundSettingsPanel.setLayout(new BoxLayout(soundSettingsPanel, BoxLayout.PAGE_AXIS));
         ImageIcon soundIcon = new ImageIcon(this.getClass().getResource("/icons/sound_small.png"));
         configSettingsTabbedPane.addTab("Sound Settings", soundIcon, soundSettingsPanel);
-
 
         //Sound Settings tab
         soundSettingsPanel.add(this.createSpacer());
@@ -676,6 +704,14 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
         this.basicParticleConfig = new BasicParticleConfig(settings);
         particleSettingsPanel.add(this.basicParticleConfig);
         particleSettingsPanel.add(this.createSpacer());
+
+
+        //TODO: Only scan dir for preview pics and height calcs
+        //TODO: dont load entire thing
+        //Load manually here
+        if(MultiLayerConfig.spriteDataAnimated == null) {
+            MultiLayerConfig.setSpriteDataAnimated(settings.deserializeSpriteDataAnimated(settings.pathDataMap.get(PowerMode3.ConfigType.MULTI_LAYER)));
+        }
 
         this.multiLayerConfig = new MultiLayerConfig(settings);
         particleSettingsPanel.add(multiLayerConfig);
@@ -770,7 +806,7 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
 
 
 
-        private void disableAllParticleSettings(){
+    private void disableAllParticleSettings(){
 
             enableBasicParticleCheckBox.setSelected(false);
             enableLizardCheckBox.setSelected(false);
@@ -827,13 +863,6 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
                 }
             }
         });
-    }
-
-    @Override
-    public void dispose(){
-        this.refreshMemoryWidget = false; //stop bg thread from updating
-        MemoryMonitorService powerMemoryService = ApplicationManager.getApplication().getService(MemoryMonitorService.class);
-        powerMemoryService.cleanup();
     }
 
 

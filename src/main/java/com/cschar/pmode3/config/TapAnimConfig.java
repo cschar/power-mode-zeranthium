@@ -22,7 +22,7 @@ import java.awt.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-public class TapAnimConfig extends BaseConfigPanel {
+public class TapAnimConfig extends BaseConfigJPanel {
 
     JPanel mainPanel;
     PowerMode3 settings;
@@ -32,7 +32,7 @@ public class TapAnimConfig extends BaseConfigPanel {
 
     private JComponent spriteConfigPanel;
     public final static int PREVIEW_SIZE = 120;
-    static ArrayList<SpriteDataAnimated> spriteDataAnimated;
+    public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
 
     public TapAnimConfig(PowerMode3 settings){
         this.settings = settings;
@@ -134,7 +134,7 @@ public class TapAnimConfig extends BaseConfigPanel {
 
     public void saveValues() throws ConfigurationException {
 
-        settings.setSerializedSpriteDataAnimated(TapAnimConfig.spriteDataAnimated, PowerMode3.ConfigType.TAP_ANIM);
+        settings.setSerializedSDAJsonInfo(TapAnimConfig.spriteDataAnimated, PowerMode3.ConfigType.TAP_ANIM);
     }
 
 
@@ -221,7 +221,7 @@ class TapAnimTableModel extends AbstractConfigTableModel {
             Boolean.class
     };
 
-    public TapAnimTableModel(BaseConfigPanel config) {
+    public TapAnimTableModel(BaseConfigJPanel config) {
         super(config);
     }
 

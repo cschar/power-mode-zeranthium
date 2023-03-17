@@ -19,7 +19,7 @@ import java.awt.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-public class LinkerConfig extends BaseConfigPanel {
+public class LinkerConfig extends BaseConfigJPanel {
 
     JPanel mainPanel;
     PowerMode3 settings;
@@ -51,13 +51,13 @@ public class LinkerConfig extends BaseConfigPanel {
 
 
     private JComponent linkerSpriteConfigPanel;
-    static ArrayList<SpriteDataAnimated> spriteDataAnimated;
+    public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
+
+
 
     public LinkerConfig(PowerMode3 settings){
         this.settings = settings;
 
-//        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-//        this.setMaximumSize(new Dimension(1000,300));
         this.setLayout(new GridLayout(2,0)); //as many rows as necessary
 
         mainPanel = new JPanel();
@@ -72,10 +72,8 @@ public class LinkerConfig extends BaseConfigPanel {
 
         this.setupHeaderPanel("LinkerI Options", spriteDataAnimated);
         secondCol.add(headerPanel);
-        mainPanel.add(secondCol);
 
-//        JPanel lizardColorPanel = Config.getColorPickerPanel("Lizard Color", PowerMode3.SpriteType.LIZARD, settings, Color.GREEN);
-//        secondCol.add(lizardColorPanel);
+        mainPanel.add(secondCol);
 
 
         JPanel maxPsi = new JPanel();
@@ -103,15 +101,7 @@ public class LinkerConfig extends BaseConfigPanel {
         secondCol.add(minPsi);
 
         this.chancePerKeyPressTextField = new JTextField();
-//        JLabel chancePerKeyPressLabel = new JLabel("Chance per keypress (0-100)");
-//        JPanel chancePerKeyPressPanel = new JPanel();
-//        chancePerKeyPressPanel.add(chancePerKeyPressLabel);
-//        chancePerKeyPressPanel.add(chancePerKeyPressTextField);
-//        chancePerKeyPressPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-//        chancePerKeyPressPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
-//        chancePerKeyPressPanel.setMaximumSize(new Dimension(400, 50));
-//        chancePerKeyPressPanel.setBackground(Color.lightGray);
-//        secondCol.add(chancePerKeyPressPanel);
+
 
         JPanel tracerColorPanel = Config.getColorPickerPanel("tracer Color", PowerMode3.ConfigType.LINKER, settings, this.originalTracerColor);
         this.tracerEnabledCheckBox = new JCheckBox("is enabled?", true);
@@ -130,28 +120,8 @@ public class LinkerConfig extends BaseConfigPanel {
         cyclicPanel.setMaximumSize(new Dimension(500, 50));
         secondCol.add(cyclicPanel);
 
-
         this.chanceOfSpawnTextField = new JTextField();
-//        JLabel chanceOfSpawnLabel = new JLabel("Chance of Link per anchor (0-100)");
-//        JPanel chancePanel = new JPanel();
-//        chancePanel.add(chanceOfSpawnLabel);
-//        chancePanel.add(chanceOfSpawnTextField);
-//        chancePanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-//        chancePanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
-//        chancePanel.setMaximumSize(new Dimension(400, 50));
-////        chancePanel.setBackground(Color.lightGray);
-//        secondCol.add(chancePanel);
-
         this.maxAnchorsToUse = new JTextField();
-//        JLabel maxAnchorsLabel = new JLabel("Max Anchors to Use (1-100)");
-//        JPanel maxAnchorsPanel = new JPanel();
-//        maxAnchorsPanel.add(maxAnchorsLabel);
-//        maxAnchorsPanel.add(maxAnchorsToUse);
-//        maxAnchorsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-//        maxAnchorsPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
-//        maxAnchorsPanel.setMaximumSize(new Dimension(500, 50));
-////        maxAnchorsPanel.setBackground(Color.yellow);
-//        secondCol.add(maxAnchorsPanel);
 
 
         //First col config
@@ -395,7 +365,7 @@ public class LinkerConfig extends BaseConfigPanel {
         settings.setSpriteTypeProperty(PowerMode3.ConfigType.LINKER, "curve1Amount",
                 String.valueOf(curve1Amount));
 
-        settings.setSerializedSpriteDataAnimated(LinkerConfig.spriteDataAnimated, PowerMode3.ConfigType.LINKER);
+        settings.setSerializedSDAJsonInfo(LinkerConfig.spriteDataAnimated, PowerMode3.ConfigType.LINKER);
     }
 
 
@@ -530,25 +500,18 @@ class LinkerTableModel extends AbstractConfigTableModel {
     static ArrayList<SpriteDataAnimated> data = LinkerConfig.spriteDataAnimated;
 
 
-
     public static final String[] columnNames = new String[]{
             "preview",
             "enabled?",
             "scale",
             "speed",
-//            "weighted amount (1-100)",
-
             "set path",
             "path",
             "reset",
             "alpha",
             "offset",
             "repeat every"
-
     };
-
-
-
 
 
     private final Class[] columnClasses = new Class[]{
@@ -564,9 +527,10 @@ class LinkerTableModel extends AbstractConfigTableModel {
             Integer.class
     };
 
-    public LinkerTableModel(BaseConfigPanel config) {
+    public LinkerTableModel(BaseConfigJPanel config) {
         super(config);
     }
+
 
     @Override
     public int getRowCount() {

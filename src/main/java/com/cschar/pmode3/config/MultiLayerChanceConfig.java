@@ -22,13 +22,13 @@ import java.awt.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-public class MultiLayerChanceConfig extends BaseConfigPanel{
+public class MultiLayerChanceConfig extends BaseConfigJPanel {
 
 
     JPanel firstRow;
     JComponent spriteConfigPanel;
 
-    static ArrayList<SpriteDataAnimated> spriteDataAnimated;
+    public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
     PowerMode3 settings;
 
     public final static int PREVIEW_SIZE = 80;
@@ -131,7 +131,7 @@ public class MultiLayerChanceConfig extends BaseConfigPanel{
 
     public void saveValues() throws ConfigurationException {
 
-        settings.setSerializedSpriteDataAnimated(spriteDataAnimated, PowerMode3.ConfigType.MULTI_LAYER_CHANCE);
+        settings.setSerializedSDAJsonInfo(spriteDataAnimated, PowerMode3.ConfigType.MULTI_LAYER_CHANCE);
     }
 
 
@@ -221,7 +221,7 @@ class MultiLayerChanceTableModel extends AbstractConfigTableModel {
             Boolean.class
     };
 
-    public MultiLayerChanceTableModel(BaseConfigPanel config) {
+    public MultiLayerChanceTableModel(BaseConfigJPanel config) {
         super(config);
     }
 

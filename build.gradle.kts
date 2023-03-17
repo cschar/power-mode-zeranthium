@@ -1,3 +1,4 @@
+import jdk.javadoc.doclet.Doclet
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
 import org.gradle.api.tasks.testing.TestResult.ResultType
@@ -48,6 +49,9 @@ dependencies {
     // https://www.baeldung.com/junit-5-gradle#enabling-support-for-old-versions
 //    testCompileOnly("junit:junit:4.13.1")
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.3.1")
+
+
+//    javadocToJson()
 
 }
 
@@ -102,6 +106,9 @@ kover.xmlReport {
     onCheck.set(true)
 }
 
+
+
+
 tasks {
 
 //    https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html#tasks-buildsearchableoptions
@@ -113,7 +120,9 @@ tasks {
         gradleVersion = properties("gradleVersion").get()
     }
 
-
+    runIde {
+        maxHeapSize = "4g"
+    }
 
     jar {
         // https://docs.gradle.org/current/userguide/more_about_tasks.html

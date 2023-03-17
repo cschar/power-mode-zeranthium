@@ -20,7 +20,7 @@ import java.awt.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-public class LanternConfig extends BaseConfigPanel {
+public class LanternConfig extends BaseConfigJPanel {
 
     JPanel topPanel;
     PowerMode3 settings;
@@ -45,7 +45,7 @@ public class LanternConfig extends BaseConfigPanel {
 
 
     private JComponent spriteConfigPanel;
-    static ArrayList<SpriteDataAnimated> spriteDataAnimated;
+    public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
 
 
     public LanternConfig(PowerMode3 settings){
@@ -323,7 +323,7 @@ public class LanternConfig extends BaseConfigPanel {
         ParticleSpriteLinkerAnchor.MAX_CYCLE_PARTICLES = LinkerConfig.MAX_CYCLE_PARTICLES(settings);
 
 
-        settings.setSerializedSpriteDataAnimated(LanternConfig.spriteDataAnimated,
+        settings.setSerializedSDAJsonInfo(LanternConfig.spriteDataAnimated,
                                                  PowerMode3.ConfigType.LANTERN);
     }
 
@@ -410,7 +410,7 @@ class LanternTableModel extends AbstractConfigTableModel {
             Integer.class
     };
 
-    public LanternTableModel(BaseConfigPanel config) {
+    public LanternTableModel(BaseConfigJPanel config) {
         super(config);
     }
 

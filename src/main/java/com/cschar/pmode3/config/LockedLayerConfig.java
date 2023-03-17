@@ -21,7 +21,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.EventObject;
 
-public class LockedLayerConfig extends BaseConfigPanel {
+public class LockedLayerConfig extends BaseConfigJPanel {
 
 
     JPanel firstRow;
@@ -30,7 +30,7 @@ public class LockedLayerConfig extends BaseConfigPanel {
     private JTextField gutterWidthTextField;
 
     PowerMode3 settings;
-    static ArrayList<SpriteDataAnimated> spriteDataAnimated;
+    public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
     public final static int PREVIEW_SIZE = 120;
 
     public LockedLayerConfig(PowerMode3 settings){
@@ -137,7 +137,7 @@ public class LockedLayerConfig extends BaseConfigPanel {
             d.val1 = gutterVal;
         }
 
-        settings.setSerializedSpriteDataAnimated(LockedLayerConfig.spriteDataAnimated, PowerMode3.ConfigType.LOCKED_LAYER);
+        settings.setSerializedSDAJsonInfo(LockedLayerConfig.spriteDataAnimated, PowerMode3.ConfigType.LOCKED_LAYER);
     }
 
     public static void setSpriteDataAnimated(ArrayList<SpriteDataAnimated> data){
@@ -317,7 +317,7 @@ class LockedLayerTableModel extends AbstractConfigTableModel {
 
     };
 
-    public LockedLayerTableModel(BaseConfigPanel config) {
+    public LockedLayerTableModel(BaseConfigJPanel config) {
         super(config);
     }
 

@@ -21,7 +21,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.EventObject;
 
-public class MultiLayerConfig extends BaseConfigPanel{
+public class MultiLayerConfig extends BaseConfigJPanel {
 
 
     JPanel firstRow;
@@ -29,7 +29,7 @@ public class MultiLayerConfig extends BaseConfigPanel{
 
     private JCheckBox moveWithCaret;
     private JTextField moveSpeedTextField;
-    static ArrayList<SpriteDataAnimated> spriteDataAnimated;
+    public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
     PowerMode3 settings;
 
     public final static int PREVIEW_SIZE = 120;
@@ -167,15 +167,14 @@ public class MultiLayerConfig extends BaseConfigPanel{
     }
 
     public void saveValues(boolean isSettingEnabled) throws ConfigurationException {
+        // header GUIs
         ParticleSpriteMultiLayer.settingEnabled = isSettingEnabled; //to kill any lingering ones
-
         settings.setSpriteTypeProperty(PowerMode3.ConfigType.MULTI_LAYER, "moveWithCaretEnabled", String.valueOf(moveWithCaret.isSelected()));
-
         settings.setSpriteTypeProperty(PowerMode3.ConfigType.MULTI_LAYER, "moveSpeed",
                 String.valueOf(Config.getJTextFieldWithinBoundsFloat(this.moveSpeedTextField,
                         0.001f, 1.0f,"moveSpeed")));
-
-        settings.setSerializedSpriteDataAnimated(spriteDataAnimated, PowerMode3.ConfigType.MULTI_LAYER);
+        // table data
+        settings.setSerializedSDAJsonInfo(spriteDataAnimated, PowerMode3.ConfigType.MULTI_LAYER);
     }
 
 
@@ -388,7 +387,7 @@ class MultiLayerTableModel extends AbstractConfigTableModel {
 //            MandalaOtherCellData.class
     };
 
-    public MultiLayerTableModel(BaseConfigPanel config) {
+    public MultiLayerTableModel(BaseConfigJPanel config) {
         super(config);
     }
 

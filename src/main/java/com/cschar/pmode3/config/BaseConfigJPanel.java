@@ -12,7 +12,7 @@ import java.util.ArrayList;
 /**
  * base config panel used to build out other particle effect configs
  */
-public abstract class BaseConfigPanel extends JPanel {
+public abstract class BaseConfigJPanel extends JPanel {
 
     public JPanel headerPanel;
     public JLabel headerSizeLabel;
@@ -28,10 +28,7 @@ public abstract class BaseConfigPanel extends JPanel {
 
 
         headerSizeLabel = new JLabel();
-        //TODO: refactor to scan dir and calculate size
-        // but DONT load into memory permanently
-        // Only load if enabled at top at end
-//        calculateAssetSizesMB(spriteDataAnimated, this.headerSizeLabel);
+        calculateAssetSizesMB(spriteDataAnimated);
         headerSizeLabel.setBackground(ZeranthiumColors.specialOption3);
         headerSizeLabel.setOpaque(true);
         headerSizeLabel.setBorder(JBUI.Borders.empty(5));

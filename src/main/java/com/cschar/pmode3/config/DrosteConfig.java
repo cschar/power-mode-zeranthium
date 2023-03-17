@@ -3,10 +3,7 @@ package com.cschar.pmode3.config;
 import com.cschar.pmode3.ParticleSpriteDroste;
 import com.cschar.pmode3.PowerMode3;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
-import com.cschar.pmode3.config.common.ui.AbstractConfigTableModel;
-import com.cschar.pmode3.config.common.ui.CustomPathCellHighlighterRenderer;
-import com.cschar.pmode3.config.common.ui.JTableButtonMouseListener;
-import com.cschar.pmode3.config.common.ui.JTableButtonRenderer;
+import com.cschar.pmode3.config.common.ui.*;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
@@ -22,7 +19,7 @@ import java.awt.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-public class DrosteConfig extends BaseConfigPanel {
+public class DrosteConfig extends BaseConfigJPanel {
 
     JPanel mainPanel;
     PowerMode3 settings;
@@ -31,17 +28,14 @@ public class DrosteConfig extends BaseConfigPanel {
 
     private static Color originalTracerColor = Color.WHITE;
     private JComponent drosteSpriteConfigPanel;
-    static ArrayList<SpriteDataAnimated> spriteDataAnimated;
+    public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
 
     public final static int PREVIEW_SIZE = 120;
 
     public DrosteConfig(PowerMode3 settings){
         this.settings = settings;
 
-
         this.setLayout(new GridLayout(1,1));
-
-
 
         JPanel firstRow =  new JPanel();
         firstRow.setLayout(new BoxLayout(firstRow, BoxLayout.PAGE_AXIS));
@@ -54,10 +48,8 @@ public class DrosteConfig extends BaseConfigPanel {
         drosteSpriteConfigPanel = createConfigTable();
         firstRow.add(drosteSpriteConfigPanel);
         this.add(firstRow);
-//        this.add(drosteSpriteConfigPanel);
 
         this.loadValues();
-
     }
 
 
@@ -137,7 +129,7 @@ public class DrosteConfig extends BaseConfigPanel {
 
     public void saveValues() throws ConfigurationException {
 
-        settings.setSerializedSpriteDataAnimated(DrosteConfig.spriteDataAnimated, PowerMode3.ConfigType.DROSTE);
+        settings.setSerializedSDAJsonInfo(DrosteConfig.spriteDataAnimated, PowerMode3.ConfigType.DROSTE);
     }
 
 
@@ -179,15 +171,13 @@ class DrosteTableModel extends AbstractConfigTableModel {
 
     static ArrayList<SpriteDataAnimated> data = DrosteConfig.spriteDataAnimated;
 
-
+    private BaseConfigJPanel parentConfig;
 
     public static final String[] columnNames = new String[]{
             "preview",
             "enabled?",
             "scale",
             "speed",
-//            "weighted amount (1-100)",
-
             "set path",
             "path",
             "reset",
@@ -196,10 +186,6 @@ class DrosteTableModel extends AbstractConfigTableModel {
             "is cyclic"
 
     };
-
-
-
-
 
     private final Class[] columnClasses = new Class[]{
             ImageIcon.class,
@@ -214,9 +200,10 @@ class DrosteTableModel extends AbstractConfigTableModel {
             Boolean.class
     };
 
-    public DrosteTableModel(BaseConfigPanel config) {
+    public DrosteTableModel(BaseConfigJPanel config) {
         super(config);
     }
+
 
     @Override
     public int getRowCount() {

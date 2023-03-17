@@ -26,9 +26,14 @@ links to
 [ ] - Type , pseudo-Disable plugin, Type,  assert when plugin disabled, characters are still typed
 
 ## BUGS ?
+
+-- make sure when we unload, a sound isnt still playing
+
 -- ensure SpriteDataAnimated only loads at startup if its enabled
 -- load them at settings pane if they are switched on
 -- unload them at settings pane on 'apply' if they are switched off
+
+-- UI doesnt unload from memory when settings panel closes  (cellRendererTables are still in memory heapdump for example)
 
 -- Dyanmic Plugin memory when shutting down
    -- HeapDump debug with VisualVM, start VM with same JDK that Sandbox IDe is running
@@ -39,3 +44,13 @@ links to
 ## upgrade
 put docs on astro site
 https://docs.astro.build/en/guides/deploy/github/
+
+
+/opt/jdk/11/bin/javadoc \
+-docletpath  -docletpath ./build/classes/java/main \
+  -doclet com.cschar.pmode3.MyDoclet \
+src/main/java/com/cschar/pmode3/MyDoclet.java
+
+-docletpath  -docletpath ./build/classes/java/main \
+-doclet com.cschar.pmode3.MyTagScannerDoclet \
+src/main/java/com/cschar/pmode3/MyTagScannerDoclet.java
