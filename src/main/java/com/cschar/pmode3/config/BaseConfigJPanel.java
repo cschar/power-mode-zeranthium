@@ -28,7 +28,10 @@ public abstract class BaseConfigPanel extends JPanel {
 
 
         headerSizeLabel = new JLabel();
-        calculateSize(spriteDataAnimated, this.headerSizeLabel);
+        //TODO: refactor to scan dir and calculate size
+        // but DONT load into memory permanently
+        // Only load if enabled at top at end
+//        calculateAssetSizesMB(spriteDataAnimated, this.headerSizeLabel);
         headerSizeLabel.setBackground(ZeranthiumColors.specialOption3);
         headerSizeLabel.setOpaque(true);
         headerSizeLabel.setBorder(JBUI.Borders.empty(5));
@@ -39,7 +42,7 @@ public abstract class BaseConfigPanel extends JPanel {
         headerPanel.setMaximumSize(new Dimension(500,100));
     }
 
-    public static void calculateSize(ArrayList<SpriteDataAnimated> spriteDataAnimated, JLabel headerSizeLabel){
+    public void calculateAssetSizesMB(ArrayList<SpriteDataAnimated> spriteDataAnimated){
         double totalSizeMB = 0;
         for(SpriteDataAnimated d : spriteDataAnimated){
             totalSizeMB += d.getAssetSizeMB();

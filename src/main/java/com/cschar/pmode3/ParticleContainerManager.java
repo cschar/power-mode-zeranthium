@@ -47,8 +47,8 @@ public class ParticleContainerManager implements EditorFactoryListener, Disposab
 
     public ParticleContainerManager(PowerMode3 settings) {
         Disposer.register(settings, this);
-        this.settings = settings;
 
+        this.settings = settings;
         thread = new Thread(new Runnable() {
 
             @Override
@@ -79,6 +79,13 @@ public class ParticleContainerManager implements EditorFactoryListener, Disposab
     public void dispose() {
         LOGGER.debug("Disposing ParticleContainerManager....");
         thread.interrupt();
+        try {
+            //wait for loop to finish so when we clear particleContainers below,
+            // they aren't being accessed.
+            thread.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         resetAllContainers();
         particleContainers.clear();
         particleContainers = null;
