@@ -58,15 +58,6 @@ public class ParticleContainer extends JComponent implements ComponentListener, 
         myCaretListener = new MyCaretListener();
         MyCaretListener.enabled = true; //TODO make this non-static wtf lol
         editor.getCaretModel().addCaretListener(myCaretListener);
-
-    }
-
-    private void cleanupReferences() {
-        LOGGER.trace("Removing JComponent Listener");
-        parentJComponent.removeComponentListener(this);
-        parentJComponent.remove(this);
-        LOGGER.trace("Removing Caret Listener");
-        editor.getCaretModel().removeCaretListener(this.myCaretListener);
     }
 
     @Override
@@ -74,6 +65,16 @@ public class ParticleContainer extends JComponent implements ComponentListener, 
         LOGGER.debug("Particle instance disposing..." + this);
         this.cleanupReferences();
     }
+
+    public void cleanupReferences() {
+        LOGGER.trace("Removing JComponent Listener");
+        parentJComponent.removeComponentListener(this);
+        parentJComponent.remove(this);
+        LOGGER.trace("Removing Caret Listener");
+        editor.getCaretModel().removeCaretListener(this.myCaretListener);
+    }
+
+
 
     public void addExternalParticle(Particle p){
         this.particles.add(p);
@@ -510,16 +511,6 @@ public class ParticleContainer extends JComponent implements ComponentListener, 
 
     }
 
-
-//    public void update(Point point) {
-//        //TODO configurable
-//        for (int i = 0; i < 7; i++) {
-//            addParticle(point.x, point.y);
-//        }
-//        shakeEditor(parent, 5, 5, shakeDir);
-//        shakeDir = !shakeDir;
-//        this.repaint();
-//    }
 
     public void updateWithAnchors(Point point, Anchor[] anchors){
         PowerMode3 settings = PowerMode3.getInstance();

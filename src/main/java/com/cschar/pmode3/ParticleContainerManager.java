@@ -64,11 +64,14 @@ public class ParticleContainerManager implements EditorFactoryListener, Disposab
                         // 1000ms/60 = 16.6666666667      60 fps
                         Thread.sleep(17);
                     } catch (InterruptedException ignored) {
+                        LOGGER.debug("Thread interrupted ....");
                         //thread interrupted, shutdown
+                        break;
                     } catch (ConcurrentModificationException modified) {
                         // ignore it
                     }
                 }
+                LOGGER.debug("Done render thread....");
             }
 
         });
@@ -86,7 +89,15 @@ public class ParticleContainerManager implements EditorFactoryListener, Disposab
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+        thread = null;
+        LOGGER.debug("clearing particle containers....");
         resetAllContainers();
+        for(Editor key : particleContainers.keySet()){
+            ParticleContainer pc = particleContainers.get(key);
+            pc.cleanupReferences();
+            Disposer.dispose(pc);
+
+        }
         particleContainers.clear();
         particleContainers = null;
     }
@@ -102,7 +113,8 @@ public class ParticleContainerManager implements EditorFactoryListener, Disposab
     */
     public void bootstrapEditor(Editor editor){
 
-        particleContainers.put(editor, new ParticleContainer(editor));
+        ParticleContainer pc = new ParticleContainer(editor);
+        particleContainers.put(editor, pc);
 //        MyCaretListener cl = new MyCaretListener();
 //        MyCaretListener.enabled = true;
 //        editor.getCaretModel().addCaretListener(cl);
@@ -118,7 +130,7 @@ public class ParticleContainerManager implements EditorFactoryListener, Disposab
         ParticleContainer pc = new ParticleContainer(editor);
 
         // Add to disposable, so when plugin disabled, we cascade into removing container
-        Disposer.register(this, pc);
+//        Disposer.register(this, pc);
 
         particleContainers.put(editor, pc);
 

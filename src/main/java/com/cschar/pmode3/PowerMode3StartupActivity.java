@@ -53,6 +53,26 @@ public class PowerMode3StartupActivity implements ProjectActivity {
         return null;
     }
 
+    private EditorActionHandler pasteHandler;
+    private EditorActionHandler copyHandler;
+    private EditorActionHandler deleteHandler;
+    private EditorActionHandler backspaceHandler;
+    private EditorActionHandler enterHandler;
+
+    public void teardownActionEditorKeys() {
+        LOGGER.debug("unsetting actionEditorKeys...");
+
+        final EditorActionManager actionManager = EditorActionManager.getInstance();
+
+        actionManager.setActionHandler(IdeActions.ACTION_EDITOR_COPY, copyHandler);
+        actionManager.setActionHandler(IdeActions.ACTION_EDITOR_PASTE, pasteHandler);
+        actionManager.setActionHandler(IdeActions.ACTION_EDITOR_DELETE, deleteHandler);
+        actionManager.setActionHandler(IdeActions.ACTION_EDITOR_BACKSPACE, backspaceHandler);
+        actionManager.setActionHandler(IdeActions.ACTION_EDITOR_ENTER, enterHandler);
+
+
+    }
+
 
 
     public void setupActionEditorKeys() {
@@ -63,28 +83,31 @@ public class PowerMode3StartupActivity implements ProjectActivity {
         EditorActionHandler origHandler;
 
         //COPYPASTEVOID
-        origHandler = actionManager.getActionHandler(IdeActions.ACTION_EDITOR_PASTE);
-        MyPasteHandler myPasteHandler = new MyPasteHandler(origHandler);
+        pasteHandler = actionManager.getActionHandler(IdeActions.ACTION_EDITOR_PASTE);
+        MyPasteHandler myPasteHandler = new MyPasteHandler(pasteHandler);
         actionManager.setActionHandler(IdeActions.ACTION_EDITOR_PASTE, myPasteHandler);
 
         //SPECIAL_ACTION_SOUND
-        origHandler = actionManager.getActionHandler(IdeActions.ACTION_EDITOR_COPY);
-        h1 = new MySpecialActionHandler(origHandler, SpecialActionSoundConfig.KEYS.COPY);
-        actionManager.setActionHandler(IdeActions.ACTION_EDITOR_COPY, h1);
-
+        //Paste reuses Copypastevoid above
         origHandler = actionManager.getActionHandler(IdeActions.ACTION_EDITOR_PASTE);
         h1 = new MySpecialActionHandler(origHandler, SpecialActionSoundConfig.KEYS.PASTE);
         actionManager.setActionHandler(IdeActions.ACTION_EDITOR_PASTE, h1);
 
-        origHandler = actionManager.getActionHandler(IdeActions.ACTION_EDITOR_DELETE);
+        copyHandler = actionManager.getActionHandler(IdeActions.ACTION_EDITOR_COPY);
+        h1 = new MySpecialActionHandler(copyHandler, SpecialActionSoundConfig.KEYS.COPY);
+        actionManager.setActionHandler(IdeActions.ACTION_EDITOR_COPY, h1);
+
+
+
+        deleteHandler = actionManager.getActionHandler(IdeActions.ACTION_EDITOR_DELETE);
         h1 = new MySpecialActionHandler(origHandler, SpecialActionSoundConfig.KEYS.DELETE);
         actionManager.setActionHandler(IdeActions.ACTION_EDITOR_DELETE, h1);
 
-        origHandler = actionManager.getActionHandler(IdeActions.ACTION_EDITOR_BACKSPACE);
+        backspaceHandler = actionManager.getActionHandler(IdeActions.ACTION_EDITOR_BACKSPACE);
         h1 = new MySpecialActionHandler(origHandler, SpecialActionSoundConfig.KEYS.BACKSPACE);
         actionManager.setActionHandler(IdeActions.ACTION_EDITOR_BACKSPACE, h1);
 
-        origHandler = actionManager.getActionHandler(IdeActions.ACTION_EDITOR_ENTER);
+        enterHandler = actionManager.getActionHandler(IdeActions.ACTION_EDITOR_ENTER);
         h1 = new MySpecialActionHandler(origHandler, SpecialActionSoundConfig.KEYS.ENTER);
         actionManager.setActionHandler(IdeActions.ACTION_EDITOR_ENTER, h1);
 
