@@ -19,6 +19,11 @@ links to
 [2] https://github.com/krasa/StringManipulation/commit/08422d714ce70126093c051bd5147c8f9dbcdd3f
 
 
+## TODO before release
+- delete PowerMode3Configurable2
+- delete POwermode3ConfigurableUI2
+- resolve most TODO
+
 ## DIAGNOSTICS
 #com.cschar.pmode3:all
 

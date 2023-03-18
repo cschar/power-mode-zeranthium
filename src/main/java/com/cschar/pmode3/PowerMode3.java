@@ -498,10 +498,10 @@ final public class PowerMode3 implements
             
             long startTime = System.nanoTime();
 
-            if(this.getSpriteTypeEnabled(ConfigType.MULTI_LAYER)) {
+//            if(this.getSpriteTypeEnabled(ConfigType.MULTI_LAYER)) {
                 setUpdateProgress(progressIndicator, "Multi Layer", 0.1);
                 MultiLayerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MULTI_LAYER)));
-            }
+//            }
 //            if(this.getSpriteTypeEnabled(ConfigType.MULTI_LAYER_CHANCE)) {
                 setUpdateProgress(progressIndicator, "Multi Layer Chance", 0.2);
                 MultiLayerChanceConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MULTI_LAYER_CHANCE)));

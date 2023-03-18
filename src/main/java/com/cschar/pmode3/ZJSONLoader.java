@@ -49,7 +49,6 @@ public class ZJSONLoader {
         try {
             JSONObject jo = new JSONObject(sb.toString());
 
-            //TODO this is extra work, we go .json --> JSONObject --> string ( ..later --> JSONObject ---> pathData)
             JSONArray tableData = jo.getJSONArray("data");
             for (int i = 0; i < tableData.length(); i++) {
                 smartList.add(tableData.getJSONObject(i).toString());

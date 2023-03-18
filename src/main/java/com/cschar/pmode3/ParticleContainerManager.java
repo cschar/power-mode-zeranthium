@@ -115,11 +115,6 @@ public class ParticleContainerManager implements EditorFactoryListener, Disposab
 
         ParticleContainer pc = new ParticleContainer(editor);
         particleContainers.put(editor, pc);
-//        MyCaretListener cl = new MyCaretListener();
-//        MyCaretListener.enabled = true;
-//        editor.getCaretModel().addCaretListener(cl);
-        //TODO: disposable, should removeCaretLIstener from editor if it still exists
-//        editor.getCaretModel().addCaretListener(cl, this);
     }
 
 
