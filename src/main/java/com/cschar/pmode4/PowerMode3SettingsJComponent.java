@@ -125,9 +125,14 @@ public class PowerMode3SettingsJComponent implements Disposable, Pmode3PackLoade
         LOGGER.debug("Creating MenuConfigurableUI...");
 
         this.ultraPanel = new JPanel();
+        this.ultraPanel.setMaximumSize(new Dimension(1240,8000));
+//        this.ultraPanel.setBackground(Color.green); //ui padding debug
+
         settings = ApplicationManager.getApplication().getService(PowerMode3.class);
 
         JBTabbedPane settingsTabbedPane = new JBTabbedPane(JTabbedPane.LEFT);
+//        settingsTabbedPane.setBackground(Color.LIGHT_GRAY); //ui padding debug
+        settingsTabbedPane.setMaximumSize(new Dimension(1240,8000));
         settingsTabbedPane.setOpaque(false);
 
         JPanel panel2 = new JPanel();
@@ -176,8 +181,11 @@ public class PowerMode3SettingsJComponent implements Disposable, Pmode3PackLoade
 
         ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/pack-logo8.png"));
         settingsTabbedPane.addTab("|", sliderIcon, panel1);
-        this.ultraPanel.setMaximumSize(new Dimension(1000,1100));
+
+
+//        this.ultraPanel.setMaximumSize(new Dimension(1000,1100));
         this.ultraPanel.setLayout(new BoxLayout(this.ultraPanel, BoxLayout.X_AXIS));
+//        settingsTabbedPane.setMaximumSize(new Dimension(900,1100));
         this.ultraPanel.add(settingsTabbedPane);
 
         settings = powerMode3;
@@ -194,7 +202,7 @@ public class PowerMode3SettingsJComponent implements Disposable, Pmode3PackLoade
         scrollPane.getVerticalScrollBar().setValue(settings.getScrollBarPosition());
         configSettingsTabbedPane.setSelectedIndex(settings.getLastTabIndex());
 
-//        ultraPanel.revalidate();
+        ultraPanel.revalidate();
 //        ultraPanel.repaint();
     }
 
@@ -232,6 +240,8 @@ public class PowerMode3SettingsJComponent implements Disposable, Pmode3PackLoade
                 }
             });
         }
+
+
 
         return this.ultraPanel;
     }
@@ -648,13 +658,19 @@ public class PowerMode3SettingsJComponent implements Disposable, Pmode3PackLoade
         }
     }
 
-    /** called in the constructor */
+    /**
+     * <pre>
+     *  called in the constructor
+     *  populates the configSettingsTabPane
+     * </pre>
+     * */
     private void createConfig(){
         LOGGER.debug("CreateConfig:  Creating Config JPanels...");
         if (loadingLabel.getParent() == this.theCustomCreatePanel) {
             this.theCustomCreatePanel.remove(loadingLabel);
         }
         configSettingsTabbedPane = new JBTabbedPane();
+        configSettingsTabbedPane.setMaximumSize(new Dimension(1000,8000));
         configSettingsTabbedPane.setOpaque(false);
 
         particleSettingsPanel = new JPanel();

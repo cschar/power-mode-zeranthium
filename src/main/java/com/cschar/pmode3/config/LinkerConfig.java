@@ -52,29 +52,83 @@ public class LinkerConfig extends BaseConfigJPanel {
 
     private JComponent linkerSpriteConfigPanel;
     public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
-
+    JPanel firstRow;
 
 
     public LinkerConfig(PowerMode3 settings){
         this.settings = settings;
 
-        this.setLayout(new GridLayout(2,0)); //as many rows as necessary
+        //Copied from MultiLayer
+        this.setMaximumSize(new Dimension(1000,700));
+        this.setLayout(new GridLayout(2,1)); //as many rows as necessary
 
-        mainPanel = new JPanel();
-        mainPanel.setMaximumSize(new Dimension(1000,500));
-        mainPanel.setLayout(new GridLayout(0,2));
+        firstRow = new JPanel();
+        firstRow.setMaximumSize(new Dimension(1000,500));
+        firstRow.setLayout(new BoxLayout(firstRow, BoxLayout.X_AXIS));
+
+        this.setupHeaderPanel("Multi Layer Options", spriteDataAnimated);
+        this.add(firstRow);
+
+        //Populate First row
+
         JPanel firstCol = new JPanel();
         firstCol.setLayout(new BoxLayout(firstCol, BoxLayout.PAGE_AXIS));
-        mainPanel.add(firstCol);
+
+        // -----------  First col config --------------------
+
+        JPanel caretMovementPanel = new JPanel();
+        caretMovementPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        caretMovementPanel.setAlignmentX(RIGHT_ALIGNMENT);
+        caretMovementPanel.setMaximumSize(new Dimension(500,100));
+//        this.moveWithCaret = new JCheckBox("move with Caret?");
+        this.moveWithCaret = new JCheckBox("move with caret/mouse?");
+        caretMovementPanel.add(moveWithCaret);
+        this.moveSpeedTextField = new JTextField();
+//        this.moveSpeedTextField.setEditable(false);
+        caretMovementPanel.add(Config.populateTextFieldPanel(this.moveSpeedTextField, "speed (0.01 - 1.0)"));
+        caretMovementPanel.setOpaque(true);
+        caretMovementPanel.setBackground(ZeranthiumColors.specialOption1);
+        firstCol.add(caretMovementPanel);
+
+        this.maxLinksTextField = new JTextField();
+//        this.maxAnchorsToUse.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        JLabel maxLinksLabel = new JLabel("Max Links to Use (1-50)");
+        JPanel maxLinksPanel = new JPanel();
+        maxLinksPanel.add(maxLinksLabel);
+        maxLinksPanel.add(this.maxLinksTextField);
+        maxLinksPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        maxLinksPanel.setAlignmentX(RIGHT_ALIGNMENT);//0.0
+        maxLinksPanel.setMaximumSize(new Dimension(500, 40));
+        firstCol.add(maxLinksPanel);
+
+        this.distanceFromCenterTextField = new JTextField();
+        JLabel distanceFromCenterLabel = new JLabel("Cutoff Distance From Center px (1-500)");
+        JPanel distanceFromCenterPanel = new JPanel();
+        distanceFromCenterPanel.add(distanceFromCenterLabel);
+        distanceFromCenterPanel.add(this.distanceFromCenterTextField);
+        distanceFromCenterPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        distanceFromCenterPanel.setAlignmentX(RIGHT_ALIGNMENT);//0.0
+        distanceFromCenterPanel.setMaximumSize(new Dimension(500, 40));
+        firstCol.add(distanceFromCenterPanel);
+
+        this.wobbleAmountTextField = new JTextField();
+        JPanel wobbleConfig = Config.populateTextFieldPanel(this.wobbleAmountTextField, "Wobble amount (0-200)");
+        firstCol.add(wobbleConfig);
+
+        this.curve1AmountTextField = new JTextField();
+        JPanel curve1Config = Config.populateTextFieldPanel(this.curve1AmountTextField, "curve amount (-100 - 400)");
+        firstCol.add(curve1Config);
+
+        firstRow.add(firstCol);
 
         JPanel secondCol = new JPanel();
         secondCol.setLayout(new BoxLayout(secondCol, BoxLayout.Y_AXIS));
-
         this.setupHeaderPanel("LinkerI Options", spriteDataAnimated);
         secondCol.add(headerPanel);
+        firstRow.add(secondCol);
 
-        mainPanel.add(secondCol);
 
+        // ------ Second Column Config ----------------
 
         JPanel maxPsi = new JPanel();
 //        maxPsi.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -124,64 +178,11 @@ public class LinkerConfig extends BaseConfigJPanel {
         this.maxAnchorsToUse = new JTextField();
 
 
-        //First col config
-
-        JPanel caretMovementPanel = new JPanel();
-        caretMovementPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        caretMovementPanel.setAlignmentX(RIGHT_ALIGNMENT);
-        caretMovementPanel.setMaximumSize(new Dimension(500,100));
-//        this.moveWithCaret = new JCheckBox("move with Caret?");
-        this.moveWithCaret = new JCheckBox("move with caret/mouse?");
-        caretMovementPanel.add(moveWithCaret);
-        this.moveSpeedTextField = new JTextField();
-//        this.moveSpeedTextField.setEditable(false);
-        caretMovementPanel.add(Config.populateTextFieldPanel(this.moveSpeedTextField, "speed (0.01 - 1.0)"));
-        caretMovementPanel.setOpaque(true);
-        caretMovementPanel.setBackground(ZeranthiumColors.specialOption1);
-        firstCol.add(caretMovementPanel);
-
-
-
-        this.maxLinksTextField = new JTextField();
-//        this.maxAnchorsToUse.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        JLabel maxLinksLabel = new JLabel("Max Links to Use (1-50)");
-        JPanel maxLinksPanel = new JPanel();
-        maxLinksPanel.add(maxLinksLabel);
-        maxLinksPanel.add(this.maxLinksTextField);
-        maxLinksPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        maxLinksPanel.setAlignmentX(RIGHT_ALIGNMENT);//0.0
-        maxLinksPanel.setMaximumSize(new Dimension(500, 40));
-        firstCol.add(maxLinksPanel);
-
-        this.distanceFromCenterTextField = new JTextField();
-        JLabel distanceFromCenterLabel = new JLabel("Cutoff Distance From Center px (1-500)");
-        JPanel distanceFromCenterPanel = new JPanel();
-        distanceFromCenterPanel.add(distanceFromCenterLabel);
-        distanceFromCenterPanel.add(this.distanceFromCenterTextField);
-        distanceFromCenterPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        distanceFromCenterPanel.setAlignmentX(RIGHT_ALIGNMENT);//0.0
-        distanceFromCenterPanel.setMaximumSize(new Dimension(500, 40));
-        firstCol.add(distanceFromCenterPanel);
-
-        this.wobbleAmountTextField = new JTextField();
-        JPanel wobbleConfig = Config.populateTextFieldPanel(this.wobbleAmountTextField, "Wobble amount (0-200)");
-        firstCol.add(wobbleConfig);
-
-        this.curve1AmountTextField = new JTextField();
-        JPanel curve1Config = Config.populateTextFieldPanel(this.curve1AmountTextField, "curve amount (-100 - 400)");
-        firstCol.add(curve1Config);
-
-
 
 
         linkerSpriteConfigPanel = createConfigTable();
-//        firstCol.add(linkerSpriteConfigPanel);
 
-//        isCyclicEnabled = new JCheckBox("Is cyclic enabled?");
-//        firstCol.add(isCyclicEnabled);
-
-
-        this.add(mainPanel);
+        this.add(firstRow);
         this.add(linkerSpriteConfigPanel);
 
         this.loadValues();
@@ -190,22 +191,18 @@ public class LinkerConfig extends BaseConfigJPanel {
 
 
     public JComponent createConfigTable(){
-
         JBTable table = new JBTable();
 
-
         table.setRowHeight(PREVIEW_SIZE);
-        LinkerTableModel tableModel = new LinkerTableModel(this);
-        table.setModel(tableModel);
+        table.setModel(new LinkerTableModel(this));
 
         table.setCellSelectionEnabled(false);
         table.setColumnSelectionAllowed(false);
         table.setRowSelectionAllowed(false);
-        table.getTableHeader().setReorderingAllowed(false);
 
         table.setPreferredScrollableViewportSize(new Dimension(400,
                 table.getRowHeight() * 3));
-
+        table.getTableHeader().setReorderingAllowed(false);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 //        table.setBackground(Color.yellow);
 //        table.setOpaque(true);
@@ -216,7 +213,7 @@ public class LinkerConfig extends BaseConfigJPanel {
         sp.setOpaque(true);
 //        sp.setAlignmentX(Component.RIGHT_ALIGNMENT);
 //        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-//        table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
         TableColumnModel colModel=table.getColumnModel();
 
         colModel.getColumn(0).setPreferredWidth(PREVIEW_SIZE); //preview

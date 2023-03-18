@@ -45,26 +45,9 @@ public class MultiLayerConfig extends BaseConfigJPanel {
         firstRow.setLayout(new BoxLayout(firstRow, BoxLayout.Y_AXIS));
 
         this.setupHeaderPanel("Multi Layer Options", spriteDataAnimated);
-//        headerPanel = new JPanel();
-//        JLabel headerLabel = new JLabel("Mandala Options");
-//        headerLabel.setFont(new Font ("Arial", Font.BOLD, 20));
-//        headerPanel.add(headerLabel);
-//
-//
-//        headerSizeLabel = new JLabel();
-//        this.calculateSize();
-//        headerSizeLabel.setBackground(ZeranthiumColors.specialOption3);
-//        headerSizeLabel.setOpaque(true);
-//
-//        headerPanel.add(headerSizeLabel);
-//
-//        headerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-//        headerPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-//        headerPanel.setMaximumSize(new Dimension(500,100));
-
         this.add(firstRow);
 
-        spriteConfigPanel = createConfigTable();
+
         firstRow.add(headerPanel);
         JPanel caretMovementPanel = new JPanel();
         caretMovementPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -76,10 +59,10 @@ public class MultiLayerConfig extends BaseConfigJPanel {
         this.moveSpeedTextField = new JTextField();
         caretMovementPanel.add(Config.populateTextFieldPanel(this.moveSpeedTextField, "speed (0.001 - 1.0)"));
         caretMovementPanel.setBackground(ZeranthiumColors.specialOption1);
-
         firstRow.add(caretMovementPanel);
 
-
+        // Add ConfigTable
+        spriteConfigPanel = createConfigTable();
         firstRow.add(spriteConfigPanel);
 
 
@@ -89,9 +72,7 @@ public class MultiLayerConfig extends BaseConfigJPanel {
 
 
     public JComponent createConfigTable(){
-
         JBTable table = new JBTable();
-
 
         table.setRowHeight(PREVIEW_SIZE);
         table.setModel(new MultiLayerTableModel(this));

@@ -31,23 +31,26 @@ public class DrosteConfig extends BaseConfigJPanel {
     public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
 
     public final static int PREVIEW_SIZE = 120;
+    private JPanel firstRow;
 
     public DrosteConfig(PowerMode3 settings){
         this.settings = settings;
 
+        this.setMaximumSize(new Dimension(1000,300));
         this.setLayout(new GridLayout(1,1));
 
-        JPanel firstRow =  new JPanel();
-        firstRow.setLayout(new BoxLayout(firstRow, BoxLayout.PAGE_AXIS));
+        firstRow =  new JPanel();
         firstRow.setMaximumSize(new Dimension(1000,300));
+        firstRow.setLayout(new BoxLayout(firstRow, BoxLayout.PAGE_AXIS));
+
 
         this.setupHeaderPanel("Droste Options", spriteDataAnimated);
         firstRow.add(headerPanel);
 
-
         drosteSpriteConfigPanel = createConfigTable();
         firstRow.add(drosteSpriteConfigPanel);
         this.add(firstRow);
+
 
         this.loadValues();
     }

@@ -33,16 +33,16 @@ public class TapAnimConfig extends BaseConfigJPanel {
     private JComponent spriteConfigPanel;
     public final static int PREVIEW_SIZE = 120;
     public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
+    private JPanel firstRow;
 
     public TapAnimConfig(PowerMode3 settings){
         this.settings = settings;
 
-
+        this.setMaximumSize(new Dimension(1000,700));
         this.setLayout(new GridLayout(1,1));
 
 
-
-        JPanel firstRow =  new JPanel();
+        firstRow =  new JPanel();
         firstRow.setLayout(new BoxLayout(firstRow, BoxLayout.PAGE_AXIS));
         firstRow.setMaximumSize(new Dimension(1000,300));
 
@@ -50,6 +50,7 @@ public class TapAnimConfig extends BaseConfigJPanel {
         firstRow.add(headerPanel);
 
 
+        //add config panel directly in first row to eliminate any spacing from GRID based layout.
         spriteConfigPanel = createConfigTable();
         firstRow.add(spriteConfigPanel);
         this.add(firstRow);
