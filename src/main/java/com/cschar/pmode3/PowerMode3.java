@@ -207,18 +207,23 @@ final public class PowerMode3 implements
             SoundConfig.soundData.clear();
         }
         SoundConfig.soundData = null;
+        SoundConfigTableModel.emptySounds();
 
         LOGGER.trace("Unloading MUSIC_TRIGGER data...");
         if(MusicTriggerConfig.soundData != null) {
             MusicTriggerConfig.soundData.clear();
         }
         MusicTriggerConfig.soundData = null;
+        MusicTriggerConfigTableModel.data = null;
+        MusicTriggerConfigTableModel.emptySounds();
 
         LOGGER.trace("Unloading SPECIAL_ACTION_SOUND data...");
         if(SpecialActionSoundConfig.soundData != null) {
             SpecialActionSoundConfig.soundData.clear();
         }
         SpecialActionSoundConfig.soundData = null;
+        SpecialActionSoundConfigTableModel.data = null;
+        SpecialActionSoundConfigTableModel.emptySounds();
 
 
         this.pathDataMap.clear();
@@ -226,6 +231,13 @@ final public class PowerMode3 implements
 
         this.configMap.clear();
         this.configMap = null;
+
+
+        //Clear soundConfigTableMOdel sound playings...
+
+        //TODO: ensure no sounds are playing:
+        //  wherever we create SoUnd objects...
+        //     add playing sounds to a global list and check if that list is still populated
 
 //        Disposer.dispose(this.configurableUI2);
 //        this.configurableUI2 = null;

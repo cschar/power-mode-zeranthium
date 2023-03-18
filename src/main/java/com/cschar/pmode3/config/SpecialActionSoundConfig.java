@@ -12,10 +12,7 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
 
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumnModel;
+import javax.swing.table.*;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -76,7 +73,9 @@ public class SpecialActionSoundConfig extends JPanel {
 
         table.setRowHeight(PREVIEW_SIZE);
 
-        table.setModel(new SpecialActionSoundConfigTableModel());
+        TableModel t = new SpecialActionSoundConfigTableModel();
+
+        table.setModel(t);
 
         table.setCellSelectionEnabled(false);
         table.setColumnSelectionAllowed(false);
@@ -149,164 +148,3 @@ public class SpecialActionSoundConfig extends JPanel {
 }
 
 
-class SpecialActionSoundConfigTableModel extends AbstractTableModel {
-
-    static ArrayList<SoundData> data = SpecialActionSoundConfig.soundData;
-    public static Sound[] soundsPlaying = new Sound[data.size()];
-
-
-
-    public static final String[] columnNames = new String[]{
-            "preview",
-            "enabled?",
-            "key",
-//            "weighted amount (1-100)",
-
-            "set path (MP3)",
-            "path",
-            "reset"
-
-    };
-
-
-
-
-
-
-
-
-    private final Class[] columnClasses = new Class[]{
-            JButton.class,
-            Boolean.class,
-            String.class,
-            JButton.class,
-            String.class,
-            JButton.class,
-    };
-
-    @Override
-    public int getRowCount() {
-        return data.size();
-    }
-
-
-    @Override
-    public int getColumnCount() {
-        return columnNames.length;
-    }
-
-    @Override
-    public String getColumnName(int column) {
-        return columnNames[column];
-    }
-
-    @Override
-    public Class<?> getColumnClass(int columnIndex) {
-        return columnClasses[columnIndex];
-    }
-
-
-    @Override
-    public boolean isCellEditable(int row, int column) {
-        switch (column) {
-            case 0:
-            case 2:
-            case 4:
-                return false;
-            default:
-                return true;
-        }
-    }
-
-
-    @Override
-    public Object getValueAt(int row, int column) {
-
-//https://stackoverflow.com/questions/13833688/adding-jbutton-to-jtable
-//        ImageIcon.class, Boolean.class, Integer.class, Boolean.class, String.class
-//
-        SoundData d = data.get(row);
-
-        switch (column) {
-            case 0:
-                return JTableSoundButtonRenderer.getPreviewPlaySoundButton(this, soundsPlaying, d, row,column);
-            case 1:
-                return data.get(row).enabled;
-            case 2:
-                String s="";
-                if(row == SpecialActionSoundConfig.KEYS.COPY.ordinal()) { s="COPY"; }
-                else if(row == SpecialActionSoundConfig.KEYS.PASTE.ordinal()){ s="PASTE";}
-                else if(row == SpecialActionSoundConfig.KEYS.BACKSPACE.ordinal()){ s="BACKSPACE";}
-                else if(row == SpecialActionSoundConfig.KEYS.DELETE.ordinal()){ s="DELETE";}
-                else if(row == SpecialActionSoundConfig.KEYS.ENTER.ordinal()){ s="ENTER";}
-
-                return "<html> <b> key: </b> " + s + "</html>";
-
-            case 3:
-                final JButton button = new JButton("Set path");
-                button.addActionListener(arg0 -> {
-
-                    FileChooserDescriptor fd = new FileChooserDescriptor(true,false,false,false,false,false);
-                    fd = new SoundFileChooserDescriptor(fd);
-//                    fd.setForcedToUseIdeaFileChooser(true);
-
-                    FileChooserDialog fcDialog = FileChooserFactory.getInstance().createFileChooser(fd, null, null);
-                    VirtualFile[] vfs = fcDialog.choose(null);
-
-                    if(vfs.length != 0){
-                        d.setValidMP3Path(vfs[0]);
-                        this.fireTableDataChanged();
-                    }
-
-                });
-                return button;
-            case 4:
-                return data.get(row).customPath;
-            case 5:
-                final JButton resetButton = new JButton("reset");
-                resetButton.addActionListener(arg0 -> {
-
-                    d.customPath = "";
-                    d.customPathValid = false;
-
-
-                    this.fireTableDataChanged();
-                });
-                return resetButton;
-
-        }
-
-        throw new IllegalArgumentException();
-    }
-
-
-
-    @Override
-    public void setValueAt(Object value, int row, int column) {
-
-//        ImageIcon.class, Boolean.class, Integer.class, Boolean.class, String.class
-
-        SoundData d = data.get(row);
-
-        switch (column) {
-            case 0:  //sound preview button clicked
-                return;
-            case 1:  //enabled
-                d.enabled = (Boolean) value;  // is set in hotkey map settings
-                return;
-            case 2:   //button clicked
-                return;
-            case 3:   // custom path
-                return;
-            case 4:    //reset button clicked
-                return;
-            case 5:    //reset button clicked
-                return;
-
-        }
-
-        throw new IllegalArgumentException();
-    }
-
-
-}
