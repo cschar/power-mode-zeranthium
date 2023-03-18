@@ -9,7 +9,8 @@ import org.jetbrains.annotations.NotNull;
 
 import com.intellij.openapi.diagnostic.Logger;
 
-
+// ? ? ?
+// TODO: remove this, just make it a thread task inside the JComponent
 public class MemoryMonitorServiceImpl implements MemoryMonitorService {
     private static final Logger LOGGER = Logger.getInstance(MemoryMonitorServiceImpl.class.getName());
     PowerMode3ConfigurableUI2 menuConfigurableUI;

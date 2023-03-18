@@ -1,17 +1,18 @@
-package com.cschar.pmode3;
+package com.cschar.pmode4;
 
+import com.cschar.pmode3.PowerMode3;
 import com.cschar.pmode3.config.*;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.cschar.pmode3.config.common.ui.ZeranthiumColors;
 import com.cschar.pmode3.services.GitPackLoaderJComponent;
 import com.cschar.pmode3.services.MemoryMonitorService;
-import com.cschar.pmode4.Pmode3PackLoader;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.Shortcut;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.options.ConfigurableUi;
 import com.intellij.openapi.options.ConfigurationException;
@@ -39,17 +40,16 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Scanner;
-import com.intellij.openapi.diagnostic.Logger;
 
 import static com.cschar.pmode3.ParticleContainerManager.resetAllContainers;
 
-public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Disposable, Pmode3PackLoader {
-    private static final Logger LOGGER = Logger.getInstance(PowerMode3ConfigurableUI2.class.getName());
+public class PowerMode3SettingsJComponent implements Disposable, Pmode3PackLoader {
+    private static final Logger LOGGER = Logger.getInstance(PowerMode3SettingsJComponent.class.getName());
 
     private JTextField lifetimeTextField;
     private JCheckBox isEnabledCheckBox;
     private JLabel toggleHotkeyLabel;
-    
+
     private JPanel particleSettingsPanel;
     private JPanel soundSettingsPanel;
     private JTabbedPane configSettingsTabbedPane;
@@ -112,15 +112,16 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
 
     @Override
     public void dispose(){
+        //TODO: PUT THIS somehwere..
         LOGGER.debug("ConfigurableUI: disposing...");
 
         this.refreshMemoryWidget = false; //stop bg thread from updating
-        MemoryMonitorService powerMemoryService = ApplicationManager.getApplication().getService(MemoryMonitorService.class);
-        powerMemoryService.cleanup();
+//        MemoryMonitorService powerMemoryService = ApplicationManager.getApplication().getService(MemoryMonitorService.class);
+//        powerMemoryService.cleanup();
     }
 
 
-    public PowerMode3ConfigurableUI2(PowerMode3 powerMode3) {
+    public PowerMode3SettingsJComponent(PowerMode3 powerMode3) {
         LOGGER.debug("Creating MenuConfigurableUI...");
 
         this.ultraPanel = new JPanel();
@@ -200,7 +201,6 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
     private AdjustmentListener scrollAdjustmentListener;
 
     @NotNull
-    @Override
     public JComponent getComponent() {
         LOGGER.debug("ConfigurableUI: getComponent() override ");
 
@@ -325,10 +325,10 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
         //Col3 - Memory panel
         this.memoryStatsPanel = new JPanel();
         reinitMemoryStatsPanel();
-        MemoryMonitorService powerMemoryService = ApplicationManager.getApplication().getService(MemoryMonitorService.class);
-        powerMemoryService.setUi(this);
-        powerMemoryService.updateUi();
-        col3.add(memoryStatsPanel);
+//        MemoryMonitorService powerMemoryService = ApplicationManager.getApplication().getService(MemoryMonitorService.class);
+//        powerMemoryService.setUi(this);
+//        powerMemoryService.updateUi();
+//        col3.add(memoryStatsPanel);
 
         //Col3 - Anchor config
         setupAnchorConfigButton();
@@ -491,23 +491,9 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
     }
 
 
-    @Override
-    public void reset(@NotNull PowerMode3 settings) {
-        isEnabledCheckBox.setSelected(settings.isEnabled());
-    }
-
     public boolean refreshMemoryWidget = true;
-    @Override
-    public boolean isModified(@NotNull PowerMode3 settings) {
-
-//        isOpen = false;
-        //ideally check if checkbox is equal to settings boolean
-        return true;
-    }
 
 
-
-    @Override
     public void apply(@NotNull PowerMode3 settings) throws ConfigurationException {
         LOGGER.trace("ConfigurableUI: apply ");
 
@@ -517,8 +503,6 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
         settings.setLifetime(getJTextFieldWithinBounds(lifetimeTextField, 5, 500, "Lifetime"));
         settings.setMaxPsiSearchDistance(getJTextFieldWithinBounds(maxPsiSearchDistanceTextField,
                 10, 1000, "Max Psi/Anchor Search Distance"));
-
-
 
         //basic particle
 //        settings.setBasicParticleEnabled(enableBasicParticleCheckBox.isSelected());
@@ -664,6 +648,7 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
         }
     }
 
+    /** called in the constructor */
     private void createConfig(){
         LOGGER.debug("CreateConfig:  Creating Config JPanels...");
         if (loadingLabel.getParent() == this.theCustomCreatePanel) {
@@ -804,9 +789,6 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
         return newValue;
     }
 
-
-
-
     private void disableAllParticleSettings(){
 
             enableBasicParticleCheckBox.setSelected(false);
@@ -865,7 +847,6 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
             }
         });
     }
-
 
     public void loadConfigPack(@NotNull String manifestPath, ProgressIndicator progressIndicator) throws FileNotFoundException, JSONException {
         if (progressIndicator != null) {
@@ -954,7 +935,5 @@ public class PowerMode3ConfigurableUI2 implements ConfigurableUi<PowerMode3>, Di
         Notifications.Bus.notify(n);
 
     }
-
-
 
 }

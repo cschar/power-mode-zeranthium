@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 //UI  https://jetbrains.github.io/ui/principles/groups_of_controls/
+/** Clones git packs, thats it. */
 public class GitPackLoaderService {
 
     private static final Logger LOGGER = Logger.getInstance(GitPackLoaderService.class.getName());

@@ -113,7 +113,7 @@ tasks {
 
 //    https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html#tasks-buildsearchableoptions
     buildSearchableOptions {
-//        enabled = false
+        enabled = false
     }
 
     wrapper {
@@ -122,6 +122,7 @@ tasks {
 
     runIde {
         maxHeapSize = "4g"
+        systemProperties["idea.log.debug.categories"] = "#com.cschar.pmode3:all"
     }
 
     jar {

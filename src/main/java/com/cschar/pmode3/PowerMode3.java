@@ -227,9 +227,9 @@ final public class PowerMode3 implements
         this.configMap.clear();
         this.configMap = null;
 
-        Disposer.dispose(this.configurableUI2);
-        this.configurableUI2 = null;
-        LOGGER.trace("Done disposing Powermode3");
+//        Disposer.dispose(this.configurableUI2);
+//        this.configurableUI2 = null;
+        LOGGER.trace(" ===== Done disposing Powermode3 ======= ");
 
     }
 
@@ -299,7 +299,7 @@ final public class PowerMode3 implements
 
 
     @com.intellij.util.xmlb.annotations.MapAnnotation
-    protected Map<ConfigType, SmartList<String>> pathDataMap = new HashMap<ConfigType, SmartList<String>>() {{
+    public Map<ConfigType, SmartList<String>> pathDataMap = new HashMap<ConfigType, SmartList<String>>() {{
         //populated by loading in .json files in resources folder.
     }};
 

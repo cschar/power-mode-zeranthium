@@ -17,17 +17,24 @@
     <extensions defaultExtensionNs="com.intellij">
         <!-- inserts the a GUI into the settings menu under "appearance -> Power Mode - Zeranthium" -->
 
-        <applicationConfigurable groupId="appearance"
-                                 groupWeight="20"
-                                 id="power.mode3.zeranthium"
+<!--        <applicationConfigurable groupId="appearance"-->
+<!--                                 groupWeight="20"-->
+<!--                                 id="power.mode3.zeranthium"-->
 
-                                 instance="com.cschar.pmode3.PowerMode3Configurable2"
-                                 />
+<!--                                 instance="com.cschar.pmode3.PowerMode3Configurable2"-->
+<!--                                 />-->
 <!--        https://github.com/JetBrains/intellij-sdk-code-samples/blob/main/settings/src/main/resources/META-INF/plugin.xml-->
 <!--        <applicationService serviceImplementation="com.cschar.pmode3.PowerMode3"/>-->
 
-        <applicationService serviceImplementation="com.cschar.pmode3.services.GitPackLoaderService"/>
+        <applicationConfigurable
+                parentId="appearance"
+                instance="com.cschar.pmode4.AppSettingsConfigurable"
+                id="org.intellij.sdk.settings.AppSettingsConfigurable"
+                displayName="POEWR MODE ZERANTHIUM "/>
+        <applicationService
+                serviceImplementation="com.cschar.pmode4.AppSettingsState"/>
 
+        <applicationService serviceImplementation="com.cschar.pmode3.services.GitPackLoaderService"/>
         <applicationService serviceInterface="com.cschar.pmode3.services.MemoryMonitorService"
                             serviceImplementation="com.cschar.pmode3.services.MemoryMonitorServiceImpl"
                             headlessImplementation="com.cschar.pmode3.services.MemoryMonitorServiceHeadless"

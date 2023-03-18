@@ -19,6 +19,9 @@ links to
 [2] https://github.com/krasa/StringManipulation/commit/08422d714ce70126093c051bd5147c8f9dbcdd3f
 
 
+## DIAGNOSTICS
+#com.cschar.pmode3:all
+
 ## TESTS
 
 [ ] - robotUI test: make a test to load settings UI when it is disabled, check if checkboxes are disabled

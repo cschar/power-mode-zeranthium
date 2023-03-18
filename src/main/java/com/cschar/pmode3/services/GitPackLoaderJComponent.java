@@ -3,6 +3,7 @@ package com.cschar.pmode3.services;
 import com.cschar.pmode3.PowerMode3;
 import com.cschar.pmode3.PowerMode3ConfigurableUI2;
 import com.cschar.pmode3.config.common.ui.ZeranthiumColors;
+import com.cschar.pmode4.Pmode3PackLoader;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
@@ -42,14 +43,15 @@ public class GitPackLoaderJComponent extends JPanel{
     public static final String ZERANTHIUM_EXTRAS_GIT_VOL2 = "https://github.com/powermode-zeranthium/zeranthium-extras-vol2.git";
     public static final String ZERANTHIUM_EXTRAS_GIT_VOL3 = "https://github.com/powermode-zeranthium/zeranthium-extras-vol3.git";
 
-    public PowerMode3ConfigurableUI2 menuConfigurable;
+    //TODO: A service should not know about the UI, not have a reference to it
+    public Pmode3PackLoader menuConfigurable;
     public PowerMode3 settings;
     public String directoryPath;
     private JComponent gitRepoTabbedPane;
 
     private Color jbDarkGreen = JBColor.green;
 
-    public GitPackLoaderJComponent(String title, PowerMode3ConfigurableUI2 menuConfigurable){
+    public GitPackLoaderJComponent(String title, Pmode3PackLoader menuConfigurable){
 
         this.menuConfigurable = menuConfigurable;
         settings = ApplicationManager.getApplication().getService(PowerMode3.class);
