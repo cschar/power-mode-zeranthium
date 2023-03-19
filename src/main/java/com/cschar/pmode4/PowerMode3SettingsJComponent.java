@@ -899,6 +899,7 @@ public class PowerMode3SettingsJComponent implements Disposable, Pmode3PackLoade
     }
 
     public void loadConfigPack(@NotNull String manifestPath, ProgressIndicator progressIndicator) throws FileNotFoundException, JSONException {
+        LOGGER.debug("Loading Config Pack: " + manifestPath);
         if (progressIndicator != null) {
             progressIndicator.setIndeterminate(false);
         }

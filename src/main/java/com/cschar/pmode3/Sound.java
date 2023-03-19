@@ -16,7 +16,7 @@ public class Sound {
 
     Player player;
     private String path;
-    public String getPath(){ return this.path };
+    public String getPath(){ return this.path; };
 
 
     public static void closeAllPlayers(){

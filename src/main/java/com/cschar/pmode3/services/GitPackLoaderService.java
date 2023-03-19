@@ -32,6 +32,7 @@ public class GitPackLoaderService {
 
 
     public void getRepo(String REMOTE_URL, File localPath, ProgressMonitor progressMonitor) throws IOException, GitAPIException {
+        LOGGER.trace("GitPackLoaderService: getRepo");
 
         if(localPath == null){
             String path = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
@@ -73,20 +74,19 @@ public class GitPackLoaderService {
         }
 
         if (found) {
-            
+            LOGGER.trace("Repo already exists.. skipping clone");
             return;
         }
 
         // then clone
-        
 
+        LOGGER.trace("Repo not found... cloning");
         try {
             result = Git.cloneRepository()
                     .setURI(REMOTE_URL)
                     .setDirectory(localPath)
                     .setProgressMonitor(progressMonitor)
                     .call();
-
             // Note: the call() returns an opened repository already which needs to be closed to avoid file handle leaks!
             
         }catch(TransportException e){
@@ -97,7 +97,6 @@ public class GitPackLoaderService {
             if(result != null){
                 result.close();
             }
-
         }
 
     }

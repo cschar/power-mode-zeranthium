@@ -3,6 +3,7 @@ package com.cschar.pmode3.services;
 import com.cschar.pmode3.PowerMode3;
 import com.cschar.pmode3.config.common.ui.ZeranthiumColors;
 import com.cschar.pmode4.Pmode3PackLoader;
+import com.cschar.pmode4.PowerMode3SettingsJComponent;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
@@ -36,21 +37,22 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import com.intellij.openapi.diagnostic.Logger;
 
+//TODO: shouldnt be in services folder
 public class GitPackLoaderJComponent extends JPanel{
     private static final Logger LOGGER = Logger.getInstance( GitPackLoaderJComponent.class.getName() );
     public static final String ZERANTHIUM_EXTRAS_GIT_VOL1 = "https://github.com/powermode-zeranthium/zeranthium-extras-vol1.git";
     public static final String ZERANTHIUM_EXTRAS_GIT_VOL2 = "https://github.com/powermode-zeranthium/zeranthium-extras-vol2.git";
     public static final String ZERANTHIUM_EXTRAS_GIT_VOL3 = "https://github.com/powermode-zeranthium/zeranthium-extras-vol3.git";
 
-    //TODO: A service should not know about the UI, not have a reference to it
-    public Pmode3PackLoader menuConfigurable;
+
+    public PowerMode3SettingsJComponent menuConfigurable;
     public PowerMode3 settings;
     public String directoryPath;
     private JComponent gitRepoTabbedPane;
 
     private Color jbDarkGreen = JBColor.green;
 
-    public GitPackLoaderJComponent(String title, Pmode3PackLoader menuConfigurable){
+    public GitPackLoaderJComponent(String title, PowerMode3SettingsJComponent menuConfigurable){
 
         this.menuConfigurable = menuConfigurable;
         settings = ApplicationManager.getApplication().getService(PowerMode3.class);
@@ -167,7 +169,7 @@ public class GitPackLoaderJComponent extends JPanel{
         panel3.add(packListHolder1);
 
         //vol3 pack
-        JPanel panelVol3= new JPanel();
+        JPanel panelVol3 = new JPanel();
 //        panel3.setBackground(JBColor.getHSBColor(100,88,20));
         panelVol3.setBorder(JBUI.Borders.empty(2, 2, 2, 2));
         panelVol3.setLayout(new BoxLayout(panelVol3, BoxLayout.PAGE_AXIS));
@@ -200,6 +202,8 @@ public class GitPackLoaderJComponent extends JPanel{
         customPackLoader.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                LOGGER.debug("Showing custom config pack UI...");
+
                 ImageIcon sliderIcon5 = new ImageIcon(this.getClass().getResource("/icons/bar_small.png"));
                 int result = Messages.showYesNoDialog(null,
                     "<html> <h1> Load config pack? </h1>" +
@@ -334,6 +338,7 @@ public class GitPackLoaderJComponent extends JPanel{
         downloadBUtton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                LOGGER.debug("launching Git Clone task");
                 Task.Backgroundable bgTask2 = new Task.Backgroundable(null,
                                                                         "Cloning "+customRepoName+"...",
                                                                 true, null) {
@@ -362,6 +367,7 @@ public class GitPackLoaderJComponent extends JPanel{
 //                        statusLabel.setText("Status - Downloading...");
 
                         if(gitService.runningMonitors.get(customRepoName) == null){
+                            LOGGER.debug("No running monitor task found for: " + customRepoName + " ... adding");
                             gitService.runningMonitors.put(customRepoName, (GitPackLoaderProgressMonitor) progressMonitor);
                         }
 
@@ -379,6 +385,7 @@ public class GitPackLoaderJComponent extends JPanel{
                             downloadStatusLabel.setText("[]+");
                             validate();
                             repaint();
+                            LOGGER.debug("Fetching repo...");
                             gitService.getRepo(repoUrl, localPath, progressMonitor);
                             statusLabel.setText("Status - Finished ...");
                         } catch(Exception e){
@@ -469,6 +476,7 @@ public class GitPackLoaderJComponent extends JPanel{
     private void loadPackModal(String manifestPath){
         Task.Modal modalTask = new Task.Modal(null, "Loading Theme Pack", true) {
             public void run(@NotNull() final ProgressIndicator indicator) {
+                LOGGER.debug("Launching pack loader task...");
                 //TODO save state beforehand to rollback if cancelled
                 indicator.setText2("loading assets...");
 
