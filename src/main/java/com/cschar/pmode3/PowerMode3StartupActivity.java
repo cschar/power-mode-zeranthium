@@ -51,8 +51,6 @@ public class PowerMode3StartupActivity implements ProjectActivity {
         LOGGER.debug(" ====== Loading Startup Activity.. ======= ");
 
 
-        ApplicationManager.getApplication().getService(PowerMode3Configurable2.class);
-//        PowerMode3 p = PowerMode3.getInstance();
         PowerMode3 p = ApplicationManager.getApplication().getService(PowerMode3.class);
 
         p.startup1 = this;

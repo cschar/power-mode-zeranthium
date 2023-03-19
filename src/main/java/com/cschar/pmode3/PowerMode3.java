@@ -21,6 +21,7 @@ package com.cschar.pmode3;
 import com.cschar.pmode3.config.*;
 import com.cschar.pmode3.config.common.SoundData;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
+import com.cschar.pmode4.PowerMode3SettingsJComponent;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
@@ -206,8 +207,9 @@ final public class PowerMode3 implements
         if(SoundConfig.soundData != null) {
             SoundConfig.soundData.clear();
         }
-        SoundConfig.soundData = null;
+        //TODO: this is bugged method, static constructor rlies on sounds.size() not to be null
         SoundConfigTableModel.emptySounds();
+        SoundConfig.soundData = null;
 
         LOGGER.trace("Unloading MUSIC_TRIGGER data...");
         if(MusicTriggerConfig.soundData != null) {
@@ -222,7 +224,6 @@ final public class PowerMode3 implements
             SpecialActionSoundConfig.soundData.clear();
         }
         SpecialActionSoundConfig.soundData = null;
-        SpecialActionSoundConfigTableModel.data = null;
         SpecialActionSoundConfigTableModel.emptySounds();
 
 
@@ -232,7 +233,7 @@ final public class PowerMode3 implements
         this.configMap.clear();
         this.configMap = null;
 
-
+        this.ui = null;
         //Clear soundConfigTableMOdel sound playings...
 
         //TODO: ensure no sounds are playing:
@@ -244,9 +245,6 @@ final public class PowerMode3 implements
         LOGGER.trace(" ===== Done disposing Powermode3 ======= ");
 
     }
-
-    @Transient
-    public PowerMode3Configurable2 configurableUI2;
 
 
     @com.intellij.util.xmlb.annotations.Transient
@@ -533,14 +531,17 @@ final public class PowerMode3 implements
                 LanternConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LANTERN)));
 //            }
 
+
 //            if(this.getSpriteTypeEnabled(ConfigType.TAP_ANIM)){
                 setUpdateProgress(progressIndicator, "Tap Anim", 0.85);
                 TapAnimConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.TAP_ANIM)));
 //            }
 
             setUpdateProgress(progressIndicator, "Sounds", 0.9);
+            LOGGER.debug("======== LOADING SOUNDS ========= ");
             SoundConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.SOUND)));
             MusicTriggerConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.MUSIC_TRIGGER)));
+
             SpecialActionSoundConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.SPECIAL_ACTION_SOUND)));
 
             long endTime = System.nanoTime();
@@ -555,20 +556,27 @@ final public class PowerMode3 implements
 
             //TODO: replace this with a message or signal or listener or something..
             // remove the static reference plumbing
-//            PowerMode3ConfigurableUI2 ui = PowerMode3ConfigurableUI2.getInstance();
-//            if (ui != null) {
-//
-//                ui.updateConfigUIAfterAssetsAreLoaded(wasEnabled);
-//            }
+            if (ui != null) {
+                ui.updateConfigUIAfterAssetsAreLoaded(wasEnabled);
+            }
         }
     }
 
+    @Transient
+    public PowerMode3SettingsJComponent ui;
+
     private void setUpdateProgress(ProgressIndicator progressIndicator, String info, double amt) {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
         String s = "Loading - " + info + " " + amt;
 //        progressIndicator.setText(s);
         progressIndicator.setText2(s);
         progressIndicator.setFraction(amt);
-        PowerMode3ConfigurableUI2.loadingLabel.setText(s);
+        PowerMode3SettingsJComponent.loadingLabel.setText(s);
 //        try {              Thread.sleep(3000);          } catch (InterruptedException e) {          }
 
     }

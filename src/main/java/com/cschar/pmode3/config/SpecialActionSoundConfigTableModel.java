@@ -2,6 +2,7 @@ package com.cschar.pmode3.config;
 
 import com.cschar.pmode3.Sound;
 import com.cschar.pmode3.config.common.SoundData;
+import com.cschar.pmode3.config.common.ui.AbstractConfigTableModel;
 import com.cschar.pmode3.config.common.ui.JTableSoundButtonRenderer;
 import com.cschar.pmode3.config.common.ui.SoundFileChooserDescriptor;
 import com.intellij.openapi.diagnostic.Logger;
@@ -13,15 +14,20 @@ import com.intellij.openapi.vfs.VirtualFile;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
+import java.util.List;
 
-public class SpecialActionSoundConfigTableModel extends AbstractTableModel {
+public class SpecialActionSoundConfigTableModel extends AbstractConfigTableModel {
 
-    public SpecialActionSoundConfigTableModel(){
-        super();
+    public static Sound[] soundsPlaying;
+    public static List<SoundData> soundData;
+    public SpecialActionSoundConfigTableModel(BaseConfigJPanel config, List<SoundData> sd){
+        super(config);
+        soundsPlaying = new Sound[sd.size()];
+        soundData = sd;
     }
 
-    public static ArrayList<SoundData> data = SpecialActionSoundConfig.soundData;
-    public static Sound[] soundsPlaying = new Sound[data.size()];
+//    public static ArrayList<SoundData> data = SpecialActionSoundConfig.soundData;
+
     private static final Logger LOGGER = Logger.getInstance(SpecialActionSoundConfigTableModel.class);
     public static void emptySounds(){
         if(soundsPlaying != null){
@@ -61,7 +67,7 @@ public class SpecialActionSoundConfigTableModel extends AbstractTableModel {
 
     @Override
     public int getRowCount() {
-        return data.size();
+        return soundData.size();
     }
 
 
@@ -100,13 +106,13 @@ public class SpecialActionSoundConfigTableModel extends AbstractTableModel {
 //https://stackoverflow.com/questions/13833688/adding-jbutton-to-jtable
 //        ImageIcon.class, Boolean.class, Integer.class, Boolean.class, String.class
 //
-        SoundData d = data.get(row);
+        SoundData d = soundData.get(row);
 
         switch (column) {
             case 0:
                 return JTableSoundButtonRenderer.getPreviewPlaySoundButton(this, soundsPlaying, d, row, column);
             case 1:
-                return data.get(row).enabled;
+                return soundData.get(row).enabled;
             case 2:
                 String s = "";
                 if (row == SpecialActionSoundConfig.KEYS.COPY.ordinal()) {
@@ -142,7 +148,7 @@ public class SpecialActionSoundConfigTableModel extends AbstractTableModel {
                 });
                 return button;
             case 4:
-                return data.get(row).customPath;
+                return soundData.get(row).customPath;
             case 5:
                 final JButton resetButton = new JButton("reset");
                 resetButton.addActionListener(arg0 -> {
@@ -166,7 +172,7 @@ public class SpecialActionSoundConfigTableModel extends AbstractTableModel {
 
 //        ImageIcon.class, Boolean.class, Integer.class, Boolean.class, String.class
 
-        SoundData d = data.get(row);
+        SoundData d = soundData.get(row);
 
         switch (column) {
             case 0:  //sound preview button clicked

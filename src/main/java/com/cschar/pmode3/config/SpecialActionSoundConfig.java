@@ -17,7 +17,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 
-public class SpecialActionSoundConfig extends JPanel {
+public class SpecialActionSoundConfig extends BaseConfigJPanel {
 
 
     public static ArrayList<SoundData> soundData;
@@ -60,23 +60,14 @@ public class SpecialActionSoundConfig extends JPanel {
 
 //        this.add(configTable);
         this.add(firstRow);
-
-
-
-
     }
 
     public JComponent createConfigTable(){
 
         JBTable table = new JBTable();
-
-
         table.setRowHeight(PREVIEW_SIZE);
-
-        TableModel t = new SpecialActionSoundConfigTableModel();
-
-        table.setModel(t);
-
+        SpecialActionSoundConfigTableModel tableModel = new SpecialActionSoundConfigTableModel(this, soundData);
+        table.setModel(tableModel);
         table.setCellSelectionEnabled(false);
         table.setColumnSelectionAllowed(false);
         table.setRowSelectionAllowed(false);
@@ -111,7 +102,7 @@ public class SpecialActionSoundConfig extends JPanel {
 
 
         TableCellRenderer buttonRenderer = new JTableButtonRenderer();
-        TableCellRenderer playerPreviewButtonRenderer = new JTableSoundButtonRenderer(SpecialActionSoundConfigTableModel.soundsPlaying);
+        TableCellRenderer playerPreviewButtonRenderer = new JTableSoundButtonRenderer(tableModel.soundsPlaying);
         table.getColumn("preview").setCellRenderer(playerPreviewButtonRenderer);
 
         table.getColumn(MusicTriggerConfigTableModel.columnNames[2]).setCellRenderer(buttonRenderer);

@@ -1,7 +1,6 @@
 package com.cschar.pmode3.services;
 
 import com.cschar.pmode3.PowerMode3;
-import com.cschar.pmode3.PowerMode3ConfigurableUI2;
 import com.cschar.pmode3.config.common.ui.ZeranthiumColors;
 import com.cschar.pmode4.Pmode3PackLoader;
 import com.intellij.notification.Notification;
@@ -57,12 +56,11 @@ public class GitPackLoaderJComponent extends JPanel{
         settings = ApplicationManager.getApplication().getService(PowerMode3.class);
         directoryPath = settings.getPackDownloadPath();
 
-//        directoryPath = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
-
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
         JPanel packsPanel = new JPanel();
-//        gitdownloadPanel.setPreferredSize(new Dimension(800,400));
+        //DONT REMOVE!!!
+        packsPanel.setPreferredSize(new Dimension(900,700));
         packsPanel.setLayout(new BoxLayout(packsPanel, BoxLayout.PAGE_AXIS));
 //        packsPanel.setLayout(new BoxLayout(packsPanel, BoxLayout.Y_AXIS));
 //        packsPanel.setBackground(JBColor.CYAN);

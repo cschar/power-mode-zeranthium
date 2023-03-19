@@ -1,6 +1,7 @@
 package com.cschar.pmode3.services;
 
 
+import com.cschar.pmode4.PowerMode3SettingsJComponent;
 import com.intellij.openapi.options.ConfigurableUi;
 
 /**
@@ -8,7 +9,7 @@ import com.intellij.openapi.options.ConfigurableUi;
  */
 public class MemoryMonitorServiceHeadless implements MemoryMonitorService {
     @Override
-    public void setUi(ConfigurableUi ui){
+    public void setUi(PowerMode3SettingsJComponent ui){
         
     }
     @Override

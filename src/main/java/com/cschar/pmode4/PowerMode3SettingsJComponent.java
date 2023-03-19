@@ -19,6 +19,7 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.VerticalSeparatorComponent;
+import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.util.ui.JBUI;
@@ -120,47 +121,70 @@ public class PowerMode3SettingsJComponent implements Disposable, Pmode3PackLoade
 //        powerMemoryService.cleanup();
     }
 
+    /** The settings panel */
+    private JPanel settingsPanel;
+    private JTabbedPane settingsTabbedPane;
 
     public PowerMode3SettingsJComponent(PowerMode3 powerMode3) {
         LOGGER.debug("Creating MenuConfigurableUI...");
+        powerMode3.ui = this;
 
         this.ultraPanel = new JPanel();
         this.ultraPanel.setMaximumSize(new Dimension(1240,8000));
-//        this.ultraPanel.setBackground(Color.green); //ui padding debug
+        this.ultraPanel.setBackground(new Color(22, 57, 14)); //ui padding debug
+
 
         settings = ApplicationManager.getApplication().getService(PowerMode3.class);
 
-        JBTabbedPane settingsTabbedPane = new JBTabbedPane(JTabbedPane.LEFT);
-//        settingsTabbedPane.setBackground(Color.LIGHT_GRAY); //ui padding debug
-        settingsTabbedPane.setMaximumSize(new Dimension(1240,8000));
+        settingsTabbedPane = new JBTabbedPane(JTabbedPane.LEFT);
+        settingsTabbedPane.setMaximumSize(new Dimension(1200,6000));
         settingsTabbedPane.setOpaque(false);
 
-        JPanel panel2 = new JPanel();
-        scrollPane = new JBScrollPane(panel2);
+        settingsPanel = new JPanel();
+        settingsPanel.setMaximumSize(new Dimension(1340,700));
+        settingsPanel.setBackground(new Color(183, 25, 25));
+        scrollPane = new JBScrollPane(settingsPanel);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-        panel2.setBorder(JBUI.Borders.empty(2, 2, 200, 2));
-        panel2.setLayout(new BoxLayout(panel2, BoxLayout.PAGE_AXIS));
+        settingsPanel.setBorder(JBUI.Borders.empty(2, 2, 10, 2));
+        settingsPanel.setLayout(new BoxLayout(settingsPanel, BoxLayout.PAGE_AXIS));
         ImageIcon sliderIcon2 = new ImageIcon(this.getClass().getResource("/icons/bar_small.png"));
         settingsTabbedPane.addTab("Settings", sliderIcon2, scrollPane);
 
         mainTopPanel = makeTopSettings(settings);
-        panel2.add(mainTopPanel);
+//        mainTopPanel.setBackground(new Color(218, 181, 108));
+        mainTopPanel.setMaximumSize(new Dimension(1240,130));
+
+        settingsPanel.add(mainTopPanel);
 
         mainBottomPanel = makeBotSettings();
-        panel2.add(mainBottomPanel);
+        mainBottomPanel.setBackground(new Color(199, 127, 127));
+        mainBottomPanel.setMaximumSize(new Dimension(1240,130));
+        settingsPanel.add(mainBottomPanel);
 
         theCustomCreatePanel = new JPanel();
         theCustomCreatePanel.setOpaque(false);
         theCustomCreatePanel.setLayout(new BoxLayout(theCustomCreatePanel, BoxLayout.PAGE_AXIS));
-        panel2.add(theCustomCreatePanel);
+
+        theCustomCreatePanel.setBackground(Color.PINK);
+
+        settingsPanel.add(theCustomCreatePanel);
 
 
         //If we're background loading assets, and the User tries to access UI in settings beforehand
         if(!settings.isConfigLoaded){
+            theCustomCreatePanel.setMaximumSize(new Dimension(1240,200));
+            theCustomCreatePanel.setLayout(new BoxLayout(theCustomCreatePanel, BoxLayout.X_AXIS));
+            loadingLabel.setBackground(new Color(116, 125, 190));
             loadingLabel.setFont(new Font ("Arial", Font.BOLD, 30));
+            loadingLabel.setOpaque(false);
+
             theCustomCreatePanel.add(loadingLabel);
+            theCustomCreatePanel.setBackground(Color.ORANGE);
+            theCustomCreatePanel.validate();
+            theCustomCreatePanel.repaint();
+
         }else{
             LOGGER.debug("loading settings (config is already loaded, dont need to wait)");
             createConfig();
@@ -171,16 +195,26 @@ public class PowerMode3SettingsJComponent implements Disposable, Pmode3PackLoade
         // Pack loader UI
         /////////////////////////
         JPanel panel1 = new JPanel();
-//        panel1.setBackground(JBColor.orange);
+        panel1.setMaximumSize(new Dimension(700,1100));
+        panel1.setBackground(new Color(218, 195, 128));
         panel1.setBorder(JBUI.Borders.empty(2, 2, 0, 2));
-        panel1.setLayout(new BoxLayout(panel1, BoxLayout.X_AXIS));
-
-//        GitPackDownloaderComponent jComponent = new GitPackDownloaderComponent("title", this);
+//        panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
         GitPackLoaderJComponent jComponent = new GitPackLoaderJComponent("title", this);
+        jComponent.setMaximumSize(new Dimension(1000,1100));
         panel1.add(jComponent);
-
         ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/pack-logo8.png"));
         settingsTabbedPane.addTab("|", sliderIcon, panel1);
+//        settingsTabbedPane.setLayout(new BoxLayout(settingsPanel, BoxLayout.PAGE_AXIS));
+//
+//        JPanel panel2 = new JPanel();
+//        panel2.setMaximumSize(new Dimension(1000,1100));
+////        panel1.setBackground(JBColor.orange);
+//        panel2.setBorder(JBUI.Borders.empty(2, 2, 0, 2));
+//        panel2.setLayout(new BoxLayout(panel2, BoxLayout.Y_AXIS));
+//        GitPackLoaderJComponent jComponent2 = new GitPackLoaderJComponent("title", this);
+//        panel2.add(jComponent2);
+//        ImageIcon sliderIcon3 = new ImageIcon(this.getClass().getResource("/icons/pack-logo8.png"));
+//        settingsTabbedPane.addTab("|", sliderIcon3, panel2);
 
 
 //        this.ultraPanel.setMaximumSize(new Dimension(1000,1100));
@@ -194,6 +228,8 @@ public class PowerMode3SettingsJComponent implements Disposable, Pmode3PackLoade
         //If user has opened settings, but config values arent loaded yet from filesystem...
         if(!settings.isConfigLoaded){
             toggleMainSettingsEnabled(false);
+            ultraPanel.revalidate();
+            ultraPanel.repaint();
             return;
         }
 
@@ -202,7 +238,7 @@ public class PowerMode3SettingsJComponent implements Disposable, Pmode3PackLoade
         scrollPane.getVerticalScrollBar().setValue(settings.getScrollBarPosition());
         configSettingsTabbedPane.setSelectedIndex(settings.getLastTabIndex());
 
-        ultraPanel.revalidate();
+//        ultraPanel.revalidate();
 //        ultraPanel.repaint();
     }
 
@@ -504,6 +540,7 @@ public class PowerMode3SettingsJComponent implements Disposable, Pmode3PackLoade
     public boolean refreshMemoryWidget = true;
 
 
+    //TODO
     public void apply(@NotNull PowerMode3 settings) throws ConfigurationException {
         LOGGER.trace("ConfigurableUI: apply ");
 
@@ -549,11 +586,7 @@ public class PowerMode3SettingsJComponent implements Disposable, Pmode3PackLoade
         this.momaConfig.saveValues();
 
 
-        //TODO: remoeve this unload
-        //unload to ensure we can setData without needing binary stuff
-//        for(SpriteDataAnimated sd: multiLayerConfig.spriteDataAnimated){
-//            sd.unloadImages();
-//        }
+
         this.multiLayerConfig.saveValues(enableMultilayerCheckbox.isSelected());
 
 
@@ -611,6 +644,7 @@ public class PowerMode3SettingsJComponent implements Disposable, Pmode3PackLoade
         // but ConfiguraleUI has already been loaded with 'false' setting
         // ***other settings are loaded from config dict which isn't modified so not needed
 
+        theCustomCreatePanel.setMaximumSize(new Dimension(1240,7000));
 
         toggleMainSettingsEnabled(true);
         isEnabledCheckBox.setSelected(wasEnabled);

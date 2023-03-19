@@ -20,7 +20,8 @@ import java.util.ArrayList;
 public class MusicTriggerConfigTableModel extends AbstractTableModel {
 
     public static ArrayList<SoundData> data = MusicTriggerConfig.soundData;
-    public static Sound[] soundsPlaying = new Sound[data.size()];
+    static int MAX_SOUNDS = 10;
+    public static Sound[] soundsPlaying = new Sound[MAX_SOUNDS];
     private static final Logger LOGGER = Logger.getInstance(MusicTriggerConfigTableModel.class);
     //TODO: can put this in Pmode3abstracttablemodel then have soundconfigtablemodels use that class
     // also need soundconfigs to then inherit from baseConfigJPanel
@@ -29,8 +30,9 @@ public class MusicTriggerConfigTableModel extends AbstractTableModel {
             for(Sound s : soundsPlaying){
                 try {
                     s.stop();
+                    LOGGER.debug("stopped sound playing: " + s.getPath());
                 }catch (Exception e){
-                    LOGGER.debug("sound already null");
+//                    LOGGER.debug("sound already null");
 //                    LOGGER.warn("tried closing sound", e);
                 }
             }

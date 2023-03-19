@@ -1,7 +1,6 @@
 package com.cschar.pmode4;
 
 import com.cschar.pmode3.PowerMode3;
-import com.cschar.pmode3.PowerMode3Configurable2;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.Configurable;
 import org.jetbrains.annotations.Nls;

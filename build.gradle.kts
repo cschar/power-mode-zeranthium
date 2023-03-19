@@ -122,7 +122,8 @@ tasks {
 
     runIde {
         maxHeapSize = "4g"
-        systemProperties["idea.log.debug.categories"] = "#com.cschar.pmode3:all"
+        systemProperties["idea.log.debug.categories"] = "#com.cschar.pmode3"
+        systemProperties["idea.log.trace.categories"] = "#com.cschar.pmode3"
     }
 
     jar {
