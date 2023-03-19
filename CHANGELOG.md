@@ -3,6 +3,8 @@
 # power-mode-zeranthium Changelog
 
 ## [Unreleased]
+
+## [3.2.0-eap] - 2023-03-14
 - 2023.1 eap update
 - basic particles now show on first time startup
 - disable lizard on first time startup
@@ -27,7 +29,8 @@
 ### Added
 - Initial scaffold created from [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
 
-[Unreleased]: https://github.com/cschar/power-mode-zeranthium/compare/v3.1.0...HEAD
+[Unreleased]: https://github.com/cschar/power-mode-zeranthium/compare/v3.2.0-eap...HEAD
+[3.2.0-eap]: https://github.com/cschar/power-mode-zeranthium/compare/v3.1.0...v3.2.0-eap
 [3.1.0]: https://github.com/cschar/power-mode-zeranthium/compare/v3.0.0...v3.1.0
 [3.0.0]: https://github.com/cschar/power-mode-zeranthium/compare/v2.6.0...v3.0.0
 [2.6.0]: https://github.com/cschar/power-mode-zeranthium/compare/v2.5.1...v2.6.0
