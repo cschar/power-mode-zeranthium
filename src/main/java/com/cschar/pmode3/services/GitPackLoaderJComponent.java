@@ -2,7 +2,6 @@ package com.cschar.pmode3.services;
 
 import com.cschar.pmode3.PowerMode3;
 import com.cschar.pmode3.config.common.ui.ZeranthiumColors;
-import com.cschar.pmode4.Pmode3PackLoader;
 import com.cschar.pmode4.PowerMode3SettingsJComponent;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
@@ -62,7 +61,7 @@ public class GitPackLoaderJComponent extends JPanel{
 
         JPanel packsPanel = new JPanel();
         //DONT REMOVE!!!
-        packsPanel.setPreferredSize(new Dimension(900,700));
+        packsPanel.setPreferredSize(new Dimension(1000,700));
         packsPanel.setLayout(new BoxLayout(packsPanel, BoxLayout.PAGE_AXIS));
 //        packsPanel.setLayout(new BoxLayout(packsPanel, BoxLayout.Y_AXIS));
 //        packsPanel.setBackground(JBColor.CYAN);
@@ -339,21 +338,28 @@ public class GitPackLoaderJComponent extends JPanel{
             @Override
             public void actionPerformed(ActionEvent e) {
                 LOGGER.debug("launching Git Clone task");
-                Task.Backgroundable bgTask2 = new Task.Backgroundable(null,
-                                                                        "Cloning "+customRepoName+"...",
-                                                                true, null) {
+
+                //TODO Add this task to a hashmap to keep track of it.
+                Task.Modal modalTask2 = new Task.Modal(null, downloadBUtton,
+                        "Cloning "+customRepoName+"...",
+                        true) {
+//                Task.Backgroundable bgTask2 = new Task.Backgroundable(null,
+//                                                                        "Cloning "+customRepoName+"...",
+//                                                                true, null) {
 
                     @Override
                     public void onCancel() {
                         super.onCancel();
                         GitPackLoaderService gitService = ApplicationManager.getApplication().getService(GitPackLoaderService.class);
                         gitService.runningMonitors.remove(customRepoName);
+                        gitService.backgroundTasks.remove(customRepoName);
                     }
 
                     @Override
                     public void onFinished() {
                         GitPackLoaderService gitService = ApplicationManager.getApplication().getService(GitPackLoaderService.class);
                         gitService.runningMonitors.remove(customRepoName);
+                        gitService.backgroundTasks.remove(customRepoName);
                         super.onFinished();
                     }
 
@@ -381,6 +387,7 @@ public class GitPackLoaderJComponent extends JPanel{
                         } catch (InterruptedException interruptedException) {
                             interruptedException.printStackTrace();
                         }
+
                         try {
                             downloadStatusLabel.setText("[]+");
                             validate();
@@ -394,7 +401,11 @@ public class GitPackLoaderJComponent extends JPanel{
                     }
                 };
                 LOGGER.trace("Launching cloning task  from thread " + Thread.currentThread().toString());
-                ProgressManager.getInstance().run(bgTask2);
+//                ProgressManager.getInstance().run(bgTask2);
+                //                gitService.backgroundTasks.put(customRepoName, bgTask2);
+                ProgressManager.getInstance().run(modalTask2);
+
+
 
             };
         });

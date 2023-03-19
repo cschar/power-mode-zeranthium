@@ -3,7 +3,7 @@
   {
     "previewSize":120,
     "customPath":"",
-    "defaultPath":"/blender/mandala1/",
+    "defaultPath":"/blender/mandala1",
     "val2":5,
     "isCyclic":false,
     "alpha":1,
@@ -15,7 +15,7 @@
   {
     "previewSize":120,
     "customPath":"",
-    "defaultPath":"/blender/mandala2/",
+    "defaultPath":"/blender/mandala2",
     "val2":5,
     "isCyclic":true,
     "alpha":1,
@@ -27,7 +27,7 @@
   {
     "previewSize":120,
     "customPath":"",
-    "defaultPath":"/blender/mandala3/",
+    "defaultPath":"/blender/mandala3",
     "val2":5,
     "isCyclic":true,
     "alpha":1,
@@ -39,7 +39,7 @@
   {
     "previewSize":120,
     "customPath":"",
-    "defaultPath":"/blender/mandala3/",
+    "defaultPath":"/blender/mandala3",
     "val2":5,
     "isCyclic":false,
     "alpha":1,

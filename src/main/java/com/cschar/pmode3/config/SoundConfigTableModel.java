@@ -60,7 +60,12 @@ public class SoundConfigTableModel extends AbstractTableModel {
 
     @Override
     public int getRowCount() {
-        return data.size();
+        try {
+            return data.size();
+        } catch (Exception e) {
+            LOGGER.debug("error getting row count");
+            return 0;
+        }
     }
 
 

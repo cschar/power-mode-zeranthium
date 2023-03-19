@@ -1,6 +1,8 @@
 package com.cschar.pmode3.services;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.progress.Task;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ResetCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -17,17 +19,19 @@ import java.util.HashMap;
 
 //UI  https://jetbrains.github.io/ui/principles/groups_of_controls/
 /** Clones git packs, thats it. */
-public class GitPackLoaderService {
+public class GitPackLoaderService implements Disposable {
 
     private static final Logger LOGGER = Logger.getInstance(GitPackLoaderService.class.getName());
 
     /** used to keep track of whether to change label to 'downloading...' when we reopen the GitPackLoaderJComponent panel */
     public HashMap<String, GitPackLoaderProgressMonitor> runningMonitors;
+    public HashMap<String, Task.Backgroundable> backgroundTasks;
 
     public GitPackLoaderService()
     {
 //        
         runningMonitors = new HashMap<>();
+        backgroundTasks = new HashMap<>();
     }
 
 
@@ -101,4 +105,8 @@ public class GitPackLoaderService {
 
     }
 
+    @Override
+    public void dispose() {
+        LOGGER.trace("GitPackLoaderService: Disposing...");
+    }
 }

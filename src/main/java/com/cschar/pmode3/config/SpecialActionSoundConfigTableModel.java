@@ -67,7 +67,12 @@ public class SpecialActionSoundConfigTableModel extends AbstractConfigTableModel
 
     @Override
     public int getRowCount() {
-        return soundData.size();
+        try {
+            return soundData.size();
+        } catch (Exception e) {
+            LOGGER.debug("error getting row count");
+            return 0;
+        }
     }
 
 

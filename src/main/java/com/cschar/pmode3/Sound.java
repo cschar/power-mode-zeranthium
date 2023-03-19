@@ -91,6 +91,17 @@ public class Sound {
         }
     }
 
+    public static void stopAll(){
+        while(playerBank.size() > 0){
+            try {
+                Player p = playerBank.remove();
+                p.close();
+            } catch (Exception e){
+
+            }
+        }
+    }
+
     //https://stackoverflow.com/a/2187030/5198805
     //make a cleanup callback after a sound is done playing
     // e.g.  change a button UI

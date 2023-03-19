@@ -16,23 +16,12 @@
     <!--    https://www.jetbrains.org/intellij/sdk/docs/basics/plugin_structure/plugin_configuration_file.html -->
     <extensions defaultExtensionNs="com.intellij">
         <!-- inserts the a GUI into the settings menu under "appearance -> Power Mode - Zeranthium" -->
-
-<!--        <applicationConfigurable groupId="appearance"-->
-<!--                                 groupWeight="20"-->
-<!--                                 id="power.mode3.zeranthium"-->
-
-<!--                                 instance="com.cschar.pmode3.PowerMode3Configurable2"-->
-<!--                                 />-->
-<!--        https://github.com/JetBrains/intellij-sdk-code-samples/blob/main/settings/src/main/resources/META-INF/plugin.xml-->
-<!--        <applicationService serviceImplementation="com.cschar.pmode3.PowerMode3"/>-->
-
         <applicationConfigurable
                 parentId="appearance"
+                groupWeight="20"
                 instance="com.cschar.pmode4.AppSettingsConfigurable"
-                id="org.intellij.sdk.settings.AppSettingsConfigurable"
-                displayName="POEWR MODE ZERANTHIUM "/>
-        <applicationService
-                serviceImplementation="com.cschar.pmode4.AppSettingsState"/>
+                id="power.mode3.zeranthium"
+                displayName="PowerMode Zeranthium"/>
 
         <applicationService serviceImplementation="com.cschar.pmode3.services.GitPackLoaderService"/>
         <applicationService serviceInterface="com.cschar.pmode3.services.MemoryMonitorService"

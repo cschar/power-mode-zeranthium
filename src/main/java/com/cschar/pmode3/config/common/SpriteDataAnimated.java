@@ -168,6 +168,8 @@ public class SpriteDataAnimated  extends SpriteData {
 
             this.totalLoadedAssetSizeMB = totalSizeMBResources;
 //            LOGGER.info(String.format("Loaded assets with size MB: %.2f",this.totalLoadedAssetSizeMB));
+
+//            LOGGER.debug(path);
             LOGGER.debug(String.format("Loaded default resource %s    size MB: %.2f", dir.getPath(), this.totalLoadedAssetSizeMB));
 
         }else{
@@ -226,6 +228,7 @@ public class SpriteDataAnimated  extends SpriteData {
                     this.previewIcon = new ImageIcon(previewImage);
 
                     this.totalLoadedAssetSizeMB = totalSizeGB * 1024;
+
                     LOGGER.debug("Loaded customPath directory: " + path + "   total size (MB): " + this.totalLoadedAssetSizeMB);
                 }
             }

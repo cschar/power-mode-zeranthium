@@ -21,6 +21,8 @@ package com.cschar.pmode3;
 import com.cschar.pmode3.config.*;
 import com.cschar.pmode3.config.common.SoundData;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
+import com.cschar.pmode3.services.GitPackLoaderProgressMonitor;
+import com.cschar.pmode3.services.GitPackLoaderService;
 import com.cschar.pmode4.PowerMode3SettingsJComponent;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataContext;
@@ -38,7 +40,9 @@ import com.intellij.openapi.editor.actionSystem.TypedActionHandler;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.tasks.TaskManager;
 import com.intellij.ui.JBColor;
 import com.intellij.util.SmartList;
 import com.intellij.util.xmlb.XmlSerializerUtil;
@@ -227,6 +231,9 @@ final public class PowerMode3 implements
         SpecialActionSoundConfigTableModel.emptySounds();
 
 
+
+
+
         this.pathDataMap.clear();
         this.pathDataMap = null;
 
@@ -236,9 +243,8 @@ final public class PowerMode3 implements
         this.ui = null;
         //Clear soundConfigTableMOdel sound playings...
 
-        //TODO: ensure no sounds are playing:
-        //  wherever we create SoUnd objects...
-        //     add playing sounds to a global list and check if that list is still populated
+        LOGGER.trace("stopping all playing sounds...");
+        Sound.stopAll();
 
 //        Disposer.dispose(this.configurableUI2);
 //        this.configurableUI2 = null;
@@ -566,18 +572,17 @@ final public class PowerMode3 implements
     public PowerMode3SettingsJComponent ui;
 
     private void setUpdateProgress(ProgressIndicator progressIndicator, String info, double amt) {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            Thread.sleep(1000);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
 
         String s = "Loading - " + info + " " + amt;
 //        progressIndicator.setText(s);
         progressIndicator.setText2(s);
         progressIndicator.setFraction(amt);
         PowerMode3SettingsJComponent.loadingLabel.setText(s);
-//        try {              Thread.sleep(3000);          } catch (InterruptedException e) {          }
 
     }
 

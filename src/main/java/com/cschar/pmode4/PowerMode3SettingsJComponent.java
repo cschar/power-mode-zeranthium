@@ -44,7 +44,7 @@ import java.util.Scanner;
 
 import static com.cschar.pmode3.ParticleContainerManager.resetAllContainers;
 
-public class PowerMode3SettingsJComponent implements Disposable, Pmode3PackLoader {
+public class PowerMode3SettingsJComponent implements Disposable {
     private static final Logger LOGGER = Logger.getInstance(PowerMode3SettingsJComponent.class.getName());
 
     private JTextField lifetimeTextField;
@@ -131,7 +131,7 @@ public class PowerMode3SettingsJComponent implements Disposable, Pmode3PackLoade
 
         this.ultraPanel = new JPanel();
         this.ultraPanel.setMaximumSize(new Dimension(1240,8000));
-        this.ultraPanel.setBackground(new Color(22, 57, 14)); //ui padding debug
+//        this.ultraPanel.setBackground(new Color(22, 57, 14)); //ui padding debug
 
 
         settings = ApplicationManager.getApplication().getService(PowerMode3.class);
@@ -142,7 +142,7 @@ public class PowerMode3SettingsJComponent implements Disposable, Pmode3PackLoade
 
         settingsPanel = new JPanel();
         settingsPanel.setMaximumSize(new Dimension(1340,700));
-        settingsPanel.setBackground(new Color(183, 25, 25));
+//        settingsPanel.setBackground(new Color(183, 25, 25));
         scrollPane = new JBScrollPane(settingsPanel);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -159,7 +159,7 @@ public class PowerMode3SettingsJComponent implements Disposable, Pmode3PackLoade
         settingsPanel.add(mainTopPanel);
 
         mainBottomPanel = makeBotSettings();
-        mainBottomPanel.setBackground(new Color(199, 127, 127));
+//        mainBottomPanel.setBackground(new Color(199, 127, 127));
         mainBottomPanel.setMaximumSize(new Dimension(1240,130));
         settingsPanel.add(mainBottomPanel);
 
@@ -176,7 +176,7 @@ public class PowerMode3SettingsJComponent implements Disposable, Pmode3PackLoade
         if(!settings.isConfigLoaded){
             theCustomCreatePanel.setMaximumSize(new Dimension(1240,200));
             theCustomCreatePanel.setLayout(new BoxLayout(theCustomCreatePanel, BoxLayout.X_AXIS));
-            loadingLabel.setBackground(new Color(116, 125, 190));
+//            loadingLabel.setBackground(new Color(116, 125, 190));
             loadingLabel.setFont(new Font ("Arial", Font.BOLD, 30));
             loadingLabel.setOpaque(false);
 
@@ -196,7 +196,7 @@ public class PowerMode3SettingsJComponent implements Disposable, Pmode3PackLoade
         /////////////////////////
         JPanel panel1 = new JPanel();
         panel1.setMaximumSize(new Dimension(700,1100));
-        panel1.setBackground(new Color(218, 195, 128));
+//        panel1.setBackground(new Color(218, 195, 128));
         panel1.setBorder(JBUI.Borders.empty(2, 2, 0, 2));
 //        panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
         GitPackLoaderJComponent jComponent = new GitPackLoaderJComponent("title", this);
@@ -607,30 +607,30 @@ public class PowerMode3SettingsJComponent implements Disposable, Pmode3PackLoade
         //Load the Data if settings turned on
         //Determine if particle types have been turned on and load data if so
 //        settings.loadConfigData();
-        if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.MULTI_LAYER)) {
-            //load data
-            for(SpriteDataAnimated sd: multiLayerConfig.spriteDataAnimated){
-                sd.loadImages();
-            }
-//            MultiLayerConfig.setSpriteDataAnimated(settings.deserializeSpriteDataAnimated(settings.pathDataMap.get(PowerMode3.ConfigType.MULTI_LAYER)));
-        }else{
-            //unload
-            for(SpriteDataAnimated sd: multiLayerConfig.spriteDataAnimated){
-                sd.unloadImages();
-            }
-        }
-
-        if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.MULTI_LAYER_CHANCE)) {
-            MultiLayerChanceConfig.setSpriteDataAnimated(settings.deserializeSpriteDataAnimated(settings.pathDataMap.get(PowerMode3.ConfigType.MULTI_LAYER_CHANCE)));
-        }
-        // -------------Unload-------------------------
-        //Unload the Data if settings turned off
-        if(!settings.getSpriteTypeEnabled(PowerMode3.ConfigType.MULTI_LAYER)) {
-            LOGGER.debug("Unsetting MULTI_LAYER SpriteDataAnimated images, count: " + multiLayerConfig.spriteDataAnimated.size());
-            for(SpriteDataAnimated sd: multiLayerConfig.spriteDataAnimated){
-                sd.unloadImages();
-            }
-        }
+//        if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.MULTI_LAYER)) {
+//            //load data
+//            for(SpriteDataAnimated sd: multiLayerConfig.spriteDataAnimated){
+//                sd.loadImages();
+//            }
+////            MultiLayerConfig.setSpriteDataAnimated(settings.deserializeSpriteDataAnimated(settings.pathDataMap.get(PowerMode3.ConfigType.MULTI_LAYER)));
+//        }else{
+//            //unload
+//            for(SpriteDataAnimated sd: multiLayerConfig.spriteDataAnimated){
+//                sd.unloadImages();
+//            }
+//        }
+//
+//        if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.MULTI_LAYER_CHANCE)) {
+//            MultiLayerChanceConfig.setSpriteDataAnimated(settings.deserializeSpriteDataAnimated(settings.pathDataMap.get(PowerMode3.ConfigType.MULTI_LAYER_CHANCE)));
+//        }
+//        // -------------Unload-------------------------
+//        //Unload the Data if settings turned off
+//        if(!settings.getSpriteTypeEnabled(PowerMode3.ConfigType.MULTI_LAYER)) {
+//            LOGGER.debug("Unsetting MULTI_LAYER SpriteDataAnimated images, count: " + multiLayerConfig.spriteDataAnimated.size());
+//            for(SpriteDataAnimated sd: multiLayerConfig.spriteDataAnimated){
+//                sd.unloadImages();
+//            }
+//        }
 
     }
 
@@ -740,14 +740,6 @@ public class PowerMode3SettingsJComponent implements Disposable, Pmode3PackLoade
         this.basicParticleConfig = new BasicParticleConfig(settings);
         particleSettingsPanel.add(this.basicParticleConfig);
         particleSettingsPanel.add(this.createSpacer());
-
-
-        //TODO: Only scan dir for preview pics and height calcs
-        //TODO: dont load entire thing
-        //Load manually here
-        if(MultiLayerConfig.spriteDataAnimated == null) {
-            MultiLayerConfig.setSpriteDataAnimated(settings.deserializeSpriteDataAnimated(settings.pathDataMap.get(PowerMode3.ConfigType.MULTI_LAYER)));
-        }
 
         this.multiLayerConfig = new MultiLayerConfig(settings);
         particleSettingsPanel.add(multiLayerConfig);

@@ -3,6 +3,7 @@ package com.cschar.pmode4;
 import com.cschar.pmode3.PowerMode3;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.Configurable;
+import com.intellij.openapi.options.ConfigurationException;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,7 +14,6 @@ import javax.swing.*;
  */
 public class AppSettingsConfigurable implements Configurable {
     private static final Logger LOGGER = Logger.getInstance( AppSettingsConfigurable.class.getName() );
-    private AppSettingsComponent mySettingsComponent;
     private PowerMode3SettingsJComponent myPowerMode3SettingsComponent;
 
     // A default constructor with no arguments is required because this implementation
@@ -22,14 +22,14 @@ public class AppSettingsConfigurable implements Configurable {
     @Nls(capitalization = Nls.Capitalization.Title)
     @Override
     public String getDisplayName() {
-        return "SDK: Application Settings Example";
+        return "PowerMode Zeranthium";
     }
 
-    @Override
-    public JComponent getPreferredFocusedComponent() {
-        LOGGER.debug("AppSettings: getPreferredFocusedComponent...");
-        return mySettingsComponent.getPreferredFocusedComponent();
-    }
+//    @Override
+//    public JComponent getPreferredFocusedComponent() {
+//        LOGGER.debug("AppSettings: getPreferredFocusedComponent...");
+//        return myPowerMode3SettingsComponent.ultraPanel;
+//    }
 
     @Nullable
     @Override
@@ -37,8 +37,6 @@ public class AppSettingsConfigurable implements Configurable {
         LOGGER.debug("AppSettings: CreateComponent...");
         PowerMode3 settings = PowerMode3.getInstance();
         myPowerMode3SettingsComponent = new PowerMode3SettingsJComponent(settings);
-//        mySettingsComponent = new AppSettingsComponent();
-//        return mySettingsComponent.getPanel();
         return myPowerMode3SettingsComponent.getComponent();
     }
 
@@ -52,7 +50,13 @@ public class AppSettingsConfigurable implements Configurable {
     }
 
     @Override
-    public void apply() {
+    public void apply() throws ConfigurationException {
+        PowerMode3 settings = PowerMode3.getInstance();
+        try {
+            myPowerMode3SettingsComponent.apply(settings);
+        } catch (ConfigurationException e) {
+            throw e;
+        }
 //        AppSettingsState settings = AppSettingsState.getInstance();
 //        settings.userId = mySettingsComponent.getUserNameText();
 //        settings.ideaStatus = mySettingsComponent.getIdeaUserStatus();
@@ -69,8 +73,7 @@ public class AppSettingsConfigurable implements Configurable {
     public void disposeUIResources()
     {
         LOGGER.debug("AppSettings: disposeUIResources...");
-
-        mySettingsComponent = null;
+        myPowerMode3SettingsComponent = null;
     }
 
 }
