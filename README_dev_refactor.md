@@ -19,10 +19,6 @@ links to
 [2] https://github.com/krasa/StringManipulation/commit/08422d714ce70126093c051bd5147c8f9dbcdd3f
 
 
-## TODO before release
-- delete PowerMode3Configurable2
-- delete POwermode3ConfigurableUI2
-- resolve most TODO
 
 ## DIAGNOSTICS
 #com.cschar.pmode3:all
@@ -35,13 +31,6 @@ links to
 
 ## BUGS ?
 
--- make sure when we unload, a sound isnt still playing
-
--- ensure SpriteDataAnimated only loads at startup if its enabled
--- load them at settings pane if they are switched on
--- unload them at settings pane on 'apply' if they are switched off
-
--- UI doesnt unload from memory when settings panel closes  (cellRendererTables are still in memory heapdump for example)
 
 -- Dyanmic Plugin memory when shutting down
    -- HeapDump debug with VisualVM, start VM with same JDK that Sandbox IDe is running

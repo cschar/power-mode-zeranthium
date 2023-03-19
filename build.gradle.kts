@@ -50,9 +50,6 @@ dependencies {
 //    testCompileOnly("junit:junit:4.13.1")
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.3.1")
 
-
-//    javadocToJson()
-
 }
 
 group = properties("pluginGroup").get()
@@ -113,7 +110,7 @@ tasks {
 
 //    https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html#tasks-buildsearchableoptions
     buildSearchableOptions {
-        enabled = false
+//        enabled = false
     }
 
     wrapper {
