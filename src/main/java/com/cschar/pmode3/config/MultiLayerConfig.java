@@ -21,7 +21,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.EventObject;
 
-public class MultiLayerConfig extends BaseConfigPanel{
+public class MultiLayerConfig extends BaseConfigJPanel {
 
 
     JPanel firstRow;
@@ -29,7 +29,7 @@ public class MultiLayerConfig extends BaseConfigPanel{
 
     private JCheckBox moveWithCaret;
     private JTextField moveSpeedTextField;
-    static ArrayList<SpriteDataAnimated> spriteDataAnimated;
+    public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
     PowerMode3 settings;
 
     public final static int PREVIEW_SIZE = 120;
@@ -45,26 +45,9 @@ public class MultiLayerConfig extends BaseConfigPanel{
         firstRow.setLayout(new BoxLayout(firstRow, BoxLayout.Y_AXIS));
 
         this.setupHeaderPanel("Multi Layer Options", spriteDataAnimated);
-//        headerPanel = new JPanel();
-//        JLabel headerLabel = new JLabel("Mandala Options");
-//        headerLabel.setFont(new Font ("Arial", Font.BOLD, 20));
-//        headerPanel.add(headerLabel);
-//
-//
-//        headerSizeLabel = new JLabel();
-//        this.calculateSize();
-//        headerSizeLabel.setBackground(ZeranthiumColors.specialOption3);
-//        headerSizeLabel.setOpaque(true);
-//
-//        headerPanel.add(headerSizeLabel);
-//
-//        headerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-//        headerPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-//        headerPanel.setMaximumSize(new Dimension(500,100));
-
         this.add(firstRow);
 
-        spriteConfigPanel = createConfigTable();
+
         firstRow.add(headerPanel);
         JPanel caretMovementPanel = new JPanel();
         caretMovementPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -76,10 +59,10 @@ public class MultiLayerConfig extends BaseConfigPanel{
         this.moveSpeedTextField = new JTextField();
         caretMovementPanel.add(Config.populateTextFieldPanel(this.moveSpeedTextField, "speed (0.001 - 1.0)"));
         caretMovementPanel.setBackground(ZeranthiumColors.specialOption1);
-
         firstRow.add(caretMovementPanel);
 
-
+        // Add ConfigTable
+        spriteConfigPanel = createConfigTable();
         firstRow.add(spriteConfigPanel);
 
 
@@ -89,9 +72,7 @@ public class MultiLayerConfig extends BaseConfigPanel{
 
 
     public JComponent createConfigTable(){
-
         JBTable table = new JBTable();
-
 
         table.setRowHeight(PREVIEW_SIZE);
         table.setModel(new MultiLayerTableModel(this));
@@ -167,15 +148,14 @@ public class MultiLayerConfig extends BaseConfigPanel{
     }
 
     public void saveValues(boolean isSettingEnabled) throws ConfigurationException {
+        // header GUIs
         ParticleSpriteMultiLayer.settingEnabled = isSettingEnabled; //to kill any lingering ones
-
         settings.setSpriteTypeProperty(PowerMode3.ConfigType.MULTI_LAYER, "moveWithCaretEnabled", String.valueOf(moveWithCaret.isSelected()));
-
         settings.setSpriteTypeProperty(PowerMode3.ConfigType.MULTI_LAYER, "moveSpeed",
                 String.valueOf(Config.getJTextFieldWithinBoundsFloat(this.moveSpeedTextField,
                         0.001f, 1.0f,"moveSpeed")));
-
-        settings.setSerializedSpriteDataAnimated(spriteDataAnimated, PowerMode3.ConfigType.MULTI_LAYER);
+        // table data
+        settings.setSerializedSDAJsonInfo(spriteDataAnimated, PowerMode3.ConfigType.MULTI_LAYER);
     }
 
 
@@ -388,7 +368,7 @@ class MultiLayerTableModel extends AbstractConfigTableModel {
 //            MandalaOtherCellData.class
     };
 
-    public MultiLayerTableModel(BaseConfigPanel config) {
+    public MultiLayerTableModel(BaseConfigJPanel config) {
         super(config);
     }
 

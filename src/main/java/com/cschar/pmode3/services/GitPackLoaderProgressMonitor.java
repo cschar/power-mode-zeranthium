@@ -6,7 +6,7 @@ import org.eclipse.jgit.lib.ProgressMonitor;
 
 import javax.swing.*;
 
-class GitPackLoaderProgressMonitor implements ProgressMonitor {
+public class GitPackLoaderProgressMonitor implements ProgressMonitor {
 
     private static final Logger LOGGER = Logger.getInstance(GitPackLoaderProgressMonitor.class.getName());
 
@@ -17,6 +17,7 @@ class GitPackLoaderProgressMonitor implements ProgressMonitor {
         this.statusLabel = lbl;
         this.progressIndicator = progressIndicator;
         progressIndicator.setIndeterminate(false);
+
     }
 
 
@@ -73,7 +74,7 @@ class GitPackLoaderProgressMonitor implements ProgressMonitor {
 
     @Override
     public void endTask() {
-        //
+        LOGGER.debug("ending task");
     }
 
     //custom logic to check to cancel process...

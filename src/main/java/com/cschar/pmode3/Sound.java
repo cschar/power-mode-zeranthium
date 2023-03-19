@@ -15,7 +15,8 @@ public class Sound {
     public static Queue<Player> playerBank = new ConcurrentLinkedQueue<Player>();
 
     Player player;
-
+    private String path;
+    public String getPath(){ return this.path; };
 
 
     public static void closeAllPlayers(){
@@ -27,6 +28,7 @@ public class Sound {
 
 
     public Sound(String filePath, boolean isResource){
+        this.path = filePath;
         InputStream stream;
         if(isResource){
             stream = this.getClass().getResourceAsStream(filePath);
@@ -86,6 +88,17 @@ public class Sound {
         if(player != null){
             player.close();
             playerBank.remove(player);
+        }
+    }
+
+    public static void stopAll(){
+        while(playerBank.size() > 0){
+            try {
+                Player p = playerBank.remove();
+                p.close();
+            } catch (Exception e){
+
+            }
         }
     }
 

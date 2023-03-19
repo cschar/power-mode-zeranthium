@@ -1,6 +1,6 @@
 package com.cschar.pmode3.services;
 
-import com.cschar.pmode3.PowerMode3ConfigurableUI2;
+import com.cschar.pmode4.PowerMode3SettingsJComponent;
 import com.intellij.openapi.options.ConfigurableUi;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
@@ -9,14 +9,15 @@ import org.jetbrains.annotations.NotNull;
 
 import com.intellij.openapi.diagnostic.Logger;
 
-
+// ? ? ?
+// TODO: remove this, just make it a thread task inside the JComponent
 public class MemoryMonitorServiceImpl implements MemoryMonitorService {
     private static final Logger LOGGER = Logger.getInstance(MemoryMonitorServiceImpl.class.getName());
-    PowerMode3ConfigurableUI2 menuConfigurableUI;
+    PowerMode3SettingsJComponent menuConfigurableUI;
 
     @Override
-    public void setUi(ConfigurableUi ui) {
-        this.menuConfigurableUI = (PowerMode3ConfigurableUI2) ui;
+    public void setUi(PowerMode3SettingsJComponent ui) {
+        this.menuConfigurableUI = (PowerMode3SettingsJComponent) ui;
 
     }
 

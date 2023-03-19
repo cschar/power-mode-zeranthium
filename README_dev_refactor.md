@@ -19,6 +19,10 @@ links to
 [2] https://github.com/krasa/StringManipulation/commit/08422d714ce70126093c051bd5147c8f9dbcdd3f
 
 
+
+## DIAGNOSTICS
+#com.cschar.pmode3:all
+
 ## TESTS
 
 [ ] - robotUI test: make a test to load settings UI when it is disabled, check if checkboxes are disabled
@@ -27,9 +31,23 @@ links to
 
 ## BUGS ?
 
+
 -- Dyanmic Plugin memory when shutting down
    -- HeapDump debug with VisualVM, start VM with same JDK that Sandbox IDe is running
    -- Use VisualVMPlugin extension tool to start it with same JDK
 -- When stopping with CTRL+SHIFT+Z.... particles/dinos still float away instead of immediatly disappearing
 -- in Droste, moving caret with arrow keys doesnt resize cover
 
+## upgrade
+put docs on astro site
+https://docs.astro.build/en/guides/deploy/github/
+
+
+/opt/jdk/11/bin/javadoc \
+-docletpath  -docletpath ./build/classes/java/main \
+  -doclet com.cschar.pmode3.MyDoclet \
+src/main/java/com/cschar/pmode3/MyDoclet.java
+
+-docletpath  -docletpath ./build/classes/java/main \
+-doclet com.cschar.pmode3.MyTagScannerDoclet \
+src/main/java/com/cschar/pmode3/MyTagScannerDoclet.java

@@ -1,6 +1,8 @@
 package com.cschar.pmode3.services;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.progress.Task;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ResetCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -16,21 +18,25 @@ import java.io.IOException;
 import java.util.HashMap;
 
 //UI  https://jetbrains.github.io/ui/principles/groups_of_controls/
-public class GitPackLoaderService {
+/** Clones git packs, thats it. */
+public class GitPackLoaderService implements Disposable {
 
     private static final Logger LOGGER = Logger.getInstance(GitPackLoaderService.class.getName());
 
     /** used to keep track of whether to change label to 'downloading...' when we reopen the GitPackLoaderJComponent panel */
     public HashMap<String, GitPackLoaderProgressMonitor> runningMonitors;
+    public HashMap<String, Task.Backgroundable> backgroundTasks;
 
     public GitPackLoaderService()
     {
 //        
         runningMonitors = new HashMap<>();
+        backgroundTasks = new HashMap<>();
     }
 
 
     public void getRepo(String REMOTE_URL, File localPath, ProgressMonitor progressMonitor) throws IOException, GitAPIException {
+        LOGGER.trace("GitPackLoaderService: getRepo");
 
         if(localPath == null){
             String path = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
@@ -72,20 +78,19 @@ public class GitPackLoaderService {
         }
 
         if (found) {
-            
+            LOGGER.trace("Repo already exists.. skipping clone");
             return;
         }
 
         // then clone
-        
 
+        LOGGER.trace("Repo not found... cloning");
         try {
             result = Git.cloneRepository()
                     .setURI(REMOTE_URL)
                     .setDirectory(localPath)
                     .setProgressMonitor(progressMonitor)
                     .call();
-
             // Note: the call() returns an opened repository already which needs to be closed to avoid file handle leaks!
             
         }catch(TransportException e){
@@ -96,9 +101,12 @@ public class GitPackLoaderService {
             if(result != null){
                 result.close();
             }
-
         }
 
     }
 
+    @Override
+    public void dispose() {
+        LOGGER.trace("GitPackLoaderService: Disposing...");
+    }
 }

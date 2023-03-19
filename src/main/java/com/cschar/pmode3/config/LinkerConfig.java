@@ -19,7 +19,7 @@ import java.awt.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-public class LinkerConfig extends BaseConfigPanel {
+public class LinkerConfig extends BaseConfigJPanel {
 
     JPanel mainPanel;
     PowerMode3 settings;
@@ -51,110 +51,30 @@ public class LinkerConfig extends BaseConfigPanel {
 
 
     private JComponent linkerSpriteConfigPanel;
-    static ArrayList<SpriteDataAnimated> spriteDataAnimated;
+    public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
+    JPanel firstRow;
+
 
     public LinkerConfig(PowerMode3 settings){
         this.settings = settings;
 
-//        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-//        this.setMaximumSize(new Dimension(1000,300));
-        this.setLayout(new GridLayout(2,0)); //as many rows as necessary
+        //Copied from MultiLayer
+        this.setMaximumSize(new Dimension(1000,700));
+        this.setLayout(new GridLayout(2,1)); //as many rows as necessary
 
-        mainPanel = new JPanel();
-        mainPanel.setMaximumSize(new Dimension(1000,500));
-        mainPanel.setLayout(new GridLayout(0,2));
+        firstRow = new JPanel();
+        firstRow.setMaximumSize(new Dimension(1000,500));
+        firstRow.setLayout(new BoxLayout(firstRow, BoxLayout.X_AXIS));
+
+        this.setupHeaderPanel("Multi Layer Options", spriteDataAnimated);
+        this.add(firstRow);
+
+        //Populate First row
+
         JPanel firstCol = new JPanel();
         firstCol.setLayout(new BoxLayout(firstCol, BoxLayout.PAGE_AXIS));
-        mainPanel.add(firstCol);
 
-        JPanel secondCol = new JPanel();
-        secondCol.setLayout(new BoxLayout(secondCol, BoxLayout.Y_AXIS));
-
-        this.setupHeaderPanel("LinkerI Options", spriteDataAnimated);
-        secondCol.add(headerPanel);
-        mainPanel.add(secondCol);
-
-//        JPanel lizardColorPanel = Config.getColorPickerPanel("Lizard Color", PowerMode3.SpriteType.LIZARD, settings, Color.GREEN);
-//        secondCol.add(lizardColorPanel);
-
-
-        JPanel maxPsi = new JPanel();
-//        maxPsi.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        maxPsi.add(new JLabel("Max Psi Anchor Scan Distance: "));
-        this.maxPsiAnchorDistanceTextField = new JTextField("");
-        this.maxPsiAnchorDistanceTextField.setMinimumSize(new Dimension(50,20));
-        maxPsi.add(maxPsiAnchorDistanceTextField);
-        maxPsi.setAlignmentX(RIGHT_ALIGNMENT);//0.0
-        maxPsi.setMaximumSize(new Dimension(500, 50));
-        maxPsi.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        secondCol.add(maxPsi);
-
-
-
-        JPanel minPsi = new JPanel();
-        minPsi.add(new JLabel("Min Psi Anchor Scan Distance: "));
-        this.minPsiAnchorDistanceTextField = new JTextField("");
-        this.minPsiAnchorDistanceTextField.setMinimumSize(new Dimension(50,20));
-        minPsi.add(minPsiAnchorDistanceTextField);
-        minPsi.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        minPsi.setAlignmentX(RIGHT_ALIGNMENT);//0.0
-        minPsi.setMaximumSize(new Dimension(500, 50));
-//        minPsi.setBackground(Color.YELLOW);
-        secondCol.add(minPsi);
-
-        this.chancePerKeyPressTextField = new JTextField();
-//        JLabel chancePerKeyPressLabel = new JLabel("Chance per keypress (0-100)");
-//        JPanel chancePerKeyPressPanel = new JPanel();
-//        chancePerKeyPressPanel.add(chancePerKeyPressLabel);
-//        chancePerKeyPressPanel.add(chancePerKeyPressTextField);
-//        chancePerKeyPressPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-//        chancePerKeyPressPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
-//        chancePerKeyPressPanel.setMaximumSize(new Dimension(400, 50));
-//        chancePerKeyPressPanel.setBackground(Color.lightGray);
-//        secondCol.add(chancePerKeyPressPanel);
-
-        JPanel tracerColorPanel = Config.getColorPickerPanel("tracer Color", PowerMode3.ConfigType.LINKER, settings, this.originalTracerColor);
-        this.tracerEnabledCheckBox = new JCheckBox("is enabled?", true);
-        JPanel tracerConfig = Config.populateEnabledColorPickerPanel(tracerColorPanel, tracerEnabledCheckBox);
-        secondCol.add(tracerConfig);
-
-        isCyclicEnabled = new JCheckBox("cyclic?");
-        this.maxCycleParticlesTextField = new JTextField();
-        JLabel maxCycleParticleLabel = new JLabel("Cycle Particles (1-5)");
-        JPanel cyclicPanel = new JPanel();
-        cyclicPanel.add(isCyclicEnabled);
-        cyclicPanel.add(maxCycleParticleLabel);
-        cyclicPanel.add(this.maxCycleParticlesTextField);
-        cyclicPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        cyclicPanel.setAlignmentX(RIGHT_ALIGNMENT);//0.0
-        cyclicPanel.setMaximumSize(new Dimension(500, 50));
-        secondCol.add(cyclicPanel);
-
-
-        this.chanceOfSpawnTextField = new JTextField();
-//        JLabel chanceOfSpawnLabel = new JLabel("Chance of Link per anchor (0-100)");
-//        JPanel chancePanel = new JPanel();
-//        chancePanel.add(chanceOfSpawnLabel);
-//        chancePanel.add(chanceOfSpawnTextField);
-//        chancePanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-//        chancePanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
-//        chancePanel.setMaximumSize(new Dimension(400, 50));
-////        chancePanel.setBackground(Color.lightGray);
-//        secondCol.add(chancePanel);
-
-        this.maxAnchorsToUse = new JTextField();
-//        JLabel maxAnchorsLabel = new JLabel("Max Anchors to Use (1-100)");
-//        JPanel maxAnchorsPanel = new JPanel();
-//        maxAnchorsPanel.add(maxAnchorsLabel);
-//        maxAnchorsPanel.add(maxAnchorsToUse);
-//        maxAnchorsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-//        maxAnchorsPanel.setAlignmentX( Component.RIGHT_ALIGNMENT);//0.0
-//        maxAnchorsPanel.setMaximumSize(new Dimension(500, 50));
-////        maxAnchorsPanel.setBackground(Color.yellow);
-//        secondCol.add(maxAnchorsPanel);
-
-
-        //First col config
+        // -----------  First col config --------------------
 
         JPanel caretMovementPanel = new JPanel();
         caretMovementPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -169,8 +89,6 @@ public class LinkerConfig extends BaseConfigPanel {
         caretMovementPanel.setOpaque(true);
         caretMovementPanel.setBackground(ZeranthiumColors.specialOption1);
         firstCol.add(caretMovementPanel);
-
-
 
         this.maxLinksTextField = new JTextField();
 //        this.maxAnchorsToUse.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -201,17 +119,70 @@ public class LinkerConfig extends BaseConfigPanel {
         JPanel curve1Config = Config.populateTextFieldPanel(this.curve1AmountTextField, "curve amount (-100 - 400)");
         firstCol.add(curve1Config);
 
+        firstRow.add(firstCol);
+
+        JPanel secondCol = new JPanel();
+        secondCol.setLayout(new BoxLayout(secondCol, BoxLayout.Y_AXIS));
+        this.setupHeaderPanel("LinkerI Options", spriteDataAnimated);
+        secondCol.add(headerPanel);
+        firstRow.add(secondCol);
+
+
+        // ------ Second Column Config ----------------
+
+        JPanel maxPsi = new JPanel();
+//        maxPsi.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        maxPsi.add(new JLabel("Max Psi Anchor Scan Distance: "));
+        this.maxPsiAnchorDistanceTextField = new JTextField("");
+        this.maxPsiAnchorDistanceTextField.setMinimumSize(new Dimension(50,20));
+        maxPsi.add(maxPsiAnchorDistanceTextField);
+        maxPsi.setAlignmentX(RIGHT_ALIGNMENT);//0.0
+        maxPsi.setMaximumSize(new Dimension(500, 50));
+        maxPsi.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        secondCol.add(maxPsi);
+
+
+
+        JPanel minPsi = new JPanel();
+        minPsi.add(new JLabel("Min Psi Anchor Scan Distance: "));
+        this.minPsiAnchorDistanceTextField = new JTextField("");
+        this.minPsiAnchorDistanceTextField.setMinimumSize(new Dimension(50,20));
+        minPsi.add(minPsiAnchorDistanceTextField);
+        minPsi.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        minPsi.setAlignmentX(RIGHT_ALIGNMENT);//0.0
+        minPsi.setMaximumSize(new Dimension(500, 50));
+//        minPsi.setBackground(Color.YELLOW);
+        secondCol.add(minPsi);
+
+        this.chancePerKeyPressTextField = new JTextField();
+
+
+        JPanel tracerColorPanel = Config.getColorPickerPanel("tracer Color", PowerMode3.ConfigType.LINKER, settings, this.originalTracerColor);
+        this.tracerEnabledCheckBox = new JCheckBox("is enabled?", true);
+        JPanel tracerConfig = Config.populateEnabledColorPickerPanel(tracerColorPanel, tracerEnabledCheckBox);
+        secondCol.add(tracerConfig);
+
+        isCyclicEnabled = new JCheckBox("cyclic?");
+        this.maxCycleParticlesTextField = new JTextField();
+        JLabel maxCycleParticleLabel = new JLabel("Cycle Particles (1-5)");
+        JPanel cyclicPanel = new JPanel();
+        cyclicPanel.add(isCyclicEnabled);
+        cyclicPanel.add(maxCycleParticleLabel);
+        cyclicPanel.add(this.maxCycleParticlesTextField);
+        cyclicPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        cyclicPanel.setAlignmentX(RIGHT_ALIGNMENT);//0.0
+        cyclicPanel.setMaximumSize(new Dimension(500, 50));
+        secondCol.add(cyclicPanel);
+
+        this.chanceOfSpawnTextField = new JTextField();
+        this.maxAnchorsToUse = new JTextField();
+
 
 
 
         linkerSpriteConfigPanel = createConfigTable();
-//        firstCol.add(linkerSpriteConfigPanel);
 
-//        isCyclicEnabled = new JCheckBox("Is cyclic enabled?");
-//        firstCol.add(isCyclicEnabled);
-
-
-        this.add(mainPanel);
+        this.add(firstRow);
         this.add(linkerSpriteConfigPanel);
 
         this.loadValues();
@@ -220,22 +191,18 @@ public class LinkerConfig extends BaseConfigPanel {
 
 
     public JComponent createConfigTable(){
-
         JBTable table = new JBTable();
 
-
         table.setRowHeight(PREVIEW_SIZE);
-        LinkerTableModel tableModel = new LinkerTableModel(this);
-        table.setModel(tableModel);
+        table.setModel(new LinkerTableModel(this));
 
         table.setCellSelectionEnabled(false);
         table.setColumnSelectionAllowed(false);
         table.setRowSelectionAllowed(false);
-        table.getTableHeader().setReorderingAllowed(false);
 
         table.setPreferredScrollableViewportSize(new Dimension(400,
                 table.getRowHeight() * 3));
-
+        table.getTableHeader().setReorderingAllowed(false);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 //        table.setBackground(Color.yellow);
 //        table.setOpaque(true);
@@ -246,7 +213,7 @@ public class LinkerConfig extends BaseConfigPanel {
         sp.setOpaque(true);
 //        sp.setAlignmentX(Component.RIGHT_ALIGNMENT);
 //        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-//        table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
         TableColumnModel colModel=table.getColumnModel();
 
         colModel.getColumn(0).setPreferredWidth(PREVIEW_SIZE); //preview
@@ -395,7 +362,7 @@ public class LinkerConfig extends BaseConfigPanel {
         settings.setSpriteTypeProperty(PowerMode3.ConfigType.LINKER, "curve1Amount",
                 String.valueOf(curve1Amount));
 
-        settings.setSerializedSpriteDataAnimated(LinkerConfig.spriteDataAnimated, PowerMode3.ConfigType.LINKER);
+        settings.setSerializedSDAJsonInfo(LinkerConfig.spriteDataAnimated, PowerMode3.ConfigType.LINKER);
     }
 
 
@@ -530,25 +497,18 @@ class LinkerTableModel extends AbstractConfigTableModel {
     static ArrayList<SpriteDataAnimated> data = LinkerConfig.spriteDataAnimated;
 
 
-
     public static final String[] columnNames = new String[]{
             "preview",
             "enabled?",
             "scale",
             "speed",
-//            "weighted amount (1-100)",
-
             "set path",
             "path",
             "reset",
             "alpha",
             "offset",
             "repeat every"
-
     };
-
-
-
 
 
     private final Class[] columnClasses = new Class[]{
@@ -564,9 +524,10 @@ class LinkerTableModel extends AbstractConfigTableModel {
             Integer.class
     };
 
-    public LinkerTableModel(BaseConfigPanel config) {
+    public LinkerTableModel(BaseConfigJPanel config) {
         super(config);
     }
+
 
     @Override
     public int getRowCount() {

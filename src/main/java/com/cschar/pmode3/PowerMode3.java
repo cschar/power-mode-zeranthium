@@ -21,6 +21,9 @@ package com.cschar.pmode3;
 import com.cschar.pmode3.config.*;
 import com.cschar.pmode3.config.common.SoundData;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
+import com.cschar.pmode3.services.GitPackLoaderProgressMonitor;
+import com.cschar.pmode3.services.GitPackLoaderService;
+import com.cschar.pmode4.PowerMode3SettingsJComponent;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
@@ -37,20 +40,19 @@ import com.intellij.openapi.editor.actionSystem.TypedActionHandler;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.tasks.TaskManager;
 import com.intellij.ui.JBColor;
 import com.intellij.util.SmartList;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.OptionTag;
+import com.intellij.util.xmlb.annotations.Transient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
-import java.io.InputStream;
 import java.util.List;
 import java.util.*;
 
@@ -78,12 +80,176 @@ final public class PowerMode3 implements
     public static String NOTIFICATION_GROUP_DISPLAY_ID = "PowerMode - Zeranthium";
     private static final Logger LOGGER = Logger.getInstance(PowerMode3.class);
 
+    @com.intellij.util.xmlb.annotations.Transient
+    private ZJSONLoader JSONLoader;
+
+    @com.intellij.util.xmlb.annotations.Transient
+    public int dummyValue = 2;
+
+    public void PowerMode3(){
+        LOGGER.debug("Constructing PowerMode3...");
+        JSONLoader = new ZJSONLoader();
+        JSONLoader.getDefaultJSONTableConfigs();
+
+    }
+    @com.intellij.util.xmlb.annotations.Transient
+    public PowerMode3StartupActivity startup1;
+    @com.intellij.util.xmlb.annotations.Transient
+    public TypedActionHandler origHandler;
 
     @Override
     public void dispose() {
 //      See https://jetbrains.org/intellij/sdk/docs/basics/disposers.html for more details.
         LOGGER.debug("Disposing PowerMode3");
-        Disposer.dispose(particleContainerManager);
+        this.particleContainerManager = null;
+        //unload special action handlers for COPY/PASTE etc..
+        this.startup1.teardownActionEditorKeys();
+        this.startup1 = null;
+        this.BASIC_PARTICLE = null;
+
+
+        LOGGER.trace("Restoring original TypedAction");
+        //replace TypedActionHandler with original one
+        final TypedAction typedAction = TypedAction.getInstance();
+        typedAction.setupRawHandler(origHandler);
+
+        LOGGER.trace("Unloading MULTI_LAYER sprites...");
+        if(MultiLayerConfig.spriteDataAnimated != null) {
+            for (SpriteDataAnimated sda : MultiLayerConfig.spriteDataAnimated) {
+                sda.unloadImages();
+            }
+            MultiLayerConfig.spriteDataAnimated.clear();
+        }
+        MultiLayerConfig.spriteDataAnimated = null;
+        ParticleSpriteMultiLayer.spriteDataAnimated = null;
+
+
+
+        LOGGER.trace("Unloading LIZARD sprites...");
+        if(LizardConfig.spriteDataAnimated != null) {
+            for (SpriteDataAnimated sda : LizardConfig.spriteDataAnimated) {
+                sda.unloadImages();
+            }
+            LizardConfig.spriteDataAnimated.clear();
+        }
+        LizardConfig.spriteDataAnimated = null;
+        ParticleSpriteLizardAnchor.spriteDataAnimated = null;
+
+        LOGGER.trace("Unloading MULTI_LAYER_Chance sprites...");
+        if(MultiLayerChanceConfig.spriteDataAnimated != null) {
+            for (SpriteDataAnimated sda : MultiLayerChanceConfig.spriteDataAnimated) {
+                sda.unloadImages();
+            }
+            MultiLayerChanceConfig.spriteDataAnimated.clear();
+        }
+        MultiLayerChanceConfig.spriteDataAnimated = null;
+        ParticleSpriteMultiLayerChance.spriteDataAnimated = null;
+
+        LOGGER.trace("Unloading LINKER sprites...");
+        if(LinkerConfig.spriteDataAnimated != null) {
+            for (SpriteDataAnimated sda : LinkerConfig.spriteDataAnimated) {
+                sda.unloadImages();
+            }
+            LinkerConfig.spriteDataAnimated.clear();
+        }
+        LinkerConfig.spriteDataAnimated = null;
+        ParticleSpriteLinkerAnchor.spriteDataAnimated = null;
+
+
+        LOGGER.trace("Unloading DROSTE sprites...");
+        if(DrosteConfig.spriteDataAnimated != null) {
+            for (SpriteDataAnimated sda : DrosteConfig.spriteDataAnimated) {
+                sda.unloadImages();
+            }
+            DrosteConfig.spriteDataAnimated.clear();
+        }
+        DrosteConfig.spriteDataAnimated = null;
+        ParticleSpriteDroste.spriteDataAnimated = null;
+
+        LOGGER.trace("Unloading COPYPASTEVOID sprites...");
+        if(CopyPasteVoidConfig.spriteDataAnimated != null) {
+            for (SpriteDataAnimated sda : CopyPasteVoidConfig.spriteDataAnimated) {
+                sda.unloadImages();
+            }
+            CopyPasteVoidConfig.spriteDataAnimated.clear();
+        }
+        CopyPasteVoidConfig.spriteDataAnimated = null;
+        ParticleSpritePasteShape.spriteDataAnimated = null;
+
+        LOGGER.trace("Unloading LOCKEDLAYER sprites...");
+        if(LockedLayerConfig.spriteDataAnimated != null) {
+            for (SpriteDataAnimated sda : LockedLayerConfig.spriteDataAnimated) {
+                sda.unloadImages();
+            }
+            LockedLayerConfig.spriteDataAnimated.clear();
+        }
+        LockedLayerConfig.spriteDataAnimated = null;
+        ParticleSpriteLockedLayer.spriteDataAnimated = null;
+
+        LOGGER.trace("Unloading LANTERN sprites...");
+        if(LanternConfig.spriteDataAnimated != null) {
+            for (SpriteDataAnimated sda : LanternConfig.spriteDataAnimated) {
+                sda.unloadImages();
+            }
+            LanternConfig.spriteDataAnimated.clear();
+        }
+        LanternConfig.spriteDataAnimated = null;
+        ParticleSpriteLantern.spriteDataAnimated = null;
+
+        LOGGER.trace("Unloading TAP_ANIM sprites...");
+        if(TapAnimConfig.spriteDataAnimated != null) {
+            for (SpriteDataAnimated sda : TapAnimConfig.spriteDataAnimated) {
+                sda.unloadImages();
+            }
+            TapAnimConfig.spriteDataAnimated.clear();
+        }
+        TapAnimConfig.spriteDataAnimated = null;
+        ParticleSpriteTapAnim.spriteDataAnimated = null;
+
+
+        LOGGER.trace("Unloading SOUND data...");
+        if(SoundConfig.soundData != null) {
+            SoundConfig.soundData.clear();
+        }
+        //TODO: this is bugged method, static constructor rlies on sounds.size() not to be null
+        SoundConfigTableModel.emptySounds();
+        SoundConfig.soundData = null;
+
+        LOGGER.trace("Unloading MUSIC_TRIGGER data...");
+        if(MusicTriggerConfig.soundData != null) {
+            MusicTriggerConfig.soundData.clear();
+        }
+        MusicTriggerConfig.soundData = null;
+        MusicTriggerConfigTableModel.data = null;
+        MusicTriggerConfigTableModel.emptySounds();
+
+        LOGGER.trace("Unloading SPECIAL_ACTION_SOUND data...");
+        if(SpecialActionSoundConfig.soundData != null) {
+            SpecialActionSoundConfig.soundData.clear();
+        }
+        SpecialActionSoundConfig.soundData = null;
+        SpecialActionSoundConfigTableModel.emptySounds();
+
+
+
+
+
+        this.pathDataMap.clear();
+        this.pathDataMap = null;
+
+        this.configMap.clear();
+        this.configMap = null;
+
+        this.ui = null;
+        //Clear soundConfigTableMOdel sound playings...
+
+        LOGGER.trace("stopping all playing sounds...");
+        Sound.stopAll();
+
+//        Disposer.dispose(this.configurableUI2);
+//        this.configurableUI2 = null;
+        LOGGER.trace(" ===== Done disposing Powermode3 ======= ");
+
     }
 
 
@@ -123,6 +289,10 @@ final public class PowerMode3 implements
 
     public AnchorTypes anchorType = AnchorTypes.PARENTHESIS;
 
+    public static class CONF {
+        public static int MY_BASIC_PARTICLE = 1;
+        public static int MY_LIZARD = 2;
+    }
     public enum ConfigType {
         BASIC_PARTICLE,
 
@@ -144,70 +314,8 @@ final public class PowerMode3 implements
 
 
 
-    //TODO: Make non-static
-    //Populates the pathDataMap
-    static class JSONLoader {
-        private static HashMap<ConfigType, String> defaultJSONTables;
-
-        static {
-            JSONLoader.defaultJSONTables = new HashMap<ConfigType, String>() {{
-                put(ConfigType.LOCKED_LAYER, "LOCKED_LAYER.json");
-                put(ConfigType.COPYPASTEVOID, "COPYPASTEVOID.json");
-                put(ConfigType.DROSTE, "DROSTE.json");
-                put(ConfigType.LINKER, "LINKER.json");
-                put(ConfigType.LANTERN, "LANTERN.json");
-                put(ConfigType.LIZARD, "LIZARD.json");
-                put(ConfigType.MULTI_LAYER, "MULTI_LAYER.json");
-                put(ConfigType.MULTI_LAYER_CHANCE, "MULTI_LAYER_CHANCE.json");
-                put(ConfigType.TAP_ANIM, "TAP_ANIM.json");
-
-                put(ConfigType.MUSIC_TRIGGER, "MUSIC_TRIGGERS.json");
-                put(ConfigType.SOUND, "SOUND.json");
-                put(ConfigType.SPECIAL_ACTION_SOUND, "SPECIAL_ACTION_SOUND.json");
-
-            }};
-        }
-
-        public static void loadSingleJSONTableConfig(Map<ConfigType, SmartList<String>> pathDataMap, ConfigType t) {
-
-            String jsonFile = defaultJSONTables.get(t);
-            InputStream inputStream = JSONLoader.class.getResourceAsStream("/configJSON/" + jsonFile);
-
-            StringBuilder sb = new StringBuilder();
-            Scanner s = new Scanner(inputStream);
-            while (s.hasNextLine()) {
-                sb.append(s.nextLine());
-            }
-
-            SmartList<String> smartList = new SmartList<>();
-            try {
-                JSONObject jo = new JSONObject(sb.toString());
-
-                //TODO this is extra work, we go .json --> JSONObject --> string ( ..later --> JSONObject ---> pathData)
-                JSONArray tableData = jo.getJSONArray("data");
-                for (int i = 0; i < tableData.length(); i++) {
-                    smartList.add(tableData.getJSONObject(i).toString());
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            pathDataMap.put(t, smartList);
-        }
-
-
-        public static HashMap<ConfigType, SmartList<String>> getDefaultJSONTableConfigs() {
-            HashMap<ConfigType, SmartList<String>> pathDataMap = new HashMap<>();
-            for (ConfigType t : defaultJSONTables.keySet()) {
-                loadSingleJSONTableConfig(pathDataMap, t);
-            }
-            return pathDataMap;
-        }
-
-    }
-
-
     @com.intellij.util.xmlb.annotations.MapAnnotation
-    protected Map<ConfigType, SmartList<String>> pathDataMap = new HashMap<ConfigType, SmartList<String>>() {{
+    public Map<ConfigType, SmartList<String>> pathDataMap = new HashMap<ConfigType, SmartList<String>>() {{
         //populated by loading in .json files in resources folder.
     }};
 
@@ -287,6 +395,7 @@ final public class PowerMode3 implements
         //Setup SOUND handler
         final TypedAction typedAction2 = TypedAction.getInstance();
         TypedActionHandler rawHandler2 = typedAction2.getRawHandler();
+        this.origHandler = rawHandler2;
         typedAction2.setupRawHandler(
                 new TypedActionHandler() {
                     @Override
@@ -315,6 +424,7 @@ final public class PowerMode3 implements
     @Nullable
     @Override
     public PowerMode3 getState() {
+        LOGGER.debug("Powermode3: Getting State");
         //http://www.jetbrains.org/intellij/sdk/docs/basics/persisting_state_of_components.html#persistent-component-lifecycle
         return this;
     }
@@ -324,7 +434,9 @@ final public class PowerMode3 implements
         LOGGER.info("No State loaded previously");
         this.setParticleRGB(JBColor.darkGray.getRGB());
         this.setPackDownloadPath(FileSystemView.getFileSystemView().getDefaultDirectory().getPath());
-
+        if(JSONLoader == null){
+            JSONLoader =  new ZJSONLoader();
+        }
         pathDataMap = JSONLoader.getDefaultJSONTableConfigs();
 
         loadConfigData();
@@ -390,29 +502,52 @@ final public class PowerMode3 implements
             
             long startTime = System.nanoTime();
 
-            setUpdateProgress(progressIndicator, "Multi Layer", 0.1);
-            MultiLayerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MULTI_LAYER)));
-            setUpdateProgress(progressIndicator, "Multi Layer Chance", 0.2);
-            MultiLayerChanceConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MULTI_LAYER_CHANCE)));
+//            if(this.getSpriteTypeEnabled(ConfigType.MULTI_LAYER)) {
+                setUpdateProgress(progressIndicator, "Multi Layer", 0.1);
+                MultiLayerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MULTI_LAYER)));
+//            }
+//            if(this.getSpriteTypeEnabled(ConfigType.MULTI_LAYER_CHANCE)) {
+                setUpdateProgress(progressIndicator, "Multi Layer Chance", 0.2);
+                MultiLayerChanceConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.MULTI_LAYER_CHANCE)));
+//            }
 
-            setUpdateProgress(progressIndicator, "lizard", 0.3);
-            LizardConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LIZARD)));
-            setUpdateProgress(progressIndicator, "linker", 0.4);
-            LinkerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LINKER)));
-            setUpdateProgress(progressIndicator, "Droste", 0.5);
-            DrosteConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.DROSTE)));
-            setUpdateProgress(progressIndicator, "Copypaste", 0.6);
-            CopyPasteVoidConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.COPYPASTEVOID)));
-            setUpdateProgress(progressIndicator, "Locked Layer", 0.7);
-            LockedLayerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LOCKED_LAYER)));
-            setUpdateProgress(progressIndicator, "Lantern", 0.8);
-            LanternConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LANTERN)));
-            setUpdateProgress(progressIndicator, "Tap Anim", 0.85);
-            TapAnimConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.TAP_ANIM)));
+//            if(this.getSpriteTypeEnabled(ConfigType.LIZARD)) {
+                setUpdateProgress(progressIndicator, "lizard", 0.3);
+                LizardConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LIZARD)));
+//            }
+
+//            if(this.getSpriteTypeEnabled(ConfigType.LINKER)) {
+                setUpdateProgress(progressIndicator, "linker", 0.4);
+                LinkerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LINKER)));
+//            }
+//            if(this.getSpriteTypeEnabled(ConfigType.DROSTE)) {
+                setUpdateProgress(progressIndicator, "Droste", 0.5);
+                DrosteConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.DROSTE)));
+//            }
+//            if(this.getSpriteTypeEnabled(ConfigType.COPYPASTEVOID)) {
+                setUpdateProgress(progressIndicator, "Copypaste", 0.6);
+                CopyPasteVoidConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.COPYPASTEVOID)));
+//            }
+//            if(this.getSpriteTypeEnabled(ConfigType.LOCKED_LAYER)) {
+                setUpdateProgress(progressIndicator, "Locked Layer", 0.7);
+                LockedLayerConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LOCKED_LAYER)));
+//            }
+//            if(this.getSpriteTypeEnabled(ConfigType.LANTERN)) {
+                setUpdateProgress(progressIndicator, "Lantern", 0.8);
+                LanternConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.LANTERN)));
+//            }
+
+
+//            if(this.getSpriteTypeEnabled(ConfigType.TAP_ANIM)){
+                setUpdateProgress(progressIndicator, "Tap Anim", 0.85);
+                TapAnimConfig.setSpriteDataAnimated(this.deserializeSpriteDataAnimated(pathDataMap.get(ConfigType.TAP_ANIM)));
+//            }
 
             setUpdateProgress(progressIndicator, "Sounds", 0.9);
+            LOGGER.debug("======== LOADING SOUNDS ========= ");
             SoundConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.SOUND)));
             MusicTriggerConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.MUSIC_TRIGGER)));
+
             SpecialActionSoundConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.SPECIAL_ACTION_SOUND)));
 
             long endTime = System.nanoTime();
@@ -425,21 +560,29 @@ final public class PowerMode3 implements
             this.enabled = wasEnabled;
             this.isConfigLoaded = true;
 
-            PowerMode3ConfigurableUI2 ui = PowerMode3ConfigurableUI2.getInstance();
+            //TODO: replace this with a message or signal or listener or something..
+            // remove the static reference plumbing
             if (ui != null) {
-                
                 ui.updateConfigUIAfterAssetsAreLoaded(wasEnabled);
             }
         }
     }
 
+    @Transient
+    public PowerMode3SettingsJComponent ui;
+
     private void setUpdateProgress(ProgressIndicator progressIndicator, String info, double amt) {
+//        try {
+//            Thread.sleep(1000);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+
         String s = "Loading - " + info + " " + amt;
 //        progressIndicator.setText(s);
         progressIndicator.setText2(s);
         progressIndicator.setFraction(amt);
-        PowerMode3ConfigurableUI2.loadingLabel.setText(s);
-//        try {              Thread.sleep(3000);          } catch (InterruptedException e) {          }
+        PowerMode3SettingsJComponent.loadingLabel.setText(s);
 
     }
 
@@ -480,7 +623,7 @@ final public class PowerMode3 implements
 //        this.pathDataMap.put(configType, serialized);
 //    }
 
-    public void setSerializedSpriteDataAnimated(ArrayList<SpriteDataAnimated> spriteData, ConfigType configType) {
+    public void setSerializedSDAJsonInfo(ArrayList<SpriteDataAnimated> spriteData, ConfigType configType) {
         SmartList<String> serialized = new SmartList<>();
         for (SpriteDataAnimated d : spriteData) {
             serialized.add(d.toJSONObject().toString());

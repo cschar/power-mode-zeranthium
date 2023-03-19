@@ -14,7 +14,6 @@ public class HotKeyEnabledAction extends AnAction {
 
 
 
-
     public HotKeyEnabledAction() {
         super();
     }

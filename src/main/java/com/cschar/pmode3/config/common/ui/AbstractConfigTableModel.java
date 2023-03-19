@@ -1,7 +1,6 @@
 package com.cschar.pmode3.config.common.ui;
 
-import com.cschar.pmode3.config.BaseConfigPanel;
-import com.cschar.pmode3.config.DrosteConfig;
+import com.cschar.pmode3.config.BaseConfigJPanel;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDialog;
@@ -14,8 +13,8 @@ import java.util.ArrayList;
 
 public abstract class AbstractConfigTableModel  extends AbstractTableModel {
 
-    public BaseConfigPanel config;
-    public AbstractConfigTableModel(BaseConfigPanel config){
+    public BaseConfigJPanel config;
+    public AbstractConfigTableModel(BaseConfigJPanel config){
         this.config = config;
 
     }
@@ -36,7 +35,8 @@ public abstract class AbstractConfigTableModel  extends AbstractTableModel {
                 d.customPath = vfs[0].getPath();
                 d.setImageAnimated(vfs[0].getPath(), false);
 
-                DrosteConfig.calculateSize(data, this.config.headerSizeLabel);
+
+                this.config.calculateAssetSizesMB(data);
                 this.fireTableDataChanged();
             }
 
@@ -52,9 +52,11 @@ public abstract class AbstractConfigTableModel  extends AbstractTableModel {
             d.customPath = "";
             d.customPathValid = false;
 
-            DrosteConfig.calculateSize(data, this.config.headerSizeLabel);
+            this.config.calculateAssetSizesMB(data);
             this.fireTableDataChanged();
         });
         return resetButton;
     }
+
+
 }

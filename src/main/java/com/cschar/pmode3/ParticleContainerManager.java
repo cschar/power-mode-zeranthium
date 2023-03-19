@@ -20,6 +20,7 @@ import com.intellij.openapi.editor.ScrollingModel;
 import com.intellij.openapi.editor.VisualPosition;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
 import com.intellij.openapi.editor.event.EditorFactoryListener;
+import com.intellij.openapi.util.Disposer;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -37,16 +38,17 @@ import com.intellij.openapi.diagnostic.Logger;
  */
 public class ParticleContainerManager implements EditorFactoryListener, Disposable {
     private static final Logger LOGGER = Logger.getInstance(ParticleContainerManager.class);
-
+    private PowerMode3 settings;
+    /** the main render thread */
     private Thread thread;
     public static Map<Editor, ParticleContainer> particleContainers = new HashMap<>();
 //    private Map<Editor, ParticleContainer> particleContainers = new HashMap<>();
 
-    private PowerMode3 settings;
 
     public ParticleContainerManager(PowerMode3 settings) {
-        this.settings = settings;
+        Disposer.register(settings, this);
 
+        this.settings = settings;
         thread = new Thread(new Runnable() {
 
             @Override
@@ -55,19 +57,55 @@ public class ParticleContainerManager implements EditorFactoryListener, Disposab
                     for (ParticleContainer particleContainer : particleContainers.values()) {
                         particleContainer.updateParticles();
                     }
+
+                    //TODO: if internal disabled, delete all particle containers
+
                     try {
                         // 1000ms/60 = 16.6666666667      60 fps
                         Thread.sleep(17);
                     } catch (InterruptedException ignored) {
+                        LOGGER.debug("Thread interrupted ....");
                         //thread interrupted, shutdown
+                        break;
                     } catch (ConcurrentModificationException modified) {
                         // ignore it
                     }
                 }
+                LOGGER.debug("Done render thread....");
             }
 
         });
         thread.start();
+    }
+
+    @Override
+    public void dispose() {
+        LOGGER.debug("Disposing ParticleContainerManager....");
+        thread.interrupt();
+        try {
+            //wait for loop to finish so when we clear particleContainers below,
+            // they aren't being accessed.
+            thread.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        thread = null;
+        LOGGER.debug("clearing particle containers....");
+        resetAllContainers();
+        for(Editor key : particleContainers.keySet()){
+            ParticleContainer pc = particleContainers.get(key);
+            pc.cleanupReferences();
+            Disposer.dispose(pc);
+
+        }
+        particleContainers.clear();
+        particleContainers = null;
+    }
+
+    public static void resetAllContainers() {
+        for (ParticleContainer pc : particleContainers.values()) {
+            pc.resetParticles();
+        }
     }
 
     /**
@@ -75,14 +113,8 @@ public class ParticleContainerManager implements EditorFactoryListener, Disposab
     */
     public void bootstrapEditor(Editor editor){
 
-//        EditorFactoryEvent ev = new EditorFactoryEvent(EditorFactory.getInstance(), e);
-//        final Editor editor = ev.getEditor();
-
-        particleContainers.put(editor, new ParticleContainer(editor));
-        MyCaretListener cl = new MyCaretListener();
-        MyCaretListener.enabled = true;
-//        editor.getCaretModel().addCaretListener(cl);
-        editor.getCaretModel().addCaretListener(cl, this);
+        ParticleContainer pc = new ParticleContainer(editor);
+        particleContainers.put(editor, pc);
     }
 
 
@@ -90,19 +122,27 @@ public class ParticleContainerManager implements EditorFactoryListener, Disposab
     public void editorCreated(@NotNull EditorFactoryEvent event) {
         final Editor editor = event.getEditor();
         LOGGER.debug("Editor Created :" + editor);
-        particleContainers.put(editor, new ParticleContainer(editor));
-        MyCaretListener cl = new MyCaretListener();
-        MyCaretListener.enabled = true;
-        editor.getCaretModel().addCaretListener(cl, this);
+        ParticleContainer pc = new ParticleContainer(editor);
 
+        // Add to disposable, so when plugin disabled, we cascade into removing container
+//        Disposer.register(this, pc);
+
+        particleContainers.put(editor, pc);
+
+//        MyCaretListener cl = new MyCaretListener();
+//        MyCaretListener.enabled = true;
+//        editor.getCaretModel().addCaretListener(cl, this);
+//        editor.getCaretModel().addCaretListener(cl, pc);
     }
 
     @Override
     public void editorReleased(@NotNull EditorFactoryEvent event) {
         ParticleContainer pc = particleContainers.get(event.getEditor());
-        LOGGER.debug("releasing editor with particleContainer: " + pc);
+
         if(pc != null) {
+            LOGGER.debug("releasing editor with particleContainer: " + pc);
             pc.cleanupParticles();
+            Disposer.dispose(pc);
         }
         particleContainers.remove(event.getEditor());
     }
@@ -135,10 +175,7 @@ public class ParticleContainerManager implements EditorFactoryListener, Disposab
             Anchor[] anchors = getAnchors(editor, particleContainer);
             particleContainer.updateWithAnchors(point, anchors);
         }
-
-
     }
-
 
     public Anchor[] getAnchors(Editor editor, ParticleContainer particleContainer) {
 
@@ -198,19 +235,5 @@ public class ParticleContainerManager implements EditorFactoryListener, Disposab
 
 
         return points.toArray(new Anchor[points.size()]);
-    }
-
-    public void dispose() {
-        thread.interrupt();
-        resetAllContainers();
-        particleContainers.clear();
-        LOGGER.debug("Disposing ParticleContainerManager....");
-
-    }
-
-    public static void resetAllContainers() {
-        for (ParticleContainer pc : particleContainers.values()) {
-            pc.resetParticles();
-        }
     }
 }

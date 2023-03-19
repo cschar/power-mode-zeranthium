@@ -12,7 +12,7 @@ import java.util.ArrayList;
 /**
  * base config panel used to build out other particle effect configs
  */
-public abstract class BaseConfigPanel extends JPanel {
+public abstract class BaseConfigJPanel extends JPanel {
 
     public JPanel headerPanel;
     public JLabel headerSizeLabel;
@@ -28,7 +28,7 @@ public abstract class BaseConfigPanel extends JPanel {
 
 
         headerSizeLabel = new JLabel();
-        calculateSize(spriteDataAnimated, this.headerSizeLabel);
+        calculateAssetSizesMB(spriteDataAnimated);
         headerSizeLabel.setBackground(ZeranthiumColors.specialOption3);
         headerSizeLabel.setOpaque(true);
         headerSizeLabel.setBorder(JBUI.Borders.empty(5));
@@ -39,7 +39,7 @@ public abstract class BaseConfigPanel extends JPanel {
         headerPanel.setMaximumSize(new Dimension(500,100));
     }
 
-    public static void calculateSize(ArrayList<SpriteDataAnimated> spriteDataAnimated, JLabel headerSizeLabel){
+    public void calculateAssetSizesMB(ArrayList<SpriteDataAnimated> spriteDataAnimated){
         double totalSizeMB = 0;
         for(SpriteDataAnimated d : spriteDataAnimated){
             totalSizeMB += d.getAssetSizeMB();

@@ -22,7 +22,7 @@ import java.awt.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-public class TapAnimConfig extends BaseConfigPanel {
+public class TapAnimConfig extends BaseConfigJPanel {
 
     JPanel mainPanel;
     PowerMode3 settings;
@@ -32,17 +32,17 @@ public class TapAnimConfig extends BaseConfigPanel {
 
     private JComponent spriteConfigPanel;
     public final static int PREVIEW_SIZE = 120;
-    static ArrayList<SpriteDataAnimated> spriteDataAnimated;
+    public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
+    private JPanel firstRow;
 
     public TapAnimConfig(PowerMode3 settings){
         this.settings = settings;
 
-
+        this.setMaximumSize(new Dimension(1000,700));
         this.setLayout(new GridLayout(1,1));
 
 
-
-        JPanel firstRow =  new JPanel();
+        firstRow =  new JPanel();
         firstRow.setLayout(new BoxLayout(firstRow, BoxLayout.PAGE_AXIS));
         firstRow.setMaximumSize(new Dimension(1000,300));
 
@@ -50,6 +50,7 @@ public class TapAnimConfig extends BaseConfigPanel {
         firstRow.add(headerPanel);
 
 
+        //add config panel directly in first row to eliminate any spacing from GRID based layout.
         spriteConfigPanel = createConfigTable();
         firstRow.add(spriteConfigPanel);
         this.add(firstRow);
@@ -134,7 +135,7 @@ public class TapAnimConfig extends BaseConfigPanel {
 
     public void saveValues() throws ConfigurationException {
 
-        settings.setSerializedSpriteDataAnimated(TapAnimConfig.spriteDataAnimated, PowerMode3.ConfigType.TAP_ANIM);
+        settings.setSerializedSDAJsonInfo(TapAnimConfig.spriteDataAnimated, PowerMode3.ConfigType.TAP_ANIM);
     }
 
 
@@ -142,6 +143,10 @@ public class TapAnimConfig extends BaseConfigPanel {
     public static void setSpriteDataAnimated(ArrayList<SpriteDataAnimated> data){
         spriteDataAnimated = data;
         ParticleSpriteTapAnim.spriteDataAnimated = data;
+    }
+
+    public static void disposeSpriteDataAnimated(){
+
     }
 
 
@@ -217,7 +222,7 @@ class TapAnimTableModel extends AbstractConfigTableModel {
             Boolean.class
     };
 
-    public TapAnimTableModel(BaseConfigPanel config) {
+    public TapAnimTableModel(BaseConfigJPanel config) {
         super(config);
     }
 

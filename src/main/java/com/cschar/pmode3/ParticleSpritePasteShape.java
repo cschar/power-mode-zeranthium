@@ -33,13 +33,6 @@ public class ParticleSpritePasteShape extends Particle{
 
     private ArrayList<BufferedImage> sprites = new ArrayList<>();
 
-    static {
-//        sprites = new ArrayList<BufferedImage>();
-//        for(int i=1; i <= 1; i++){
-//            sprites.add(ParticleUtils.loadSprite(String.format("/blender/droste2/0%03d.png", i)));
-//        }
-
-    }
 
     private int frame = 0;
     private float maxAlpha;

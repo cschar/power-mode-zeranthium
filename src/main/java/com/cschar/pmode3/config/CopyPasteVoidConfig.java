@@ -18,7 +18,7 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class CopyPasteVoidConfig extends BaseConfigPanel{
+public class CopyPasteVoidConfig extends BaseConfigJPanel {
 
 
     PowerMode3 settings;
@@ -28,7 +28,7 @@ public class CopyPasteVoidConfig extends BaseConfigPanel{
     private JCheckBox fadeColorEnabledCheckBox;
 
     private static Color fadeColor = Color.GREEN;
-    static ArrayList<SpriteDataAnimated> spriteDataAnimated;
+    public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
 
     public CopyPasteVoidConfig(PowerMode3 settings){
         this.settings = settings;
@@ -160,7 +160,7 @@ public class CopyPasteVoidConfig extends BaseConfigPanel{
         settings.setSpriteTypeProperty(PowerMode3.ConfigType.COPYPASTEVOID, "fadeAmount",
                 String.valueOf(fadeAmount));
 
-        settings.setSerializedSpriteDataAnimated(CopyPasteVoidConfig.spriteDataAnimated, PowerMode3.ConfigType.COPYPASTEVOID);
+        settings.setSerializedSDAJsonInfo(CopyPasteVoidConfig.spriteDataAnimated, PowerMode3.ConfigType.COPYPASTEVOID);
     }
 
 
@@ -223,7 +223,7 @@ class CopyPasteVoidTableModel extends AbstractConfigTableModel {
             Boolean.class
     };
 
-    public CopyPasteVoidTableModel(BaseConfigPanel config) {
+    public CopyPasteVoidTableModel(BaseConfigJPanel config) {
         super(config);
     }
 

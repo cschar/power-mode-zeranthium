@@ -22,6 +22,13 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import com.intellij.openapi.diagnostic.Logger;
 
+/**
+ * <pre>
+ * Represents a Row in a Sprite Table
+ *
+ * Also contains ImageData for that Sprite Sequence
+ * </pre>
+ */
 public class SpriteDataAnimated  extends SpriteData {
     private static final Logger LOGGER = Logger.getInstance( SpriteDataAnimated.class.getName() );
 
@@ -32,7 +39,7 @@ public class SpriteDataAnimated  extends SpriteData {
 
     public int previewSize=60;
 
-
+    //flush these images on dispose
     public ArrayList<BufferedImage> images = new ArrayList<>();
 //    public ArrayList<ImageIcon> previewIcons = new ArrayList<>();
 
@@ -42,11 +49,14 @@ public class SpriteDataAnimated  extends SpriteData {
     private double MAX_TOTAL_GB_SIZE = 1.0;
 
     private double totalLoadedAssetSizeMB =0;
+    private FilenameFilter IMAGE_FILTER;
+    private String currentPath = "";
 
     public SpriteDataAnimated(int previewSize, boolean enabled, float scale, int speedRate, String defaultPath, String customPath,
                               boolean isCyclic, int val2, float alpha, int val1, int val3) {
         super(enabled, scale, val1, defaultPath, customPath,false);
 
+//        this.image.flush();
         this.previewSize = previewSize;
         this.speedRate = speedRate;
         this.isCyclic = isCyclic;
@@ -61,31 +71,11 @@ public class SpriteDataAnimated  extends SpriteData {
 //        if(this.val2 > 20) this.val2 = 20;
 
 
-        if(customPath.equals("")){
-            setImageAnimated(defaultPath, true);
-//            customPathValid = true; //only valid if empty path
-        }
-        else{
-            setImageAnimated(customPath, false);
-        }
-
-    }
-
-
-    public void setImageAnimated(String path, boolean isResource){
-        ImageIcon imageIcon;
-
-
-
-        //https://stackoverflow.com/questions/11300847/load-and-display-all-the-images-from-a-folder
-
-        // array of supported extensions (use a List if you prefer)
         final String[] EXTENSIONS = new String[]{
                 "png" // and other formats you need
         };
         // filter to identify images based on their extensions
-        final FilenameFilter IMAGE_FILTER = new FilenameFilter() {
-
+        IMAGE_FILTER = new FilenameFilter() {
             @Override
             public boolean accept(final File dir, final String name) {
                 for (final String ext : EXTENSIONS) {
@@ -97,10 +87,40 @@ public class SpriteDataAnimated  extends SpriteData {
             }
         };
 
+        if(customPath.equals("")){
+            setImageAnimated(defaultPath, true);
+        }else{
+            setImageAnimated(customPath, false);
+        }
+    }
+
+
+    public void loadImages(){
+        if(customPath.equals("")){
+            setImageAnimated(defaultPath, true);
+        }else{
+            setImageAnimated(customPath, false);
+        }
+    }
+
+    public void unloadImages(){
+        LOGGER.trace("Unloading " + this.images.size() + " images from path: " + this.currentPath);
+        for(BufferedImage i : this.images){
+            i.flush();
+        }
+        this.images.clear();
+
+    }
+
+
+    public void setImageAnimated(String path, boolean isResource){
+        currentPath = path;
+        //https://stackoverflow.com/questions/11300847/load-and-display-all-the-images-from-a-folder
+        // array of supported extensions (use a List if you prefer)
+
+        //If its part of the built-in blender resource images...
         if(isResource){
             images = new ArrayList<BufferedImage>();
-//            previewIcons = new ArrayList<ImageIcon>();
-
 
             // File representing the folder that you select using a FileChooser
             final File dir = new File(String.valueOf(this.getClass().getResource(path)));
@@ -111,55 +131,45 @@ public class SpriteDataAnimated  extends SpriteData {
             //load in images, then determine each ones filesize
             for(int i = 0; i<MAX_NUM_DEFAULT_FILES; i++){
                 String tmpPath = path + String.format("/0%03d.png", i);
+                URL imageURL = this.getClass().getResource(tmpPath);
+                if(imageURL == null){
+                    continue;
+                }
 
-                    URL imageURL = this.getClass().getResource(tmpPath);
-                    if(imageURL == null){
-                        continue;
-//                        break;
-                    }
-
-
-                    BufferedImage loadedImage = null;
-                    try {
-
-                        loadedImage  = ImageIO.read(imageURL);
-
-                        // this method is not working..
+                BufferedImage loadedImage = null;
+                try {
+                    loadedImage  = ImageIO.read(imageURL);
+                    // this method is not working..
 //                        DataBuffer dataBuffer = loadedImage.getRaster().getDataBuffer();
 ////                        double sizeBytes = ((double) dataBuffer.getSize());
 //                        //getSize --> size in bits
 //                        int sizeBytes = dataBuffer.getSize() * DataBuffer.getDataTypeSize(dataBuffer.getDataType()) / 8;
 //                        double sizeMB = sizeBytes / (1024.0 * 1024.0);
-                        //files inside jar alway return length = 0 ! ! ! ! ! ! !
+                    //files inside jar alway return length = 0 ! ! ! ! ! ! !
 //                        File f = new File(String.valueOf(imageURL));
+                    InputStream tmpStream = imageURL.openStream();
+                    int length = tmpStream.available();  //Not supposed to work in all VMs... https://stackoverflow.com/a/18237279/5198805
+                    tmpStream.close();
+                    double sizeMB = length / 1024.0 / 1024.0;
+                    totalSizeMBResources += sizeMB;
 
-                        InputStream tmpStream = imageURL.openStream();
-                        int length = tmpStream.available();  //Not supposed to work in all VMs... https://stackoverflow.com/a/18237279/5198805
-                        tmpStream.close();
-                        double sizeMB = length / 1024.0 / 1024.0;
-
-
-
-                        totalSizeMBResources += sizeMB;
-//                        
-
-                    } catch (IOException ex) {
-                        LOGGER.error(ex.toString(), ex );
-                    }
-
-//                    BufferedImage loadedImage = ParticleUtils.loadSprite(tmpPath);
-                    if(loadedImage != null) {
-                        this.images.add(loadedImage);
-                    }
-
-
+                } catch (IOException ex) {
+                    LOGGER.error(ex.toString(), ex );
+                }
+                if(loadedImage != null) {
+                    this.images.add(loadedImage);
+                }
             }
+
+
             this.image = this.images.get(this.images.size()-1);
             Image previewImage = image.getScaledInstance(previewSize, previewSize, Image.SCALE_SMOOTH);
             this.previewIcon = new ImageIcon(previewImage);
 
             this.totalLoadedAssetSizeMB = totalSizeMBResources;
 //            LOGGER.info(String.format("Loaded assets with size MB: %.2f",this.totalLoadedAssetSizeMB));
+
+//            LOGGER.debug(path);
             LOGGER.debug(String.format("Loaded default resource %s    size MB: %.2f", dir.getPath(), this.totalLoadedAssetSizeMB));
 
         }else{
@@ -193,28 +203,18 @@ public class SpriteDataAnimated  extends SpriteData {
                             break;
                         }
 
-                        BufferedImage img = null;
-                        img = ImageIO.read(f);
+                        BufferedImage img = ImageIO.read(f);
                         newImages.add(img);
                     }
 
                 } catch (final IOException e) {
                     LOGGER.warn("error loading image directory: " + path);
-                    setImageAnimated(this.defaultPath, true);
+                    LOGGER.debug("falling back to default path: " + this.defaultPath);
+                    this.setImageAnimated(this.defaultPath, true);
                     customPathValid = false;
                     return;
                 }
 
-                //Load previewIcons
-//                for (final File f : files) {
-//
-//                    imageIcon = new ImageIcon(f.getPath());
-//                    Image image = imageIcon.getImage(); // transform it
-//                    Image newimg = image.getScaledInstance(previewSize, previewSize, Image.SCALE_SMOOTH); // scale it the smooth way
-//                    newPreviewIcons.add(new ImageIcon(newimg));
-//                }
-
-//                if(newPreviewIcons.size() == 0 || newImages.size() == 0){
                 if(newImages.size() == 0){
                     LOGGER.info("No images found in directory: " + path);
                     this.customPathValid = false;
@@ -222,24 +222,17 @@ public class SpriteDataAnimated  extends SpriteData {
 ;
                     this.image = newImages.get(newImages.size()-1);
                     this.images = newImages;
-
                     this.customPathValid = true;
-//                    this.previewIcons = newPreviewIcons;
-//                    this.previewIcon = newPreviewIcons.get(0);
-//                    newPreviewIcons.add(new ImageIcon(newimg))
+
                     Image previewImage = image.getScaledInstance(previewSize, previewSize, Image.SCALE_SMOOTH); // scale it the smooth way
                     this.previewIcon = new ImageIcon(previewImage);
 
                     this.totalLoadedAssetSizeMB = totalSizeGB * 1024;
+
                     LOGGER.debug("Loaded customPath directory: " + path + "   total size (MB): " + this.totalLoadedAssetSizeMB);
                 }
-
-
             }
         }
-
-
-
     }
 
     public double getAssetSizeMB(){
@@ -315,8 +308,6 @@ public class SpriteDataAnimated  extends SpriteData {
 
         return sd;
     }
-
-
 
     public static Object safeUnwrap( Object myDefault, String inputValue, JSONObject jo) {
         try {

@@ -31,23 +31,12 @@ import java.util.Map;
 
 public class ParticleSpriteMultiLayerChance extends Particle{
 
-
-    static {
-
-    }
-
     public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
     private BufferedImage sprite;
-
-
     public static int targetX;
     public static int targetY;
 
     private int frame = 0;
-
-
-
-
 
 
     //editor --> ring_num, # of particles

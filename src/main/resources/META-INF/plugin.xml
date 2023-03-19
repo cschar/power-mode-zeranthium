@@ -1,7 +1,7 @@
 <!--https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html-->
-<idea-plugin url="https://github.com/cschar/power-mode-zeranthium"
-             require-restart="true"
->
+<!--<idea-plugin url="https://github.com/cschar/power-mode-zeranthium"  require-restart="true" >-->
+<idea-plugin url="https://github.com/cschar/power-mode-zeranthium"  >
+
     <id>com.cschar.power.mode3.zeranthium</id>
     <name>Power Mode - Zeranthium</name>
     <vendor email="codyscharfe@gmail.com">cody scharfe</vendor>
@@ -16,18 +16,14 @@
     <!--    https://www.jetbrains.org/intellij/sdk/docs/basics/plugin_structure/plugin_configuration_file.html -->
     <extensions defaultExtensionNs="com.intellij">
         <!-- inserts the a GUI into the settings menu under "appearance -> Power Mode - Zeranthium" -->
-
-        <applicationConfigurable groupId="appearance"
-                                 groupWeight="20"
-                                 id="power.mode3.zeranthium"
-
-                                 instance="com.cschar.pmode3.PowerMode3Configurable2"
-                                 />
-<!--        https://github.com/JetBrains/intellij-sdk-code-samples/blob/main/settings/src/main/resources/META-INF/plugin.xml-->
-<!--        <applicationService serviceImplementation="com.cschar.pmode3.PowerMode3"/>-->
+        <applicationConfigurable
+                parentId="appearance"
+                groupWeight="20"
+                instance="com.cschar.pmode4.AppSettingsConfigurable"
+                id="power.mode3.zeranthium"
+                displayName="PowerMode Zeranthium"/>
 
         <applicationService serviceImplementation="com.cschar.pmode3.services.GitPackLoaderService"/>
-
         <applicationService serviceInterface="com.cschar.pmode3.services.MemoryMonitorService"
                             serviceImplementation="com.cschar.pmode3.services.MemoryMonitorServiceImpl"
                             headlessImplementation="com.cschar.pmode3.services.MemoryMonitorServiceHeadless"

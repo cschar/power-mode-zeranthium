@@ -20,9 +20,9 @@ import java.awt.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-public class LanternConfig extends BaseConfigPanel {
+public class LanternConfig extends BaseConfigJPanel {
 
-    JPanel topPanel;
+    JPanel firstRow;
     PowerMode3 settings;
 
 
@@ -45,29 +45,28 @@ public class LanternConfig extends BaseConfigPanel {
 
 
     private JComponent spriteConfigPanel;
-    static ArrayList<SpriteDataAnimated> spriteDataAnimated;
+    public static ArrayList<SpriteDataAnimated> spriteDataAnimated;
 
 
     public LanternConfig(PowerMode3 settings){
         this.settings = settings;
 
-//        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-//        this.setMaximumSize(new Dimension(1000,300));
-//        this.setLayout(new GridLayout(2,0)); //as many rows as necessary
-        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        this.setMaximumSize(new Dimension(1000,700));
 
-        topPanel = new JPanel();
-        topPanel.setMaximumSize(new Dimension(1000,500));
-        topPanel.setLayout(new GridLayout(1,2));
+        this.setLayout(new GridLayout(2,1));
+
+        firstRow = new JPanel();
+        firstRow.setMaximumSize(new Dimension(1000,500));
+        firstRow.setLayout(new GridLayout(1,2));
         JPanel firstCol = new JPanel();
         firstCol.setLayout(new BoxLayout(firstCol, BoxLayout.PAGE_AXIS));
-        topPanel.add(firstCol);
+        firstRow.add(firstCol);
 
         JPanel secondCol = new JPanel();
         secondCol.setLayout(new BoxLayout(secondCol, BoxLayout.Y_AXIS));
         this.setupHeaderPanel("Lantern Options", spriteDataAnimated);
         secondCol.add(headerPanel);
-        topPanel.add(secondCol);
+        firstRow.add(secondCol);
 
 //        JPanel lizardColorPanel = Config.getColorPickerPanel("Lizard Color", PowerMode3.SpriteType.LIZARD, settings, Color.GREEN);
 //        secondCol.add(lizardColorPanel);
@@ -138,7 +137,7 @@ public class LanternConfig extends BaseConfigPanel {
         spriteConfigPanel = createConfigTable();
 
 
-        this.add(topPanel);
+        this.add(firstRow);
         this.add(spriteConfigPanel);
 
         this.loadValues();
@@ -323,7 +322,7 @@ public class LanternConfig extends BaseConfigPanel {
         ParticleSpriteLinkerAnchor.MAX_CYCLE_PARTICLES = LinkerConfig.MAX_CYCLE_PARTICLES(settings);
 
 
-        settings.setSerializedSpriteDataAnimated(LanternConfig.spriteDataAnimated,
+        settings.setSerializedSDAJsonInfo(LanternConfig.spriteDataAnimated,
                                                  PowerMode3.ConfigType.LANTERN);
     }
 
@@ -410,7 +409,7 @@ class LanternTableModel extends AbstractConfigTableModel {
             Integer.class
     };
 
-    public LanternTableModel(BaseConfigPanel config) {
+    public LanternTableModel(BaseConfigJPanel config) {
         super(config);
     }
 
