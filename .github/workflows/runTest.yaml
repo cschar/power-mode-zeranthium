@@ -86,7 +86,7 @@ jobs:
         run: |
           pwd
           ls
-          ./gradlew runIdeForUiTests
+          ./gradlew runIdeForUiTests &
 #        run: start gradlew.bat :runIdeForUiTests
 
       - name: Wait for Idea started
