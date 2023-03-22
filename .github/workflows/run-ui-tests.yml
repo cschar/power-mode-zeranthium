@@ -61,5 +61,6 @@ jobs:
       - name: Tests IDE
         env:
           TEST_TYPE: UI
+          DISPLAY: ":99:"
         run: |
           ./gradlew :test --info --tests "com.cschar.pmode3.uitest.OpenSettingsJavaTest.opens_project"
