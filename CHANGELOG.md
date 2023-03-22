@@ -3,9 +3,10 @@
 # power-mode-zeranthium Changelog
 
 ## [Unreleased]
-- 2023.1 eap update
+- 2023.1 update
 - basic particles now show on first time startup
 - disable lizard on first time startup
+
 
 ## [3.1.0] - 2023-03-13
 - 2022.3 update

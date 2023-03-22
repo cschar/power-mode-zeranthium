@@ -31,7 +31,7 @@ public class GitPackLoaderService implements Disposable {
     {
 //        
         runningMonitors = new HashMap<>();
-        backgroundTasks = new HashMap<>();
+//        backgroundTasks = new HashMap<>();
     }
 
 

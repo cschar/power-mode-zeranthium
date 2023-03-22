@@ -31,8 +31,8 @@
 //
 //
 //
-// Test Failing with similar error
-// https://youtrack.jetbrains.com/issue/IDEA-313397
+//// Test Failing with similar error
+//// https://youtrack.jetbrains.com/issue/IDEA-313397
 //
 ////The BasePlatformTestcase seems to be from Junit3... so gradle's test task, using Junit4 Vintage enigne can't seem to run it...
 ////public class PowerMode3Test extends BasePlatformTestCase {

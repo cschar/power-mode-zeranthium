@@ -340,26 +340,26 @@ public class GitPackLoaderJComponent extends JPanel{
                 LOGGER.debug("launching Git Clone task");
 
                 //TODO Add this task to a hashmap to keep track of it.
-                Task.Modal modalTask2 = new Task.Modal(null, downloadBUtton,
-                        "Cloning "+customRepoName+"...",
-                        true) {
-//                Task.Backgroundable bgTask2 = new Task.Backgroundable(null,
-//                                                                        "Cloning "+customRepoName+"...",
-//                                                                true, null) {
+//                Task.Modal task = new Task.Modal(null, downloadBUtton,
+//                        "Cloning "+customRepoName+"...",
+//                        true) {
+                Task.Backgroundable task = new Task.Backgroundable(null,
+                                                                        "Cloning "+customRepoName+"...",
+                                                                true, null) {
 
                     @Override
                     public void onCancel() {
                         super.onCancel();
                         GitPackLoaderService gitService = ApplicationManager.getApplication().getService(GitPackLoaderService.class);
                         gitService.runningMonitors.remove(customRepoName);
-                        gitService.backgroundTasks.remove(customRepoName);
+//                        gitService.backgroundTasks.remove(customRepoName);
                     }
 
                     @Override
                     public void onFinished() {
                         GitPackLoaderService gitService = ApplicationManager.getApplication().getService(GitPackLoaderService.class);
                         gitService.runningMonitors.remove(customRepoName);
-                        gitService.backgroundTasks.remove(customRepoName);
+//                        gitService.backgroundTasks.remove(customRepoName);
                         super.onFinished();
                     }
 
@@ -403,7 +403,7 @@ public class GitPackLoaderJComponent extends JPanel{
                 LOGGER.trace("Launching cloning task  from thread " + Thread.currentThread().toString());
 //                ProgressManager.getInstance().run(bgTask2);
                 //                gitService.backgroundTasks.put(customRepoName, bgTask2);
-                ProgressManager.getInstance().run(modalTask2);
+                ProgressManager.getInstance().run(task);
 
 
 
