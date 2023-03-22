@@ -99,7 +99,7 @@ public class OpenSettingsJavaTest {
         System.out.println("found Ideaframe, waiting to exit dumb mode...");
         waitFor(ofMinutes(5), () -> !idea.isDumbMode());
 
-        System.out.println("opening settings..");
+        System.out.println("opening settings...");
 
         if (remoteRobot.isMac()) {
             keyboard.hotKey(VK_META, VK_COMMA);
