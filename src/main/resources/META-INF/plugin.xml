@@ -21,7 +21,7 @@
                 groupWeight="20"
                 instance="com.cschar.pmode4.AppSettingsConfigurable"
                 id="power.mode3.zeranthium"
-                displayName="PowerMode Zeranthium"/>
+                displayName="Power Mode - Zeranthium"/>
 
         <applicationService serviceImplementation="com.cschar.pmode3.services.GitPackLoaderService"/>
         <applicationService serviceInterface="com.cschar.pmode3.services.MemoryMonitorService"

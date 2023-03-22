@@ -21,10 +21,7 @@ add in Help > diagnostic Tools > Debug Log Settings
 #com.cschar.pmode3:all     (including # at start)
 
 
-# upgrading gradle
-https://tomgregory.com/how-to-update-gradle/
-./gradlew wrapper --gradle-version 7.6.1
-./gradlew --version
+
 
 # logo design
 

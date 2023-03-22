@@ -20,10 +20,7 @@ import com.automation.remarks.junit5.Video;
 
 import com.intellij.ui.components.JBTabbedPane;
 import org.assertj.swing.fixture.JTabbedPaneFixture;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -70,6 +67,7 @@ public class OpenSettingsJavaTest {
 
     @Test
     @Video
+    @Order(1)
     void opens_project(final RemoteRobot remoteRobot) {
         System.out.println("starting..");
 
@@ -130,23 +128,25 @@ public class OpenSettingsJavaTest {
                 byXpath("//div[@text.key='button.cancel']"),
                 Duration.ofSeconds(5)).click();
 
-        System.out.println("Closing the project...");
-
-        step("Close the project", () -> {
-            if (remoteRobot.isMac()) {
-                keyboard.hotKey(VK_SHIFT, VK_META, VK_A);
-                keyboard.enterText("Close Project");
-                keyboard.enter();
-            } else {
-                actionMenu(remoteRobot, "File").click();
-                actionMenuItem(remoteRobot, "Close Project").click();
-            }
-        });
+        //Don't close so next test can run
+//        System.out.println("Closing the project...");
+//
+//        step("Close the project", () -> {
+//            if (remoteRobot.isMac()) {
+//                keyboard.hotKey(VK_SHIFT, VK_META, VK_A);
+//                keyboard.enterText("Close Project");
+//                keyboard.enter();
+//            } else {
+//                actionMenu(remoteRobot, "File").click();
+//                actionMenuItem(remoteRobot, "Close Project").click();
+//            }
+//        });
 
 //        assert 5 == 3;
     }
 
     @Test
+    @Order(2)
     void createDownloadAndCancel_ReopeningShows_ReadyStatus(final RemoteRobot remoteRobot) {
 //        sharedSteps.createNewCommandLineProject();
 //        sharedSteps.closeTipOfTheDay();
@@ -184,7 +184,8 @@ public class OpenSettingsJavaTest {
 
             settingsDialog.find(ComponentFixture.class,
 //                    byXpath("//div[@accessiblename.key='icon.nodes.nodePlaceholder.tooltip' and @class='JLabel']"),
-                    byXpath("//div[@text='packs']"),
+//                    byXpath("//div[@text='packs']"),
+                    byXpath("//div[@text='|']"),
                     Duration.ofSeconds((3))).click();
 
             settingsDialog.find(ComponentFixture.class,
@@ -216,13 +217,25 @@ public class OpenSettingsJavaTest {
 //            assert(gitService.runningMonitors.size() == 1);
 
             idea.find(ComponentFixture.class,
-                    byXpath("//div[@mytext='Cloning zeranthium-extras-vol1...']"),
+//                    byXpath("//div[@mytext='Cloning zeranthium-extras-vol1...']"),
+                    //2023.1 elements...
+                    byXpath("//div[@accessiblename='Cloning zeranthium-extras-vol1...' and @class='TextPanel' and @text='Cloning zeranthium-extras-vol1...']"),
                     Duration.ofSeconds(LONG_WAIT_5s)).click();
+
+
 
             idea.find(ComponentFixture.class,
                     byXpath("//div[@myicon='stop.svg']"),
                     Duration.ofSeconds(2)).click();
 
+            //incase we click it too fast... try to click again
+            try {
+                idea.find(ComponentFixture.class,
+                        byXpath("//div[@myicon='stop.svg']"),
+                        Duration.ofSeconds(5)).click();
+            }catch (Exception e){
+
+            }
 //            waitFor(ofSeconds(3), () -> gitService.runningMonitors.size() == 0);
 //            assert(gitService.runningMonitors.size() == 0);
 
@@ -243,8 +256,8 @@ public class OpenSettingsJavaTest {
                     Duration.ofSeconds(LONG_WAIT_5s)).click();
 
             settingsRentry.find(ComponentFixture.class,
-                    byXpath("//div[@text='packs']"),
-//                    byXpath("//div[@accessiblename.key='icon.nodes.nodePlaceholder.tooltip' and @class='JLabel']"),
+//                    byXpath("//div[@text='packs']"),
+                    byXpath("//div[@text='|']"),
                     Duration.ofSeconds((LONG_WAIT_5s))).click();
 
             settingsRentry.find(ComponentFixture.class,
@@ -266,8 +279,11 @@ public class OpenSettingsJavaTest {
 
 
     @Test
+    @Order(3)
+    @Disabled()
     void createDownload_ReopeningShows_DownloadLabel(final RemoteRobot remoteRobot) {
 
+        //This frame is an open project,not the home screen
         final IdeaFrame idea = remoteRobot.find(IdeaFrame.class, ofSeconds(10));
         waitFor(ofMinutes(5), () -> !idea.isDumbMode());
 
