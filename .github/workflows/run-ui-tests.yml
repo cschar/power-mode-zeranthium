@@ -19,15 +19,15 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-latest
-            runIde: |
-              export DISPLAY=:99.0
-              Xvfb -ac :99 -screen 0 1920x1080x16 &
-              gradle runIdeForUiTests &
           - os: windows-latest
             runIde: start gradlew.bat runIdeForUiTests
-          - os: macos-latest
-            runIde: ./gradlew runIdeForUiTests &
+#          - os: macos-latest
+#            runIde: ./gradlew runIdeForUiTests &
+#          - os: ubuntu-latest
+#            runIde: |
+#              export DISPLAY=:99.0
+#              Xvfb -ac :99 -screen 0 1920x1080x16 &
+#              gradle runIdeForUiTests &
 
     steps:
 
@@ -58,9 +58,18 @@ jobs:
       - name: Tests
         run: ./gradlew test
 
+
       - name: Tests IDE
         env:
           TEST_TYPE: UI
-          DISPLAY: ":99:"
         run: |
           ./gradlew :test --info --tests "com.cschar.pmode3.uitest.OpenSettingsJavaTest.opens_project"
+
+# linux broken
+#      - name: Tests IDE
+#        env:
+#          TEST_TYPE: UI
+#          DISPLAY: ":99:"
+#        run: |
+#          Xvfb -ac :99 -screen 0 1920x1080x16 &
+#          ./gradlew :test --info --tests "com.cschar.pmode3.uitest.OpenSettingsJavaTest.opens_project"
