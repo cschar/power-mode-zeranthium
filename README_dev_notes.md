@@ -6,7 +6,11 @@
  1. Change versions
     - 1.1. make actual change in gradle.properties:
         - 1.1.1  change pluginVersion
-        - 1.1.2  update pluginUntilBuild
+        - 1.1.2  update pluginSinceBuild & pluginUntilBuild
+                  ex: to cover 2023.2 -> 2024.1.*
+                  pluginSinceBuild = 232
+                  pluginUntilBuild = 241.*
+                  
         - 1.1.3  update pluginVerifierIdeVersions
 
 
