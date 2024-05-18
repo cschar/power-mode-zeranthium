@@ -24,6 +24,7 @@
         ./gradlew :runPlugin
         
  5. test 
+        export POWERMODE_ZERANTHIUM_TESTS="true"
         ./gradlew :test --info
  
  . publish  
@@ -45,6 +46,7 @@ step 2. set that SDK as the project SDK to have the external library defined to 
 - run a single test
   `./gradlew :test --tests "com.cschar.pmode3.uitest.WriteTextJavaTest.writeSomeText"`
   `./gradlew :test --tests "com.cschar.pmode3.GSONTest"`
+- `./gradlew :test --tests "com.cschar.pmode3.PowerMode3Test"`
 
 ## testing ui
 

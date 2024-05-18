@@ -77,6 +77,8 @@ jobs:
 
       # Run tests
       - name: Run Tests
+        env:
+          POWERMODE_ZERANTHIUM_TESTS: true
         run: ./gradlew check
 
       # Collect Tests Result of failed tests
