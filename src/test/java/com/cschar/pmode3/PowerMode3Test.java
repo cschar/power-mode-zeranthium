@@ -46,10 +46,24 @@
 ////public class PowerMode3Test extends LightPlatform4TestCase {  //This boots up the Service/Components defined in plugin.xml
 //public class PowerMode3Test extends BasePlatformTestCase {  //This boots up the Service/Components defined in plugin.xml
 //
+//    @Test
+//    public void testCopy(){
+////        PowerMode3 pmode3Service = ApplicationManager.getApplication().getService(PowerMode3.class);
+////        PowerMode3 p1 = new PowerMode3();
+////
+////        assertEquals(12, pmode3Service.pathDataMap.size());
+////        assertEquals(0, p1.pathDataMap.size());
+////        XmlSerializerUtil.copyBean(pmode3Service, p1);
+////
+////        assertEquals(pmode3Service.getParticleRGB(), p1.getParticleRGB());
+////        assertEquals(12, p1.pathDataMap.size());
+//        assertEquals(12, 12);
+//
+//    }
 ////public class PowerMode3Test {
 ////    private static final Logger LOG = Logger.getInstance(PowerMode3Test.class);
 ////    private static final Logger LOG = LoggerFactory.getLogger(PowerMode3Test.class);
-//    private static final Logger LOG = Logger.getInstance(PowerMode3Test.class);
+////    private static final Logger LOG = Logger.getInstance(PowerMode3Test.class);
 //    //can use Tags to separate UiTests from unit tests
 //
 ////
@@ -149,18 +163,5 @@
 ////        assertEquals(0.4f, spa.scale);
 ////    }
 //
-//    @Test
-//    public void testCopy(){
-////        PowerMode3 pmode3Service = ApplicationManager.getApplication().getService(PowerMode3.class);
-////        PowerMode3 p1 = new PowerMode3();
-////
-////        assertEquals(12, pmode3Service.pathDataMap.size());
-////        assertEquals(0, p1.pathDataMap.size());
-////        XmlSerializerUtil.copyBean(pmode3Service, p1);
-////
-////        assertEquals(pmode3Service.getParticleRGB(), p1.getParticleRGB());
-////        assertEquals(12, p1.pathDataMap.size());
-//        assertEquals(12, 12);
 //
-//    }
 //}

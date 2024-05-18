@@ -28,6 +28,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "1.8.10"
     // Gradle IntelliJ Plugin
 
+//    id("org.jetbrains.intellij.platform") version "2.0.0-beta2"?
     id("org.jetbrains.intellij") version "1.17.3"
     // Gradle Changelog Plugin
     id("org.jetbrains.changelog") version "2.0.0"
@@ -41,11 +42,11 @@ var remoteRobotVersion = "0.11.18"
 
 dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
-    implementation(group = "org.json", name = "json", version = "20220320")
+    implementation(group = "org.json", name = "json", version = "20231013")
     implementation(group = "javazoom", name = "jlayer", version = "1.0.1")
     implementation(group = "org.imgscalr", name = "imgscalr-lib", version = "4.2")
 
-    implementation(group = "org.eclipse.jgit", name = "org.eclipse.jgit", version = "5.12.0.202106070339-r") {
+    implementation(group = "org.eclipse.jgit", name = "org.eclipse.jgit", version = "6.7.0.202309050840-r") {
         exclude(group = "org.slf4j", module = "slf4j-api")
     }
 
@@ -73,6 +74,7 @@ version = properties("pluginVersion").get()
 kotlin {
     jvmToolchain(17)
 }
+
 
 // Configure Gradle IntelliJ Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
@@ -127,6 +129,7 @@ tasks {
     }
 
     jar {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         // https://docs.gradle.org/current/userguide/more_about_tasks.html
         // https://docs.gradle.org/current/dsl/org.gradle.api.tasks.bundling.Jar.html#org.gradle.api.tasks.bundling.Jar:archiveBaseName
         // https://stackoverflow.com/questions/56518451/
@@ -173,6 +176,8 @@ tasks {
         useJUnitPlatform()
         outputs.upToDateWhen { false }
         testLogging.showStandardStreams = true
+
+
     }
 
     // Configure UI tests plugin

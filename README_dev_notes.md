@@ -40,6 +40,7 @@ step 2. set that SDK as the project SDK to have the external library defined to 
 `./gradlew :test --info`
 - run a single test
   `./gradlew :test --tests "com.cschar.pmode3.uitest.WriteTextJavaTest.writeSomeText"`
+  `./gradlew :test --tests "com.cschar.pmode3.GSONTest"`
 
 ## testing ui
 
@@ -92,14 +93,15 @@ add in Help > diagnostic Tools > Debug Log Settings
 
 ```
 
-##runIdeForUiTest gotcha
+## runIdeForUiTest gotcha
 make sure no file is open inside the ./build folder, :clean and :runIdeForUiTest will break
 
 
-#Gradle dev env
+## Gradle dev env
 in intellij run configurations make an empty gradle config with these args to intended project file
 runIde --args="C:\\path\\to\\my\\project\\file\\App22336.kt"
 
+## Upgrading Gradle
 When upgrading gradle... (to make ./gradlew use a diff version on commadnline...)
 go into gradle/wrapper/gradle-wrapper.properties, and change the URL from which it downloads the version
 
