@@ -3,6 +3,9 @@
 # power-mode-zeranthium Changelog
 
 ## [Unreleased]
+- 2024.1 update
+
+## [3.2.0] - 2023-03-22
 - 2023.1 update
 - basic particles now show on first time startup
 - disable lizard on first time startup
