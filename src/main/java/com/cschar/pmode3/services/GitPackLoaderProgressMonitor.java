@@ -92,4 +92,9 @@ public class GitPackLoaderProgressMonitor implements ProgressMonitor {
         }
         return false;
     }
+
+    @Override
+    public void showDuration(boolean enabled) {
+        return;
+    }
 }

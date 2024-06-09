@@ -6,6 +6,18 @@ import org.gradle.api.tasks.testing.TestResult.ResultType
 fun properties(key: String) = providers.gradleProperty(key)
 fun environment(key: String) = providers.environmentVariable(key)
 
+
+// Configure project's dependencies
+repositories {
+    mavenCentral()
+    maven { url = uri("https://jitpack.io") }
+    // for remoterobot
+    // https://docs.gradle.org/current/userguide/declaring_repositories.html#sec:declaring_multiple_repositories
+    maven {
+        url = uri("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies")
+    }
+}
+
 plugins {
     //Gradle Test Output
     id("com.adarshr.test-logger") version "3.2.0"
@@ -15,7 +27,9 @@ plugins {
     // Kotlin support
     id("org.jetbrains.kotlin.jvm") version "1.8.10"
     // Gradle IntelliJ Plugin
-    id("org.jetbrains.intellij") version "1.13.2"
+
+//    id("org.jetbrains.intellij.platform") version "2.0.0-beta2"?
+    id("org.jetbrains.intellij") version "1.17.3"
     // Gradle Changelog Plugin
     id("org.jetbrains.changelog") version "2.0.0"
     // Gradle Qodana Plugin
@@ -28,11 +42,11 @@ var remoteRobotVersion = "0.11.18"
 
 dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
-    implementation(group = "org.json", name = "json", version = "20220320")
+    implementation(group = "org.json", name = "json", version = "20231013")
     implementation(group = "javazoom", name = "jlayer", version = "1.0.1")
     implementation(group = "org.imgscalr", name = "imgscalr-lib", version = "4.2")
 
-    implementation(group = "org.eclipse.jgit", name = "org.eclipse.jgit", version = "5.12.0.202106070339-r") {
+    implementation(group = "org.eclipse.jgit", name = "org.eclipse.jgit", version = "6.7.0.202309050840-r") {
         exclude(group = "org.slf4j", module = "slf4j-api")
     }
 
@@ -55,21 +69,12 @@ dependencies {
 group = properties("pluginGroup").get()
 version = properties("pluginVersion").get()
 
-// Configure project's dependencies
-repositories {
-    mavenCentral()
-
-    // for remoterobot
-    // https://docs.gradle.org/current/userguide/declaring_repositories.html#sec:declaring_multiple_repositories
-    maven {
-        url = uri("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies")
-    }
-}
 
 // Set the JVM language level used to build the project. Use Java 11 for 2020.3+, and Java 17 for 2022.2+.
 kotlin {
     jvmToolchain(17)
 }
+
 
 // Configure Gradle IntelliJ Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
@@ -124,6 +129,7 @@ tasks {
     }
 
     jar {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         // https://docs.gradle.org/current/userguide/more_about_tasks.html
         // https://docs.gradle.org/current/dsl/org.gradle.api.tasks.bundling.Jar.html#org.gradle.api.tasks.bundling.Jar:archiveBaseName
         // https://stackoverflow.com/questions/56518451/
@@ -170,6 +176,8 @@ tasks {
         useJUnitPlatform()
         outputs.upToDateWhen { false }
         testLogging.showStandardStreams = true
+
+
     }
 
     // Configure UI tests plugin
