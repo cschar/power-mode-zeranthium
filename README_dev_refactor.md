@@ -37,11 +37,6 @@ RE-enable memory monitor UI
 
 
 
-# potentially..
-- dynamic plugin enable/disable
-- pack loaders now use Modal UIs when fetching packs from github
-
-
 # https://docs.oracle.com/en/java/javase/11/docs/api/jdk.javadoc/jdk/javadoc/doclet/package-summary.html#migration
 ```bash
 javadoc \
