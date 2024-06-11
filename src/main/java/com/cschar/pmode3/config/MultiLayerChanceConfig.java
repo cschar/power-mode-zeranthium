@@ -143,7 +143,29 @@ public class MultiLayerChanceConfig extends BaseConfigJPanel {
     }
 
 
-
+    /**
+     *
+     * @val1 chance of spawn 1-1000
+     * @val2 unused
+     * @val3 unused
+     *
+     * @extra
+     *   fromBottom: used as a flag to spawn from bottom or top
+     *
+     * @exampleConfig
+     *
+     * "MULTI_LAYER_CHANCE": {
+     *       "tableData": [
+     *         {"customPath":"./MULTI_LAYER/layer1",
+     *          "alpha":1,"scale":1.0,
+     *          "val1":1000,
+     *          "fromBottom": true
+     *          "enabled":false, "speedRate":2 },
+     *         {"customPath":"./MULTI_LAYER/layer2", ... }
+     *         {"customPath":"./MULTI_LAYER/layer3", ... }
+     *       ]
+     *     }
+     */
     public void loadJSONConfig(JSONObject configData, Path parentPath) throws JSONException {
 
 

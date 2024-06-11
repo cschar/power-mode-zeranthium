@@ -142,6 +142,26 @@ public class DrosteConfig extends BaseConfigJPanel {
         ParticleSpriteDroste.spriteDataAnimated = data;
     }
 
+    /**
+     *
+     * @val1 Offset for each new expanding layer (10-400)
+     * @val2
+     * @val3
+     *
+     *
+     * @exampleConfig
+     *
+     * "DROSTE": {
+     *       "tableData": [
+     *         {"customPath":"./DROSTE/layer1",
+     *          "alpha":1, "scale":1.0,
+     *          "val1":20,
+     *           "enabled":true,"speedRate":2, "isCyclic": true},
+     *         {"customPath":"./DROSTE/layer2", ...}
+     *       ]
+     *     }
+     *
+     */
     public static void loadJSONConfig(JSONObject configData, Path parentPath) throws JSONException {
 
         JSONArray tableData = configData.getJSONArray("tableData");

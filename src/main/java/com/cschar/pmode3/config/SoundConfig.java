@@ -142,11 +142,18 @@ public class SoundConfig extends JPanel {
     }
 
 
-
-
-
-
-
+    /**
+     *
+     * @exampleConfig
+     *  "SOUND": {
+     *       "tableData": [
+     *         {"weight": 20, "customPath": "./SOUND/sound1.mp3"},
+     *         {"weight": 20, "customPath": "./SOUND/sound2.mp3"},
+     *         {"weight": 20, "customPath": "./SOUND/sound3.mp3"},
+     *         {"weight": 20, "customPath": "./SOUND/sound4.mp3"}
+     *       ]
+     *     }
+     */
     public void loadJSONConfig(JSONObject configData, Path parentPath) throws JSONException {
 
         JSONArray tableData = configData.getJSONArray("tableData");

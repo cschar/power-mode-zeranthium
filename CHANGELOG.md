@@ -3,6 +3,7 @@
 # power-mode-zeranthium Changelog
 
 ## [Unreleased]
+- 2024.2-eap update
 
 ## [3.3.0] - 2024-05-18
 - 2024.1 update

@@ -149,7 +149,7 @@ public class LockedLayerConfig extends BaseConfigJPanel {
 
     /**
      *
-     * @val1 Unused
+     * @val1 unused
      *
      * @val2
      *          screenposition
@@ -158,7 +158,7 @@ public class LockedLayerConfig extends BaseConfigJPanel {
                   Top/Left -> 2
                   Bot/Right -> 3
                   Bot/Left -> 4
-     @val3 Unused
+     @val3 unused
 
      @exampleConfig
 

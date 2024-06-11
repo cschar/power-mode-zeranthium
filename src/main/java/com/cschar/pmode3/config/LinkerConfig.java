@@ -434,6 +434,34 @@ public class LinkerConfig extends BaseConfigJPanel {
         ParticleSpriteLinkerAnchor.spriteDataAnimated = data;
     }
 
+    /**
+     *
+     * @val1 Offset to start on links
+     * @val2 Repeat every N links
+     * @val3 unused
+     *
+     *
+     * @exampleConfig
+     * "LINKER":{
+     *       "tracerEnabled": false,
+     *       "isCyclicEnabled" false,
+     *       "distanceToCenter": 290,
+     *       "tableData":[
+     *         {
+     *           "defaultPath": "./linker1/",
+     *           "val2": 100,
+     *           "isCyclic": false,
+     *           "alpha": 1,
+     *           "val1": 1,
+     *           "scale": 0.3,
+     *           "enabled": true,
+     *           "speedRate": 2
+     *         }
+     *       ]
+     *     }
+     *
+     *
+     */
     public void loadJSONConfig(JSONObject configData, Path parentPath) throws JSONException {
         PowerMode3 settings = PowerMode3.getInstance();
 
@@ -480,10 +508,10 @@ public class LinkerConfig extends BaseConfigJPanel {
                     spriteDataAnimated.get(i).defaultPath,
                     parentPath.resolve(jo.getString("customPath")).toString(),
                     jo.getBoolean("isCyclic"),
-                    jo.getInt("val2"), //val2 //repeat every n links
+                    jo.getInt("val2"), //val2  //repeat every n links
                     (float) jo.getDouble("alpha"),
-                    jo.getInt("val1"),
-                    0); //val1  //offset to start on links
+                    jo.getInt("val1"), //val1  //offset to start on links
+                    0);
 
 
             spriteDataAnimated.set(i, sd);

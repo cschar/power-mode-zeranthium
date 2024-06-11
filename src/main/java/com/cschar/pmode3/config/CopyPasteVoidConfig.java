@@ -10,12 +10,15 @@ import com.cschar.pmode3.config.common.ui.JTableButtonRenderer;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 public class CopyPasteVoidConfig extends BaseConfigJPanel {
@@ -141,6 +144,14 @@ public class CopyPasteVoidConfig extends BaseConfigJPanel {
         sp.getViewport().setOpaque(false);
         sp.setBorder(BorderFactory.createEmptyBorder());
         return sp;
+    }
+
+    /**
+     * @exampleConfig
+     *      //TODO
+     */
+    private void loadJSONConfig() {
+        // placeholder
     }
 
 

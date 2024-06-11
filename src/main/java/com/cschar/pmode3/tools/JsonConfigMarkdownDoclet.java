@@ -23,14 +23,14 @@ public class JsonConfigMarkdownDoclet extends StandardDoclet {
         if (docCommentTree != null) {
 
             if(e.toString().contains("loadJSONConfig")) {
-                System.out.println("===================[FOUND DOCSTRING for loadJSONConfig]====================");
+//                System.out.println("===================[FOUND DOCSTRING for loadJSONConfig]====================");
 
-                System.out.printf("<h3> %s </h3>\n\n", typeElem.getSimpleName());
-
+                // have to escape % with another %
+                System.out.printf("<h3 id='%s' > %s  <a href='#%s'> {%% octicon link height:16 %%} </a> </h3>\n\n", typeElem.getSimpleName(), typeElem.getSimpleName(), typeElem.getSimpleName());
+//                System.out.printf("### %s {#%s}  \n\n", typeElem.getSimpleName(), typeElem.getSimpleName());
+//                System.out.printf("[Link to the subsection](#%s)\n", typeElem.getSimpleName());
                 for (DocTree blockTag : docCommentTree.getBlockTags()) {
-//                System.out.println("\t" + blockTag.getClass().getName());
-//                System.out.println("\t" + blockTag.getKind());
-//                System.out.println("\t" + blockTag);
+
 
                     var type = blockTag.toString().split(" ", 2)[0];
                     var content = blockTag.toString().split(" ", 2)[1];
@@ -43,6 +43,10 @@ public class JsonConfigMarkdownDoclet extends StandardDoclet {
                         System.out.println("``` \n"
                                 + type.substring(1) + ": "
                                 + content + "\n```\n");
+                    }
+
+                    if (type.equals("@extra")) {
+                        System.out.println("``` \n" + content + "\n```\n");
                     }
 
                     if (type.equals("@exampleConfig")) {
@@ -62,7 +66,7 @@ public class JsonConfigMarkdownDoclet extends StandardDoclet {
         //DocTree is a tag
 
 
-        System.out.println("\n\n ===== processing ===== ");
+//        System.out.println("\n\n ===== processing ===== ");
 //        for(Element e : docEnv.getIncludedElements()){
 //            System.out.println("elements: " + e.getKind().toString() + " : " + e.getSimpleName());
 //
