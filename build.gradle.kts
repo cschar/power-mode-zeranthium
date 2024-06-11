@@ -1,46 +1,60 @@
-import jdk.javadoc.doclet.Doclet
+
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
-import org.gradle.api.tasks.testing.TestResult.ResultType
+import org.jetbrains.dokka.DokkaConfiguration
+import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+
+//https://github.com/Kotlin/dokka/blob/master/examples/gradle/dokka-customFormat-example/build.gradle.kts
+import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.dokka.base.DokkaBase
+import org.jetbrains.dokka.base.DokkaBaseConfiguration
 
 fun properties(key: String) = providers.gradleProperty(key)
 fun environment(key: String) = providers.environmentVariable(key)
 
+plugins {
+    id("java") // Java support
+    alias(libs.plugins.kotlin) // Kotlin support
+    alias(libs.plugins.intelliJPlatform) // IntelliJ Platform Gradle Plugin
+    alias(libs.plugins.changelog) // Gradle Changelog Plugin
+    alias(libs.plugins.qodana) // Gradle Qodana Plugin
+    alias(libs.plugins.kover) // Gradle Kover Plugin
+
+    //Gradle Test Output
+    id("com.adarshr.test-logger") version "4.0.0"
+
+    //Generate docs
+    id("org.jetbrains.dokka") version "1.9.20"
+    // ./gradlew :dokkaHtml
+//    kotlin("jvm") version "1.9.22"
+
+}
+
+group = properties("pluginGroup").get()
+version = properties("pluginVersion").get()
+
+// Set the JVM language level used to build the project.
+kotlin {
+    jvmToolchain(17)
+}
 
 // Configure project's dependencies
 repositories {
     mavenCentral()
-    maven { url = uri("https://jitpack.io") }
-    // for remoterobot
-    // https://docs.gradle.org/current/userguide/declaring_repositories.html#sec:declaring_multiple_repositories
-    maven {
-        url = uri("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies")
+
+    // IntelliJ Platform Gradle Plugin Repositories Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-repositories-extension.html
+    intellijPlatform {
+        defaultRepositories()
     }
-}
-
-plugins {
-    //Gradle Test Output
-    id("com.adarshr.test-logger") version "3.2.0"
-
-    // Java support
-    id("java")
-    // Kotlin support
-    id("org.jetbrains.kotlin.jvm") version "1.8.10"
-    // Gradle IntelliJ Plugin
-
-//    id("org.jetbrains.intellij.platform") version "2.0.0-beta2"?
-    id("org.jetbrains.intellij") version "1.17.3"
-    // Gradle Changelog Plugin
-    id("org.jetbrains.changelog") version "2.0.0"
-    // Gradle Qodana Plugin
-    id("org.jetbrains.qodana") version "0.1.13"
-    // Gradle Kover Plugin
-    id("org.jetbrains.kotlinx.kover") version "0.6.1"
 }
 
 var remoteRobotVersion = "0.11.18"
 
+// Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
 dependencies {
+    // implementation(libs.exampleLibrary)
+
+
     implementation("com.google.code.gson:gson:2.10.1")
     implementation(group = "org.json", name = "json", version = "20231013")
     implementation(group = "javazoom", name = "jlayer", version = "1.0.1")
@@ -49,6 +63,7 @@ dependencies {
     implementation(group = "org.eclipse.jgit", name = "org.eclipse.jgit", version = "6.7.0.202309050840-r") {
         exclude(group = "org.slf4j", module = "slf4j-api")
     }
+
 
     // Testing
     testImplementation("com.intellij.remoterobot:remote-robot:$remoteRobotVersion")
@@ -64,99 +79,48 @@ dependencies {
 //    testCompileOnly("junit:junit:4.13.1")
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.3.1")
 
-}
 
-group = properties("pluginGroup").get()
-version = properties("pluginVersion").get()
+    // IntelliJ Platform Gradle Plugin Dependencies Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html
+    intellijPlatform {
+        create(properties("platformType"), properties("platformVersion"))
 
+        // Plugin Dependencies. Uses `platformBundledPlugins` property from the gradle.properties file for bundled IntelliJ Platform plugins.
+        bundledPlugins(properties("platformBundledPlugins").map { it.split(',') })
 
-// Set the JVM language level used to build the project. Use Java 11 for 2020.3+, and Java 17 for 2022.2+.
-kotlin {
-    jvmToolchain(17)
-}
+        // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file for plugin from JetBrains Marketplace.
+        plugins(properties("platformPlugins").map { it.split(',') })
 
-
-// Configure Gradle IntelliJ Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
-intellij {
-    pluginName.set(properties("pluginName"))
-    version.set(properties("platformVersion"))
-    type.set(properties("platformType"))
-
-//    instrumentCode.set(false)
-
-    // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file.
-    plugins.set(properties("platformPlugins").map { it.split(',').map(String::trim).filter(String::isNotEmpty) })
-}
+        instrumentationTools()
+        pluginVerifier()
+        testFramework(TestFrameworkType.Platform.JUnit4)
 
 
-// Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
-changelog {
-    groups.empty()
-    repositoryUrl.set(properties("pluginRepositoryUrl"))
-}
-
-// Configure Gradle Qodana Plugin - read more: https://github.com/JetBrains/gradle-qodana-plugin
-qodana {
-    cachePath.set(provider { file(".qodana").canonicalPath })
-    reportPath.set(provider { file("build/reports/inspections").canonicalPath })
-    saveReport.set(true)
-    showReport.set(environment("QODANA_SHOW_REPORT").map { it.toBoolean() }.getOrElse(false))
-}
-
-// Configure Gradle Kover Plugin - read more: https://github.com/Kotlin/kotlinx-kover#configuration
-kover.xmlReport {
-    onCheck.set(true)
-}
-
-
-
-
-tasks {
-
-//    https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html#tasks-buildsearchableoptions
-    buildSearchableOptions {
-//        enabled = false
+        // https://github.com/JetBrains/intellij-platform-gradle-plugin/issues/1638#issuecomment-2151527333
+//        jetbrainsRuntime()
     }
+}
 
-    wrapper {
-        gradleVersion = properties("gradleVersion").get()
-    }
-
-    runIde {
-        maxHeapSize = "4g"
-        systemProperties["idea.log.debug.categories"] = "#com.cschar.pmode3"
-        systemProperties["idea.log.trace.categories"] = "#com.cschar.pmode3"
-    }
-
-    jar {
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        // https://docs.gradle.org/current/userguide/more_about_tasks.html
-        // https://docs.gradle.org/current/dsl/org.gradle.api.tasks.bundling.Jar.html#org.gradle.api.tasks.bundling.Jar:archiveBaseName
-        // https://stackoverflow.com/questions/56518451/
-        from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
-    }
-
-    patchPluginXml {
-        version.set(properties("pluginVersion"))
-        sinceBuild.set(properties("pluginSinceBuild"))
-//        untilBuild.set(properties("pluginUntilBuild"))
+// Configure IntelliJ Platform Gradle Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html
+intellijPlatform {
+    pluginConfiguration {
+        version = properties("pluginVersion")
 
         // Extract the <!-- Plugin description --> section from README.md and provide for the plugin's manifest
-        pluginDescription.set(providers.fileContents(layout.projectDirectory.file("README.md")).asText.map {
+        description = providers.fileContents(layout.projectDirectory.file("README.md")).asText.map {
             val start = "<!-- Plugin description -->"
             val end = "<!-- Plugin description end -->"
 
-            with (it.lines()) {
+            with(it.lines()) {
                 if (!containsAll(listOf(start, end))) {
                     throw GradleException("Plugin description section not found in README.md:\n$start ... $end")
                 }
                 subList(indexOf(start) + 1, indexOf(end)).joinToString("\n").let(::markdownToHTML)
             }
-        })
+        }
 
         val changelog = project.changelog // local variable for configuration cache compatibility
         // Get the latest available change notes from the changelog file
-        changeNotes.set(properties("pluginVersion").map { pluginVersion ->
+        changeNotes = properties("pluginVersion").map { pluginVersion ->
             with(changelog) {
                 renderItem(
                     (getOrNull(pluginVersion) ?: getUnreleased())
@@ -165,51 +129,163 @@ tasks {
                     Changelog.OutputType.HTML,
                 )
             }
-        })
+        }
+
+        ideaVersion {
+            sinceBuild = properties("pluginSinceBuild")
+            untilBuild = properties("pluginUntilBuild")
+        }
     }
 
-    // tag example: https://www.baeldung.com/junit-5-gradle#configuring-junit-5-tests-with-gradle
-    // from CLI: // gradle clean test -DincludeTags='regression' -DexcludeTags='accessibility'
-    // custom gradle test config: https://stackoverflow.com/a/59022129/5198805
-    // https://docs.gradle.org/current/dsl/org.gradle.api.tasks.testing.Test.html
-    test {
-        useJUnitPlatform()
-        outputs.upToDateWhen { false }
-        testLogging.showStandardStreams = true
+    signing {
+        certificateChain = environment("CERTIFICATE_CHAIN")
+        privateKey = environment("PRIVATE_KEY")
+        password = environment("PRIVATE_KEY_PASSWORD")
+    }
+
+    publishing {
+        token = environment("PUBLISH_TOKEN")
+        // The pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
+        // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
+        // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
+        channels = properties("pluginVersion").map { listOf(it.substringAfter('-', "").substringBefore('.').ifEmpty { "default" }) }
+    }
+
+    verifyPlugin {
+        ides {
+            recommended()
+        }
+    }
+}
+
+// Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
+changelog {
+    groups.empty()
+    repositoryUrl = properties("pluginRepositoryUrl")
+}
+
+// Configure Gradle Kover Plugin - read more: https://github.com/Kotlin/kotlinx-kover#configuration
+kover {
+    reports {
+        total {
+            xml {
+                onCheck = true
+            }
+        }
+    }
+}
 
 
+
+
+abstract class CreateFileTask : DefaultTask() {
+    @TaskAction
+    fun action() {
+        val file = File("myfile.txt")
+        file.createNewFile()
+        file.writeText("HELLO FROM MY TASK")
+    }
+}
+
+tasks.register<CreateFileTask>("createFileTask")
+
+//configurations {
+//    jaxDoclet
+//}
+
+
+
+//tasks.withType(Javadoc) {
+//
+//}
+
+//tasks.withType<DokkaTask>().configureEach {
+//    // custom output directory
+//    outputDirectory.set(buildDir.resolve("dokka"))
+//
+//    dokkaSourceSets {
+//
+//        named("main") { // The same name as in Kotlin Multiplatform plugin, so the sources are fetched automatically
+//
+//            includes.from("packages.md", "extra.md")
+////            samples.from("samples/basic.kt", "samples/advanced.kt")
+//        }
+//
+////        register("differentName") { // Different name, so source roots must be passed explicitly
+////            displayName.set("JVM")
+////            platform.set(org.jetbrains.dokka.Platform.jvm)
+////            sourceRoots.from(kotlin.sourceSets.getByName("jvmMain").kotlin.srcDirs)
+////            sourceRoots.from(kotlin.sourceSets.getByName("commonMain").kotlin.srcDirs)
+////        }
+//    }
+//}
+
+
+buildscript {
+    dependencies {
+        classpath("org.jetbrains.dokka:dokka-base:1.9.20")
+    }
+}
+
+tasks {
+
+    // https://docs.gradle.org/current/kotlin-dsl/gradle/org.gradle.api.tasks.javadoc/-javadoc/index.html
+    javadoc {
+//        setDestinationDir(file("./myjavadocs/docs2"))
+
+//        options.docletpath = "./build/classes/java/main" as List
+//        options.docletpath = [rootProject.file("./build/classes/java/main")]
+
+        options.docletpath(file("./build/classes/java/main"))
+        options.doclet = "com.cschar.pmode3.tools.JsonConfigMarkdownDoclet"
+        options {
+            this as StandardJavadocDocletOptions
+//            noTimestamp()
+
+        }
+    }
+
+    dokkaHtml {
+        // https://kotlinlang.org/docs/dokka-gradle.html#single-project-configuration
+        dokkaSourceSets.configureEach {
+            documentedVisibilities.set(
+                setOf(
+                    DokkaConfiguration.Visibility.PUBLIC,
+                    DokkaConfiguration.Visibility.PROTECTED,
+                )
+            )
+            perPackageOption {
+                matchingRegex.set(".*.*")
+                suppress.set(true)
+            }
+
+            perPackageOption {
+                matchingRegex.set(".*config.*")
+                suppress.set(false)
+            }
+            perPackageOption {
+                matchingRegex.set(".*config.common.*")
+                suppress.set(true)
+            }
+        }
+        outputDirectory.set(file("mydocs/dokkaHtml"))
+    }
+
+
+    wrapper {
+        gradleVersion = properties("gradleVersion").get()
     }
 
     // Configure UI tests plugin
     // Read more: https://github.com/JetBrains/intellij-ui-test-robot
-    runIdeForUiTests {
+    testIdeUi {
         systemProperty("robot-server.port", "8082")
         systemProperty("ide.mac.message.dialogs.as.sheets", "false")
         systemProperty("jb.privacy.policy.text", "<!--999.999-->")
         systemProperty("jb.consents.confirmation.enabled", "false")
     }
 
-
-
-
-
-    runPluginVerifier {
-        ideVersions.set(listOf(properties("pluginVerifierIdeVersions").get()))
-
-    }
-
-    signPlugin {
-        certificateChain.set(environment("CERTIFICATE_CHAIN"))
-        privateKey.set(environment("PRIVATE_KEY"))
-        password.set(environment("PRIVATE_KEY_PASSWORD"))
-    }
-
     publishPlugin {
-        dependsOn("patchChangelog")
-        token.set(environment("PUBLISH_TOKEN"))
-        // The pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
-        // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
-        // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
-        channels.set(properties("pluginVersion").map { listOf(it.split('-').getOrElse(1) { "default" }.split('.').first()) })
+        dependsOn(patchChangelog)
     }
 }

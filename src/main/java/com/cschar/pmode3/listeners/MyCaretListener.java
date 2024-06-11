@@ -1,9 +1,10 @@
-package com.cschar.pmode3.actionHandlers;
+package com.cschar.pmode3.listeners;
 
 import com.cschar.pmode3.*;
 import com.cschar.pmode3.config.LanternConfig;
 import com.cschar.pmode3.config.LinkerConfig;
 import com.cschar.pmode3.config.MultiLayerConfig;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollingModel;
 import com.intellij.openapi.editor.VisualPosition;
@@ -14,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 
 public class MyCaretListener implements CaretListener {
+    private static final Logger LOGGER = Logger.getInstance(MyCaretListener.class);
 
     public static boolean enabled = true; //CopyPasteVoid
 
@@ -21,6 +23,9 @@ public class MyCaretListener implements CaretListener {
 
     @Override
     public void caretPositionChanged(@NotNull CaretEvent event) {
+        LOGGER.debug("caret position changed",
+                            event.getNewPosition(),
+                            event.getOldPosition());
 
         if(enabled && pluginInitialized) {
 

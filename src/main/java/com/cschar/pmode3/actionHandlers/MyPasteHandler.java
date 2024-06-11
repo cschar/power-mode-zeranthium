@@ -6,6 +6,7 @@ import com.cschar.pmode3.ParticleSpritePasteShape;
 import com.cschar.pmode3.PowerMode3;
 import com.cschar.pmode3.config.CopyPasteVoidConfig;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
+import com.cschar.pmode3.listeners.MyCaretListener;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.*;

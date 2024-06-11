@@ -24,6 +24,7 @@
         ./gradlew :runPlugin
         
  5. test 
+        export POWERMODE_ZERANTHIUM_TESTS="true"
         ./gradlew :test --info
  
  . publish  
@@ -39,12 +40,13 @@ step 1. in File -> project structure -> SDKs ... '+' icon ---> add the IntelliJP
 step 2. set that SDK as the project SDK to have the external library defined to access all intellij.openapi stuff
 
 
-## testing 
+## testing
 
 `./gradlew :test --info`
 - run a single test
   `./gradlew :test --tests "com.cschar.pmode3.uitest.WriteTextJavaTest.writeSomeText"`
   `./gradlew :test --tests "com.cschar.pmode3.GSONTest"`
+- `./gradlew :test --tests "com.cschar.pmode3.PowerMode3Test"`
 
 ## testing ui
 
@@ -84,8 +86,17 @@ rm `./build/idea-sandbox/config/options/power.mode.3.Zeranthium.xml`
 add in Help > diagnostic Tools > Debug Log Settings
 #com.cschar.pmode3:all     (including # at start)
 
+# then the log entries will be visible in
+    `build/idea-sandbox/<IDE-VERSION>/log/idea.log`
+ex: `build/idea-sandbox/IC-2024.2/log/idea.log`
 
 
+### generating custom javadocs
+
+```
+./gradlew :javadoc --rerun --quiet
+./gradlew :javadoc --rerun --quiet > ./docsv2/_includes/options.md
+```
 
 ----------------------------------------------------------------
 
@@ -144,34 +155,3 @@ https://math.stackexchange.com/a/820632
 
 
 ----------------------------------------------------------------
-
-
-# CRASH notes:
-
-```
-java.lang.NoClassDefFoundError: org/json/JSONException
-    at com.cschar.pmode3.PowerMode3$JSONLoader.loadDefaultJSONTableConfigs(PowerMode3.java:164)
-    at com.cschar.pmode3.PowerMode3.loadState(PowerMode3.java:353)
-    at com.cschar.pmode3.PowerMode3.loadState(PowerMode3.java:66)
-    at com.intellij.configurationStore.ComponentStoreImpl.doInitComponent(ComponentStoreImpl.kt:405)
-    at com.intellij.configurationStore.ComponentStoreImpl.initComponent(ComponentStoreImpl.kt:355)
-    ....
-Caused by: java.lang.ClassNotFoundException: org.json.JSONException PluginClassLoader[com.cschar.powermode3zeranthium, 1.0] com.intellij.ide.plugins.cl.PluginClassLoader@67d484dc
-    at com.intellij.ide.plugins.cl.PluginClassLoader.loadClass(PluginClassLoader.java:75)
-    at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:521
-``` 
-    
---Fixed by packaging a FAT JAR
-https://discuss.gradle.org/t/how-to-include-dependencies-in-jar/19571/5
-or using shadowJar w/ gradle
-
-#launch bug:
-WARNING: An illegal reflective access operation has occurred
-WARNING: Illegal reflective access by com.intellij.util.ReflectionUtil to method sun.java2d.SunGraphicsEnvironment.isUIScaleEnabled()
-WARNING: Please consider reporting this to the maintainers of com.intellij.util.ReflectionUtil
-WARNING: Use --illegal-access=warn to enable warnings of further illeg
-
-this is being tracked here: https://youtrack.jetbrains.com/issue/IDEA-210683
-
-
-

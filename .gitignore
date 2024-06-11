@@ -1,16 +1,10 @@
 .gradle
-#build.gradle
-#gradlew
-#gradlew.bat
-#settings.gradle
-
-.DS_Store
-
-build
-#gradle
 .idea
-
+.intellijPlatform
 .qodana
+build
+
+myjavadocs
 
 docs/_site
 docs/.jekyll-cache

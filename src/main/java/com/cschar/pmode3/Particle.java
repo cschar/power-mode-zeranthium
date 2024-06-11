@@ -52,6 +52,12 @@ public class Particle {
         x += dx;
         y += dy;
         life--;
+
+        if(!settings.isEnabled()){
+            life = 0;
+        }
+
+
         return life <= 0;
     }
 

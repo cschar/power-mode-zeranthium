@@ -2,6 +2,7 @@ package com.cschar.pmode3.hotkeys;
 
 
 import com.cschar.pmode3.PowerMode3;
+import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
@@ -12,7 +13,11 @@ import javax.swing.*;
 
 public class HotKeyEnabledAction extends AnAction {
 
-
+    @Override
+    public @NotNull ActionUpdateThread getActionUpdateThread() {
+        return ActionUpdateThread.EDT;
+//        return super.getActionUpdateThread();
+    }
 
     public HotKeyEnabledAction() {
         super();

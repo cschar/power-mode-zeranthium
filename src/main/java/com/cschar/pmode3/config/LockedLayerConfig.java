@@ -21,6 +21,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.EventObject;
 
+
 public class LockedLayerConfig extends BaseConfigJPanel {
 
 
@@ -146,12 +147,41 @@ public class LockedLayerConfig extends BaseConfigJPanel {
     }
 
 
+    /**
+     *
+     * @val1 Unused
+     *
+     * @val2
+     *          screenposition
+                  Stretch -> 0
+                  Top/Right -> 1
+                  Top/Left -> 2
+                  Bot/Right -> 3
+                  Bot/Left -> 4
+     @val3 Unused
+
+     @exampleConfig
+
+         "LOCKED_LAYER": {
+            "tableData": [
+                {"customPath":"./lockedlayer1",
+                 "alpha":1, "scale":1.0,
+                 "val2": 3,
+                 "enabled":true,"speedRate":2, "isCyclic": true},
+                {"customPath":"./lockedlayer2", ...}
+            ]
+         }
+
+     */
     public static void loadJSONConfig(JSONObject configData, Path parentPath) throws JSONException {
 
         JSONArray tableData = configData.getJSONArray("tableData");
 
         for(int i =0; i<tableData.length(); i++){
             JSONObject jo = tableData.getJSONObject(i);
+
+            // val1 is unused in SpriteDataAnimated
+            // gutterwidth is its own attribute ?
 
             int screenPosition = jo.getInt("val2");
             screenPosition = Math.max(screenPosition, 0);
@@ -169,8 +199,8 @@ public class LockedLayerConfig extends BaseConfigJPanel {
                     screenPosition,
                     (float) jo.getDouble("alpha"),
                     60,
-                    0); // --> gutterWidth
-//                    jo.getInt("val1")); // --> gutterWidth
+                    0);
+
 
             spriteDataAnimated.set(i, sd);
         }

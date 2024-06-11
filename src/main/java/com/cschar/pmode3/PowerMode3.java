@@ -40,9 +40,7 @@ import com.intellij.openapi.editor.actionSystem.TypedActionHandler;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.tasks.TaskManager;
+
 import com.intellij.ui.JBColor;
 import com.intellij.util.SmartList;
 import com.intellij.util.xmlb.XmlSerializerUtil;
@@ -387,7 +385,7 @@ final public class PowerMode3 implements
                     rawHandler.execute(editor, c, dataContext);
                 }
             });
-        }, ModalityState.NON_MODAL);
+        }, ModalityState.nonModal());
         
     }
 

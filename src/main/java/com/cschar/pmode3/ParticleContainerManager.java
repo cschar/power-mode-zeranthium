@@ -13,7 +13,6 @@
 
 package com.cschar.pmode3;
 
-import com.cschar.pmode3.actionHandlers.MyCaretListener;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollingModel;

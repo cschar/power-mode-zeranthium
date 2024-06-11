@@ -16,6 +16,8 @@ import kotlin.coroutines.Continuation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.diagnostic.Logger;
+
+import java.util.Objects;
 //import java.util.logging.Logger;
 
 /**
@@ -50,9 +52,16 @@ public class PowerMode3StartupActivity implements ProjectActivity {
     public Object execute(@NotNull Project project, @NotNull Continuation<? super Unit> continuation) {
         LOGGER.debug(" ====== Loading Startup Activity.. ======= ");
 
+        // Freezes up loading BasePlatformTestCase
+        // Skip with Environment Variable
+        String testFlag = System.getenv("POWERMODE_ZERANTHIUM_TESTS");
+        if(testFlag != null && !testFlag.trim().isEmpty()){
+            LOGGER.warn("test flag : " + testFlag);
+            LOGGER.warn("test flag is set, skipping setup");
+           return null;
+        }
 
         PowerMode3 p = ApplicationManager.getApplication().getService(PowerMode3.class);
-
         p.startup1 = this;
         setupActionEditorKeys();
         return null;
