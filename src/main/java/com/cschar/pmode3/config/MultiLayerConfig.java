@@ -174,6 +174,28 @@ public class MultiLayerConfig extends BaseConfigJPanel {
         return Config.getFloatProperty(settings, PowerMode3.ConfigType.MULTI_LAYER, "moveSpeed", 0.1f);
     }
 
+    /**
+     *
+     * @val1 unused
+     * @val2 max particles 1-10
+     * @val3 unused
+     *
+     *
+     * @exampleConfig
+     *  "MULTI_LAYER": {
+     *       "moveWithCaretEnabled": true,
+     *       "moveSpeed": 0.1,
+     *       "tableData": [
+     *         {"customPath":"./MULTI_LAYER/layer1",
+     *          "alpha":1,"scale":1.0,
+     *          "val2":10,
+     *          "enabled":false, "speedRate":2, "isCyclic": true},
+     *         {"customPath":"./MULTI_LAYER/layer2", ... }
+     *         {"customPath":"./MULTI_LAYER/layer3", ... }
+     *       ]
+     *     }
+     *
+     */
     public void loadJSONConfig(JSONObject configData, Path parentPath) throws JSONException {
 
         if(configData.has("moveWithCaretEnabled")) {

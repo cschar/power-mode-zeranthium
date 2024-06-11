@@ -229,7 +229,36 @@ public class LanternConfig extends BaseConfigJPanel {
 
     }
 
-    /** currently only used when loading packs... not in resource loader */
+    /**
+     *
+     * @val1 Offset to start on links
+     * @val2 Repeat every N links
+     * @val3 max length of links per sprite type
+     *
+     *
+     * @exampleConfig
+     *
+     * "LANTERN":{
+     *       "maxParticles": 40,
+     *       "tracerEnabled": false,
+     *       "isCyclicEnabled": false,
+     *       "tableData":[
+     *         {
+     *           "defaultPath": "./lantern1/",
+     *
+     *           "isCyclic": false,
+     *           "alpha": 1,
+     *           "val1": 1,
+     *           "val2": 2,
+     *           "val3": 12,
+     *           "scale": 0.3,
+     *           "enabled": true,
+     *           "speedRate": 2
+     *         }
+     *       ]
+     *     }
+     *
+     */
     public void loadJSONConfig(JSONObject configData, Path parentPath) throws JSONException {
         PowerMode3 settings = PowerMode3.getInstance();
 

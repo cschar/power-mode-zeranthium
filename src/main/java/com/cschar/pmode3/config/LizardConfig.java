@@ -268,6 +268,31 @@ public class LizardConfig extends BaseConfigJPanel {
         ParticleSpriteLizardAnchor.spriteDataAnimated = data;
     }
 
+    /**
+     *
+     * @val1 weight for spawn chance (1-1000)
+     * @val2 unused
+     * @val3 unused
+     *
+     * @exampleConfig
+     *
+     *  "LIZARD": {
+     *       "tableData": [
+     *         {"customPath":"./lizard",
+     *           "alpha":1,
+     *           "val1":2,
+     *           "scale":0.4,
+     *           "enabled":true,
+     *           "speedRate":3},
+     *         {"customPath":"./lizard2", ...},
+     *         {"customPath":"./lizard3", ...}
+     *       ]
+     *     }
+     *
+     *
+     *
+     *
+     */
     public static void loadJSONConfig(JSONObject configData, Path parentPath) throws JSONException {
 
         JSONArray tableData = configData.getJSONArray("tableData");

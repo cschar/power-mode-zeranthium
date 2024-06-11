@@ -95,7 +95,7 @@ ex: `build/idea-sandbox/IC-2024.2/log/idea.log`
 
 ```
 ./gradlew :javadoc --rerun --quiet
-./gradlew :javadoc --rerun --quiet > ./docsv2/_includes/options.md
+./gradlew :javadoc --rerun --quiet > ./docs/_includes/options.md
 ```
 
 ----------------------------------------------------------------
