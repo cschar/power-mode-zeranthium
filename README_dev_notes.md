@@ -40,7 +40,7 @@ step 1. in File -> project structure -> SDKs ... '+' icon ---> add the IntelliJP
 step 2. set that SDK as the project SDK to have the external library defined to access all intellij.openapi stuff
 
 
-## testing 
+## testing
 
 `./gradlew :test --info`
 - run a single test
@@ -86,7 +86,7 @@ rm `./build/idea-sandbox/config/options/power.mode.3.Zeranthium.xml`
 add in Help > diagnostic Tools > Debug Log Settings
 #com.cschar.pmode3:all     (including # at start)
 
-# then the log entries will be visible in 
+# then the log entries will be visible in
     `build/idea-sandbox/<IDE-VERSION>/log/idea.log`
 ex: `build/idea-sandbox/IC-2024.2/log/idea.log`
 
