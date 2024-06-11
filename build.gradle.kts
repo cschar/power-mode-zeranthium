@@ -1,13 +1,17 @@
+
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
+import org.jetbrains.dokka.DokkaConfiguration
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+
+//https://github.com/Kotlin/dokka/blob/master/examples/gradle/dokka-customFormat-example/build.gradle.kts
+import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.dokka.base.DokkaBase
+import org.jetbrains.dokka.base.DokkaBaseConfiguration
 
 fun properties(key: String) = providers.gradleProperty(key)
 fun environment(key: String) = providers.environmentVariable(key)
 
-
-//libs references the file named
-// libs.versions.toml inside the gradle folder....
 plugins {
     id("java") // Java support
     alias(libs.plugins.kotlin) // Kotlin support
@@ -15,6 +19,15 @@ plugins {
     alias(libs.plugins.changelog) // Gradle Changelog Plugin
     alias(libs.plugins.qodana) // Gradle Qodana Plugin
     alias(libs.plugins.kover) // Gradle Kover Plugin
+
+    //Gradle Test Output
+    id("com.adarshr.test-logger") version "4.0.0"
+
+    //Generate docs
+    id("org.jetbrains.dokka") version "1.9.20"
+    // ./gradlew :dokkaHtml
+//    kotlin("jvm") version "1.9.22"
+
 }
 
 group = properties("pluginGroup").get()
@@ -35,9 +48,37 @@ repositories {
     }
 }
 
+var remoteRobotVersion = "0.11.18"
+
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
 dependencies {
     // implementation(libs.exampleLibrary)
+
+
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation(group = "org.json", name = "json", version = "20231013")
+    implementation(group = "javazoom", name = "jlayer", version = "1.0.1")
+    implementation(group = "org.imgscalr", name = "imgscalr-lib", version = "4.2")
+
+    implementation(group = "org.eclipse.jgit", name = "org.eclipse.jgit", version = "6.7.0.202309050840-r") {
+        exclude(group = "org.slf4j", module = "slf4j-api")
+    }
+
+
+    // Testing
+    testImplementation("com.intellij.remoterobot:remote-robot:$remoteRobotVersion")
+    testImplementation("com.intellij.remoterobot:remote-fixtures:$remoteRobotVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.7.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.2")
+    // Logging Network Calls
+    testImplementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
+    // Video Recording
+    testImplementation("com.automation-remarks:video-recorder-junit5:2.0")
+    // https://www.baeldung.com/junit-5-gradle#enabling-support-for-old-versions
+//    testCompileOnly("junit:junit:4.13.1")
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.3.1")
+
 
     // IntelliJ Platform Gradle Plugin Dependencies Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html
     intellijPlatform {
@@ -52,6 +93,10 @@ dependencies {
         instrumentationTools()
         pluginVerifier()
         testFramework(TestFrameworkType.Platform.JUnit4)
+
+
+        // https://github.com/JetBrains/intellij-platform-gradle-plugin/issues/1638#issuecomment-2151527333
+//        jetbrainsRuntime()
     }
 }
 
@@ -130,7 +175,103 @@ kover {
     }
 }
 
+
+
+
+abstract class CreateFileTask : DefaultTask() {
+    @TaskAction
+    fun action() {
+        val file = File("myfile.txt")
+        file.createNewFile()
+        file.writeText("HELLO FROM MY TASK")
+    }
+}
+
+tasks.register<CreateFileTask>("createFileTask")
+
+//configurations {
+//    jaxDoclet
+//}
+
+
+
+//tasks.withType(Javadoc) {
+//
+//}
+
+//tasks.withType<DokkaTask>().configureEach {
+//    // custom output directory
+//    outputDirectory.set(buildDir.resolve("dokka"))
+//
+//    dokkaSourceSets {
+//
+//        named("main") { // The same name as in Kotlin Multiplatform plugin, so the sources are fetched automatically
+//
+//            includes.from("packages.md", "extra.md")
+////            samples.from("samples/basic.kt", "samples/advanced.kt")
+//        }
+//
+////        register("differentName") { // Different name, so source roots must be passed explicitly
+////            displayName.set("JVM")
+////            platform.set(org.jetbrains.dokka.Platform.jvm)
+////            sourceRoots.from(kotlin.sourceSets.getByName("jvmMain").kotlin.srcDirs)
+////            sourceRoots.from(kotlin.sourceSets.getByName("commonMain").kotlin.srcDirs)
+////        }
+//    }
+//}
+
+
+buildscript {
+    dependencies {
+        classpath("org.jetbrains.dokka:dokka-base:1.9.20")
+    }
+}
+
 tasks {
+
+    // https://docs.gradle.org/current/kotlin-dsl/gradle/org.gradle.api.tasks.javadoc/-javadoc/index.html
+    javadoc {
+//        setDestinationDir(file("./myjavadocs/docs2"))
+
+//        options.docletpath = "./build/classes/java/main" as List
+//        options.docletpath = [rootProject.file("./build/classes/java/main")]
+
+        options.docletpath(file("./build/classes/java/main"))
+        options.doclet = "com.cschar.pmode3.tools.JsonConfigMarkdownDoclet"
+        options {
+            this as StandardJavadocDocletOptions
+//            noTimestamp()
+
+        }
+    }
+
+    dokkaHtml {
+        // https://kotlinlang.org/docs/dokka-gradle.html#single-project-configuration
+        dokkaSourceSets.configureEach {
+            documentedVisibilities.set(
+                setOf(
+                    DokkaConfiguration.Visibility.PUBLIC,
+                    DokkaConfiguration.Visibility.PROTECTED,
+                )
+            )
+            perPackageOption {
+                matchingRegex.set(".*.*")
+                suppress.set(true)
+            }
+
+            perPackageOption {
+                matchingRegex.set(".*config.*")
+                suppress.set(false)
+            }
+            perPackageOption {
+                matchingRegex.set(".*config.common.*")
+                suppress.set(true)
+            }
+        }
+        outputDirectory.set(file("mydocs/dokkaHtml"))
+    }
+
+
     wrapper {
         gradleVersion = properties("gradleVersion").get()
     }

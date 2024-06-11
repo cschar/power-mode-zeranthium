@@ -420,6 +420,7 @@ public class GitPackLoaderJComponent extends JPanel{
             public void actionPerformed(ActionEvent e) {
                 LOGGER.debug("Loading pack for " + customRepoName+"...");
 
+//                statusLabel.
                 packsList.removeAll();
                 packsList.validate();
                 packsList.repaint();

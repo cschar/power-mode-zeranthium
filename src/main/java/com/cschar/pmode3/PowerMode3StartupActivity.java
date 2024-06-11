@@ -55,7 +55,8 @@ public class PowerMode3StartupActivity implements ProjectActivity {
         // Freezes up loading BasePlatformTestCase
         // Skip with Environment Variable
         String testFlag = System.getenv("POWERMODE_ZERANTHIUM_TESTS");
-        if(!Objects.equals(testFlag, "")){
+        if(testFlag != null && !testFlag.trim().isEmpty()){
+            LOGGER.warn("test flag : " + testFlag);
             LOGGER.warn("test flag is set, skipping setup");
            return null;
         }

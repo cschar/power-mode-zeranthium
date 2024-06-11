@@ -5,6 +5,7 @@ import com.cschar.pmode3.PowerMode3;
 import com.cschar.pmode3.Sound;
 import com.cschar.pmode3.config.MusicTriggerConfig;
 import com.cschar.pmode3.config.common.SoundData;
+import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
@@ -15,8 +16,12 @@ import javax.swing.*;
 
 public class HotKeyMusicTriggerBAction extends AnAction {
 
+    @Override
+    public @NotNull ActionUpdateThread getActionUpdateThread() {
 
-
+        return ActionUpdateThread.EDT;
+//        return super.getActionUpdateThread();
+    }
 
     public HotKeyMusicTriggerBAction() {
         super();

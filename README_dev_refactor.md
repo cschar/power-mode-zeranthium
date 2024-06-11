@@ -10,11 +10,6 @@ uses this plugin:
 https://plugins.jetbrains.com/plugin/15104-ide-perf
 
 
-Try USING THIS FOR TESTS:
-https://stackoverflow.com/a/46533151/5198805
-https://github.com/radarsh/gradle-test-logger-plugin
-
-
 Resources on IntelliJ API:
 https://developerlife.com/2021/03/13/ij-idea-plugin-advanced/
 http://vladsch.com/blog/3
@@ -36,24 +31,22 @@ RE-enable memory monitor UI
 [x] - robotUI test: test to load packs through UI, prebuilt packs + custom pack
 [ ] - Type , pseudo-Disable plugin, Type,  assert when plugin disabled, characters are still typed
 
-## BUGS ?
-
--- When stopping with CTRL+SHIFT+Z.... particles/dinos still float away instead of immediatly disappearing
+## BUGS 
+-- When loading pack and hitting 'reload', label stays as 'downloading', but is done
 -- in Droste, moving caret with arrow keys doesnt resize cover
 
-## upgrade
-put docs on astro site
-https://docs.astro.build/en/guides/deploy/github/
+
 
 # potentially..
 - dynamic plugin enable/disable
 - pack loaders now use Modal UIs when fetching packs from github
 
-/opt/jdk/11/bin/javadoc \
--docletpath  -docletpath ./build/classes/java/main \
-  -doclet com.cschar.pmode3.MyDoclet \
-src/main/java/com/cschar/pmode3/MyDoclet.java
 
--docletpath  -docletpath ./build/classes/java/main \
--doclet com.cschar.pmode3.MyTagScannerDoclet \
-src/main/java/com/cschar/pmode3/MyTagScannerDoclet.java
+# https://docs.oracle.com/en/java/javase/11/docs/api/jdk.javadoc/jdk/javadoc/doclet/package-summary.html#migration
+```bash
+javadoc \
+-docletpath ./build/classes/java/main \
+-doclet com.cschar.pmode3.tools.MyJavadoclet \
+src.main.java.com.cschar.pmode3.tools
+
+```

@@ -86,8 +86,17 @@ rm `./build/idea-sandbox/config/options/power.mode.3.Zeranthium.xml`
 add in Help > diagnostic Tools > Debug Log Settings
 #com.cschar.pmode3:all     (including # at start)
 
+# then the log entries will be visible in 
+    `build/idea-sandbox/<IDE-VERSION>/log/idea.log`
+ex: `build/idea-sandbox/IC-2024.2/log/idea.log`
 
 
+### generating custom javadocs
+
+```
+./gradlew :javadoc --rerun --quiet
+./gradlew :javadoc --rerun --quiet > ./docsv2/_includes/options.md
+```
 
 ----------------------------------------------------------------
 

@@ -150,8 +150,25 @@ public class TapAnimConfig extends BaseConfigJPanel {
     }
 
 
+    /**
+      @val1  yoffset  from caret
+      @val2  xoffset  from caret
 
+      @val3 unused
 
+     @exampleConfig
+
+     "TAP_ANIM": {
+         "tableData": [
+             {"customPath":"./TAP_ANIM/layer1", "alpha":1,
+                 "val1":15,
+                 "val2":-30,
+                 "scale":0.8,
+                 "enabled":true,"speedRate":4, "isCyclic": true
+             }
+         ]
+     }
+     */
     public static void loadJSONConfig(JSONObject configData, Path parentPath) throws JSONException {
 
         JSONArray tableData = configData.getJSONArray("tableData");

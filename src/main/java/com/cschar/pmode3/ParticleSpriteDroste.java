@@ -258,7 +258,7 @@ public class ParticleSpriteDroste extends Particle{
             at.translate((int)cursorX*(1/curScale) ,(int)cursorY *(1/curScale));
 
             at.translate(-sprite.getWidth()/2,
-                             -sprite.getHeight()/2);
+                         -sprite.getHeight()/2);
 
             g2d.drawImage(sprites.get(frame), at, null);
 

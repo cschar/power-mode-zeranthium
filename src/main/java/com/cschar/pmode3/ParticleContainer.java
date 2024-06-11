@@ -13,14 +13,13 @@
 
 package com.cschar.pmode3;
 
-import com.cschar.pmode3.actionHandlers.MyCaretListener;
+import com.cschar.pmode3.listeners.MyCaretListener;
 import com.cschar.pmode3.config.*;
 import com.cschar.pmode3.config.common.SpriteDataAnimated;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.CaretListener;
-import com.intellij.openapi.util.Disposer;
 
 import javax.swing.*;
 import java.awt.*;

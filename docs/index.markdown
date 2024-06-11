@@ -1,3 +1,9 @@
+---
+# Feel free to add content and custom Front Matter to this file.
+# To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
+
+layout: home
+---
 
 
 get more stuff here:
@@ -49,7 +55,7 @@ with sibling folders containing the assets the manifest.json file will point to:
 
 ```
 
-Once the manifest.json file is present with the assets, from inside the settings you can open
+Once the manifest.json file is created with the assets, from inside the plugin settings you can open
 that custom pack file. The plugin will autoload all configurations specified in the manifest.
 
 Here is an example manifest.json file for a theme
@@ -291,3 +297,6 @@ val2: xoffset  from caret
 <h3> Action Sound </h3>
 Todo
 
+
+
+{% include options.md %}
