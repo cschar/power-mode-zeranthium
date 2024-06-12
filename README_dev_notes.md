@@ -27,8 +27,9 @@
         export POWERMODE_ZERANTHIUM_TESTS="true"
         ./gradlew :test --info
  
- . publish  
-        ./gradlew :publishPlugin --no-configuration-cache
+ 6. publish  
+         # ensure you have PUBLISH_TOKEN set as env var
+        ./gradlew :publishPlugin --no-configuration-cache --info
 
 ```
 
