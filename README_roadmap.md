@@ -37,6 +37,8 @@ Done;
       
 future TODO:
 
+- TEXT COMPLETE Sound
+
 - BUILDUP_MONITOR, where you hit different thresholds
   - based on threshold, different SOUNDS/EFFECTS HAPPEN
   - thresholds can be based on wpm
