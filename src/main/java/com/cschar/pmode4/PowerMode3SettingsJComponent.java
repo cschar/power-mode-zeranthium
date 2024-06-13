@@ -537,6 +537,7 @@ public class PowerMode3SettingsJComponent implements Disposable {
         this.lanternConfig.loadValues();
         this.tapAnimConfig.loadValues();
         this.multiLayerChanceConfig.loadValues();
+
         //sound panel
         this.soundConfig.loadValues();
         this.musicTriggerConfig.loadValues();
@@ -579,6 +580,7 @@ public class PowerMode3SettingsJComponent implements Disposable {
         //Sound
         settings.setSpriteTypeEnabled(enableBasicSound.isSelected(), PowerMode3.ConfigType.SOUND);
         settings.setSpriteTypeEnabled(enableActionSound.isSelected(), PowerMode3.ConfigType.SPECIAL_ACTION_SOUND);
+        settings.setSpriteTypeEnabled(enableTextCompletionSound.isSelected(), PowerMode3.ConfigType.TEXT_COMPLETION_SOUND);
 
 
         if(!settings.isConfigLoaded){
@@ -867,6 +869,7 @@ public class PowerMode3SettingsJComponent implements Disposable {
             
             enableBasicSound.setSelected(false);
             enableActionSound.setSelected(false);
+            enableTextCompletionSound.setSelected(false);
         
         }
 
@@ -942,10 +945,6 @@ public class PowerMode3SettingsJComponent implements Disposable {
                     LizardConfig.loadJSONConfig(configKeyData, path.getParent());
                     enableLizardCheckBox.setSelected(true);
                     break;
-                case "SOUND":
-                    enableBasicSound.setSelected(true);
-                    soundConfig.loadJSONConfig(configKeyData, path.getParent());
-                    break;
                 case "DROSTE":
                     enableDrosteCheckbox.setSelected(true);
                     DrosteConfig.loadJSONConfig(configKeyData, path.getParent());
@@ -975,6 +974,14 @@ public class PowerMode3SettingsJComponent implements Disposable {
                     enableLantern.setSelected(true);
                     //TODO updateUI method called on object instance
                     lanternConfig.loadJSONConfig(configKeyData, path.getParent());
+                    break;
+                case "SOUND":
+                    enableBasicSound.setSelected(true);
+                    soundConfig.loadJSONConfig(configKeyData, path.getParent());
+                    break;
+                case "TEXT_COMPLETION_SOUND":
+                    enableTextCompletionSound.setSelected(true);
+                    textCompletionSoundConfig.loadJSONConfig(configKeyData, path.getParent());
                     break;
                 default:
                     found = false;

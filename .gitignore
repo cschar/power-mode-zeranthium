@@ -2,6 +2,7 @@
 .idea
 .intellijPlatform
 .qodana
+.kotlin
 build
 
 myjavadocs

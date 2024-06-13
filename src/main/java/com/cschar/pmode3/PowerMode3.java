@@ -52,6 +52,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
+import java.lang.reflect.Array;
 import java.util.List;
 import java.util.*;
 
@@ -397,6 +398,10 @@ final public class PowerMode3 implements
         
     }
 
+
+    /** Keep track of index of each word */
+    private int[] charIndexLadder = new int[10];
+
     private void setupSoundTyper(){
         //Setup SOUND handler
         final TypedAction typedAction2 = TypedAction.getInstance();
@@ -406,7 +411,10 @@ final public class PowerMode3 implements
                 new TypedActionHandler() {
                     @Override
                     public void execute(@NotNull Editor editor, char c, @NotNull DataContext dataContext) {
-                        if (PowerMode3.this.isConfigLoaded && PowerMode3.this.enabled && PowerMode3.this.getSpriteTypeEnabled(ConfigType.SOUND)) {
+                        if (PowerMode3.this.isConfigLoaded
+                            && PowerMode3.this.enabled
+                            && PowerMode3.this.getSpriteTypeEnabled(ConfigType.SOUND)) {
+
                             int winner = SoundData.getWeightedAmountWinningIndex(SoundConfig.soundData);
                             if (winner != -1) {
                                 //TODO refactor to just return object or null
@@ -414,8 +422,31 @@ final public class PowerMode3 implements
                                 Sound s = new Sound(d.getPath(), !d.customPathValid);
                                 s.play();
                             }
+                            LOGGER.debug("sound type");
                         }
-                        LOGGER.debug("sound type");
+                        if (PowerMode3.this.isConfigLoaded
+                            && PowerMode3.this.enabled
+                            && PowerMode3.this.getSpriteTypeEnabled(ConfigType.TEXT_COMPLETION_SOUND)) {
+
+
+                            // IncrementLadder(ladder int[], char c)
+                            // PlayCompleted(ladder int[])
+
+                            var sounds = TextCompletionSoundConfig.soundData;
+                            int[] results = TextCompletionSoundConfig.incrementLadder(charIndexLadder, c, sounds);
+
+                            for(int j=0; j<results.length; j++){
+                                if ( results[j] == 1){
+                                    LOGGER.debug("text completion: playing sound for " + sounds.get(j).soundExtra1);
+                                    SoundData d = sounds.get(j);
+                                    Sound s = new Sound(d.getPath(), !d.customPathValid);
+                                    s.play();
+                                }
+                            }
+                            LOGGER.debug("text completion ladder  : " + Arrays.toString(charIndexLadder));
+                            LOGGER.debug("text completion results : " + Arrays.toString(results));
+                        }
+
                         rawHandler2.execute(editor, c, dataContext);
                     }
                 });
@@ -499,6 +530,9 @@ final public class PowerMode3 implements
     @com.intellij.util.xmlb.annotations.Transient
     public boolean isConfigLoaded = false;
 
+    /**
+     * Load config data from default files
+     */
     private void loadConfigDataAsync(ProgressIndicator progressIndicator) {
         progressIndicator.setIndeterminate(false);
         progressIndicator.setText("loading assets.. ");
@@ -654,6 +688,9 @@ final public class PowerMode3 implements
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+        if(!this.enabled){
+            Sound.stopAll();
+        }
     }
 
 

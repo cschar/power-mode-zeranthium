@@ -94,7 +94,6 @@ public class TextCompletionSoundConfigTableModel extends AbstractConfigTableMode
     public boolean isCellEditable(int row, int column) {
         switch (column) {
             case 0:
-            case 2:
             case 4:
                 return false;
             default:
@@ -117,10 +116,7 @@ public class TextCompletionSoundConfigTableModel extends AbstractConfigTableMode
             case 1:
                 return soundData.get(row).enabled;
             case 2:
-                String s = "test";
-
-                return "<html> <b> key: </b> " + s + "</html>";
-
+                return soundData.get(row).soundExtra1;
             case 3:
                 final JButton button = new JButton("Set path");
                 button.addActionListener(arg0 -> {
@@ -172,7 +168,14 @@ public class TextCompletionSoundConfigTableModel extends AbstractConfigTableMode
             case 1:  //enabled
                 d.enabled = (Boolean) value;  // is set in hotkey map settings
                 return;
-            case 2:   //button clicked
+            case 2:   //text to complete
+
+                // Limit to length 50
+                String v = (String) value;
+                if (v.length() > 50){
+                    v = v.substring(0,50);
+                }
+                d.soundExtra1 = v;
                 return;
             case 3:   // custom path
                 return;

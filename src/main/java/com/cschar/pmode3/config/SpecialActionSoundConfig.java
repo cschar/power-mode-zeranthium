@@ -120,9 +120,10 @@ public class SpecialActionSoundConfig extends BaseConfigJPanel {
         return sp;
     }
 
-    public void loadValues(){
+    //TODO: No loadJSONConfig or consumeJSONConfig ? Sound has it
 
-//        this.soundEnabled.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.SOUND,"soundEnabled", true));
+    public void loadValues(){
+        //Done in plugin setup since config panel may not be launched before typing action
     }
 
     public void saveValues() {

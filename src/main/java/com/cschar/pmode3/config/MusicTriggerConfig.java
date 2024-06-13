@@ -124,8 +124,7 @@ public class MusicTriggerConfig extends JPanel {
     }
 
     public void loadValues(){
-
-//        this.soundEnabled.setSelected(Config.getBoolProperty(settings, PowerMode3.ConfigType.SOUND,"soundEnabled", true));
+        //Done in plugin setup since config panel may not be launched before typing action
     }
 
     public void saveValues() {

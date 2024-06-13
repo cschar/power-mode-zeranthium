@@ -143,6 +143,7 @@ public class SoundConfig extends JPanel {
 
 
     /**
+     *  only used for loading custom config packs
      *
      * @exampleConfig
      *  "SOUND": {
@@ -160,6 +161,8 @@ public class SoundConfig extends JPanel {
 
         for(int i =0; i<tableData.length(); i++){
             JSONObject spriteDataRow = tableData.getJSONObject(i);
+            // can be replaced with
+            // SoundData sd2 = SoundData.fromJsonObjectString(jo.toString());
             SoundConfig.soundData.set(i, consumeJSONConfig(spriteDataRow, i, parentPath));
         }//table data will change on scroll
 

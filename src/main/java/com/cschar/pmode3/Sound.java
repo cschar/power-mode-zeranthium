@@ -19,13 +19,6 @@ public class Sound {
     public String getPath(){ return this.path; };
 
 
-    public static void closeAllPlayers(){
-        for(Player p : playerBank){
-            p.close();
-        }
-        playerBank.clear();
-    }
-
 
     public Sound(String filePath, boolean isResource){
         this.path = filePath;

@@ -12,9 +12,20 @@ import com.intellij.openapi.diagnostic.Logger;
 public class SoundData extends PathData{
     private static final Logger LOGGER = Logger.getInstance( SoundData.class.getName() );
 
+    public String soundExtra1 = "";
+
     public SoundData(boolean enabled, int val1, String defaultPath, String customPath) {
         super(enabled, defaultPath, customPath, val1);
+        setValidPath();
 
+    }
+    public SoundData(boolean enabled, int val1, String defaultPath, String customPath, String soundExtra1) {
+        super(enabled, defaultPath, customPath, val1);
+        setValidPath();
+        this.soundExtra1 = soundExtra1;
+    }
+
+    private void setValidPath(){
         if(!customPath.equals("")){ //check if value on filesystem is bad on initialization
             VirtualFile tmp = LocalFileSystem.getInstance().findFileByPath(customPath);
             if(tmp == null){
@@ -23,7 +34,6 @@ public class SoundData extends PathData{
                 this.customPathValid = true;
             }
         }
-
     }
 
     public void setValidMP3Path(VirtualFile f){
@@ -50,6 +60,7 @@ public class SoundData extends PathData{
             jo.put("defaultPath",this.defaultPath);
             jo.put("customPath",this.customPath);
             jo.put("val1",this.val1);
+            jo.put("soundExtra1", this.soundExtra1);
         }catch(JSONException e){
             LOGGER.error(e.toString(),e);
         }
@@ -66,6 +77,10 @@ public class SoundData extends PathData{
                     jo.getInt("val1"),
                     jo.getString("defaultPath"),
                     jo.getString("customPath"));
+            //set optional extra fields
+            if (jo.has("soundExtra1")){
+                sd.soundExtra1 = jo.getString("soundExtra1");
+            }
 
         }catch(JSONException e){
             LOGGER.error(e.toString(),e);

@@ -54,13 +54,12 @@ public class PowerMode3Test extends BasePlatformTestCase {  //This boots up the 
         PowerMode3 p1 = new PowerMode3();
 
         LOG.info("checking defaults are set in config...");
-        assertEquals(12, pmode3Service.pathDataMap.size());
+        assertEquals(13, pmode3Service.pathDataMap.size());
         assertEquals(0, p1.pathDataMap.size());
         XmlSerializerUtil.copyBean(pmode3Service, p1);
 
         assertEquals(pmode3Service.getParticleRGB(), p1.getParticleRGB());
-        assertEquals(12, p1.pathDataMap.size());
-        assertEquals(12, 12);
+        assertEquals(13, p1.pathDataMap.size());
 
     }
     //can use Tags to separate UiTests from unit tests
