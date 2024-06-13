@@ -1,5 +1,6 @@
 package com.cschar.pmode3.config;
 
+import com.cschar.pmode3.PowerMode3;
 import com.cschar.pmode3.Sound;
 import com.cschar.pmode3.config.common.SoundData;
 import com.cschar.pmode3.config.common.ui.AbstractConfigTableModel;
@@ -143,8 +144,8 @@ public class TextCompletionSoundConfigTableModel extends AbstractConfigTableMode
 
                     d.customPath = "";
                     d.customPathValid = false;
-
-
+                    d.soundExtra1 = TextCompletionSoundConfig.getDefaultWord(row);
+                    
                     this.fireTableDataChanged();
                 });
                 return resetButton;

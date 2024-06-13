@@ -2,6 +2,7 @@ package com.cschar.pmode3.config;
 
 import com.cschar.pmode3.PowerMode3;
 import com.cschar.pmode3.Sound;
+import com.cschar.pmode3.ZJSONLoader;
 import com.cschar.pmode3.config.common.SoundData;
 import com.cschar.pmode3.config.common.ui.CustomPathCellHighlighterRenderer;
 import com.cschar.pmode3.config.common.ui.JTableButtonMouseListener;
@@ -10,6 +11,7 @@ import com.cschar.pmode3.config.common.ui.JTableSoundButtonRenderer;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
+import com.intellij.util.SmartList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -76,6 +78,7 @@ public class TextCompletionSoundConfig extends BaseConfigJPanel {
      */
     public static int[] incrementLadder(int[] ladder, char c, ArrayList<SoundData> sounds){
         int[] results = new int[ladder.length];
+        c = Character.toLowerCase(c);
 
         for(int i =0; i < ladder.length; i++){
             if ( i >= sounds.size() ){
@@ -83,6 +86,8 @@ public class TextCompletionSoundConfig extends BaseConfigJPanel {
             }
 
             String word = sounds.get(i).soundExtra1;
+            //TODO: put lowercase when loading
+            word = word.toLowerCase();
             System.out.println("checking " + word + "against " + String.valueOf(c));
             int curIdx = ladder[i];
 
@@ -110,20 +115,12 @@ public class TextCompletionSoundConfig extends BaseConfigJPanel {
         return results;
     }
 
-//    public static void playCompleted(int[] ladder, int soundIndex,  ArrayList<SoundData> sounds){
-//        String word = sounds.get(soundIndex).soundExtra1;
-//        if ( ladder[soundIndex] == word.length()) {
-//            // we completed the word, play the sound
-//            SoundData d = TextCompletionSoundConfig.soundData.get(soundIndex);
-//            Sound s = new Sound(d.getPath(), !d.customPathValid);
-//            s.play();
-//
-//            //reset ladder
-//            ladder[soundIndex] = 0;
-//
-//
-//        }
-//    }
+    public static String getDefaultWord(int row){
+        ZJSONLoader z = new ZJSONLoader();
+        SmartList<String> defaults = z.getDefaultJSONTableConfigs().get(PowerMode3.ConfigType.TEXT_COMPLETION_SOUND);
+        SoundData sd = SoundData.fromJsonObjectString(defaults.get(row));
+        return sd.soundExtra1;
+    }
 
     public JComponent createConfigTable(){
 

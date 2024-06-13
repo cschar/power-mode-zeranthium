@@ -235,7 +235,7 @@ final public class PowerMode3 implements
             TextCompletionSoundConfig.soundData.clear();
         }
         TextCompletionSoundConfig.soundData = null;
-//        SpecialActionSoundConfigTableModel.emptySounds();
+        TextCompletionSoundConfigTableModel.emptySounds();
 
 
 
@@ -317,6 +317,7 @@ final public class PowerMode3 implements
         MULTI_LAYER_CHANCE,
         TEXT_COMPLETION_SOUND,
     }
+
 
 
 
@@ -428,10 +429,6 @@ final public class PowerMode3 implements
                             && PowerMode3.this.enabled
                             && PowerMode3.this.getSpriteTypeEnabled(ConfigType.TEXT_COMPLETION_SOUND)) {
 
-
-                            // IncrementLadder(ladder int[], char c)
-                            // PlayCompleted(ladder int[])
-
                             var sounds = TextCompletionSoundConfig.soundData;
                             int[] results = TextCompletionSoundConfig.incrementLadder(charIndexLadder, c, sounds);
 
@@ -443,8 +440,8 @@ final public class PowerMode3 implements
                                     s.play();
                                 }
                             }
-                            LOGGER.debug("text completion ladder  : " + Arrays.toString(charIndexLadder));
-                            LOGGER.debug("text completion results : " + Arrays.toString(results));
+//                            LOGGER.debug("text completion ladder  : " + Arrays.toString(charIndexLadder));
+//                            LOGGER.debug("text completion results : " + Arrays.toString(results));
                         }
 
                         rawHandler2.execute(editor, c, dataContext);
