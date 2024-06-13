@@ -19,6 +19,7 @@ links to
 RE-enable memory monitor UI
 
 ## DIAGNOSTICS
+put the following including the "#"
 #com.cschar.pmode3:all
 
 ## TESTS

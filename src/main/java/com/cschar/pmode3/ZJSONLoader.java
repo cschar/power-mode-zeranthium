@@ -31,6 +31,7 @@ public class ZJSONLoader {
             put(PowerMode3.ConfigType.MUSIC_TRIGGER, "MUSIC_TRIGGERS.json");
             put(PowerMode3.ConfigType.SOUND, "SOUND.json");
             put(PowerMode3.ConfigType.SPECIAL_ACTION_SOUND, "SPECIAL_ACTION_SOUND.json");
+            put(PowerMode3.ConfigType.TEXT_COMPLETION_SOUND, "TEXT_COMPLETION_SOUND.json");
         }};
     }
 

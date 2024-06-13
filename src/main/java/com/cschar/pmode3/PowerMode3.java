@@ -452,8 +452,10 @@ final public class PowerMode3 implements
     @Override
     public void loadState(@NotNull PowerMode3 state) {
         LOGGER.debug("previous state found: setting up...");
-
         XmlSerializerUtil.copyBean(state, this);
+        if(JSONLoader == null){
+            JSONLoader =  new ZJSONLoader();
+        }
 
         //check for missing config data e.g. new setting has been added
         List<ConfigType> missingConfigs = new ArrayList<>();
@@ -470,7 +472,7 @@ final public class PowerMode3 implements
         if (missingConfigs.size() != 0) {
             LOGGER.debug("Missing configs found: " + missingConfigs.size() + " -- loading defaults");
             for (ConfigType c : missingConfigs) {
-                LOGGER.debug("loading missing config :" + c.name());
+                LOGGER.debug("loading missing config : " + c.name());
                 JSONLoader.loadSingleJSONTableConfig(pathDataMap, c);
             }
         }
