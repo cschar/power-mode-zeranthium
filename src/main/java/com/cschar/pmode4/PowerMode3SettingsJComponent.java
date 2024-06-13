@@ -55,9 +55,6 @@ public class PowerMode3SettingsJComponent implements Disposable {
     private JPanel soundSettingsPanel;
     private JTabbedPane configSettingsTabbedPane;
 
-    private SoundConfig soundConfig;
-    private MusicTriggerConfig musicTriggerConfig;
-    private SpecialActionSoundConfig specialActionSoundConfig;
 
 
     //TODO: Move all this into a component
@@ -78,6 +75,7 @@ public class PowerMode3SettingsJComponent implements Disposable {
     private JButton loadPackButton;
     private JCheckBox enableBasicSound;
     private JCheckBox enableActionSound;
+    private JCheckBox enableTextCompletionSound;
     private JCheckBox enableLockedLayerCheckbox;
     private JCheckBox enableLantern;
     private JCheckBox enableTapAnim;
@@ -85,7 +83,7 @@ public class PowerMode3SettingsJComponent implements Disposable {
     private JButton anchorConfigButton;
     private JCheckBox enableMultiLayerChanceCheckbox;
 
-
+    //particle config
     private BasicParticleConfig basicParticleConfig;
     private LizardConfig lizardConfig;
     private VineConfig vineConfig;
@@ -98,6 +96,12 @@ public class PowerMode3SettingsJComponent implements Disposable {
     private LockedLayerConfig lockedLayerConfig;
     private LanternConfig lanternConfig;
     private TapAnimConfig tapAnimConfig;
+
+    //sound config
+    private SoundConfig soundConfig;
+    private MusicTriggerConfig musicTriggerConfig;
+    private SpecialActionSoundConfig specialActionSoundConfig;
+    private TextCompletionSoundConfig textCompletionSoundConfig;
 
     PowerMode3 settings;
 
@@ -506,7 +510,10 @@ public class PowerMode3SettingsJComponent implements Disposable {
         if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.SPECIAL_ACTION_SOUND)){
             enableActionSound.setSelected(true);
         }
-
+        enableTextCompletionSound = setCheckBox(col4, "Enable Text Completion Sound");
+        if(settings.getSpriteTypeEnabled(PowerMode3.ConfigType.TEXT_COMPLETION_SOUND)){
+            enableTextCompletionSound.setSelected(true);
+        }
 
         mainBottomPanel.add(col1);
         mainBottomPanel.add(col2);
@@ -534,6 +541,7 @@ public class PowerMode3SettingsJComponent implements Disposable {
         this.soundConfig.loadValues();
         this.musicTriggerConfig.loadValues();
         this.specialActionSoundConfig.loadValues();
+        this.textCompletionSoundConfig.loadValues();
     }
 
 
@@ -602,6 +610,7 @@ public class PowerMode3SettingsJComponent implements Disposable {
         this.soundConfig.saveValues();
         this.musicTriggerConfig.saveValues();
         this.specialActionSoundConfig.saveValues();
+        this.textCompletionSoundConfig.saveValues();
 
 
         //Load the Data if settings turned on
@@ -703,6 +712,7 @@ public class PowerMode3SettingsJComponent implements Disposable {
         if (loadingLabel.getParent() == this.theCustomCreatePanel) {
             this.theCustomCreatePanel.remove(loadingLabel);
         }
+        // Add Tabs
         configSettingsTabbedPane = new JBTabbedPane();
         configSettingsTabbedPane.setMaximumSize(new Dimension(1000,8000));
         configSettingsTabbedPane.setOpaque(false);
@@ -718,7 +728,9 @@ public class PowerMode3SettingsJComponent implements Disposable {
         ImageIcon soundIcon = new ImageIcon(this.getClass().getResource("/icons/sound_small.png"));
         configSettingsTabbedPane.addTab("Sound Settings", soundIcon, soundSettingsPanel);
 
-        //Sound Settings tab
+        //Add tab contents
+
+        //Sound Settings tab contents
         soundSettingsPanel.add(this.createSpacer());
         soundConfig = new SoundConfig(settings);
         soundSettingsPanel.add(soundConfig);
@@ -731,11 +743,15 @@ public class PowerMode3SettingsJComponent implements Disposable {
         musicTriggerConfig = new MusicTriggerConfig(settings);
         soundSettingsPanel.add(musicTriggerConfig);
 
+        soundSettingsPanel.add(this.createSpacer());
+        textCompletionSoundConfig = new TextCompletionSoundConfig(settings);
+        soundSettingsPanel.add(textCompletionSoundConfig);
+
         JPanel footerPanel = new JPanel();
         footerPanel.setMinimumSize(new Dimension(100, 300));
         soundSettingsPanel.add(footerPanel);
 
-        //Particle Settings tab
+        //Particle Settings tab contents
         particleSettingsPanel.add(this.createSpacer());
         this.basicParticleConfig = new BasicParticleConfig(settings);
         particleSettingsPanel.add(this.basicParticleConfig);

@@ -45,6 +45,7 @@ import com.intellij.ui.JBColor;
 import com.intellij.util.SmartList;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.OptionTag;
+import com.intellij.util.xmlb.annotations.Text;
 import com.intellij.util.xmlb.annotations.Transient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -228,7 +229,12 @@ final public class PowerMode3 implements
         SpecialActionSoundConfig.soundData = null;
         SpecialActionSoundConfigTableModel.emptySounds();
 
-
+        LOGGER.trace("Unloading TEXT_COMPLETION_SOUND data...");
+        if(TextCompletionSoundConfig.soundData != null) {
+            TextCompletionSoundConfig.soundData.clear();
+        }
+        TextCompletionSoundConfig.soundData = null;
+//        SpecialActionSoundConfigTableModel.emptySounds();
 
 
 
@@ -308,6 +314,7 @@ final public class PowerMode3 implements
         LANTERN,
         TAP_ANIM,
         MULTI_LAYER_CHANCE,
+        TEXT_COMPLETION_SOUND,
     }
 
 
@@ -336,6 +343,7 @@ final public class PowerMode3 implements
         put("sprite" + ConfigType.MULTI_LAYER_CHANCE + "Enabled", "false");
         put("sprite" + ConfigType.SOUND + "Enabled", "true");
         put("sprite" + ConfigType.SPECIAL_ACTION_SOUND + "Enabled", "false");
+        put("sprite" + ConfigType.TEXT_COMPLETION_SOUND + "Enabled", "false");
     }};
 
 
@@ -462,7 +470,7 @@ final public class PowerMode3 implements
         if (missingConfigs.size() != 0) {
             LOGGER.debug("Missing configs found: " + missingConfigs.size() + " -- loading defaults");
             for (ConfigType c : missingConfigs) {
-                LOGGER.debug(c.name());
+                LOGGER.debug("loading missing config :" + c.name());
                 JSONLoader.loadSingleJSONTableConfig(pathDataMap, c);
             }
         }
@@ -545,8 +553,8 @@ final public class PowerMode3 implements
             LOGGER.debug("======== LOADING SOUNDS ========= ");
             SoundConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.SOUND)));
             MusicTriggerConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.MUSIC_TRIGGER)));
-
             SpecialActionSoundConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.SPECIAL_ACTION_SOUND)));
+            TextCompletionSoundConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.TEXT_COMPLETION_SOUND)));
 
             long endTime = System.nanoTime();
             long duration = (endTime - startTime);
