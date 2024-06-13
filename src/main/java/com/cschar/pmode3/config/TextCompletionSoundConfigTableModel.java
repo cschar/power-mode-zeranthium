@@ -45,7 +45,7 @@ public class TextCompletionSoundConfigTableModel extends AbstractConfigTableMode
     public static final String[] columnNames = new String[]{
             "preview",
             "enabled?",
-            "key",
+            "text to match",
 //            "weighted amount (1-100)",
 
             "set path (MP3)",
@@ -145,7 +145,7 @@ public class TextCompletionSoundConfigTableModel extends AbstractConfigTableMode
                     d.customPath = "";
                     d.customPathValid = false;
                     d.soundExtra1 = TextCompletionSoundConfig.getDefaultWord(row);
-                    
+
                     this.fireTableDataChanged();
                 });
                 return resetButton;

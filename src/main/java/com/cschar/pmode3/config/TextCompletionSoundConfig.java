@@ -184,16 +184,15 @@ public class TextCompletionSoundConfig extends BaseConfigJPanel {
      * @exampleConfig
      *  "TEXT_COMPLETION_SOUND": {
      *       "tableData": [
-     *         //TODO
+     *               {"enabled": true,  "soundExtra1": "my_word_1",       "customPath": "./SOUND/sound1.mp3"},
+     *               {"enabled": true,  "soundExtra1": "word2",           "customPath": "./SOUND/sound2.mp3"},
+     *               {"enabled": false, "soundExtra1": "functionName500", "customPath": "./SOUND/sound3.mp3"},
+     *               {"enabled": true,  "soundExtra1": "import",          "customPath": "./SOUND/sound4.mp3"}
      *       ]
      *     }
      */
     public void loadJSONConfig(JSONObject configData, Path parentPath) throws JSONException {
-
         JSONArray tableData = configData.getJSONArray("tableData");
-
-
-//        TextCompletionSoundConfig.soundData = new ArrayList<>();
 
         for(int i =0; i<tableData.length(); i++){
             if (i >= MAX_ROWS) {
@@ -201,13 +200,40 @@ public class TextCompletionSoundConfig extends BaseConfigJPanel {
                 break;
             }
 
-            JSONObject jo = tableData.getJSONObject(i);
+            JSONObject soundDataRow = tableData.getJSONObject(i);
+            SoundData sd = overrideWithCustomConfig(soundDataRow, i, parentPath);
+            TextCompletionSoundConfig.soundData.set(i, sd);
 
-            SoundData sd2 = SoundData.fromJsonObjectString(jo.toString());
-//            TextCompletionSoundConfig.soundData.add(sd2);
-            TextCompletionSoundConfig.soundData.set(i, sd2);
-        }//table data will change on scroll
+        }
 
+    }
+
+    /**
+     * only allow specific fields to be overridden
+     */
+    private static SoundData overrideWithCustomConfig(JSONObject jo, int indexToReplace, Path parentPath) throws JSONException {
+
+        String customWord = jo.has("soundExtra1") ? jo.getString("soundExtra1") : "";
+
+        Boolean enabled = jo.has("enabled") && jo.getBoolean("enabled");
+
+        String customPath = jo.has("customPath") ? jo.getString("customPath") : "";
+
+
+        SoundData sd = new SoundData(
+                //allow override
+                enabled,
+                // default
+                SoundConfig.soundData.get(indexToReplace).val1,
+                //default
+                SoundConfig.soundData.get(indexToReplace).defaultPath,
+                //allow override
+                parentPath.resolve(customPath).toString(),
+                //allow override
+                customWord
+        );
+
+        return sd;
     }
 
     public void loadValues(){
@@ -215,10 +241,8 @@ public class TextCompletionSoundConfig extends BaseConfigJPanel {
     }
 
     public void saveValues() {
-
         //TEXT_COMPLETION_SOUND
         settings.setSerializedSoundData(soundData, PowerMode3.ConfigType.TEXT_COMPLETION_SOUND);
-
     }
 
     public static void setSoundData(ArrayList<SoundData> data){

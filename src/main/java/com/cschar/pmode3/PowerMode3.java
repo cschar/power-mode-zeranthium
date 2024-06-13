@@ -401,7 +401,7 @@ final public class PowerMode3 implements
 
 
     /** Keep track of index of each word */
-    private int[] charIndexLadder = new int[10];
+    private int[] charIndexLadder = new int[TextCompletionSoundConfig.MAX_ROWS];
 
     private void setupSoundTyper(){
         //Setup SOUND handler
