@@ -2,38 +2,38 @@
   "data": [
     {
       "customPath": "",
-      "defaultPath": "/sounds/h1.mp3",
+      "defaultPath": "/sounds/text_completions/int.mp3",
       "val1": 20,
-      "enabled": false,
+      "enabled": true,
       "soundExtra1": "int"
     },
     {
       "customPath": "",
-      "defaultPath": "/sounds/h2.mp3",
+      "defaultPath": "/sounds/text_completions/log.mp3",
       "val1": 20,
       "enabled": true,
       "soundExtra1": "log"
     },
     {
       "customPath": "",
-      "defaultPath": "/sounds/h3.mp3",
+      "defaultPath": "/sounds/text_completions/todo.mp3",
       "val1": 20,
-      "enabled": false,
+      "enabled": true,
       "soundExtra1": "TODO"
     },
     {
       "customPath": "",
-      "defaultPath": "/sounds/h4.mp3",
+      "defaultPath": "/sounds/text_completions/void.mp3",
       "val1": 20,
-      "enabled": false,
+      "enabled": true,
       "soundExtra1": "void"
     },
     {
       "customPath": "",
-      "defaultPath": "/sounds/h4.mp3",
+      "defaultPath": "/sounds/text_completions/return.mp3",
       "val1": 20,
-      "enabled": false,
-      "soundExtra1": "fibonacci"
+      "enabled": true,
+      "soundExtra1": "return"
     }
   ]
 }

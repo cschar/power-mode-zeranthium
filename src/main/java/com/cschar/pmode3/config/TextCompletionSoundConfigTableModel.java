@@ -25,8 +25,6 @@ public class TextCompletionSoundConfigTableModel extends AbstractConfigTableMode
         soundData = sd;
     }
 
-//    public static ArrayList<SoundData> data = SpecialActionSoundConfig.soundData;
-
     private static final Logger LOGGER = Logger.getInstance(TextCompletionSoundConfigTableModel.class);
     public static void emptySounds(){
         if(soundsPlaying != null){
@@ -35,7 +33,6 @@ public class TextCompletionSoundConfigTableModel extends AbstractConfigTableMode
                     s.stop();
                 }catch (Exception e){
                     LOGGER.debug("sound already null");
-//                    LOGGER.warn("tried closing sound", e);
                 }
             }
             soundsPlaying = null;
@@ -46,8 +43,6 @@ public class TextCompletionSoundConfigTableModel extends AbstractConfigTableMode
             "preview",
             "enabled?",
             "text to match",
-//            "weighted amount (1-100)",
-
             "set path (MP3)",
             "path",
             "reset"
@@ -106,9 +101,6 @@ public class TextCompletionSoundConfigTableModel extends AbstractConfigTableMode
     @Override
     public Object getValueAt(int row, int column) {
 
-//https://stackoverflow.com/questions/13833688/adding-jbutton-to-jtable
-//        ImageIcon.class, Boolean.class, Integer.class, Boolean.class, String.class
-//
         SoundData d = soundData.get(row);
 
         switch (column) {
@@ -124,7 +116,6 @@ public class TextCompletionSoundConfigTableModel extends AbstractConfigTableMode
 
                     FileChooserDescriptor fd = new FileChooserDescriptor(true, false, false, false, false, false);
                     fd = new SoundFileChooserDescriptor(fd);
-//                    fd.setForcedToUseIdeaFileChooser(true);
 
                     FileChooserDialog fcDialog = FileChooserFactory.getInstance().createFileChooser(fd, null, null);
                     VirtualFile[] vfs = fcDialog.choose(null);
@@ -158,8 +149,6 @@ public class TextCompletionSoundConfigTableModel extends AbstractConfigTableMode
 
     @Override
     public void setValueAt(Object value, int row, int column) {
-
-//        ImageIcon.class, Boolean.class, Integer.class, Boolean.class, String.class
 
         SoundData d = soundData.get(row);
 

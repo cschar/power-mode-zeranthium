@@ -434,14 +434,16 @@ final public class PowerMode3 implements
 
                             for(int j=0; j<results.length; j++){
                                 if ( results[j] == 1){
-                                    LOGGER.debug("text completion: playing sound for " + sounds.get(j).soundExtra1);
                                     SoundData d = sounds.get(j);
-                                    Sound s = new Sound(d.getPath(), !d.customPathValid);
-                                    s.play();
+                                    if (d.enabled) {
+                                        LOGGER.debug("text completion: playing sound for " + sounds.get(j).soundExtra1);
+                                        Sound s = new Sound(d.getPath(), !d.customPathValid);
+                                        s.play();
+                                    }
                                 }
                             }
-//                            LOGGER.debug("text completion ladder  : " + Arrays.toString(charIndexLadder));
-//                            LOGGER.debug("text completion results : " + Arrays.toString(results));
+                            LOGGER.debug("text completion ladder  : " + Arrays.toString(charIndexLadder));
+                            LOGGER.debug("text completion results : " + Arrays.toString(results));
                         }
 
                         rawHandler2.execute(editor, c, dataContext);

@@ -261,3 +261,15 @@ val3: max length of links per sprite type
      }
 ```
 
+<h3 id='TextCompletionSoundConfig' > TextCompletionSoundConfig  <a href='#TextCompletionSoundConfig'> {% octicon link height:16 %} </a> </h3>
+
+```json 
+"TEXT_COMPLETION_SOUND": {
+   "tableData": [
+       {"enabled": true,  "soundExtra1": "my_word_1",       "customPath": "./SOUND/sound1.mp3"},
+       {"enabled": true,  "soundExtra1": "spaced words 20", "customPath": "./SOUND/sound2.mp3"},
+       {"enabled": false, "soundExtra1": "functionName500", "customPath": "./SOUND/sound3.mp3"},
+       {"enabled": true,  "soundExtra1": "import",          "customPath": "./SOUND/sound4.mp3"}
+   ]
+ }
+```

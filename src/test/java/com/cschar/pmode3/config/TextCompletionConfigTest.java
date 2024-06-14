@@ -1,14 +1,8 @@
 package com.cschar.pmode3.config;
 
-import com.cschar.pmode3.ZStateBasicParticle;
-import com.cschar.pmode3.ZStateBasicParticleConverter;
 import com.cschar.pmode3.config.common.SoundData;
 import org.junit.Test;
-
-
 import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

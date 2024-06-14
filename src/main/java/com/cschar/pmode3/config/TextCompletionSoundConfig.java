@@ -88,7 +88,6 @@ public class TextCompletionSoundConfig extends BaseConfigJPanel {
             String word = sounds.get(i).soundExtra1;
             //TODO: put lowercase when loading
             word = word.toLowerCase();
-            System.out.println("checking " + word + "against " + String.valueOf(c));
             int curIdx = ladder[i];
 
             if(word.charAt(curIdx) == c){
@@ -183,12 +182,12 @@ public class TextCompletionSoundConfig extends BaseConfigJPanel {
      *
      * @exampleConfig
      *  "TEXT_COMPLETION_SOUND": {
-     *       "tableData": [
-     *               {"enabled": true,  "soundExtra1": "my_word_1",       "customPath": "./SOUND/sound1.mp3"},
-     *               {"enabled": true,  "soundExtra1": "word2",           "customPath": "./SOUND/sound2.mp3"},
-     *               {"enabled": false, "soundExtra1": "functionName500", "customPath": "./SOUND/sound3.mp3"},
-     *               {"enabled": true,  "soundExtra1": "import",          "customPath": "./SOUND/sound4.mp3"}
-     *       ]
+            "tableData": [
+                {"enabled": true,  "soundExtra1": "my_word_1",       "customPath": "./SOUND/sound1.mp3"},
+                {"enabled": true,  "soundExtra1": spaced words 20",  "customPath": "./SOUND/sound2.mp3"},
+                {"enabled": false, "soundExtra1": "functionName500", "customPath": "./SOUND/sound3.mp3"},
+                {"enabled": true,  "soundExtra1": "import",          "customPath": "./SOUND/sound4.mp3"}
+             ]
      *     }
      */
     public void loadJSONConfig(JSONObject configData, Path parentPath) throws JSONException {
