@@ -3,6 +3,12 @@
 # power-mode-zeranthium Changelog
 
 ## [Unreleased]
+- 2024.2 update
+- add new TEXT_COMPLETION_SOUND feature:
+  - sounds play on when finished typing custom text
+  - 5 customizable slots
+- update docs
+
 
 ## [3.4.0-eap.242] - 2024-06-12
 

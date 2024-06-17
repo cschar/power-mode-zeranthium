@@ -120,18 +120,14 @@ public class SpecialActionSoundConfig extends BaseConfigJPanel {
         return sp;
     }
 
-    //TODO: No loadJSONConfig or consumeJSONConfig ? Sound has it
+    //TODO: loadJSONConfig
 
     public void loadValues(){
         //Done in plugin setup since config panel may not be launched before typing action
     }
 
     public void saveValues() {
-
-//        settings.setSpriteTypeProperty(PowerMode3.ConfigType.SOUND, "soundEnabled", String.valueOf(soundEnabled.isSelected()));
-
         settings.setSerializedSoundData(soundData, PowerMode3.ConfigType.SPECIAL_ACTION_SOUND);
-
     }
 
     public static void setSoundData(ArrayList<SoundData> data){
