@@ -1,13 +1,9 @@
 
+import org.gradle.internal.impldep.org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
-import org.jetbrains.dokka.DokkaConfiguration
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 
-//https://github.com/Kotlin/dokka/blob/master/examples/gradle/dokka-customFormat-example/build.gradle.kts
-import org.jetbrains.dokka.gradle.DokkaTask
-import org.jetbrains.dokka.base.DokkaBase
-import org.jetbrains.dokka.base.DokkaBaseConfiguration
 
 fun properties(key: String) = providers.gradleProperty(key)
 fun environment(key: String) = providers.environmentVariable(key)
@@ -48,7 +44,7 @@ repositories {
     }
 }
 
-var remoteRobotVersion = "0.11.18"
+var remoteRobotVersion = "0.11.23"
 
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
 dependencies {
@@ -77,7 +73,11 @@ dependencies {
     testImplementation("com.automation-remarks:video-recorder-junit5:2.0")
     // https://www.baeldung.com/junit-5-gradle#enabling-support-for-old-versions
 //    testCompileOnly("junit:junit:4.13.1")
-    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.3.1")
+//    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.3.1")
+
+    // If using JUnit Jupiter
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
 
     // IntelliJ Platform Gradle Plugin Dependencies Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html
@@ -92,7 +92,7 @@ dependencies {
 
         instrumentationTools()
         pluginVerifier()
-        testFramework(TestFrameworkType.Platform.JUnit4)
+        testFramework(TestFrameworkType.Platform)
 
 
         // https://github.com/JetBrains/intellij-platform-gradle-plugin/issues/1638#issuecomment-2151527333
@@ -186,48 +186,49 @@ abstract class CreateFileTask : DefaultTask() {
         file.writeText("HELLO FROM MY TASK")
     }
 }
-
 tasks.register<CreateFileTask>("createFileTask")
 
-//configurations {
-//    jaxDoclet
-//}
-
-
-
-//tasks.withType(Javadoc) {
-//
-//}
-
-//tasks.withType<DokkaTask>().configureEach {
-//    // custom output directory
-//    outputDirectory.set(buildDir.resolve("dokka"))
-//
-//    dokkaSourceSets {
-//
-//        named("main") { // The same name as in Kotlin Multiplatform plugin, so the sources are fetched automatically
-//
-//            includes.from("packages.md", "extra.md")
-////            samples.from("samples/basic.kt", "samples/advanced.kt")
-//        }
-//
-////        register("differentName") { // Different name, so source roots must be passed explicitly
-////            displayName.set("JVM")
-////            platform.set(org.jetbrains.dokka.Platform.jvm)
-////            sourceRoots.from(kotlin.sourceSets.getByName("jvmMain").kotlin.srcDirs)
-////            sourceRoots.from(kotlin.sourceSets.getByName("commonMain").kotlin.srcDirs)
-////        }
-//    }
-//}
-
-
-buildscript {
-    dependencies {
-        classpath("org.jetbrains.dokka:dokka-base:1.9.20")
-    }
-}
 
 tasks {
+    wrapper {
+        gradleVersion = properties("gradleVersion").get()
+    }
+
+    // tag example: https://www.baeldung.com/junit-5-gradle#configuring-junit-5-tests-with-gradle
+    // from CLI: // gradle clean test -DincludeTags='regression' -DexcludeTags='accessibility'
+    // custom gradle test config: https://stackoverflow.com/a/59022129/5198805
+    // https://docs.gradle.org/current/dsl/org.gradle.api.tasks.testing.Test.html
+    test {
+        useJUnitPlatform()
+        outputs.upToDateWhen { false }
+        testLogging.showStandardStreams = true
+    }
+
+//    "test_ui"(Test::class) {
+//        useJUnitPlatform {
+//            includeTags = setOf("Sound","Thing2")
+//        }
+//    }
+
+    // Configure UI tests plugin
+    // Read more: https://github.com/JetBrains/intellij-ui-test-robot
+    testIdeUi {
+        systemProperty("robot-server.port", "8082")
+        systemProperty("ide.mac.message.dialogs.as.sheets", "false")
+        systemProperty("jb.privacy.policy.text", "<!--999.999-->")
+        systemProperty("jb.consents.confirmation.enabled", "false")
+        // Newer IntelliJ versions require this property to avoid trust project popup
+        systemProperty("idea.trust.all.projects", "true")
+        systemProperty("ide.show.tips.on.startup.default.value", "false")
+    }
+
+
+    publishPlugin {
+        dependsOn(patchChangelog)
+    }
+
+
+
 
     // https://docs.gradle.org/current/kotlin-dsl/gradle/org.gradle.api.tasks.javadoc/-javadoc/index.html
     javadoc {
@@ -245,47 +246,4 @@ tasks {
         }
     }
 
-    dokkaHtml {
-        // https://kotlinlang.org/docs/dokka-gradle.html#single-project-configuration
-        dokkaSourceSets.configureEach {
-            documentedVisibilities.set(
-                setOf(
-                    DokkaConfiguration.Visibility.PUBLIC,
-                    DokkaConfiguration.Visibility.PROTECTED,
-                )
-            )
-            perPackageOption {
-                matchingRegex.set(".*.*")
-                suppress.set(true)
-            }
-
-            perPackageOption {
-                matchingRegex.set(".*config.*")
-                suppress.set(false)
-            }
-            perPackageOption {
-                matchingRegex.set(".*config.common.*")
-                suppress.set(true)
-            }
-        }
-        outputDirectory.set(file("mydocs/dokkaHtml"))
-    }
-
-
-    wrapper {
-        gradleVersion = properties("gradleVersion").get()
-    }
-
-    // Configure UI tests plugin
-    // Read more: https://github.com/JetBrains/intellij-ui-test-robot
-    testIdeUi {
-        systemProperty("robot-server.port", "8082")
-        systemProperty("ide.mac.message.dialogs.as.sheets", "false")
-        systemProperty("jb.privacy.policy.text", "<!--999.999-->")
-        systemProperty("jb.consents.confirmation.enabled", "false")
-    }
-
-    publishPlugin {
-        dependsOn(patchChangelog)
-    }
 }

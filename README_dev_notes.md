@@ -52,8 +52,8 @@ step 2. set that SDK as the project SDK to have the external library defined to 
 ## testing ui
 
 - in 1 terminal run
-  `./gradlew :clean :runIdeForUiTests`
-  `./gradlew :clean :runIdeForUiTests --args="C:\\Users\\codywin\\IdeaProjects\\untitled13\\src\\App22336.kt"`
+  `./gradlew :clean :testIdeUi`
+  `./gradlew :clean :testIdeUi --args="C:\\Users\\codywin\\IdeaProjects\\untitled13\\src\\App22336.kt"`
 
   then open `http://localhost:8082/` to check UI structure
 

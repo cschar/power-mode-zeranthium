@@ -6,14 +6,18 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
-import org.junit.Test;
+//import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 //Dummy test for pipeline
+@EnabledIfEnvironmentVariable(named = "POWERMODE_ZERANTHIUM_TESTS", matches = "1")
 public class SmokeJUnitTest {
+
     @Test
     public void testAdd() {
         assertEquals(42, Integer.sum(19, 23));
