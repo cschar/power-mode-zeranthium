@@ -52,8 +52,8 @@ step 2. set that SDK as the project SDK to have the external library defined to 
 ## testing ui
 
 - in 1 terminal run
-  `./gradlew :clean :runIdeForUiTests`
-  `./gradlew :clean :runIdeForUiTests --args="C:\\Users\\codywin\\IdeaProjects\\untitled13\\src\\App22336.kt"`
+  `./gradlew :clean :testIdeUi`
+  `./gradlew :clean :testIdeUi --args="C:\\Users\\codywin\\IdeaProjects\\untitled13\\src\\App22336.kt"`
 
   then open `http://localhost:8082/` to check UI structure
 
@@ -99,6 +99,12 @@ ex: `build/idea-sandbox/IC-2024.2/log/idea.log`
 ./gradlew :javadoc --rerun --quiet > ./docs/_includes/options.md
 ```
 
+### Testing doc page
+```
+cd docs
+bundle exec jekyll serve
+```
+
 ----------------------------------------------------------------
 
 # Troubleshooting
@@ -126,12 +132,17 @@ go into gradle/wrapper/gradle-wrapper.properties, and change the URL from which 
 
 
 # logo design
-
 -- SVG editor for logo here:
 https://editor.method.ac/
 
 # any new images added, make sure to run through quant image compression
 https://pngquant.org/
+
+###### any new sounds, can compress like so
+https://trac.ffmpeg.org/wiki/Encode/MP3
+ffmpeg -i input.mp3 -codec:a libmp3lame -qscale:a 8 output.mp3
+###### and volume adjusted
+ffmpeg -i input.mp3 -filter:a "volume=0.5" output.mp3
 
 # LICENSING ...
 

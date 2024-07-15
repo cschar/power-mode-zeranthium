@@ -4,7 +4,7 @@ package com.cschar.pmode3.uitest.steps;
 
 import com.cschar.pmode3.uitest.pages.DialogFixture;
 import com.cschar.pmode3.uitest.pages.IdeaFrame;
-//import com.cschar.pmode3.uitest.pages.WelcomeFrameFixture2;
+import com.cschar.pmode3.uitest.pages.WelcomeFrameFixture;
 import com.cschar.pmode3.uitest.pages.WelcomeFrame;
 import com.intellij.remoterobot.RemoteRobot;
 import com.intellij.remoterobot.fixtures.ComponentFixture;
@@ -14,8 +14,11 @@ import com.intellij.remoterobot.utils.Keyboard;
 import kotlin.Unit;
 
 
+import java.awt.event.KeyEvent;
 import java.time.Duration;
 
+import static com.cschar.pmode3.uitest.pages.ActionMenuFixtureKt.actionMenu;
+import static com.cschar.pmode3.uitest.pages.ActionMenuFixtureKt.actionMenuItem;
 import static com.cschar.pmode3.uitest.pages.DialogFixture.byTitle;
 import static com.intellij.remoterobot.fixtures.dataExtractor.TextDataPredicatesKt.contains;
 import static com.intellij.remoterobot.search.locators.Locators.byXpath;
@@ -23,7 +26,9 @@ import static com.intellij.remoterobot.stepsProcessing.StepWorkerKt.step;
 import static com.intellij.remoterobot.utils.RepeatUtilsKt.waitFor;
 //import static com.intellij.remoterobot.utils.UtilsKt.hasSingleComponent;
 import static com.intellij.remoterobot.utils.UtilsKt.hasSingleComponent;
+import static java.awt.event.KeyEvent.*;
 import static java.time.Duration.ofSeconds;
+
 
 public class JavaExampleSteps {
     final private RemoteRobot remoteRobot;
@@ -36,21 +41,23 @@ public class JavaExampleSteps {
 
     public void createNewCommandLineProject() {
         step("Create New Project", () -> {
-            final WelcomeFrame welcomeFrame = remoteRobot.find(WelcomeFrame.class, Duration.ofSeconds(10));
-//            welcomeFrame.createNewProjectLink().click();
+            final WelcomeFrameFixture welcomeFrame = remoteRobot.find(WelcomeFrameFixture.class, Duration.ofSeconds(10));
+            welcomeFrame.createNewProjectLink().click();
+
+
+
+//            final DialogFixture newProjectDialog = welcomeFrame.find(DialogFixture.class, DialogFixture.byTitle("New Project"), Duration.ofSeconds(20));
 
             final DialogFixture newProjectDialog = welcomeFrame.find(DialogFixture.class,
-                                                                     byTitle("New Project"),
-                                                                     Duration.ofSeconds(20));
-            newProjectDialog.find(JListFixture.class, byXpath("//div[@class='JBList']")).clickItem("New Project", true);
-            System.out.println("clicking Java button");
+                    byXpath("//div[@class='MyDialog']"),
+                    Duration.ofSeconds(30));
+
+//            newProjectDialog.find(JListFixture.class, byXpath("//div[@class='JBList']")).clickItem("New Project", true);
+
             newProjectDialog.findText("Java").click();
-            System.out.println("clicking Create button");
             newProjectDialog.button("Create").click();
         });
     }
-
-
 
     public void closeTipOfTheDay() {
         step("Close Tip of the Day if it appears", () -> {
@@ -76,6 +83,28 @@ public class JavaExampleSteps {
                     .findText(contains(text))
                     .click();
             keyboard.enter();
+        });
+    }
+
+    public void goToLineAndColumn(int row, int column) {
+        if (remoteRobot.isMac())
+            keyboard.hotKey(KeyEvent.VK_META, KeyEvent.VK_L);
+        else
+            keyboard.hotKey(KeyEvent.VK_CONTROL, KeyEvent.VK_G);
+        keyboard.enterText(row + ":" + column);
+        keyboard.enter();
+    }
+
+    public void closeProject(final RemoteRobot remoteRobot) {
+        step("Close the project", () -> {
+            if (remoteRobot.isMac()) {
+                keyboard.hotKey(VK_SHIFT, VK_META, VK_A);
+                keyboard.enterText("Close Project");
+                keyboard.enter();
+            } else {
+                actionMenu(remoteRobot, "File").click();
+                actionMenuItem(remoteRobot, "Close Project").click();
+            }
         });
     }
 }

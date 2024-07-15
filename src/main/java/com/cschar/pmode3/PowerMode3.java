@@ -45,12 +45,14 @@ import com.intellij.ui.JBColor;
 import com.intellij.util.SmartList;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.OptionTag;
+import com.intellij.util.xmlb.annotations.Text;
 import com.intellij.util.xmlb.annotations.Transient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
+import java.lang.reflect.Array;
 import java.util.List;
 import java.util.*;
 
@@ -228,7 +230,12 @@ final public class PowerMode3 implements
         SpecialActionSoundConfig.soundData = null;
         SpecialActionSoundConfigTableModel.emptySounds();
 
-
+        LOGGER.trace("Unloading TEXT_COMPLETION_SOUND data...");
+        if(TextCompletionSoundConfig.soundData != null) {
+            TextCompletionSoundConfig.soundData.clear();
+        }
+        TextCompletionSoundConfig.soundData = null;
+        TextCompletionSoundConfigTableModel.emptySounds();
 
 
 
@@ -308,7 +315,9 @@ final public class PowerMode3 implements
         LANTERN,
         TAP_ANIM,
         MULTI_LAYER_CHANCE,
+        TEXT_COMPLETION_SOUND,
     }
+
 
 
 
@@ -336,6 +345,7 @@ final public class PowerMode3 implements
         put("sprite" + ConfigType.MULTI_LAYER_CHANCE + "Enabled", "false");
         put("sprite" + ConfigType.SOUND + "Enabled", "true");
         put("sprite" + ConfigType.SPECIAL_ACTION_SOUND + "Enabled", "false");
+        put("sprite" + ConfigType.TEXT_COMPLETION_SOUND + "Enabled", "false");
     }};
 
 
@@ -389,6 +399,10 @@ final public class PowerMode3 implements
         
     }
 
+
+    /** Keep track of index of each word */
+    private int[] charIndexLadder = new int[TextCompletionSoundConfig.MAX_ROWS];
+
     private void setupSoundTyper(){
         //Setup SOUND handler
         final TypedAction typedAction2 = TypedAction.getInstance();
@@ -398,7 +412,10 @@ final public class PowerMode3 implements
                 new TypedActionHandler() {
                     @Override
                     public void execute(@NotNull Editor editor, char c, @NotNull DataContext dataContext) {
-                        if (PowerMode3.this.isConfigLoaded && PowerMode3.this.enabled && PowerMode3.this.getSpriteTypeEnabled(ConfigType.SOUND)) {
+                        if (PowerMode3.this.isConfigLoaded
+                            && PowerMode3.this.enabled
+                            && PowerMode3.this.getSpriteTypeEnabled(ConfigType.SOUND)) {
+
                             int winner = SoundData.getWeightedAmountWinningIndex(SoundConfig.soundData);
                             if (winner != -1) {
                                 //TODO refactor to just return object or null
@@ -406,8 +423,29 @@ final public class PowerMode3 implements
                                 Sound s = new Sound(d.getPath(), !d.customPathValid);
                                 s.play();
                             }
+                            LOGGER.debug("sound type");
                         }
-                        LOGGER.debug("sound type");
+                        if (PowerMode3.this.isConfigLoaded
+                            && PowerMode3.this.enabled
+                            && PowerMode3.this.getSpriteTypeEnabled(ConfigType.TEXT_COMPLETION_SOUND)) {
+
+                            var sounds = TextCompletionSoundConfig.soundData;
+                            int[] results = TextCompletionSoundConfig.incrementLadder(charIndexLadder, c, sounds);
+
+                            for(int j=0; j<results.length; j++){
+                                if ( results[j] == 1){
+                                    SoundData d = sounds.get(j);
+                                    if (d.enabled) {
+                                        LOGGER.debug("text completion: playing sound for " + sounds.get(j).soundExtra1);
+                                        Sound s = new Sound(d.getPath(), !d.customPathValid);
+                                        s.play();
+                                    }
+                                }
+                            }
+                            LOGGER.debug("text completion ladder  : " + Arrays.toString(charIndexLadder));
+                            LOGGER.debug("text completion results : " + Arrays.toString(results));
+                        }
+
                         rawHandler2.execute(editor, c, dataContext);
                     }
                 });
@@ -444,8 +482,10 @@ final public class PowerMode3 implements
     @Override
     public void loadState(@NotNull PowerMode3 state) {
         LOGGER.debug("previous state found: setting up...");
-
         XmlSerializerUtil.copyBean(state, this);
+        if(JSONLoader == null){
+            JSONLoader =  new ZJSONLoader();
+        }
 
         //check for missing config data e.g. new setting has been added
         List<ConfigType> missingConfigs = new ArrayList<>();
@@ -462,7 +502,7 @@ final public class PowerMode3 implements
         if (missingConfigs.size() != 0) {
             LOGGER.debug("Missing configs found: " + missingConfigs.size() + " -- loading defaults");
             for (ConfigType c : missingConfigs) {
-                LOGGER.debug(c.name());
+                LOGGER.debug("loading missing config : " + c.name());
                 JSONLoader.loadSingleJSONTableConfig(pathDataMap, c);
             }
         }
@@ -489,6 +529,9 @@ final public class PowerMode3 implements
     @com.intellij.util.xmlb.annotations.Transient
     public boolean isConfigLoaded = false;
 
+    /**
+     * Load config data from default files
+     */
     private void loadConfigDataAsync(ProgressIndicator progressIndicator) {
         progressIndicator.setIndeterminate(false);
         progressIndicator.setText("loading assets.. ");
@@ -545,8 +588,8 @@ final public class PowerMode3 implements
             LOGGER.debug("======== LOADING SOUNDS ========= ");
             SoundConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.SOUND)));
             MusicTriggerConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.MUSIC_TRIGGER)));
-
             SpecialActionSoundConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.SPECIAL_ACTION_SOUND)));
+            TextCompletionSoundConfig.setSoundData(this.deserializeSoundData(pathDataMap.get(ConfigType.TEXT_COMPLETION_SOUND)));
 
             long endTime = System.nanoTime();
             long duration = (endTime - startTime);
@@ -644,6 +687,9 @@ final public class PowerMode3 implements
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+        if(!this.enabled){
+            Sound.stopAll();
+        }
     }
 
 

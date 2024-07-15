@@ -2,6 +2,7 @@ package com.cschar.pmode3.hotkeys;
 
 
 import com.cschar.pmode3.PowerMode3;
+import com.cschar.pmode3.Sound;
 import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -32,9 +33,7 @@ public class HotKeyEnabledAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
-
         PowerMode3.getInstance().setEnabled(!PowerMode3.getInstance().isEnabled());
-
     }
 
     /**

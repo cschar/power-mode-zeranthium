@@ -2,7 +2,11 @@
 .idea
 .intellijPlatform
 .qodana
+.kotlin
 build
+
+#testing
+video
 
 myjavadocs
 

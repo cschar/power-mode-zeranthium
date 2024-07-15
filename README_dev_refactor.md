@@ -1,8 +1,4 @@
 
-#
-# Try this
-# https://github.com/JetBrains/intellij-community/blob/idea/241.15989.150/platform/platform-impl/src/com/intellij/internal/ui/uiDslShowcase/DemoBasics.kt
-#
 
 Optimizing :
 https://plugins.jetbrains.com/docs/intellij/performance.html
@@ -23,6 +19,7 @@ links to
 RE-enable memory monitor UI
 
 ## DIAGNOSTICS
+put the following including the "#"
 #com.cschar.pmode3:all
 
 ## TESTS

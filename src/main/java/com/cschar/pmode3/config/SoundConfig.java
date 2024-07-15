@@ -143,6 +143,7 @@ public class SoundConfig extends JPanel {
 
 
     /**
+     *  only used for loading custom config packs
      *
      * @exampleConfig
      *  "SOUND": {
@@ -160,19 +161,26 @@ public class SoundConfig extends JPanel {
 
         for(int i =0; i<tableData.length(); i++){
             JSONObject spriteDataRow = tableData.getJSONObject(i);
-            SoundConfig.soundData.set(i, consumeJSONConfig(spriteDataRow, i, parentPath));
+            SoundData sd = overrideWithCustomConfig(spriteDataRow, i, parentPath);
+            SoundConfig.soundData.set(i, sd);
         }//table data will change on scroll
 
     }
 
 
-    //consume config according to how SoundConfig allows custom changes
-    private static SoundData consumeJSONConfig(JSONObject jo, int indexToReplace, Path parentPath) throws JSONException {
+    /**
+     * only allow specific fields to be overridden
+     */
+    private static SoundData overrideWithCustomConfig(JSONObject jo, int indexToReplace, Path parentPath) throws JSONException {
 
         SoundData sd = new SoundData(
+                //default
                 SoundConfig.soundData.get(indexToReplace).enabled,
+                // allow override
                 jo.getInt("weight"),
+                //default
                 SoundConfig.soundData.get(indexToReplace).defaultPath,
+                //allow override
                 parentPath.resolve(jo.getString("customPath")).toString()
                 );
 

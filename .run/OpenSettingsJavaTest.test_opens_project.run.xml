@@ -1,9 +1,9 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run Qodana" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="OpenSettingsJavaTest.test_opens_project" type="GradleRunConfiguration" factoryName="Gradle">
     <ExternalSystemSettings>
       <option name="env">
         <map>
-          <entry key="QODANA_SHOW_REPORT" value="true" />
+          <entry key="TEST_TYPE" value="UI" />
         </map>
       </option>
       <option name="executionName" />
@@ -15,13 +15,14 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value="cleanInspections" />
-          <option value="runInspections" />
+          <option value=":test" />
+          <option value="--tests" />
+          <option value="&quot;com.cschar.pmode3.uitest.OpenSettingsJavaTest.test_opens_project&quot;" />
         </list>
       </option>
       <option name="vmOptions" />
     </ExternalSystemSettings>
-    <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+    <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
     <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
     <EXTENSION ID="com.intellij.execution.ExternalSystemRunConfigurationJavaExtension">
       <extension name="com.fapiko.jetbrains.plugins.better_direnv.runconfigs.IdeaRunConfigurationExtension">
@@ -30,7 +31,7 @@
       </extension>
     </EXTENSION>
     <DebugAllEnabled>false</DebugAllEnabled>
-    <RunAsTest>false</RunAsTest>
+    <RunAsTest>true</RunAsTest>
     <method v="2" />
   </configuration>
 </component>

@@ -1,0 +1,39 @@
+{
+  "data": [
+    {
+      "customPath": "",
+      "defaultPath": "/sounds/text_completions/int.mp3",
+      "val1": 20,
+      "enabled": true,
+      "soundExtra1": "int"
+    },
+    {
+      "customPath": "",
+      "defaultPath": "/sounds/text_completions/log.mp3",
+      "val1": 20,
+      "enabled": true,
+      "soundExtra1": "log"
+    },
+    {
+      "customPath": "",
+      "defaultPath": "/sounds/text_completions/todo.mp3",
+      "val1": 20,
+      "enabled": true,
+      "soundExtra1": "TODO"
+    },
+    {
+      "customPath": "",
+      "defaultPath": "/sounds/text_completions/void.mp3",
+      "val1": 20,
+      "enabled": true,
+      "soundExtra1": "void"
+    },
+    {
+      "customPath": "",
+      "defaultPath": "/sounds/text_completions/return.mp3",
+      "val1": 20,
+      "enabled": true,
+      "soundExtra1": "return"
+    }
+  ]
+}
