@@ -12,6 +12,9 @@
                   pluginUntilBuild = 241.*
                   
         - 1.1.3  update pluginVerifierIdeVersions
+        
+    - 1.2 make sure to update plugin version in gradle/libs.versions.toml
+      ex: intelliJPlatform = "2.0.0-beta7" -> intelliJPlatform = "2.2.1"
 
 
  2. Update change notes plugin in build.gradle

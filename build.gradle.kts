@@ -33,6 +33,7 @@ version = properties("pluginVersion").get()
 kotlin {
 //    jvmToolchain(17)
     jvmToolchain(17) // 2025.1 requires java 21
+//    jvmToolchain(21)
 }
 
 // Configure project's dependencies
@@ -213,15 +214,16 @@ tasks {
 
     // Configure UI tests plugin
     // Read more: https://github.com/JetBrains/intellij-ui-test-robot
-    testIdeUi {
-        systemProperty("robot-server.port", "8082")
-        systemProperty("ide.mac.message.dialogs.as.sheets", "false")
-        systemProperty("jb.privacy.policy.text", "<!--999.999-->")
-        systemProperty("jb.consents.confirmation.enabled", "false")
-        // Newer IntelliJ versions require this property to avoid trust project popup
-        systemProperty("idea.trust.all.projects", "true")
-        systemProperty("ide.show.tips.on.startup.default.value", "false")
-    }
+
+//    testIdeUi {
+//        systemProperty("robot-server.port", "8082")
+//        systemProperty("ide.mac.message.dialogs.as.sheets", "false")
+//        systemProperty("jb.privacy.policy.text", "<!--999.999-->")
+//        systemProperty("jb.consents.confirmation.enabled", "false")
+//        // Newer IntelliJ versions require this property to avoid trust project popup
+//        systemProperty("idea.trust.all.projects", "true")
+//        systemProperty("ide.show.tips.on.startup.default.value", "false")
+//    }
 
 
     publishPlugin {
