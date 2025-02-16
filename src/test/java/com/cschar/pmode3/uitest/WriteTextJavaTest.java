@@ -10,7 +10,7 @@ import com.intellij.remoterobot.RemoteRobot;
 import com.intellij.remoterobot.fixtures.ContainerFixture;
 import com.intellij.remoterobot.utils.Keyboard;
 import org.assertj.swing.core.MouseButton;
-import org.junit.Ignore;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
@@ -20,7 +20,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import static com.intellij.remoterobot.search.locators.Locators.byXpath;
+
 import static com.intellij.remoterobot.stepsProcessing.StepWorkerKt.step;
 import static com.intellij.remoterobot.utils.RepeatUtilsKt.waitFor;
 import static java.time.Duration.ofMinutes;

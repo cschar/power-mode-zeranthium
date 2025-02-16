@@ -31,7 +31,8 @@ version = properties("pluginVersion").get()
 
 // Set the JVM language level used to build the project.
 kotlin {
-    jvmToolchain(17)
+//    jvmToolchain(17)
+    jvmToolchain(17) // 2025.1 requires java 21
 }
 
 // Configure project's dependencies

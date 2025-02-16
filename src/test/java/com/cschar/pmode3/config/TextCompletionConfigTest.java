@@ -1,8 +1,9 @@
 package com.cschar.pmode3.config;
 
 import com.cschar.pmode3.config.common.SoundData;
-import org.junit.Test;
+//import org.junit.Test;
 import java.util.ArrayList;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

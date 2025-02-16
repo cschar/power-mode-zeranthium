@@ -1,6 +1,7 @@
 package com.cschar.pmode3;
 
-import static org.junit.Assert.assertEquals;
+//import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.jdom.Document;
 import org.jdom.Element;

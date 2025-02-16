@@ -21,7 +21,7 @@
         ./gradlew :buildPlugin --info
  
  4. run 
-        ./gradlew :runPlugin
+        ./gradlew :runIde
         
  5. test 
         export POWERMODE_ZERANTHIUM_TESTS="true"
@@ -123,10 +123,25 @@ make sure no file is open inside the ./build folder, :clean and :runIdeForUiTest
 in intellij run configurations make an empty gradle config with these args to intended project file
 runIde --args="C:\\path\\to\\my\\project\\file\\App22336.kt"
 
+## Gradle causing issues
+wipe environment
+```
+rm -rf ~/.gradle
+rm -rf ./gradle
+
+# rebuild from intellij with gradle sync 
+```
+
+
 ## Upgrading Gradle
 When upgrading gradle... (to make ./gradlew use a diff version on commadnline...)
 go into gradle/wrapper/gradle-wrapper.properties, and change the URL from which it downloads the version
 
+## upgrading java version (java sdk / opensdk)
+
+binaries downloaded from https://adoptium.net/
+alernatively
+`nix-shell -p temurin-bin-17`
 
 ----------------------------------------------------------------
 

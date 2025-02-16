@@ -16,22 +16,13 @@ import com.intellij.remoterobot.fixtures.*;
 import com.intellij.remoterobot.search.locators.Locator;
 import com.intellij.remoterobot.search.locators.XpathLocator;
 import com.intellij.remoterobot.utils.Keyboard;
-import com.intellij.ui.components.GradientViewport;
-import com.automation.remarks.junit5.Video;
 
-import com.intellij.ui.components.JBTabbedPane;
-import org.assertj.swing.fixture.JTabbedPaneFixture;
-import org.junit.FixMethodOrder;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.time.Duration;
-import java.util.concurrent.TimeUnit;
 
-import static com.cschar.pmode3.uitest.pages.ActionMenuFixtureKt.actionMenu;
-import static com.cschar.pmode3.uitest.pages.ActionMenuFixtureKt.actionMenuItem;
-import static com.cschar.pmode3.uitest.pages.DialogFixture.byTitle;
 import static com.intellij.remoterobot.search.locators.Locators.byXpath;
 import static com.intellij.remoterobot.stepsProcessing.StepWorkerKt.step;
 import static com.intellij.remoterobot.utils.RepeatUtilsKt.waitFor;
@@ -40,7 +31,6 @@ import static java.time.Duration.ofMinutes;
 import static java.time.Duration.ofSeconds;
 
 //import org.junit.Test;
-import org.junit.runners.MethodSorters;
 
 @ExtendWith(RemoteRobotExtension.class)
 @EnabledIfEnvironmentVariable(named = "TEST_TYPE", matches = "UI")
