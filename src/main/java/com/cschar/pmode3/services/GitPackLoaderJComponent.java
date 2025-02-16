@@ -343,9 +343,11 @@ public class GitPackLoaderJComponent extends JPanel{
 //                Task.Modal task = new Task.Modal(null, downloadBUtton,
 //                        "Cloning "+customRepoName+"...",
 //                        true) {
+
+
                 Task.Backgroundable task = new Task.Backgroundable(null,
                                                                         "Cloning "+customRepoName+"...",
-                                                                true, null) {
+                                                                true) {
 
                     @Override
                     public void onCancel() {
@@ -400,9 +402,10 @@ public class GitPackLoaderJComponent extends JPanel{
                         }
                     }
                 };
+
                 LOGGER.trace("Launching cloning task  from thread " + Thread.currentThread().toString());
-//                ProgressManager.getInstance().run(bgTask2);
-                //                gitService.backgroundTasks.put(customRepoName, bgTask2);
+
+//                task.setCancelText("Stop cloning " + customRepoName).queue();
                 ProgressManager.getInstance().run(task);
 
 

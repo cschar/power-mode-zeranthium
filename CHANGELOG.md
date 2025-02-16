@@ -3,6 +3,8 @@
 # power-mode-zeranthium Changelog
 
 ## [Unreleased]
+- 2025.1 update
+- removed deprecated API usage 
 
 ## [3.4.0-stable.242] - 2024-07-16
 

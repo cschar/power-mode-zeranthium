@@ -516,7 +516,7 @@ final public class PowerMode3 implements
 
     public void loadConfigData() {
         Task.Backgroundable bgTask = new Task.Backgroundable(null, "Zeranthium Setup...",
-                false, null) {
+                false) {
             @Override
             public void run(@NotNull ProgressIndicator progressIndicator) {
                 loadConfigDataAsync(progressIndicator);
@@ -524,6 +524,9 @@ final public class PowerMode3 implements
         };
         ProgressManager.getInstance().run(bgTask);
 
+        // see
+        // https://plugins.jetbrains.com/docs/intellij/background-processes.html#progress-api
+        // bgTask.queue();
     }
 
     @com.intellij.util.xmlb.annotations.Transient

@@ -36,7 +36,7 @@ public class MemoryMonitorServiceImpl implements MemoryMonitorService {
     @Override
     public void updateUi() {
         Task.Backgroundable bgTask = new Task.Backgroundable(null, "Zeranthium Config...",
-                false, null) {
+                false) {
             @Override
             public void run(@NotNull ProgressIndicator progressIndicator) {
                 while (menuConfigurableUI != null && menuConfigurableUI.refreshMemoryWidget) {
@@ -53,6 +53,9 @@ public class MemoryMonitorServiceImpl implements MemoryMonitorService {
                 }
             }
         };
+
+
+//        bgTask.setCancelText("stop updating config").queue();
         ProgressManager.getInstance().run(bgTask);
 
 
