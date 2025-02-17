@@ -138,9 +138,8 @@ public class SpecialActionSoundConfigTableModel extends AbstractConfigTableModel
                 final JButton button = new JButton("Set path");
                 button.addActionListener(arg0 -> {
 
-                    FileChooserDescriptor fd = new FileChooserDescriptor(true, false, false, false, false, false);
-                    fd = new SoundFileChooserDescriptor(fd);
-//                    fd.setForcedToUseIdeaFileChooser(true);
+                    FileChooserDescriptor fd = new SoundFileChooserDescriptor.Builder().build();
+
 
                     FileChooserDialog fcDialog = FileChooserFactory.getInstance().createFileChooser(fd, null, null);
                     VirtualFile[] vfs = fcDialog.choose(null);

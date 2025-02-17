@@ -129,8 +129,8 @@ public class SoundConfigTableModel extends AbstractTableModel {
                 button.addActionListener(arg0 -> {
 
 
-                    FileChooserDescriptor fd = new FileChooserDescriptor(true, false, false, false, false, false);
-                    fd = new SoundFileChooserDescriptor(fd);
+
+                    FileChooserDescriptor fd = new SoundFileChooserDescriptor.Builder().build();
 
                     FileChooserDialog fcDialog = FileChooserFactory.getInstance().createFileChooser(fd, null, null);
 
