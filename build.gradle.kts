@@ -51,8 +51,8 @@ var remoteRobotVersion = "0.11.23"
 dependencies {
     // IntelliJ Platform Gradle Plugin Dependencies Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html
     intellijPlatform {
-//        create(properties("platformType"), properties("platformVersion"))
-        intellijIdeaCommunity("2024.3.3")
+        create(properties("platformType"), properties("platformVersion"))
+//        intellijIdeaCommunity("2024.3.3")
 
         // Plugin Dependencies. Uses `platformBundledPlugins` property from the gradle.properties file for bundled IntelliJ Platform plugins.
         bundledPlugins(properties("platformBundledPlugins").map { it.split(',') })
