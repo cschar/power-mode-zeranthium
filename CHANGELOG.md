@@ -3,8 +3,11 @@
 # power-mode-zeranthium Changelog
 
 ## [Unreleased]
-- 2025.1 update
-- removed deprecated API usage 
+
+## [3.4.1-stable.243] - 2025-02-17
+
+- 2024.3 update
+- removed deprecated API usage
 
 ## [3.4.0-stable.242] - 2024-07-16
 
@@ -53,7 +56,8 @@
 
 - Initial scaffold created from [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
 
-[Unreleased]: https://github.com/cschar/power-mode-zeranthium/compare/v3.4.0-stable.242...HEAD
+[Unreleased]: https://github.com/cschar/power-mode-zeranthium/compare/v3.4.1-stable.243...HEAD
+[3.4.1-stable.243]: https://github.com/cschar/power-mode-zeranthium/compare/v3.4.0-stable.242...v3.4.1-stable.243
 [3.4.0-stable.242]: https://github.com/cschar/power-mode-zeranthium/compare/v3.4.0-eap.242...v3.4.0-stable.242
 [3.4.0-eap.242]: https://github.com/cschar/power-mode-zeranthium/compare/v3.3.0...v3.4.0-eap.242
 [3.4.0-eap-242]: https://github.com/cschar/power-mode-zeranthium/compare/v3.3.0...v3.4.0-eap-242
