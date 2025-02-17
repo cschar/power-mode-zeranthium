@@ -32,6 +32,7 @@ version = properties("pluginVersion").get()
 // Set the JVM language level used to build the project.
 kotlin {
     jvmToolchain(17)
+//    jvmToolchain(21)
 }
 
 // Configure project's dependencies
@@ -48,6 +49,26 @@ var remoteRobotVersion = "0.11.23"
 
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
 dependencies {
+    // IntelliJ Platform Gradle Plugin Dependencies Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html
+    intellijPlatform {
+//        create(properties("platformType"), properties("platformVersion"))
+        intellijIdeaCommunity("2024.3.3")
+
+        // Plugin Dependencies. Uses `platformBundledPlugins` property from the gradle.properties file for bundled IntelliJ Platform plugins.
+        bundledPlugins(properties("platformBundledPlugins").map { it.split(',') })
+
+        // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file for plugin from JetBrains Marketplace.
+        plugins(properties("platformPlugins").map { it.split(',') })
+
+
+        pluginVerifier()
+        testFramework(TestFrameworkType.Platform)
+
+
+        // https://github.com/JetBrains/intellij-platform-gradle-plugin/issues/1638#issuecomment-2151527333
+//        jetbrainsRuntime()
+    }
+
     // implementation(libs.exampleLibrary)
 
 
@@ -80,24 +101,7 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
 
-    // IntelliJ Platform Gradle Plugin Dependencies Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html
-    intellijPlatform {
-        create(properties("platformType"), properties("platformVersion"))
 
-        // Plugin Dependencies. Uses `platformBundledPlugins` property from the gradle.properties file for bundled IntelliJ Platform plugins.
-        bundledPlugins(properties("platformBundledPlugins").map { it.split(',') })
-
-        // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file for plugin from JetBrains Marketplace.
-        plugins(properties("platformPlugins").map { it.split(',') })
-
-        instrumentationTools()
-        pluginVerifier()
-        testFramework(TestFrameworkType.Platform)
-
-
-        // https://github.com/JetBrains/intellij-platform-gradle-plugin/issues/1638#issuecomment-2151527333
-//        jetbrainsRuntime()
-    }
 }
 
 // Configure IntelliJ Platform Gradle Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html
@@ -151,11 +155,7 @@ intellijPlatform {
         channels = properties("pluginVersion").map { listOf(it.substringAfter('-', "").substringBefore('.').ifEmpty { "default" }) }
     }
 
-    verifyPlugin {
-        ides {
-            recommended()
-        }
-    }
+
 }
 
 // Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
@@ -212,15 +212,15 @@ tasks {
 
     // Configure UI tests plugin
     // Read more: https://github.com/JetBrains/intellij-ui-test-robot
-    testIdeUi {
-        systemProperty("robot-server.port", "8082")
-        systemProperty("ide.mac.message.dialogs.as.sheets", "false")
-        systemProperty("jb.privacy.policy.text", "<!--999.999-->")
-        systemProperty("jb.consents.confirmation.enabled", "false")
-        // Newer IntelliJ versions require this property to avoid trust project popup
-        systemProperty("idea.trust.all.projects", "true")
-        systemProperty("ide.show.tips.on.startup.default.value", "false")
-    }
+//    testIdeUi {
+//        systemProperty("robot-server.port", "8082")
+//        systemProperty("ide.mac.message.dialogs.as.sheets", "false")
+//        systemProperty("jb.privacy.policy.text", "<!--999.999-->")
+//        systemProperty("jb.consents.confirmation.enabled", "false")
+//        // Newer IntelliJ versions require this property to avoid trust project popup
+//        systemProperty("idea.trust.all.projects", "true")
+//        systemProperty("ide.show.tips.on.startup.default.value", "false")
+//    }
 
 
     publishPlugin {
