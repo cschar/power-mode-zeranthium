@@ -61,7 +61,7 @@ dependencies {
         plugins(properties("platformPlugins").map { it.split(',') })
 
 
-        pluginVerifier()
+
         testFramework(TestFrameworkType.Platform)
 
 
@@ -154,6 +154,23 @@ intellijPlatform {
         // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
         // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
         channels = properties("pluginVersion").map { listOf(it.substringAfter('-', "").substringBefore('.').ifEmpty { "default" }) }
+    }
+
+    pluginVerification {
+        // ...
+
+            ides {
+
+                ide(properties("platformType"),properties("platformVersion"))
+//                local(file("/path/to/ide/"))
+                recommended()
+//                select {
+//                    types = listOf(IntelliJPlatformType.PhpStorm)
+//                    channels = listOf(ProductRelease.Channel.RELEASE)
+//                    sinceBuild = "232"
+//                    untilBuild = "241.*"
+//                }
+            }
     }
 
 
