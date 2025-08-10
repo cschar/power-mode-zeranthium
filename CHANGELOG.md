@@ -3,6 +3,8 @@
 # power-mode-zeranthium Changelog
 
 ## [Unreleased]
+- bug fix: Specify Read/Write Action types on some EDT Thread tasks
+
 
 ## [3.4.1-stable.243] - 2025-02-17
 

@@ -69,127 +69,120 @@ public class MyPasteHandler extends EditorActionHandler implements EditorTextIns
             @Override
             public void run() {
 
-                ScrollingModel scrollingModel = editor.getScrollingModel();
+                // All editor operations should be in write action since we're modifying content
+                WriteCommandAction.runWriteCommandAction(editor.getProject(), () -> {
 
-                //disable so sprites render at correct spot and arent slowed down by visual scroll
-                scrollingModel.disableAnimation();
-                try {
-                    int beforePasteOffset = scrollingModel.getVerticalScrollOffset();
-                }catch(UnsupportedOperationException e){
-                    LOGGER.debug("paste unsupported, exiting early");
-                    //if we are pasting into a search box via ctrl+f, etc.. (not a real editor),
-                    // e.g. com.intellij.openapi.editor.textarea.TextComponentScrollingModel
-                    // don't draw to GUI, just paste and exit
-                    EditorCopyPasteHelper.getInstance().pasteFromClipboard(editor);
-                    return;
-                }
+                    ScrollingModel scrollingModel = editor.getScrollingModel();
 
-                TextRange[] pasted = EditorCopyPasteHelper.getInstance().pasteFromClipboard(editor);
-                if(pasted.length != 1) return; //ensure we have a single TextRange to work with
-                TextRange t = pasted[0];
+                    //disable so sprites render at correct spot and arent slowed down by visual scroll
+                    scrollingModel.disableAnimation();
 
+                    int beforePasteOffset;
+                    try {
+                        beforePasteOffset = scrollingModel.getVerticalScrollOffset();
+                    } catch(UnsupportedOperationException e){
+                        LOGGER.debug("paste unsupported, exiting early");
+                        //if we are pasting into a search box via ctrl+f, etc.. (not a real editor),
+                        // e.g. com.intellij.openapi.editor.textarea.TextComponentScrollingModel
+                        // don't draw to GUI, just paste and exit
+                        EditorCopyPasteHelper.getInstance().pasteFromClipboard(editor);
+                        return;
+                    }
 
-                //TODO: figure out how to calculate each pasted character x,y coord without incrementing caret
-                //Disable CaretListener for the following...
-                MyCaretListener.enabled = false;
+                    TextRange[] pasted = EditorCopyPasteHelper.getInstance().pasteFromClipboard(editor);
+                    if(pasted.length != 1) return; //ensure we have a single TextRange to work with
+                    TextRange t = pasted[0];
 
-                //   |hey|                           |   |
-                //   |ya|                 ---->      |  |
-                //   |hello there hi|                |           |
+                    //TODO: figure out how to calculate each pasted character x,y coord without incrementing caret
+                    //Disable CaretListener for the following...
+                    MyCaretListener.enabled = false;
 
-                //Begin moving caret along all of selected text to build an outline of
-                //the 'selected' blob. When outline built, add effect to it.
-                int afterPasteOffset = scrollingModel.getVerticalScrollOffset();
-                scrollingModel.enableAnimation();
-//                
-//                int charWidth = EditorUtil.getPlainSpaceWidth(editor);
-                int lineHeight = editor.getLineHeight();
-                int start = t.getStartOffset();
-                int offset = t.getLength();  //offset is # of characters typed
+                    int afterPasteOffset = scrollingModel.getVerticalScrollOffset();
+                    scrollingModel.enableAnimation();
 
-                //paste outline points,
-                //to show where each line starts and ends with 2 points
-                // max size possible for line numbers is offset
-                // ex: paste offset 5, but contents is 5 characters w/ newlines
-                Point[][] poPoints = new Point[offset][2];
+                    int lineHeight = editor.getLineHeight();
+                    int start = t.getStartOffset();
+                    int offset = t.getLength();  //offset is # of characters typed
 
-                Caret curCaret = editor.getCaretModel().getCurrentCaret();
-                Point prevPoint = null;
-                Point point = null;
-                int curLine = 0;
+                    //paste outline points,
+                    //to show where each line starts and ends with 2 points
+                    // max size possible for line numbers is offset
+                    // ex: paste offset 5, but contents is 5 characters w/ newlines
+                    Point[][] poPoints = new Point[offset][2];
 
-                for(int i = start; i <= start + offset; i++){
-                    curCaret.moveToOffset(i);
-                    VisualPosition visualPosition = curCaret.getVisualPosition();
-                    point = editor.visualPositionToXY(visualPosition);
-                    point.x = point.x - scrollingModel.getHorizontalScrollOffset();
-                    point.y = point.y - afterPasteOffset;
+                    Caret curCaret = editor.getCaretModel().getCurrentCaret();
+                    Point prevPoint = null;
+                    Point point = null;
+                    int curLine = 0;
 
-                    if(prevPoint == null){ //only happens once
-                        poPoints[0][0] = point;
-                    }else{
-                        if(prevPoint.y == point.y){ //on same line, dont add anything
-                            //continue
-                        }else {//we've moved to a new line,
-                            // so add prevPoint as END of last line,
-                            poPoints[curLine][1] = prevPoint;
-                            curLine += 1;
-                            //add new line boundary
-                            poPoints[curLine][0] = point;
+                    for(int i = start; i <= start + offset; i++){
+                        curCaret.moveToOffset(i);
+                        VisualPosition visualPosition = curCaret.getVisualPosition();
+                        point = editor.visualPositionToXY(visualPosition);
+                        point.x = point.x - scrollingModel.getHorizontalScrollOffset();
+                        point.y = point.y - afterPasteOffset;
+
+                        if(prevPoint == null){ //only happens once
+                            poPoints[0][0] = point;
+                        }else{
+                            if(prevPoint.y == point.y){ //on same line, dont add anything
+                                //continue
+                            }else {//we've moved to a new line,
+                                // so add prevPoint as END of last line,
+                                poPoints[curLine][1] = prevPoint;
+                                curLine += 1;
+                                //add new line boundary
+                                poPoints[curLine][0] = point;
+                            }
+                        }
+                        prevPoint = point;
+                    }
+
+                    poPoints[curLine][1] = point;
+
+                    //Now, with poPoints containing outline for every caret spot in blob
+                    //flesh out the pasteShape
+                    Path2D pasteShape = new Path2D.Double();
+
+                    for(int i = 0; i <= curLine; i++) {
+                        if (i == 0) { //immediately go to right side
+                            pasteShape.moveTo(poPoints[i][0].x, poPoints[i][0].y);
+                            pasteShape.lineTo(poPoints[i][1].x, poPoints[i][1].y);
+                        } else { //work way down to bottom
+                            //move down
+                            pasteShape.lineTo(poPoints[i-1][1].x, poPoints[i-1][1].y+lineHeight);
+                            //move either left/right to meet next line point
+                            pasteShape.lineTo(poPoints[i][1].x, poPoints[i][1].y);
                         }
                     }
-                    prevPoint = point;
+                    //wrap around
+                    pasteShape.lineTo(poPoints[curLine][1].x, poPoints[curLine][1].y + lineHeight);
+                    pasteShape.lineTo(poPoints[curLine][0].x, poPoints[curLine][0].y + lineHeight);
 
-                }
-
-                poPoints[curLine][1] = point;
-
-
-                //Now, with poPoints containing outline for every caret spot in blob
-                //flesh out the pasteShape
-                Path2D pasteShape = new Path2D.Double();
-
-                for(int i = 0; i <= curLine; i++) {
-                    if (i == 0) { //immediately go to right side
-                        pasteShape.moveTo(poPoints[i][0].x, poPoints[i][0].y);
-                        pasteShape.lineTo(poPoints[i][1].x, poPoints[i][1].y);
-                    } else { //work way down to bottom
-                        //move down
-                        pasteShape.lineTo(poPoints[i-1][1].x, poPoints[i-1][1].y+lineHeight);
-                        //move either left/right to meet next line point
-                        pasteShape.lineTo(poPoints[i][1].x, poPoints[i][1].y);
+                    //work way back up
+                    for(int i = curLine; i > 0; i--) {
+                        pasteShape.lineTo(poPoints[i][0].x, poPoints[i][0].y);
                     }
-                }
-                //wrap around
-                pasteShape.lineTo(poPoints[curLine][1].x, poPoints[curLine][1].y + lineHeight);
-                pasteShape.lineTo(poPoints[curLine][0].x, poPoints[curLine][0].y + lineHeight);
+                    pasteShape.lineTo(poPoints[0][0].x, poPoints[0][0].y+lineHeight);
+                    pasteShape.lineTo(poPoints[0][0].x, poPoints[0][0].y);
 
-                //work way back up
-                for(int i = curLine; i > 0; i--) {
-                    pasteShape.lineTo(poPoints[i][0].x, poPoints[i][0].y);
-                }
-                pasteShape.lineTo(poPoints[0][0].x, poPoints[0][0].y+lineHeight);
-                pasteShape.lineTo(poPoints[0][0].x, poPoints[0][0].y);
+                    int winningIndex = SpriteDataAnimated.getWeightedAmountWinningIndex(ParticleSpritePasteShape.spriteDataAnimated);
+                    if(winningIndex == -1 && !CopyPasteVoidConfig.FADE_ENABLED(settings)){
+                        //do nothing
+                    }else {
+                        ParticleSpritePasteShape pFontShape = new ParticleSpritePasteShape(pasteShape, 100,
+                                CopyPasteVoidConfig.FADE_COLOR(settings),
+                                CopyPasteVoidConfig.FADE_AMOUNT(settings),
+                                CopyPasteVoidConfig.FADE_ENABLED(settings),
+                                winningIndex,
+                                editor);
+                        ParticleContainerManager.particleContainers.get(editor).addExternalParticle(pFontShape);
+                    }
 
-
-                int winningIndex = SpriteDataAnimated.getWeightedAmountWinningIndex(ParticleSpritePasteShape.spriteDataAnimated);
-                if(winningIndex == -1 && !CopyPasteVoidConfig.FADE_ENABLED(settings)){
-                    //do nothing
-                }else {
-                    ParticleSpritePasteShape pFontShape = new ParticleSpritePasteShape(pasteShape, 100,
-                            CopyPasteVoidConfig.FADE_COLOR(settings),
-                            CopyPasteVoidConfig.FADE_AMOUNT(settings),
-                            CopyPasteVoidConfig.FADE_ENABLED(settings),
-                            winningIndex,
-                            editor);
-                    ParticleContainerManager.particleContainers.get(editor).addExternalParticle(pFontShape);
-                }
-
-
-                MyCaretListener.enabled = true;
-                curCaret.moveToOffset(start+offset);
-                scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE);
-
+                    MyCaretListener.enabled = true;
+                    curCaret.moveToOffset(start+offset);
+                    scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE);
+                });
             }
         };
 
