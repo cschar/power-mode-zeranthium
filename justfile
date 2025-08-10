@@ -5,6 +5,11 @@ _default:
 test:
 	POWERMODE_ZERANTHIUM_TESTS=1 ./gradlew :test
 
+build:
+    ./gradlew :buildPlugin --info
+
+build_refresh_deps:
+
 
 test_ui_launch_ide:
     ./gradlew :testIdeUi
