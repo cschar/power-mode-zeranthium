@@ -14,6 +14,7 @@
 package com.cschar.pmode3;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollingModel;
 import com.intellij.openapi.editor.VisualPosition;
@@ -154,7 +155,9 @@ public class ParticleContainerManager implements EditorFactoryListener, Disposab
                 @Override
                 public void run()
                 {
-                    updateInUI(editor);
+                    ApplicationManager.getApplication().runReadAction(() -> {
+                        updateInUI(editor);
+                    });
                 }
             });
         }
