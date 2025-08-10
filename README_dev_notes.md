@@ -12,6 +12,8 @@
                   pluginUntilBuild = 241.*
                   
         - 1.1.3  update pluginVerifierIdeVersions
+        - 1.1.4 update plugin versions in `libs.versions.toml`
+                see https://github.com/JetBrains/intellij-platform-plugin-template/blob/main/gradle/libs.versions.toml
 
 
  2. Update change notes plugin in build.gradle
@@ -27,10 +29,18 @@
         export POWERMODE_ZERANTHIUM_TESTS="true"
         ./gradlew :test --info
  
- 6. publish  
+ 6. publish directly from cli (optional)
          # ensure you have PUBLISH_TOKEN set as env var
         ./gradlew :publishPlugin --no-configuration-cache --info
 
+ 7. push feature branch to github, will trigger build pipeline
+ 
+ 8. merge feature branch, will trigger build pipeline on MAIN branch...
+    - by triggering on MAIN branch, will create an unpublished draft release object
+    
+ 9. publish release from github
+    - will trigger the 'release.yml' action, which will publish the plugin to the marketplace
+        
 ```
 
 
