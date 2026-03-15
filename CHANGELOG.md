@@ -4,6 +4,7 @@
 
 ## [Unreleased]
 
+- 2025.3 update
 - compatibility: replace deprecated `Messages.showDialog(...)` overload flagged by Plugin Verifier
 
 ## [3.4.2-stable.243] - 2025-08-10

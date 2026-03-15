@@ -1,5 +1,4 @@
 
-import org.gradle.internal.impldep.org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
@@ -162,7 +161,8 @@ intellijPlatform {
 
             ides {
 
-                ide(IntelliJPlatformType.IntellijIdea, properties("platformVersion").get())
+                create(IntelliJPlatformType.IntellijIdea, properties("platformVersion")) {
+                }
 //                local(file("/path/to/ide/"))
                 recommended()
 //                select {

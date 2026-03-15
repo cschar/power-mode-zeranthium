@@ -8,8 +8,8 @@ changelog = "2.2.0"
 
 # https://plugins.gradle.org/plugin/org.jetbrains.intellij.platform
 # https://github.com/JetBrains/intellij-platform-gradle-plugin/tags
-intelliJPlatform = "2.9.0"
-#intelliJPlatform = "2.13.1"
+#intelliJPlatform = "2.9.0"
+intelliJPlatform = "2.13.1"
 kotlin = "2.1.10"
 kover = "0.8.0"
 qodana = "2024.1.5"
