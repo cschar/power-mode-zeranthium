@@ -1,7 +1,7 @@
 
-import org.gradle.internal.impldep.org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 
 
@@ -31,8 +31,8 @@ version = properties("pluginVersion").get()
 
 // Set the JVM language level used to build the project.
 kotlin {
-    jvmToolchain(17)
-//    jvmToolchain(21)
+//    jvmToolchain(17)
+    jvmToolchain(21)
 }
 
 // Configure project's dependencies
@@ -51,7 +51,7 @@ var remoteRobotVersion = "0.11.23"
 dependencies {
     // IntelliJ Platform Gradle Plugin Dependencies Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html
     intellijPlatform {
-        create(properties("platformType"), properties("platformVersion"))
+        intellijIdea(properties("platformVersion"))
 //        intellijIdeaCommunity("2024.3.3")
 
         // Plugin Dependencies. Uses `platformBundledPlugins` property from the gradle.properties file for bundled IntelliJ Platform plugins.
@@ -161,7 +161,8 @@ intellijPlatform {
 
             ides {
 
-                ide(properties("platformType"),properties("platformVersion"))
+                create(IntelliJPlatformType.IntellijIdea, properties("platformVersion")) {
+                }
 //                local(file("/path/to/ide/"))
                 recommended()
 //                select {

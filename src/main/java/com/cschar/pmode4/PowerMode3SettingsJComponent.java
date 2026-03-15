@@ -897,9 +897,9 @@ public class PowerMode3SettingsJComponent implements Disposable {
                 }
 
                 ImageIcon sliderIcon = new ImageIcon(this.getClass().getResource("/icons/bar_small.png"));
-                int result = Messages.showDialog("Choose Anchor Type:", "Choose Anchor Type",
+                int result = Messages.showDialog(anchorConfigButton, "Choose Anchor Type:", "Choose Anchor Type",
                         options,
-                        settings.anchorType.ordinal(), settings.anchorType.ordinal(), sliderIcon, null);
+                        settings.anchorType.ordinal(), sliderIcon);
 
                 if(result != -1){
                     settings.anchorType = PowerMode3.AnchorTypes.values()[result];
