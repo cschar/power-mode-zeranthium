@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+## [3.5.0-stable.253] - 2026-03-15
+
 - 2025.3 update
 - compatibility: replace deprecated `Messages.showDialog(...)` overload flagged by Plugin Verifier
 
@@ -63,7 +65,8 @@
 
 - Initial scaffold created from [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
 
-[Unreleased]: https://github.com/cschar/power-mode-zeranthium/compare/v3.4.2-stable.243...HEAD
+[Unreleased]: https://github.com/cschar/power-mode-zeranthium/compare/v3.5.0-stable.253...HEAD
+[3.5.0-stable.253]: https://github.com/cschar/power-mode-zeranthium/compare/v3.4.2-stable.243...v3.5.0-stable.253
 [3.4.2-stable.243]: https://github.com/cschar/power-mode-zeranthium/compare/v3.4.1-stable.243...v3.4.2-stable.243
 [3.4.1-stable.243]: https://github.com/cschar/power-mode-zeranthium/compare/v3.4.0-stable.242...v3.4.1-stable.243
 [3.4.0-stable.242]: https://github.com/cschar/power-mode-zeranthium/compare/v3.4.0-eap.242...v3.4.0-stable.242
